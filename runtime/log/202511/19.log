@@ -1,0 +1,1123 @@
+---------------------------------------------------------------
+[ 2025-11-19T18:48:30+09:00 ] 106.146.68.25 GET www.mobile-zone.jp/
+[运行时间：0.215640s] [吞吐率：4.64req/s] [内存消耗：611.29kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000118s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002112s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000626s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000010s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'sec-fetch-dest' => 'document',
+  'accept-language' => 'zh-CN,zh-Hans;q=0.9',
+  'user-agent' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.65(0x1800412a) NetType/4G Language/zh_CN',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-site' => 'none',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'smartphone',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '106.146.68.25',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '106.146.68.25',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/index/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001870s ]
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000160s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/index/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ LOG ] INIT File
+[ error ] [1045]SQLSTATE[HY000] [1045] Access denied for user 'liyang_mb'@'localhost' (using password: YES)[/home/xs942548/mobile-zone.jp/public_html/thinkphp/library/think/db/Connection.php:295]
+---------------------------------------------------------------
+[ 2025-11-19T18:50:08+09:00 ] 27.115.124.45 GET www.mobile-zone.jp/
+[运行时间：0.236251s] [吞吐率：4.23req/s] [内存消耗：275.30kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.001282s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.008851s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.001675s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000023s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Linux; U; Android 8.1.0; zh-cn; MI 8 Build/OPM1.171019.011) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 Mobile Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'no-cache',
+  'pragma' => 'no-cache',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'smartphone',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '27.115.124.45',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '27.115.124.45',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/index/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.001364s ]
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000725s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/index/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ LOG ] INIT File
+[ error ] [1045]SQLSTATE[HY000] [1045] Access denied for user 'liyang_mb'@'localhost' (using password: YES)[/home/xs942548/mobile-zone.jp/public_html/thinkphp/library/think/db/Connection.php:295]
+---------------------------------------------------------------
+[ 2025-11-19T18:57:10+09:00 ] 36.5.193.34 GET www.mobile-zone.jp/uxTqKSPsXk.php/index/login
+[运行时间：0.013299s] [吞吐率：75.19req/s] [内存消耗：276.17kb] [文件加载：82]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000132s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000751s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000144s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000012s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'login',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'priority' => 'u=0, i',
+  'sec-fetch-user' => '?1',
+  'sec-fetch-site' => 'none',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-dest' => 'document',
+  'upgrade-insecure-requests' => '1',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '36.5.193.34',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '36.5.193.34',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000243s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000234s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000227s ]
+[ info ] [ RUN ] app\admin\controller\Index->login[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/Index.php ]
+[ info ] [ VIEW ] /home/xs942548/mobile-zone.jp/public_html/application/admin/view/index/login.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'keeyloginhours',
+  6 => 'background',
+  7 => 'title',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000052s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:57:19+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php
+[运行时间：0.004171s] [吞吐率：239.76req/s] [内存消耗：135.64kb] [文件加载：74]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000122s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000595s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000085s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000008s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'priority' => 'u=0, i',
+  'sec-fetch-user' => '?1',
+  'sec-fetch-site' => 'none',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-dest' => 'document',
+  'upgrade-insecure-requests' => '1',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000115s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000038s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:57:20+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/index/login
+[运行时间：0.003944s] [吞吐率：253.55req/s] [内存消耗：251.81kb] [文件加载：80]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000015s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000434s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000039s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000011s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'login',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'priority' => 'u=0, i',
+  'sec-fetch-user' => '?1',
+  'sec-fetch-site' => 'none',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-dest' => 'document',
+  'upgrade-insecure-requests' => '1',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000054s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000082s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000128s ]
+[ info ] [ RUN ] app\admin\controller\Index->login[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/Index.php ]
+[ info ] [ VIEW ] /home/xs942548/mobile-zone.jp/public_html/application/admin/view/index/login.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'keeyloginhours',
+  6 => 'background',
+  7 => 'title',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000019s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:57:21+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/ajax/lang?callback=define&controllername=index&lang=zh-cn&v=1763546240
+[运行时间：0.004375s] [吞吐率：228.57req/s] [内存消耗：254.96kb] [文件加载：81]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000014s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000399s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000034s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000008s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'no-cors',
+  'sec-fetch-dest' => 'script',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'index',
+  'lang' => 'zh-cn',
+  'v' => '1763546240',
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000048s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000044s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/ajax.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000091s ]
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/Ajax.php ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000022s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:57:26+09:00 ] 1.170.201.71 POST www.mobile-zone.jp/uxTqKSPsXk.php/index/login
+[运行时间：0.171667s] [吞吐率：5.83req/s] [内存消耗：429.24kb] [文件加载：90]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000014s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000456s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000047s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000009s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'login',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'priority' => 'u=0',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'cors',
+  'sec-fetch-dest' => 'empty',
+  'origin' => 'https://www.mobile-zone.jp',
+  'x-requested-with' => 'XMLHttpRequest',
+  'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'content-length' => '75',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+  '__token__' => '31c4103e4fa5910a3873d2ed5e9fba01',
+  'username' => 'admin',
+  'password' => 'admin666',
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000051s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000047s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000094s ]
+[ info ] [ RUN ] app\admin\controller\Index->login[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/Index.php ]
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.003226s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:57:26+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/index/index
+[运行时间：0.013912s] [吞吐率：71.88req/s] [内存消耗：644.74kb] [文件加载：95]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000014s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000458s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000052s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000008s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'priority' => 'u=0, i',
+  'sec-fetch-user' => '?1',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-dest' => 'document',
+  'upgrade-insecure-requests' => '1',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000054s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000069s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000117s ]
+[ info ] [ RUN ] app\admin\controller\Index->index[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/Index.php ]
+[ info ] [ VIEW ] /home/xs942548/mobile-zone.jp/public_html/application/admin/view/index/index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'menulist',
+  6 => 'navlist',
+  7 => 'fixedmenu',
+  8 => 'referermenu',
+  9 => 'title',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000026s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:57:28+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/ajax/lang?callback=define&controllername=index&lang=zh-cn&v=1763546246
+[运行时间：0.002386s] [吞吐率：419.10req/s] [内存消耗：255.06kb] [文件加载：81]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000014s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000398s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000034s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000008s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'no-cors',
+  'sec-fetch-dest' => 'script',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'index',
+  'lang' => 'zh-cn',
+  'v' => '1763546246',
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000046s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000044s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/ajax.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000085s ]
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/Ajax.php ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000016s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:57:30+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/general/config?addtabs=1
+[运行时间：0.016817s] [吞吐率：59.46req/s] [内存消耗：789.96kb] [文件加载：89]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000013s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000448s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000048s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000010s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'general.config',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'priority' => 'u=4',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-dest' => 'iframe',
+  'upgrade-insecure-requests' => '1',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000063s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000098s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/general/config.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000149s ]
+[ info ] [ RUN ] app\admin\controller\general\Config->index[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/general/Config.php ]
+[ info ] [ VIEW ] /home/xs942548/mobile-zone.jp/public_html/application/admin/view/general/config/index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'siteList',
+  6 => 'typeList',
+  7 => 'ruleList',
+  8 => 'groupList',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000024s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:57:31+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/ajax/lang?callback=define&controllername=general.config&lang=zh-cn&v=1763546250
+[运行时间：0.002479s] [吞吐率：403.38req/s] [内存消耗：254.63kb] [文件加载：81]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000014s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000432s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000034s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000008s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'no-cors',
+  'sec-fetch-dest' => 'script',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'general.config',
+  'lang' => 'zh-cn',
+  'v' => '1763546250',
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000048s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000043s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/ajax.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000085s ]
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/Ajax.php ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/general/config.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000016s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:57:59+09:00 ] 1.170.201.71 POST www.mobile-zone.jp/uxTqKSPsXk.php/general.config/edit
+[运行时间：0.175325s] [吞吐率：5.70req/s] [内存消耗：533.27kb] [文件加载：90]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000114s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000557s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000122s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000010s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'general.config',
+    2 => 'edit',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'priority' => 'u=0',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'cors',
+  'sec-fetch-dest' => 'empty',
+  'origin' => 'https://www.mobile-zone.jp',
+  'x-requested-with' => 'XMLHttpRequest',
+  'content-type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => 'application/json, text/javascript, */*; q=0.01',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'content-length' => '298',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+  '__token__' => '5640d05fb2c4b76f2a590eb3b9ca43fe',
+  'row' => 
+  array (
+    'mail_type' => '1',
+    'mail_smtp_host' => 'sv16698.xserver.jp',
+    'mail_smtp_port' => '465',
+    'mail_smtp_user' => 'no-reply@mobile-zone.jp',
+    'mail_smtp_pass' => 'o+I5AY^pyQNZ',
+    'mail_verify_type' => '2',
+    'mail_from' => 'no-reply@mobile-zone.jp',
+  ),
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000153s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000089s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/general/config.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000128s ]
+[ info ] [ RUN ] app\admin\controller\general\Config->edit[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/general/Config.php ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.001774s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:58:00+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/general/config?ref=addtabs
+[运行时间：0.006059s] [吞吐率：165.05req/s] [内存消耗：443.24kb] [文件加载：83]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000013s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000444s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000036s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000008s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'general.config',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'priority' => 'u=0, i',
+  'sec-fetch-user' => '?1',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-dest' => 'document',
+  'upgrade-insecure-requests' => '1',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+  'ref' => 'addtabs',
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000047s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000023s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:58:00+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/index/index
+[运行时间：0.009543s] [吞吐率：104.79req/s] [内存消耗：600.90kb] [文件加载：93]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000014s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000421s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000039s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000010s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'index',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'priority' => 'u=0, i',
+  'sec-fetch-user' => '?1',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-dest' => 'document',
+  'upgrade-insecure-requests' => '1',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000053s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000066s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000106s ]
+[ info ] [ RUN ] app\admin\controller\Index->index[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/Index.php ]
+[ info ] [ VIEW ] /home/xs942548/mobile-zone.jp/public_html/application/admin/view/index/index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'menulist',
+  6 => 'navlist',
+  7 => 'fixedmenu',
+  8 => 'referermenu',
+  9 => 'title',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000019s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:58:01+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/general/config?addtabs=1
+[运行时间：0.078227s] [吞吐率：12.78req/s] [内存消耗：571.34kb] [文件加载：87]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000017s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.003795s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000882s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000012s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'general.config',
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'priority' => 'u=4',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-dest' => 'iframe',
+  'upgrade-insecure-requests' => '1',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+  'addtabs' => '1',
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000528s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000469s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/general/config.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000929s ]
+[ info ] [ RUN ] app\admin\controller\general\Config->index[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/general/Config.php ]
+[ info ] [ VIEW ] /home/xs942548/mobile-zone.jp/public_html/application/admin/view/general/config/index.html [ array (
+  0 => 'breadcrumb',
+  1 => 'site',
+  2 => 'config',
+  3 => 'auth',
+  4 => 'admin',
+  5 => 'siteList',
+  6 => 'typeList',
+  7 => 'ruleList',
+  8 => 'groupList',
+) ]
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000369s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:58:02+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/ajax/lang?callback=define&controllername=index&lang=zh-cn&v=1763546280
+[运行时间：0.031873s] [吞吐率：31.37req/s] [内存消耗：255.13kb] [文件加载：81]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000015s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.005679s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000634s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000011s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'no-cors',
+  'sec-fetch-dest' => 'script',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'index',
+  'lang' => 'zh-cn',
+  'v' => '1763546280',
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000331s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000358s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/ajax.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000735s ]
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/Ajax.php ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/index.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000344s ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-19T18:58:02+09:00 ] 1.170.201.71 GET www.mobile-zone.jp/uxTqKSPsXk.php/ajax/lang?callback=define&controllername=general.config&lang=zh-cn&v=1763546281
+[运行时间：0.018174s] [吞吐率：55.02req/s] [内存消耗：254.63kb] [文件加载：81]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000014s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002248s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000453s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000011s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'ajax',
+    2 => 'lang',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'adminer_version=5.4.1; PHPSESSID=7d7aa89d5c03ca9554a9e1c161688361',
+  'sec-fetch-site' => 'same-origin',
+  'sec-fetch-mode' => 'no-cors',
+  'sec-fetch-dest' => 'script',
+  'accept-language' => 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
+  'accept' => '*/*',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '85.131.213.79',
+  'x-real-ip' => '1.170.201.71',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'www.mobile-zone.jp',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '1.170.201.71',
+  'host' => 'www.mobile-zone.jp',
+)
+[ info ] [ PARAM ] array (
+  'callback' => 'define',
+  'controllername' => 'general.config',
+  'lang' => 'zh-cn',
+  'v' => '1763546281',
+)
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000277s ]
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000233s ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/ajax.php
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000456s ]
+[ info ] [ RUN ] app\admin\controller\Ajax->lang[ /home/xs942548/mobile-zone.jp/public_html/application/admin/controller/Ajax.php ]
+[ info ] [ LANG ] /home/xs942548/mobile-zone.jp/public_html/application/admin/lang/zh-cn/general/config.php
+[ info ] [ BEHAVIOR ] Run app\admin\behavior\AdminLog @app_end [ RunTime:0.000205s ]
+[ info ] [ LOG ] INIT File

@@ -1,0 +1,723 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:5:{s:111:"/home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/view/user/applyfor.html";i:1762845568;s:109:"/home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/view/common/meta.html";i:1761205104;s:109:"/home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/view/common/head.html";i:1761872768;s:108:"/home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/view/common/nav.html";i:1761732918;s:109:"/home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/view/common/foot.html";i:1761875714;}*/ ?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+<title><?php echo htmlentities((isset($title) && ($title !== '')?$title:'') ?? ''); ?> – <?php echo htmlentities($site['name'] ?? ''); ?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="msapplication-tap-highlight" content="no">
+<meta name="format-detection" content="telephone=no" />
+<?php if(isset($keywords)): ?>
+<meta name="keywords" content="<?php echo htmlentities($keywords ?? ''); ?>">
+<?php endif; if(isset($description)): ?>
+<meta name="description" content="<?php echo htmlentities($description ?? ''); ?>">
+<?php endif; ?>
+
+<link rel="shortcut icon" href="/assets/img/favicon.ico" />
+
+<link rel="stylesheet" href="/css/swiper.min.css" />
+<link rel="stylesheet" href="/css/base.css" />
+<link rel="stylesheet" href="/css/base_rel.css" />
+<script src="/js/jquery.js"></script>
+<script src="/js/swiper.min.js"></script>
+<script src="/js/js.js"></script>
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+<!--[if lt IE 9]>
+  <script src="/assets/js/html5shiv.js"></script>
+  <script src="/assets/js/respond.min.js"></script>
+<![endif]-->
+<script type="text/javascript">
+    var require = {
+        config: <?php echo json_encode($config ?? ''); ?>
+    };
+</script>
+
+	</head>
+	<body>
+		<div class="header">
+	<div class="header1 contain">
+		<div class="logo">
+			<a href="/"><img src="/uploads/20251029/a0480341e272cdcb79c34cfcf78c3007.png" alt="" /></a>
+		</div>
+		<div class="nav">
+	<ul>
+		<li>
+			<a href="/">ホーム</a>
+		</li>
+		<li>
+			<a href="/goods">
+				商品一覧
+				<img class="arrowa" src="/img/arrowa.png" alt="" />
+				<img class="arrow" src="/img/arrow.png" alt="" />
+			</a>
+			<div class="nav_sub">
+			<?php if(is_array($goodsCategoryTree) || $goodsCategoryTree instanceof \think\Collection || $goodsCategoryTree instanceof \think\Paginator): $i = 0; $__LIST__ = $goodsCategoryTree;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item): $mod = ($i % 2 );++$i;?>
+				<div class="nav_sub1">
+					<a href="/goods/<?php echo $item['id']; ?>">
+						<span><?php echo $item['name']; ?></span>
+						
+						<?php if(!empty($item['children'])): ?>
+						<img class="arrowa" src="/img/arrow1a.png" alt="" />
+						<img class="arrow" src="/img/arrow1.png" alt="" />
+						<?php endif; ?>
+					</a>
+					<div class="nav_sub2">
+					<?php if(!empty($item['children'])): if(is_array($item['children']) || $item['children'] instanceof \think\Collection || $item['children'] instanceof \think\Paginator): $i = 0; $__LIST__ = $item['children'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item2): $mod = ($i % 2 );++$i;?>
+						<div class="nav_sub1">
+							<a href="/goods/<?php echo $item['id']; ?>/<?php echo $item2['id']; ?>">
+								<span><?php echo $item2['name']; ?></span>
+								
+							<?php if(!empty($item2['children'])): ?>
+								<img class="arrowa" src="/img/arrow1a.png" alt="" />
+								<img class="arrow" src="/img/arrow1.png" alt="" />
+							<?php endif; ?>
+							</a>
+						<?php if(!empty($item2['children'])): ?>
+							<div class="nav_sub2">
+								<div class="nav_sub3">
+								<?php if(is_array($item2['children']) || $item2['children'] instanceof \think\Collection || $item2['children'] instanceof \think\Paginator): $i = 0; $__LIST__ = $item2['children'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item3): $mod = ($i % 2 );++$i;?>
+									<a href="/goods/<?php echo $item['id']; ?>/<?php echo $item2['id']; ?>/<?php echo $item3['id']; ?>">
+										<span><?php echo $item3['name']; ?></span>
+									</a>
+								<?php endforeach; endif; else: echo "" ;endif; ?>
+								</div>
+							</div>
+						<?php endif; ?>
+						</div>
+					<?php endforeach; endif; else: echo "" ;endif; endif; ?>
+						
+					</div>
+				</div>
+			<?php endforeach; endif; else: echo "" ;endif; ?>
+				
+			</div>
+		</li>
+		<li>
+			<a href="/news">お知らせ</a>
+		</li>
+		<li>
+			<a href="/shop">店舗紹介</a>
+		</li>
+		<li>
+			<a href="/buy_way">買取方法</a>
+		</li>
+		<li>
+			<a href="/guide">ご利用ガイド</a>
+		</li>
+	</ul>
+</div>
+		<div class="pdf">
+			<div>
+				<a class="pdf1" target="_blank" href="<?php echo $site['protector_consent_form']; ?>">保護者同意書(PDF)</a>
+				<a class="pdf2" target="_blank" href="<?php echo $site['buy_application_form']; ?>">買取申し込み書(PDF)</a>
+			</div>
+		</div>
+		<div class="icon_m">
+			<a href="javascript:void(0)">
+				<img src="/img/menu.png" alt="" />
+				<img class="hide" src="/img/heclose.png" alt="" />
+			</a>
+		</div>
+		<div class="butt">
+		<?php if(empty($userInfo->id)): ?>
+			<div class="butt1 login">
+				<a href="javascript:void(0)">
+					<img src="/img/login.png" alt="" />
+					ログイン
+				</a>
+			</div>
+			<div class="butt2 login">
+				<a href="javascript:;">
+					<img src="/img/cart.png" alt="" />
+					カート
+				</a>
+			</div>
+		<?php else: ?>
+			<div class="butt1">
+				<a href="/user">
+					<img src="/img/login.png" alt="" />
+					マイページ
+				</a>
+			</div>
+			<div class="butt2">
+				<a href="/user/shopping">
+					<img src="/img/cart.png" alt="" />
+					カート
+				</a>
+			</div>
+		<?php endif; ?>
+
+			
+		</div>
+	</div>
+</div>
+<div class="menu_m">
+	<div class="menu_m1">
+		<div class="menu_m2">
+			<ul>
+				<li><a href="/">ホーム</a></li>
+				<li>
+					<a href="javascript:;">
+						商品一覧
+						<img src="/img/hearrow.png" alt="" />
+					</a>
+				<?php if(is_array($goodsCategoryTree) || $goodsCategoryTree instanceof \think\Collection || $goodsCategoryTree instanceof \think\Paginator): $i = 0; $__LIST__ = $goodsCategoryTree;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item): $mod = ($i % 2 );++$i;?>
+					<div class="menu_msub">
+						<div class="menu_msub1">
+							<a href="javascript:;"><?php echo $item['name']; if(!empty($item['children'])): ?>
+							    <img src="/img/hearrow.png" onclick="event.preventDefault();" alt="" />
+							<?php endif; ?>
+							</a>
+						<?php if(!empty($item['children'])): ?>
+							<div class="menu_msub">
+							<?php if(is_array($item['children']) || $item['children'] instanceof \think\Collection || $item['children'] instanceof \think\Paginator): $i = 0; $__LIST__ = $item['children'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item2): $mod = ($i % 2 );++$i;?>
+								<a href="/goods/<?php echo $item['id']; ?>/<?php echo $item2['id']; ?>">
+								    <?php echo $item2['name']; if(!empty($item2['children'])): ?>
+    							    <img src="/img/hearrow.png" onclick="event.preventDefault();" alt="" />
+    							<?php endif; ?>
+								</a>
+								
+    							<?php if(!empty($item2['children'])): ?>
+        							<div class="menu_msub">
+        							    <?php if(is_array($item2['children']) || $item2['children'] instanceof \think\Collection || $item2['children'] instanceof \think\Paginator): $i = 0; $__LIST__ = $item2['children'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item3): $mod = ($i % 2 );++$i;?>
+        							        <a href="/goods/<?php echo $item['id']; ?>/<?php echo $item2['id']; ?>/<?php echo $item3['id']; ?>"><?php echo $item3['name']; ?></a>
+        							    <?php endforeach; endif; else: echo "" ;endif; ?>
+        							</div>
+    							<?php endif; endforeach; endif; else: echo "" ;endif; ?>
+							</div>
+						<?php endif; ?>
+						</div>
+					</div>
+			    <?php endforeach; endif; else: echo "" ;endif; ?>
+				</li>
+				<li><a href="/news">お知らせ</a></li>
+    			<li><a href="/shop">店舗紹介</a></li>
+				<li><a href="/buy_way">買取方法</a></li>
+				<li><a href="/guide">ご利用ガイド</a></li>
+    			<li><a href="/faq">よくある質問</a></li>
+				<li><a href="/contactus">お問い合わせ</a></li>
+			</ul>
+		</div>
+		<div class="menu_m3">
+		<?php if(empty($userInfo->id)): ?>
+			<a href="javascript:;">
+				ログイン
+				<img src="/img/hearrow1.png" alt="" />
+			</a>
+		<?php else: ?>
+		    <a href="/user">
+				マイページ
+				<img src="/img/hearrow1.png" alt="" />
+			</a>
+		<?php endif; ?>
+		</div>
+	</div>
+</div>
+		<div class="cart">
+			<div class="pd150 contain">
+				<div class="address1">
+					<a href="/">ホーム</a>
+					&gt;
+					<a href="/user/shopping"> カート</a>
+					&gt;
+					<a href="javascript:;"><?php echo $type==1?'店頭買取のお申し込み' : '郵送買取のお申し込み'; ?></a>
+				</div>
+			</div>
+		<form name="form" id="order-form" class="form-vertical" method="POST" action="">
+			<div class="contain orderDeta1">
+				<div class="orderLeft">
+					<div class="orderLeft1">
+						<div class="orderDeta2">
+							お客様の情報
+						</div>
+						<div class="orderDeta3">
+							<?php echo $userInfo->name; ?>
+						</div>
+						<div class="orderDeta4">
+							<?php switch($userInfo->persion_type): case "1": ?>個人<?php break; case "2": ?>法人<?php break; default: ?><font color="red">未設定</font>
+							<?php endswitch; ?>
+							<br />
+							<?php echo $userInfo->email; ?><br />
+							〒<?php echo !empty($userInfo->zip_code)?$userInfo->zip_code: '<font color="red">未設定</font>'; ?> <br />
+							<?php echo $userInfo->address; ?> <br />
+							電話番号:<?php echo !empty($userInfo->mobile)?$userInfo->mobile: '<font color="red">未設定</font>'; ?> <br />
+							生年月日:<?php echo !empty($userInfo->birthday)?$userInfo->birthday: '<font color="red">未設定</font>'; ?> <br />
+							性別:<?php if($userInfo->gender): ?><?php echo $userInfo->gender==1?'男性' : '女性'; else: ?> <font color="red">未設定</font> <?php endif; ?><br />
+							職業:
+							<?php if($userInfo->occupation): ?>
+							    <?php echo getCategoryName($userInfo->occupation); else: ?>
+							    <font color="red">未設定</font>
+							<?php endif; ?>
+						</div>
+						<div class="orderDeta5">
+							<a href="/user">変更</a>
+						</div>
+					</div>
+					<div class="orderLeft6">
+						<div class="orderDeta2">
+							お申し込み内容
+						</div>
+						<div class="orderLeft7">
+							<div class="orderLeft8">
+								<div class="orderLeft9">
+									<ul>
+										<li class="oWidth">
+											商品品名
+										</li>
+										<li class="oWidth1">
+											数量
+										</li>
+										<li class="oWidth2">
+											小計
+										</li>
+									</ul>
+								</div>
+							<?php if(is_array($list) || $list instanceof \think\Collection || $list instanceof \think\Paginator): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item): $mod = ($i % 2 );++$i;?>
+								<div class="orderLeft10">
+									<ul>
+										<li class="oWidth">
+											<div class="orderLeft11">
+												<div class="orderLeft11a">
+													<img alt="" src="<?php echo $item['image']; ?>">
+												</div>
+												<div class="orderLeft11b">
+													<div class="orderLeft11c">
+														<?php echo $item['title']; ?>
+													</div>
+													<div class="orderLeft11d">
+														<?php if($item['memo']): ?>
+														備考 : <?php echo $item['memo']; ?> <br>
+														<?php endif; ?>
+														状態 : <?php echo $item['type']==1?'新品' : '中古'; ?>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li class="oWidth1">
+											<?php echo $item['num']; ?>
+										</li>
+										<li class="oWidth2">
+											￥<?php echo $item['price']; ?>（税込）
+										</li>
+									</ul>
+								</div>
+							<?php endforeach; endif; else: echo "" ;endif; ?>
+							</div>
+						</div>
+						<div class="orderDeta5">
+							<a href="/user/shopping">変更</a>
+						</div>
+					</div>
+					<div class="orderLeft1">
+						<div class="orderDeta2">
+							お支払い方法
+						</div>
+						<div class="orderDeta3">
+							ご希望のお支払い方法を選択してください
+						</div>
+						<div class="orderLeft12">
+							<label for="new_lab">
+								<input name="pay_mode" class="new_lab" checked type="radio" value="1">
+								現金払い
+							</label>
+							<label for="new_lab">
+								<input name="pay_mode" class="new_lab" type="radio" value="2">
+								銀行振込
+							</label>
+			            </div>
+						<div style="display:none;" class="orderLeft13" id="et">
+							<div class="orderLeft13a">
+								振込口座
+							</div>
+							<div class="orderLeft13b">
+								<label for="ptyh">
+									<input name="bank_account_type" id="ptyh" type="radio" value="1">
+									普通預金
+								</label>
+								<label for="ptyh">
+									<input name="bank_account_type" id="ptyh" type="radio" value="2">
+									当座預金
+								</label>
+							</div>
+							<div class="orderLeft13c">
+								<input placeholder="例）XXXX銀行" type="text" id="etx1" name="bank">
+							</div>
+							<div class="orderLeft13c">
+								<input placeholder="例）XXXX支店" type="text" id="etx2" name="bank_branch">
+							</div>
+							<div class="orderLeft13c">
+								<input placeholder="例）XXXX支店号" type="text" id="etx2" name="bank_branch_no">
+							</div>
+							<div class="orderLeft13a">
+								振込口座番号
+							</div>
+							<div class="orderLeft13c">
+								<input placeholder="半角32文字まで" type="text" id="etx3" name="bank_account">
+							</div>
+							<div class="orderLeft13a">
+								振込口座名義
+							</div>
+							<div class="orderLeft13c">
+								<input placeholder="ご本人様名義の口座に限ります" id="etx4" type="text" name="bank_account_name">
+							</div>
+						</div>
+					</div>
+				<?php if($type == 1): ?>
+					<div class="orderLeft1">
+						<div class="orderDeta2">
+							来店予約
+						</div>
+						<div class="orderDeta3">
+							買取方法：<?php echo $type==1?'店頭買取' : '郵送買取'; ?>
+						</div>
+						<div class="orderLeft16">
+							<span>来店場所</span>
+							<select id="" name="store_id" required>
+								<option value="">選択してください</option>
+							<?php if(is_array($shopList) || $shopList instanceof \think\Collection || $shopList instanceof \think\Paginator): $i = 0; $__LIST__ = $shopList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item): $mod = ($i % 2 );++$i;?>
+								<option value="<?php echo $item['id']; ?>"><?php echo $item['name']; ?></option>
+							<?php endforeach; endif; else: echo "" ;endif; ?>
+							</select>
+					    </div>
+						<div class="orderLeft16">
+							<span>来店日時</span>
+							<input type="text" id="dateInput" readonly name="go_store_date" value="2024/07/12" required="">
+						</div>
+						<div class="orderLeft16">
+							<span>来店時間</span>
+							<select id="go_store_time" name="go_store_time" required="">
+								<option value="">選択してください</option>
+							<?php if(is_array($goShopTime) || $goShopTime instanceof \think\Collection || $goShopTime instanceof \think\Paginator): $i = 0; $__LIST__ = $goShopTime;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item): $mod = ($i % 2 );++$i;?>
+								<option value="<?php echo $item; ?>"><?php echo $item; ?></option>
+							<?php endforeach; endif; else: echo "" ;endif; ?>
+							</select>
+						</div>
+					</div>
+				<?php endif; ?>
+				</div>
+				<script type="text/javascript" charset="utf-8">
+				    document.addEventListener('DOMContentLoaded', function() {
+                        const dateInput = document.getElementById('dateInput');
+                        const selectedDateDisplay = document.getElementById('selectedDateDisplay');
+                        const dateValue = document.getElementById('dateValue');
+                        
+                        // 获取今天的日期并格式化为YYYY-MM-DD
+                        const today = new Date();
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, '0');
+                        const dd = String(today.getDate()).padStart(2, '0');
+                        const todayFormatted = `${yyyy}-${mm}-${dd}`;
+                        
+                        // 设置最小日期为今天
+                        dateInput.setAttribute('min', todayFormatted);
+                        
+                        // 显示当前选择的日期
+                        dateInput.addEventListener('change', function() {
+                            if (this.value) {
+                                const selectedDate = new Date(this.value);
+                                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                                const formattedDate = selectedDate.toLocaleDateString('zh-CN', options);
+                                
+                                dateValue.textContent = formattedDate;
+                                selectedDateDisplay.classList.add('active');
+                            } else {
+                                selectedDateDisplay.classList.remove('active');
+                            }
+                        });
+                        
+                        // 初始显示今天的日期
+                        dateInput.value = todayFormatted;
+                        dateValue.textContent = today.toLocaleDateString('zh-CN', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        });
+                        selectedDateDisplay.classList.add('active');
+                    });
+				</script>
+				<div class="orderRight">
+					<div class="orderLeft1">
+						<div class="orderDeta2">
+							お支払い金額
+						</div>
+						<div class="orderRight1">
+							<span>商品合計（税込）</span>
+							<code>￥<?php echo $totalMoney; ?></code>
+						</div>
+						<div class="orderRight1">
+							<span>手数料</span>
+							<code>￥0</code>
+						</div>
+						<div class="orderRight2">
+							<span>合計：（税込）</span>
+							<code>￥<?php echo $totalMoney; ?></code>
+						<input type="hidden" name="type" value="<?php echo $type; ?>">
+						</div>
+						<div class="orderRight3 tips_tc4bzz">
+							<input type="submit" class="submitorder" value="お申し込みを確定する">
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		</div>
+		
+		<!-- 确认弹窗 -->
+<!-- <div class="tips_tc">
+	<div class="tips_tc1">
+		告知
+	</div>
+	<div class="tips_tc2">
+		<div class="tips_tc3">
+			お申込みのキャンセルを確定されますか？
+		</div>
+		<div class="tips_tc4">
+			<a class="tips_tc4a" href="javascript:void(0)">キャンセル</a>
+			<a class="tips_tc4b" href="javascript:void(0)">確　　認</a>
+		</div>
+	</div>
+</div> -->
+<div class="footer">
+			<div class="contain">
+				<div class="footer1">
+					<div class="footer2">
+						<div class="footer3">
+							<img src="/uploads/20251029/a0480341e272cdcb79c34cfcf78c3007.png" alt="" />
+						</div>
+						<div class="footer4">
+							〒<?php echo $site['zip_code']; ?> <br />
+							<?php echo $site['address']; ?> <br />
+							TEL：<?php echo $site['tel']; ?>
+						</div>
+						<div class="footer5">
+						<?php if(is_array($sns) || $sns instanceof \think\Collection || $sns instanceof \think\Paginator): $i = 0; $__LIST__ = $sns;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$item): $mod = ($i % 2 );++$i;?>
+							<a href="<?php echo !empty($item['url'])?$item['url']: 'javascript:;'; ?>"><img src="<?php echo $item['image']; ?>" alt="" /></a>
+						<?php endforeach; endif; else: echo "" ;endif; ?>
+						</div>
+					</div>
+					<div class="footer6 pc">
+						<a href="/">ホーム</a>
+						<a href="/goods">商品一覧</a>
+						<a href="/news">お知らせ</a>
+						<a href="/shop">店舗紹介</a>
+						<a href="/buy_way">買取方法</a>
+						<a href="/guide">ご利用ガイド</a>
+						<a href="/faq">よくある質問</a>
+						<a href="/contactus">お問い合わせ</a>
+						<!-- <a href="">ご注意事項</a> -->
+						<a href="/use_terms">ご利用規約</a>
+						<a href="/privacy_policy">プライバシー</a>
+						<a href="/trading_law">特定商取引法</a>
+					</div>
+					<div class="footer6 wap">
+						<a href="/guide">ご利用ガイド</a>
+						<a href="/shop">店舗紹介</a>
+						<a href="/buy_way">買取方法</a>
+						<a href="/contactus">お問い合わせ</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="beian">
+			<div class="beian1">
+				<!-- <a href="">ご注意事項</a> -->
+				<a href="/use_terms">ご利用規約</a>
+				<a href="/privacy_policy">プライバシー</a>
+				<a href="/trading_law">特定商取引法</a>
+			</div>
+			<?php echo $site['copyright']; ?>
+		</div>
+		<div class="goTop">
+			<a href="javascript:void(0)"><img src="/img/goTop.png" alt="" /></a>
+		</div>
+		<div class="login_tc">
+			<div class="login_tc1">
+			<form name="form" id="login-form" class="form-vertical" method="POST" action="">
+				<div class="login_tc2">
+					<div class="close">
+						<img alt="" src="/img/close.png"/>
+					</div>
+					<div class="login_tc3">
+						<img alt="" src="/img/logo.png"/>
+					</div>
+					<div class="login_tc4">
+						ログイン
+					</div>
+					<div class="login_tc5">
+						<div class="login_tc6">
+							メールアドレス *
+						</div>
+						<div class="login_tc7">
+							<input type="text" name="account" id="username"/>
+						</div>
+						<div class="login_tc6">
+							パスワード *
+						</div>
+						<div class="login_tc7">
+							<input type="password" name="password" id="password"/>
+							<img alt="" class="eye" src="/img/eye.png"/>
+							<img alt="" class="eye1" src="/img/eye1.png"/>
+						</div>
+					</div>
+					<div class="login_tc8">
+						<input type="submit" class="submitlogin" value="ログイン"/>
+					</div>
+					<div class="login_tc9" style="line-height:2;">
+						<a class="forget" >パスワードをお忘れですか？</a>
+					</div>
+					<div class="login_tc10">
+						<a class="register" >新規会員登録</a>
+					</div>
+					<div class="login_tc11">
+						<a href="/use_terms">買取利用規約</a>
+						<a href="/privacy_policy">プライバシー</a>
+						<a href="/shop">店舗紹介</a>
+					</div>
+					<div class="login_tc12">
+						 <?php echo $site['copyright']; ?>
+					</div>
+		        </div>
+		      </form>
+		    </div>
+		</div>
+		<div class="register_tc">
+			<div class="login_tc1">
+			<form name="form" id="register-form" class="form-vertical" method="POST" action="">
+				<div class="login_tc2">
+					<div class="close">
+						<img alt="" src="/img/close.png"/>
+					</div>
+					<div class="login_tc3">
+						<img alt="" src="/img/logo.png"/>
+					</div>
+					<div class="register_tc1">
+						新規会員登録
+					</div>
+					<div class="register_tc2">
+						認証コードを配信するため、メールアドレスをご入力ください。
+					</div>
+					<div class="login_tc5">
+						<div class="login_tc6">
+							メールアドレス  *
+						</div>
+						<div class="login_tc7">
+							<input type="text" name="username" class="email" placeholder="your@email.com"/>
+						</div>
+						<div class="login_tc6">
+							認証コード *
+						</div>
+						<div class="login_tc7">
+							<input placeholder="認証コードを入力してください。" id="email2" name="captcha" value="" type="text"/>
+							<a data-event="register" class="sendEms" href="javascript:;">配信</a>
+						</div>
+						<div class="login_tc6">
+							パスワード *
+						</div>
+						<div class="login_tc7">
+							<input type="password" name="password" id="zpass1"/>
+							<img alt="" class="eye" src="/img/eye.png"/>
+							<img alt="" class="eye1" src="/img/eye1.png"/>
+						</div>
+						<div class="login_tc6">
+							パスワードを再入力 *
+						</div>
+						<div class="login_tc7">
+							<input type="password" name="repassword" id="zpass2"/>
+							<img alt="" class="eye" src="/img/eye.png"/>
+							<img alt="" class="eye1" src="/img/eye1.png"/>
+						</div>
+					</div>
+					<div class="login_tc8">
+						<input type="submit" class="submitregister" value="新規会員登録"/>
+					</div>
+					<div class="login_tc11">
+						<a href="/use_terms">買取利用規約</a>
+						<a href="/privacy_policy">プライバシーポリシー</a>
+						<a href="">店舗紹介</a>
+					</div>
+					<div class="login_tc12">
+						 <?php echo $site['copyright']; ?>
+					</div>
+		        </div>
+		       </form>
+		    </div>
+		</div>
+		<div class="forget_tc">
+			<div class="login_tc1">
+			<form name="form" id="resetpwd-form" class="form-vertical" method="POST" action="">
+				<div class="login_tc2">
+					<div class="close">
+						<img alt="" src="/img/close.png"/>
+					</div>
+					<div class="login_tc3">
+						<img alt="" src="/img/logo.png"/>
+					</div>
+					<div class="register_tc1">
+						パスワード再設定
+					</div>
+					<div class="register_tc2">
+						認証コードを配信するため、登録されたメールアドレスをご入力ください。
+					</div>
+					<div class="login_tc5">
+						<div class="login_tc6">
+							メールアドレス *
+						</div>
+						<div class="login_tc7">
+							<input type="text" name="username" class="email" placeholder="your@email.com"/>
+						</div>
+						<div class="login_tc6">
+							認証コード *
+						</div>
+						<div class="login_tc7">
+							<input placeholder="認証コードを入力してください。" type="text" name="captcha" id="zhcode" />
+							<a data-event="resetpwd" class="sendEms" href="javascript:;">配信</a>
+						</div>
+						<div class="login_tc6">
+							パスワード *
+						</div>
+						<div class="login_tc7">
+							<input type="password" name="password" id="zhpass1"/>
+							<img alt="" class="eye" src="/img/eye.png"/>
+							<img alt="" class="eye1" src="/img/eye1.png"/>
+						</div>
+						<div class="login_tc6">
+							パスワードを再入力 *
+						</div>
+						<div class="login_tc7">
+							<input type="password" name="repassword" id="zhpass2">
+							<img alt="" class="eye" src="/img/eye.png"/>
+							<img alt="" class="eye1" src="/img/eye1.png"/>
+						</div>
+					</div>
+					<div class="login_tc8">
+						<input type="submit" class="submitresetpwd" value="パスワード変更" />
+					</div>
+					<div class="login_tc11">
+						<a href="/use_terms">買取利用規約</a>
+						<a href="/privacy_policy">プライバシー</a>
+						<a href="/shop">店舗紹介</a>
+					</div>
+					<div class="login_tc12">
+						<?php echo $site['copyright']; ?>
+					</div>
+		        </div>
+		      </form>
+		    </div>
+		</div>
+		<!-- 公共弹窗 -->
+		<div class="tips_tc">
+			<div class="tips_tc1">
+				
+			</div>
+			<div class="tips_tc2">
+				<div class="tips_tc3">
+					お申込みをキャンセルしました。
+				</div>
+			</div>
+		</div>
+		
+	</body>
+</html>

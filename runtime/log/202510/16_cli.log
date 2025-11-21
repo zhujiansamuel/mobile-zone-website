@@ -1,0 +1,74 @@
+[ 2025-10-16T10:04:48+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000102s ]
+[ info ] [ LOG ] INIT File
+info
+[ 2025-10-16T10:04:48+08:00 ][ info ] [ CACHE ] INIT File
+info
+[ 2025-10-16T10:04:48+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.003310s ]
+info
+[ 2025-10-16T10:04:48+08:00 ][ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000715s ]
+info
+[ 2025-10-16T10:04:48+08:00 ][ info ] [ DB ] INIT mysql
+info
+[ 2025-10-16T10:04:51+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000096s ]
+[ info ] [ LOG ] INIT File
+info
+[ 2025-10-16T10:04:51+08:00 ][ info ] [ CACHE ] INIT File
+info
+[ 2025-10-16T10:04:51+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002734s ]
+info
+[ 2025-10-16T10:04:51+08:00 ][ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000627s ]
+info
+[ 2025-10-16T10:04:51+08:00 ][ info ] [ DB ] INIT mysql
+info
+[ 2025-10-16T10:04:51+08:00 ][ info ] [ LANG ] D:\phpstudy_pro\WWW\riben_fast_shankou\application\admin\lang/zh-cn.php
+info
+[ 2025-10-16T10:50:35+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000098s ]
+[ info ] [ LOG ] INIT File
+info
+[ 2025-10-16T10:50:35+08:00 ][ info ] [ CACHE ] INIT File
+info
+[ 2025-10-16T10:50:35+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.003222s ]
+info
+[ 2025-10-16T10:50:35+08:00 ][ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000736s ]
+info
+[ 2025-10-16T10:50:35+08:00 ][ info ] [ DB ] INIT mysql
+info
+[ 2025-10-16T10:50:39+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000098s ]
+[ info ] [ LOG ] INIT File
+info
+[ 2025-10-16T10:50:39+08:00 ][ info ] [ CACHE ] INIT File
+info
+[ 2025-10-16T10:50:39+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002730s ]
+info
+[ 2025-10-16T10:50:39+08:00 ][ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000593s ]
+info
+[ 2025-10-16T10:50:39+08:00 ][ info ] [ DB ] INIT mysql
+info
+[ 2025-10-16T10:50:39+08:00 ][ info ] [ LANG ] D:\phpstudy_pro\WWW\riben_fast_shankou\application\admin\lang/zh-cn.php
+info
+[ 2025-10-16T11:24:00+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000097s ]
+[ info ] [ LOG ] INIT File
+info
+[ 2025-10-16T11:24:00+08:00 ][ info ] [ CACHE ] INIT File
+info
+[ 2025-10-16T11:24:00+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.003234s ]
+info
+[ 2025-10-16T11:24:00+08:00 ][ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000719s ]
+info
+[ 2025-10-16T11:24:00+08:00 ][ info ] [ DB ] INIT mysql
+info
+[ 2025-10-16T11:24:00+08:00 ][ info ] [ DB ] INIT mysql
+info
+[ 2025-10-16T11:24:04+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000099s ]
+[ info ] [ LOG ] INIT File
+info
+[ 2025-10-16T11:24:04+08:00 ][ info ] [ CACHE ] INIT File
+info
+[ 2025-10-16T11:24:04+08:00 ][ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.002749s ]
+info
+[ 2025-10-16T11:24:04+08:00 ][ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000611s ]
+info
+[ 2025-10-16T11:24:04+08:00 ][ info ] [ DB ] INIT mysql
+info
+[ 2025-10-16T11:24:04+08:00 ][ info ] [ LANG ] D:\phpstudy_pro\WWW\riben_fast_shankou\application\admin\lang/zh-cn.php
+info

@@ -1,0 +1,229 @@
+---------------------------------------------------------------
+[ 2025-11-01T19:38:36+09:00 ] 60.93.72.16 GET mobilezone.minamoto2025.com/
+[运行时间：0.186784s] [吞吐率：5.35req/s] [内存消耗：820.48kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000067s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.003051s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000883s ]
+[ info ] [ LANG ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000012s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => '_ga=GA1.1.532912842.1753677880; _ga_0EEXQN7TVQ=GS2.1.s1754902391$o1$g0$t1754902391$j60$l0$h0; _ga_31M8V58570=GS2.1.s1754902391$o2$g0$t1754902391$j60$l0$h0',
+  'priority' => 'u=0, i',
+  'accept-language' => 'ja,en-US;q=0.9,en;q=0.8,zh-TW;q=0.7,zh;q=0.6',
+  'sec-fetch-dest' => 'document',
+  'sec-fetch-user' => '?1',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-site' => 'none',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+  'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'sec-ch-ua-platform' => '"macOS"',
+  'sec-ch-ua-mobile' => '?0',
+  'sec-ch-ua' => '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
+  'cache-control' => 'max-age=0',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '162.43.118.60',
+  'x-real-ip' => '60.93.72.16',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'mobilezone.minamoto2025.com',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '60.93.72.16',
+  'host' => 'mobilezone.minamoto2025.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.002255s ]
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000536s ]
+[ info ] [ LANG ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.001862s ]
+[ info ] [ RUN ] app\index\controller\Index->index[ /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/controller/Index.php ]
+[ info ] [ VIEW ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/view/index/index.html [ array (
+  0 => 'user',
+  1 => 'site',
+  2 => 'config',
+  3 => 'userInfo',
+  4 => 'webController',
+  5 => 'webAction',
+  6 => 'sns',
+  7 => 'goodsCategory',
+  8 => 'goodsCategoryTree',
+  9 => 'lunbo',
+  10 => 'goods',
+  11 => 'news',
+  12 => 'buy_way',
+  13 => 'select_reason',
+  14 => 'title',
+) ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-01T19:38:40+09:00 ] 60.93.72.16 GET mobilezone.minamoto2025.com/
+[运行时间：0.008667s] [吞吐率：115.38req/s] [内存消耗：481.62kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000024s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000370s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000041s ]
+[ info ] [ LANG ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000012s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => '_ga=GA1.1.532912842.1753677880; _ga_0EEXQN7TVQ=GS2.1.s1754902391$o1$g0$t1754902391$j60$l0$h0; _ga_31M8V58570=GS2.1.s1754902391$o2$g0$t1754902391$j60$l0$h0',
+  'priority' => 'u=0, i',
+  'accept-language' => 'ja,en-US;q=0.9,en;q=0.8,zh-TW;q=0.7,zh;q=0.6',
+  'sec-fetch-dest' => 'document',
+  'sec-fetch-user' => '?1',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-site' => 'none',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+  'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'sec-ch-ua-platform' => '"macOS"',
+  'sec-ch-ua-mobile' => '?0',
+  'sec-ch-ua' => '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
+  'cache-control' => 'no-cache',
+  'pragma' => 'no-cache',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '162.43.118.60',
+  'x-real-ip' => '60.93.72.16',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'mobilezone.minamoto2025.com',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '60.93.72.16',
+  'host' => 'mobilezone.minamoto2025.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000056s ]
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000048s ]
+[ info ] [ LANG ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000198s ]
+[ info ] [ RUN ] app\index\controller\Index->index[ /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/controller/Index.php ]
+[ info ] [ VIEW ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/view/index/index.html [ array (
+  0 => 'user',
+  1 => 'site',
+  2 => 'config',
+  3 => 'userInfo',
+  4 => 'webController',
+  5 => 'webAction',
+  6 => 'sns',
+  7 => 'goodsCategory',
+  8 => 'goodsCategoryTree',
+  9 => 'lunbo',
+  10 => 'goods',
+  11 => 'news',
+  12 => 'buy_way',
+  13 => 'select_reason',
+  14 => 'title',
+) ]
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2025-11-01T19:39:04+09:00 ] 60.93.72.16 GET mobilezone.minamoto2025.com/
+[运行时间：0.129851s] [吞吐率：7.70req/s] [内存消耗：481.57kb] [文件加载：84]
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000117s ]
+[ info ] [ CACHE ] INIT File
+[ info ] [ BEHAVIOR ] Run Closure @app_init [ RunTime:0.000379s ]
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_init [ RunTime:0.000047s ]
+[ info ] [ LANG ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/thinkphp/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @app_dispatch [ RunTime:0.000017s ]
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => '_ga=GA1.1.532912842.1753677880; _ga_0EEXQN7TVQ=GS2.1.s1754902391$o1$g0$t1754902391$j60$l0$h0; _ga_31M8V58570=GS2.1.s1754902391$o2$g0$t1754902391$j60$l0$h0',
+  'priority' => 'u=0, i',
+  'accept-language' => 'ja,en-US;q=0.9,en;q=0.8,zh-TW;q=0.7,zh;q=0.6',
+  'referer' => 'https://mobilezone.minamoto2025.com/',
+  'sec-fetch-dest' => 'document',
+  'sec-fetch-user' => '?1',
+  'sec-fetch-mode' => 'navigate',
+  'sec-fetch-site' => 'same-origin',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+  'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'sec-ch-ua-platform' => '"macOS"',
+  'sec-ch-ua-mobile' => '?0',
+  'sec-ch-ua' => '"Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"',
+  'connection' => 'close',
+  'x-file-type' => 'normal',
+  'x-ua-device' => 'pc',
+  'x-failure-cache-time' => '0',
+  'x-accel-expires' => '60',
+  'x-wp-access' => '0',
+  'x-php-fpm-version' => '74',
+  'x-server-address' => '162.43.118.60',
+  'x-real-ip' => '60.93.72.16',
+  'x-forwarded-ssl' => 'on',
+  'x-forwarded-port' => '443',
+  'x-forwarded-host' => 'mobilezone.minamoto2025.com',
+  'x-forwarded-proto' => 'https',
+  'x-forwarded-for' => '60.93.72.16',
+  'host' => 'mobilezone.minamoto2025.com',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/lang/zh-cn.php
+[ info ] [ BEHAVIOR ] Run app\common\behavior\Common @module_init [ RunTime:0.000106s ]
+[ info ] [ BEHAVIOR ] Run \addons\summernote\Summernote @config_init [ RunTime:0.000089s ]
+[ info ] [ LANG ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/lang/zh-cn/index.php
+[ info ] [ DB ] INIT mysql
+[ info ] [ BEHAVIOR ] Run \addons\epay\Epay @action_begin [ RunTime:0.000189s ]
+[ info ] [ RUN ] app\index\controller\Index->index[ /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/controller/Index.php ]
+[ info ] [ VIEW ] /home/liyang/minamoto2025.com/public_html/mobilezone.minamoto2025.com/application/index/view/index/index.html [ array (
+  0 => 'user',
+  1 => 'site',
+  2 => 'config',
+  3 => 'userInfo',
+  4 => 'webController',
+  5 => 'webAction',
+  6 => 'sns',
+  7 => 'goodsCategory',
+  8 => 'goodsCategoryTree',
+  9 => 'lunbo',
+  10 => 'goods',
+  11 => 'news',
+  12 => 'buy_way',
+  13 => 'select_reason',
+  14 => 'title',
+) ]
+[ info ] [ LOG ] INIT File
