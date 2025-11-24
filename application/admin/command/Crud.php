@@ -87,7 +87,7 @@ class Crud extends Command
     ];
 
     /**
-     * 受保护的系统表, crud不会生效
+     * 保護されたシステムテーブル, crudは有効になりません
      */
     protected $systemTables = [
         'admin',
@@ -108,69 +108,69 @@ class Crud extends Command
     ];
 
     /**
-     * Selectpage搜索字段关联
+     * Selectpage検索フィールドの関連付け
      */
     protected $fieldSelectpageMap = [
         'nickname' => ['user_id', 'user_ids', 'admin_id', 'admin_ids']
     ];
 
     /**
-     * Enum类型识别为单选框的结尾字符,默认会识别为单选下拉列表
+     * Enumタイプをラジオボタンと判定する末尾文字,デフォルトでは単一選択ドロップダウンとして認識されます
      */
     protected $enumRadioSuffix = ['data', 'state', 'status'];
 
     /**
-     * Set类型识别为复选框的结尾字符,默认会识别为多选下拉列表
+     * Setタイプをチェックボックスと判定する末尾文字,デフォルトでは複数選択ドロップダウンとして認識されます
      */
     protected $setCheckboxSuffix = ['data', 'state', 'status'];
 
     /**
-     * Int类型识别为日期时间的结尾字符,默认会识别为日期文本框
+     * Intタイプを日時と判定する末尾文字,デフォルトでは日付テキストボックスとして認識されます
      */
     protected $intDateSuffix = ['time'];
 
     /**
-     * 开关后缀
+     * スイッチ用サフィックス
      */
     protected $switchSuffix = ['switch'];
 
     /**
-     * 富文本后缀
+     * リッチテキスト接尾辞
      */
     protected $editorSuffix = ['content'];
 
     /**
-     * 城市后缀
+     * 都市接尾辞
      */
     protected $citySuffix = ['city'];
 
     /**
-     * 时间区间后缀
+     * 時間範囲接尾辞
      */
     protected $rangeSuffix = ['range'];
 
     /**
-     * JSON后缀
+     * JSONサフィックス
      */
     protected $jsonSuffix = ['json', 'array'];
 
     /**
-     * 标签后缀
+     * タグ接尾辞
      */
     protected $tagSuffix = ['tag', 'tags'];
 
     /**
-     * Selectpage对应的后缀
+     * Selectpage対応する接尾辞
      */
     protected $selectpageSuffix = ['_id', '_ids'];
 
     /**
-     * Selectpage多选对应的后缀
+     * Selectpage複数選択用の対応接尾辞
      */
     protected $selectpagesSuffix = ['_ids'];
 
     /**
-     * 以指定字符结尾的字段格式化函数
+     * 指定文字で終わるフィールドのフォーマット関数
      */
     protected $fieldFormatterSuffix = [
         'status' => ['type' => ['varchar', 'enum'], 'name' => 'status'],
@@ -189,61 +189,61 @@ class Crud extends Command
     ];
 
     /**
-     * 识别为图片字段
+     * 画像フィールドとして識別
      */
     protected $imageField = ['image', 'images', 'avatar', 'avatars'];
 
     /**
-     * 识别为文件字段
+     * ファイルフィールドとして識別
      */
     protected $fileField = ['file', 'files'];
 
     /**
-     * 保留字段
+     * 予約フィールド
      */
     protected $reservedField = ['admin_id'];
 
     /**
-     * 排除字段
+     * 除外フィールド
      */
     protected $ignoreFields = [];
 
     /**
-     * 排序字段
+     * ソートフィールド
      */
     protected $sortField = 'weigh';
 
     /**
-     * 筛选字段
+     * フィルターフィールド
      * @var string
      */
     protected $headingFilterField = 'status';
 
     /**
-     * 添加时间字段
+     * 作成時刻フィールド
      * @var string
      */
     protected $createTimeField = 'createtime';
 
     /**
-     * 更新时间字段
+     * 更新時間フィールド
      * @var string
      */
     protected $updateTimeField = 'updatetime';
 
     /**
-     * 软删除时间字段
+     * ソフト削除時刻フィールド
      * @var string
      */
     protected $deleteTimeField = 'deletetime';
 
     /**
-     * 编辑器的Class
+     * エディターのClass
      */
     protected $editorClass = 'editor';
 
     /**
-     * langList的key最长字节数
+     * langListのkey最長バイト数
      */
     protected $fieldMaxLen = 0;
 
@@ -291,24 +291,24 @@ class Crud extends Command
     protected function execute(Input $input, Output $output)
     {
         $adminPath = dirname(__DIR__) . DS;
-        //数据库
+        //データベース
         $db = $input->getOption('db');
-        //表名
+        //テーブル名
         $table = $input->getOption('table') ?: '';
-        //自定义控制器
+        //カスタムコントローラー
         $controller = $input->getOption('controller');
-        //自定义模型
+        //カスタムモデル
         $model = $input->getOption('model');
         $model = $model ? $model : $controller;
-        //验证器类
+        //バリデーションクラス
         $validate = $model;
-        //自定义显示字段
+        //カスタム表示フィールド
         $fields = $input->getOption('fields');
-        //强制覆盖
+        //強制上書き
         $force = $input->getOption('force');
-        //是否为本地model,为0时表示为全局model将会把model放在app/common/model中
+        //是否ための本地model,ための0时表示ための全局model配置するmodelに配置app/common/model中
         $local = $input->getOption('local');
-        //是否启用导入功能
+        //インポート機能を有効にするかどうか
         $import = $input->getOption('import');
 
         if (!$table) {
@@ -316,55 +316,55 @@ class Crud extends Command
         }
 
 
-        //是否生成菜单
+        //メニューを生成するかどうか
         $menu = $input->getOption("menu");
-        //关联表
+        //関連テーブル
         $relation = $input->getOption('relation');
-        //自定义关联表模型
+        //カスタム関連テーブルモデル
         $relationModels = $input->getOption('relationmodel');
-        //模式
+        //モード
         $relationMode = $mode = $input->getOption('relationmode');
-        //外键
+        //外部キー
         $relationForeignKey = $input->getOption('relationforeignkey');
-        //主键
+        //主キー
         $relationPrimaryKey = $input->getOption('relationprimarykey');
-        //关联表显示字段
+        //関連テーブル表示フィールド
         $relationFields = $input->getOption('relationfields');
-        //关联表显示字段
+        //関連テーブル表示フィールド
         $relationController = $input->getOption('relationcontroller');
-        //复选框后缀
+        //チェックボックス接尾辞
         $setcheckboxsuffix = $input->getOption('setcheckboxsuffix');
-        //单选框后缀
+        //ラジオボタン接尾辞
         $enumradiosuffix = $input->getOption('enumradiosuffix');
-        //图片后缀
+        //画像接尾辞
         $imagefield = $input->getOption('imagefield');
-        //文件后缀
+        //ファイル接尾辞
         $filefield = $input->getOption('filefield');
-        //标签后缀
+        //タグ接尾辞
         $tagsuffix = $input->getOption('tagsuffix');
-        //日期后缀
+        //日付接尾辞
         $intdatesuffix = $input->getOption('intdatesuffix');
-        //开关后缀
+        //スイッチ用サフィックス
         $switchsuffix = $input->getOption('switchsuffix');
-        //富文本编辑器
+        //リッチテキストエディター
         $editorsuffix = $input->getOption('editorsuffix');
-        //城市后缀
+        //都市接尾辞
         $citysuffix = $input->getOption('citysuffix');
-        //JSON配置后缀
+        //JSON設定接尾辞
         $jsonsuffix = $input->getOption('jsonsuffix');
-        //selectpage后缀
+        //selectpageサフィックス
         $selectpagesuffix = $input->getOption('selectpagesuffix');
-        //selectpage多选后缀
+        //selectpage複数選択接尾辞
         $selectpagessuffix = $input->getOption('selectpagessuffix');
-        //排除字段
+        //除外フィールド
         $ignoreFields = $input->getOption('ignorefields');
-        //排序字段
+        //ソートフィールド
         $sortfield = $input->getOption('sortfield');
-        //顶部筛选过滤字段
+        //上部フィルター用フィールド
         $headingfilterfield = $input->getOption('headingfilterfield');
-        //固定列数量
+        //固定列数
         $fixedcolumns = $input->getOption('fixedcolumns');
-        //编辑器Class
+        //エディターClass
         $editorclass = $input->getOption('editorclass');
         if ($setcheckboxsuffix) {
             $this->setCheckboxSuffix = $setcheckboxsuffix;
@@ -421,17 +421,17 @@ class Crud extends Command
         $dbname = Config::get($db . '.database');
         $prefix = Config::get($db . '.prefix');
 
-        //系统表无法生成，防止后台错乱
+        //システムテーブルは生成できません，バックエンドの乱れを防止するため
         if (in_array(str_replace($prefix, "", $table), $this->systemTables)) {
             throw new Exception('system table can\'t be crud');
         }
 
-        //模块
+        //モジュール
         $moduleName = 'admin';
         $modelModuleName = $local ? $moduleName : 'common';
         $validateModuleName = $local ? $moduleName : 'common';
 
-        //检查主表
+        //メインテーブルを確認
         $modelName = $table = stripos($table, $prefix) === 0 ? substr($table, strlen($prefix)) : $table;
         $modelTableType = 'table';
         $modelTableTypeName = $modelTableName = $modelName;
@@ -450,7 +450,7 @@ class Crud extends Command
         }
 
         $relations = [];
-        //检查关联表
+        //関連テーブルを確認
         if ($relation) {
             $relationArr = $relation;
             $relations = [];
@@ -474,48 +474,48 @@ class Crud extends Command
                 list($relationNamespace, $relationName, $relationFile) = $this->getModelData($modelModuleName, $relationModel, $relationName);
 
                 $relations[] = [
-                    //关联表基础名
+                    //関連テーブルのベース名
                     'relationName'          => $relationName,
-                    //关联表类命名空间
+                    //関連テーブルクラスの名前空間
                     'relationNamespace'     => $relationNamespace,
-                    //关联模型名
+                    //関連モデル名
                     'relationModel'         => $relationModel,
-                    //关联文件
+                    //関連ファイル
                     'relationFile'          => $relationFile,
-                    //关联表名称
+                    //関連テーブル名
                     'relationTableName'     => $relationTableName,
-                    //关联表信息
+                    //関連テーブル情報
                     'relationTableInfo'     => $relationTableInfo,
-                    //关联模型表类型(name或table)
+                    //関連モデルテーブルタイプ(nameまたはtable)
                     'relationTableType'     => $relationTableType,
-                    //关联模型表类型名称
+                    //関連モデルテーブルタイプ名
                     'relationTableTypeName' => $relationTableTypeName,
-                    //关联模式
+                    //関連モード
                     'relationFields'        => isset($relationFields[$index]) ? explode(',', $relationFields[$index]) : [],
-                    //关联模式
+                    //関連モード
                     'relationMode'          => isset($relationMode[$index]) ? $relationMode[$index] : 'belongsto',
-                    //关联模型控制器
+                    //関連モデルコントローラー
                     'relationController'    => isset($relationController[$index]) ? $relationController[$index] : '',
-                    //关联表外键
+                    //関連テーブル外部キー
                     'relationForeignKey'    => isset($relationForeignKey[$index]) ? $relationForeignKey[$index] : '',
-                    //关联表主键
+                    //関連テーブル主キー
                     'relationPrimaryKey'    => isset($relationPrimaryKey[$index]) ? $relationPrimaryKey[$index] : '',
                 ];
             }
         }
 
-        //根据表名匹配对应的Fontawesome图标
+        //テーブル名に応じて対応するFontawesomeアイコン
         $iconPath = ROOT_PATH . str_replace('/', DS, '/public/assets/libs/font-awesome/less/variables.less');
         $iconName = is_file($iconPath) && stripos(file_get_contents($iconPath), '@fa-var-' . $table . ':') ? 'fa fa-' . $table : 'fa fa-circle-o';
 
-        //控制器
+        //コントローラー
         list($controllerNamespace, $controllerName, $controllerFile, $controllerArr) = $this->getControllerData($moduleName, $controller, $table);
-        //模型
+        //モデル
         list($modelNamespace, $modelName, $modelFile, $modelArr) = $this->getModelData($modelModuleName, $model, $table);
-        //验证器
+        //バリデーター
         list($validateNamespace, $validateName, $validateFile, $validateArr) = $this->getValidateData($validateModuleName, $validate, $table);
 
-        //处理基础文件名，取消所有下划线并转换为小写
+        //ベースファイル名を処理，すべてのアンダースコアを削除して小文字に変換
         $baseNameArr = $controllerArr;
         $baseFileName = Loader::parseName(array_pop($baseNameArr), 0);
         array_push($baseNameArr, $baseFileName);
@@ -523,14 +523,14 @@ class Crud extends Command
         //$controllerUrl = strtolower(implode('/', $baseNameArr));
         $controllerUrl = $this->getControllerUrl($moduleName, $baseNameArr);
 
-        //视图文件
+        //ビュー ファイル
         $viewArr = $controllerArr;
         $lastValue = array_pop($viewArr);
         $viewArr[] = Loader::parseName($lastValue, 0);
         array_unshift($viewArr, 'view');
         $viewDir = $adminPath . strtolower(implode(DS, $viewArr)) . DS;
 
-        //最终将生成的文件路径
+        //最終的に生成されるファイルパス
         $javascriptFile = ROOT_PATH . 'public' . DS . 'assets' . DS . 'js' . DS . 'backend' . DS . $controllerBaseName . '.js';
         $addFile = $viewDir . 'add.html';
         $editFile = $viewDir . 'edit.html';
@@ -538,7 +538,7 @@ class Crud extends Command
         $recyclebinFile = $viewDir . 'recyclebin.html';
         $langFile = $adminPath . 'lang' . DS . Lang::detect() . DS . $controllerBaseName . '.php';
 
-        //是否为删除模式
+        //削除モードかどうか
         $delete = $input->getOption('delete');
         if ($delete) {
             $readyFiles = [$controllerFile, $modelFile, $validateFile, $addFile, $editFile, $indexFile, $recyclebinFile, $langFile, $javascriptFile];
@@ -556,7 +556,7 @@ class Crud extends Command
                 if (file_exists($v)) {
                     unlink($v);
                 }
-                //删除空文件夹
+                //空のフォルダーを削除
                 switch ($v) {
                     case $modelFile:
                         $this->removeEmptyBaseDir($v, $modelArr);
@@ -575,7 +575,7 @@ class Crud extends Command
                 }
             }
 
-            //继续删除菜单
+            //メニューを続けて削除
             if ($menu) {
                 exec("php think menu -c {$controllerUrl} -d 1 -f 1");
             }
@@ -584,35 +584,35 @@ class Crud extends Command
             return;
         }
 
-        //非覆盖模式时如果存在控制器文件则报错
+        //上書きモードでない場合、コントローラーファイルが存在するとエラーを報告
         if (is_file($controllerFile) && !$force) {
             throw new Exception("controller already exists!\nIf you need to rebuild again, use the parameter --force=true ");
         }
 
-        //非覆盖模式时如果存在模型文件则报错
+        //上書きモードでない場合、モデルファイルが存在するとエラーを報告
         if (is_file($modelFile) && !$force) {
             throw new Exception("model already exists!\nIf you need to rebuild again, use the parameter --force=true ");
         }
 
-        //非覆盖模式时如果存在验证文件则报错
+        //上書きモードでない場合、バリデーションファイルが存在するとエラーを報告
         if (is_file($validateFile) && !$force) {
             throw new Exception("validate already exists!\nIf you need to rebuild again, use the parameter --force=true ");
         }
 
         require $adminPath . 'common.php';
 
-        //从数据库中获取表字段信息
+        //データベースからテーブルフィールド情報を取得
         $sql = "SELECT * FROM `information_schema`.`columns` "
             . "WHERE TABLE_SCHEMA = ? AND table_name = ? "
             . "ORDER BY ORDINAL_POSITION";
-        //加载主表的列
+        //メインテーブルの列を読み込む
         $columnList = $dbconnect->query($sql, [$dbname, $modelTableName]);
         $fieldArr = [];
         foreach ($columnList as $k => $v) {
             $fieldArr[] = $v['COLUMN_NAME'];
         }
 
-        // 加载关联表的列
+        // 関連テーブルの列を読み込む
         foreach ($relations as $index => &$relation) {
             $relationColumnList = $dbconnect->query($sql, [$dbname, $relation['relationTableName']]);
 
@@ -628,11 +628,11 @@ class Crud extends Command
                     }
                 }
             }
-            // 如果主键为空
+            // 主キーが空の場合
             if (!$relation['relationPrimaryKey']) {
                 throw new Exception('Relation Primary key not found!');
             }
-            // 如果主键不在表字段中
+            // 主キーがテーブルのフィールドに存在しない場合
             if (!in_array($relation['relationPrimaryKey'], $relationFieldList)) {
                 throw new Exception('Relation Primary key not found in table!');
             }
@@ -666,7 +666,7 @@ class Crud extends Command
 
         $order = $priKey;
 
-        //如果是关联模型
+        //関連モデルである場合
         foreach ($relations as $index => &$relation) {
             if ($relation['relationMode'] == 'hasone') {
                 $relationForeignKey = $relation['relationForeignKey'] ?: $table . "_id";
@@ -723,32 +723,32 @@ class Crud extends Command
                 $importHtml = '<a href="javascript:;" class="btn btn-danger btn-import {:$auth->check(\'' . $controllerUrl . '/import\')?\'\':\'hide\'}" title="{:__(\'Import\')}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="fa fa-upload"></i> {:__(\'Import\')}</a>';
             }
 
-            //循环所有字段,开始构造视图的HTML和JS信息
+            //すべてのフィールドをループ,ビューの構築を開始HTMLとJS情報
             foreach ($columnList as $k => $v) {
                 $field = $v['COLUMN_NAME'];
                 $itemArr = [];
-                // 这里构建Enum和Set类型的列表数据
+                // ここで構築するEnumとSet型のリストデータ
                 if (in_array($v['DATA_TYPE'], ['enum', 'set', 'tinyint']) || $this->headingFilterField == $field) {
                     if ($v['DATA_TYPE'] !== 'tinyint') {
                         $itemArr = substr($v['COLUMN_TYPE'], strlen($v['DATA_TYPE']) + 1, -1);
                         $itemArr = explode(',', str_replace("'", '', $itemArr));
                     }
                     $itemArr = $this->getItemArray($itemArr, $field, $v['COLUMN_COMMENT']);
-                    //如果类型为tinyint且有使用备注数据
+                    //タイプがtinyintかつ備考データを使用している場合
                     if ($itemArr && !in_array($v['DATA_TYPE'], ['enum', 'set'])) {
                         $v['DATA_TYPE'] = 'enum';
                     }
                 }
-                // 语言列表
+                // 言語リスト
                 if ($v['COLUMN_COMMENT'] != '') {
                     $langList[] = $this->getLangItem($field, $v['COLUMN_COMMENT']);
                 }
                 $inputType = '';
-                //保留字段不能修改和添加
+                //予約フィールドは編集および追加不可
                 if ($v['COLUMN_KEY'] != 'PRI' && !in_array($field, $this->reservedField) && !in_array($field, $this->ignoreFields)) {
                     $inputType = $this->getFieldType($v);
 
-                    // 如果是number类型时增加一个步长
+                    // もし〜ならnumberタイプが number の場合はステップ値を追加
                     $step = $inputType == 'number' && $v['NUMERIC_SCALE'] > 0 ? "0." . str_repeat(0, $v['NUMERIC_SCALE'] - 1) . "1" : 0;
 
                     $attrArr = ['id' => "c-{$field}"];
@@ -756,12 +756,12 @@ class Crud extends Command
                     $fieldName = "row[{$field}]";
                     $defaultValue = $v['COLUMN_DEFAULT'];
                     $editValue = "{\$row.{$field}|htmlentities}";
-                    // 如果默认值非null,则是一个必选项
+                    // デフォルト値がnull,でない場合は必須項目となる
                     if ($v['IS_NULLABLE'] == 'NO') {
                         $attrArr['data-rule'] = 'required';
                     }
 
-                    //如果字段类型为无符号型，则设置<input min=0>
+                    //フィールドタイプが符号なし型の場合，を設定する<input min=0>
                     if (stripos($v['COLUMN_TYPE'], 'unsigned') !== false) {
                         $attrArr['min'] = 0;
                     }
@@ -778,7 +778,7 @@ class Crud extends Command
                         $this->getEnum($getEnumArr, $controllerAssignList, $field, $itemArr, $v['DATA_TYPE'] == 'set' ? 'multiple' : 'select');
 
                         $itemArr = $this->getLangArray($itemArr, false);
-                        //添加一个获取器
+                        //アクセサを追加
                         $this->getAttr($getAttrArr, $field, $v['DATA_TYPE'] == 'set' ? 'multiple' : 'select');
                         if ($v['DATA_TYPE'] == 'set') {
                             $this->setAttr($setAttrArr, $field, $inputType);
@@ -839,7 +839,7 @@ class Crud extends Command
 
                         $this->getEnum($getEnumArr, $controllerAssignList, $field, $itemArr, $inputType);
                         $itemArr = $this->getLangArray($itemArr, false);
-                        //添加一个获取器
+                        //アクセサを追加
                         $this->getAttr($getAttrArr, $field, $inputType);
                         if ($inputType == 'checkbox') {
                             $this->setAttr($setAttrArr, $field, $inputType);
@@ -896,7 +896,7 @@ class Crud extends Command
                         $formEditElement = $this->getReplacedStub('html/' . $templateName, array_merge($commonFields, ['fieldValue' => $editValue]));
                     } else {
                         $search = $replace = '';
-                        //特殊字段为关联搜索
+                        //特殊フィールドは関連検索用
                         if ($this->isMatchSuffix($field, $this->selectpageSuffix)) {
                             $inputType = 'text';
                             $defaultValue = '';
@@ -912,7 +912,7 @@ class Crud extends Command
                             }
                             $selectpageController = str_replace('_', '/', $selectpageTable);
                             $attrArr['data-source'] = $selectpageController . "/index";
-                            //如果是类型表需要特殊处理下
+                            //種類テーブルの場合は特別な処理が必要
                             if ($selectpageController == 'category') {
                                 $attrArr['data-source'] = 'category/selectpage';
                                 $attrArr['data-params'] = '##replacetext##';
@@ -951,23 +951,23 @@ class Crud extends Command
                                 }
                             }
                         }
-                        //因为有自动完成可输入其它内容
+                        //オートコンプリートがあるため他の内容も入力可能
                         $step = array_intersect($cssClassArr, ['selectpage']) ? 0 : $step;
                         $attrArr['class'] = implode(' ', $cssClassArr);
                         $isUpload = false;
                         if ($this->isMatchSuffix($field, array_merge($this->imageField, $this->fileField))) {
                             $isUpload = true;
                         }
-                        //如果是步长则加上步长
+                        //ステップ値の場合はステップ値を加算
                         if ($step) {
                             $attrArr['step'] = $step;
                         }
-                        //如果是图片加上个size
+                        //画像の場合はsize
                         if ($isUpload) {
                             $attrArr['size'] = 50;
                         }
 
-                        //字段默认值判断
+                        //フィールドのデフォルト値判定
                         if ('NULL' == $defaultValue || "''" == $defaultValue) {
                             $defaultValue = '';
                         }
@@ -978,20 +978,20 @@ class Crud extends Command
                             $formAddElement = str_replace($search, $replace, $formAddElement);
                             $formEditElement = str_replace($search, $replace, $formEditElement);
                         }
-                        //如果是图片或文件
+                        //画像またはファイルの場合
                         if ($isUpload) {
                             $formAddElement = $this->getImageUpload($field, $formAddElement);
                             $formEditElement = $this->getImageUpload($field, $formEditElement);
                         }
                     }
-                    //构造添加和编辑HTML信息
+                    //追加と編集用のHTML情報
                     $addList[] = $this->getFormGroup($field, $formAddElement);
                     $editList[] = $this->getFormGroup($field, $formEditElement);
                 }
 
-                //过滤text类型字段
+                //フィルタリングtextタイプフィールド
                 if ($v['DATA_TYPE'] != 'text' && $inputType != 'fieldlist') {
-                    //主键
+                    //主キー
                     if ($v['COLUMN_KEY'] == 'PRI' && !$priDefined) {
                         $priDefined = true;
                         $javascriptList[] = "{checkbox: true}";
@@ -1001,25 +1001,25 @@ class Crud extends Command
                         continue;
                     }
                     if (!$fields || in_array($field, explode(',', $fields))) {
-                        //构造JS列信息
+                        //構築JS列情報
                         $javascriptList[] = $this->getJsColumn($field, $v['DATA_TYPE'], $inputType && in_array($inputType, ['select', 'checkbox', 'radio']) ? '_text' : '', $itemArr, $v);
                     }
                     if ($this->headingFilterField && $this->headingFilterField == $field && $itemArr) {
                         $headingHtml = $this->getReplacedStub('html/heading-html', ['field' => $field, 'fieldName' => Loader::parseName($field, 1, false)]);
                         $multipleHtml = $this->getReplacedStub('html/multiple-html', ['field' => $field, 'fieldName' => Loader::parseName($field, 1, false), 'controllerUrl' => $controllerUrl]);
                     }
-                    //排序方式,如果有指定排序字段,否则按主键排序
+                    //ソート方法,ソートフィールドが指定されている場合,指定がない場合は主キーでソート
                     $order = $field == $this->sortField ? $this->sortField : $order;
                 }
             }
 
-            //循环关联表,追加语言包和JS列
+            //関連テーブルをループ,言語パックとJS列
             foreach ($relations as $index => $relation) {
                 if ($relation['relationMode'] == 'hasmany') {
                     $relationFieldText = ucfirst(strtolower($relation['relationName'])) . ' List';
-                    // 语言列表
+                    // 言語リスト
                     if ($relation['relationTableInfo']['Comment']) {
-                        $langList[] = $this->getLangItem($relationFieldText, rtrim($relation['relationTableInfo']['Comment'], "表") . "列表");
+                        $langList[] = $this->getLangItem($relationFieldText, rtrim($relation['relationTableInfo']['Comment'], "テーブル") . "列テーブル");
                     }
 
                     $relationTableName = $relation['relationTableName'];
@@ -1034,41 +1034,41 @@ class Crud extends Command
                     $realtionControllerArr[] = $relation['relationForeignKey'] . '/{ids}';
                     $relationControllerUrl = implode('/', $realtionControllerArr);
 
-                    //构造JS列信息
+                    //構築JS列情報
                     $operateButtonList[] = "{name: 'addtabs',title: __('{$relationFieldText}'),text: __('{$relationFieldText}'),classname: 'btn btn-xs btn-info btn-dialog',icon: 'fa fa-list',url: '" . $relationControllerUrl . "'}";
                     //echo "php think crud -t {$relation['relationTableName']} -c {$relation['relationController']} -m {$relation['relationModel']} -i " . implode(',', $relation['relationFields']);
-                    //不存在关联表控制器的情况下才进行生成
+                    //関連テーブルのコントローラーが存在しない場合のみ生成を行う
                     if (!is_file($realtionControllerFile)) {
                         exec("php think crud -t {$relation['relationTableName']} -c {$relation['relationController']} -m {$relation['relationModel']} -i " . implode(',', $relation['relationFields']));
                     }
                 }
                 foreach ($relation['relationColumnList'] as $k => $v) {
-                    // 不显示的字段直接过滤掉
+                    // 非表示フィールドはそのまま除外
                     if ($relation['relationFields'] && !in_array($v['COLUMN_NAME'], $relation['relationFields'])) {
                         continue;
                     }
 
                     $relationField = strtolower($relation['relationName']) . "." . $v['COLUMN_NAME'];
-                    // 语言列表
+                    // 言語リスト
                     if ($v['COLUMN_COMMENT'] != '') {
                         $langList[] = $this->getLangItem($relationField, $v['COLUMN_COMMENT']);
                     }
 
-                    //过滤text类型字段
+                    //フィルタリングtextタイプフィールド
                     if ($v['DATA_TYPE'] != 'text') {
-                        //构造JS列信息
+                        //構築JS列情報
                         $javascriptList[] = $this->getJsColumn($relationField, $v['DATA_TYPE'], '', [], $v);
                     }
                 }
             }
 
-            //JS最后一列加上操作列
+            //JS最後の列に操作列を追加
             $javascriptList[] = str_repeat(" ", 24) . "{field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, " . ($operateButtonList ? "buttons: [" . implode(',', $operateButtonList) . "], " : "") . "formatter: Table.api.formatter.operate}";
             $addList = implode("\n", array_filter($addList));
             $editList = implode("\n", array_filter($editList));
             $javascriptList = implode(",\n", array_filter($javascriptList));
             $langList = implode(",\n", array_filter($langList));
-            //数组等号对齐
+            //配列のイコールを揃える
             $langList = array_filter(explode(",\n", $langList . ",\n"));
             foreach ($langList as &$line) {
                 if (preg_match("/^\s+'([^']+)'\s*=>\s*'([^']+)'\s*/is", $line, $matches)) {
@@ -1084,9 +1084,9 @@ class Crud extends Command
                 $fixedColumnsJs = "\n" . str_repeat(" ", 16) . "fixedColumns: true,\n" . str_repeat(" ", 16) . ($fixedcolumns < 0 ? "fixedNumber" : "fixedRightNumber") . ": " . $fixedcolumns . ",";
             }
 
-            //表注释
+            //テーブルコメント
             $tableComment = $modelTableInfo ? $modelTableInfo['Comment'] : '';
-            $tableComment = mb_substr($tableComment, -1) == '表' ? mb_substr($tableComment, 0, -1) . '管理' : $tableComment;
+            $tableComment = mb_substr($tableComment, -1) == 'テーブル' ? mb_substr($tableComment, 0, -1) . '管理' : $tableComment;
 
             $modelInit = '';
             if ($priKey != $order) {
@@ -1141,39 +1141,39 @@ class Crud extends Command
                 'modelInit'               => $modelInit,
             ];
 
-            //如果使用关联模型
+            //関連モデルを使用する場合
             if ($relations) {
                 $relationWithList = $relationMethodList = $relationVisibleFieldList = [];
                 $relationKeyArr = ['hasone' => 'hasOne', 'belongsto' => 'belongsTo', 'hasmany' => 'hasMany'];
                 foreach ($relations as $index => $relation) {
-                    //需要构造关联的方法
+                    //関連付け用のメソッドを作成する必要があります
                     $relation['relationMethod'] = strtolower($relation['relationName']);
 
-                    //关联的模式
+                    //関連のモード
                     $relation['relationMode'] = strtolower($relation['relationMode']);
                     $relation['relationMode'] = array_key_exists($relation['relationMode'], $relationKeyArr) ? $relationKeyArr[$relation['relationMode']] : '';
 
-                    //关联字段
+                    //関連フィールド
                     $relation['relationPrimaryKey'] = $relation['relationPrimaryKey'] ? $relation['relationPrimaryKey'] : $priKey;
 
-                    //构造关联模型的方法
+                    //関連モデルを構築するメソッド
                     $relationMethodList[] = $this->getReplacedStub('mixins' . DS . 'modelrelationmethod' . ($relation['relationMode'] == 'hasMany' ? '-hasmany' : ''), $relation);
 
                     if ($relation['relationMode'] == 'hasMany') {
                         continue;
                     }
 
-                    //预载入的方法
+                    //プリロード用のメソッド
                     $relationWithList[] = $relation['relationMethod'];
 
                     unset($relation['relationColumnList'], $relation['relationFieldList'], $relation['relationTableInfo']);
 
-                    //如果设置了显示主表字段，则必须显式将关联表字段显示
+                    //メインテーブルの表示フィールドを設定している場合，関連テーブルのフィールドを明示的に表示する必要があります
                     if ($fields) {
                         $relationVisibleFieldList[] = "\$row->visible(['{$relation['relationMethod']}']);";
                     }
 
-                    //显示的字段
+                    //表示フィールド
                     if ($relation['relationFields']) {
                         $relationVisibleFieldList[] = "\$row->getRelation('" . $relation['relationMethod'] . "')->visible(['" . implode("','", $relation['relationFields']) . "']);";
                     }
@@ -1184,32 +1184,32 @@ class Crud extends Command
                 $data['relationVisibleFieldList'] = implode("\n\t\t\t\t", $relationVisibleFieldList);
 
                 if ($relationWithList) {
-                    //需要重写index方法
+                    //オーバーライドが必要ですindexメソッド
                     $data['controllerIndex'] = $this->getReplacedStub('controllerindex', $data);
                 }
             } elseif ($fields) {
                 $data = array_merge($data, ['relationWithList' => '', 'relationMethodList' => '', 'relationVisibleFieldList' => '']);
-                //需要重写index方法
+                //オーバーライドが必要ですindexメソッド
                 $data['controllerIndex'] = $this->getReplacedStub('controllerindex', $data);
             }
 
-            // 生成控制器文件
+            // コントローラーファイルを生成
             $this->writeToFile('controller', $data, $controllerFile);
-            // 生成模型文件
+            // モデルファイルを生成
             $this->writeToFile('model', $data, $modelFile);
 
             if ($relations) {
                 foreach ($relations as $i => $relation) {
                     $relation['modelNamespace'] = $relation['relationNamespace'];
                     if (!is_file($relation['relationFile'])) {
-                        // 生成关联模型文件
+                        // 関連モデルファイルを生成
                         $this->writeToFile('relationmodel', $relation, $relation['relationFile']);
                     }
                 }
             }
-            // 生成验证文件
+            // バリデーションファイルを生成
             $this->writeToFile('validate', $data, $validateFile);
-            // 生成视图文件
+            // ビュー文件を生成
             $this->writeToFile('add', $data, $addFile);
             $this->writeToFile('edit', $data, $editFile);
             $this->writeToFile('index', $data, $indexFile);
@@ -1219,15 +1219,15 @@ class Crud extends Command
                 $recyclebinTitleJs = $recyclebinTitle ? "\n                        {field: '{$recyclebinTitle}', title: __('" . (ucfirst($recyclebinTitle)) . "'), align: 'left'}," : '';
                 $data['recyclebinJs'] = $this->getReplacedStub('mixins/recyclebinjs', ['deleteTimeField' => $this->deleteTimeField, 'recyclebinTitleJs' => $recyclebinTitleJs, 'controllerUrl' => $controllerUrl]);
             }
-            // 生成JS文件
+            // 生成JSファイル
             $this->writeToFile('javascript', $data, $javascriptFile);
-            // 生成语言文件
+            // 言語ファイルを生成
             $this->writeToFile('lang', $data, $langFile);
         } catch (ErrorException $e) {
             throw new Exception("Code: " . $e->getCode() . "\nLine: " . $e->getLine() . "\nMessage: " . $e->getMessage() . "\nFile: " . $e->getFile());
         }
 
-        //继续生成菜单
+        //続けてメニューを生成
         if ($menu) {
             exec("php think menu -c {$controllerUrl}");
         }
@@ -1298,7 +1298,7 @@ EOD;
     }
 
     /**
-     * 移除相对的空目录
+     * 対応する空ディレクトリを削除
      * @param $parseFile
      * @param $parseArr
      * @return bool
@@ -1326,7 +1326,7 @@ EOD;
     }
 
     /**
-     * 获取控制器URL
+     * コントローラーを取得URL
      * @param string $moduleName
      * @param array  $baseNameArr
      * @return string
@@ -1337,7 +1337,7 @@ EOD;
             $temp = array_slice($baseNameArr, 0, $i + 1);
             $temp[$i] = ucfirst($temp[$i]);
             $controllerFile = APP_PATH . $moduleName . DS . 'controller' . DS . implode(DS, $temp) . '.php';
-            //检测父级目录同名控制器是否存在，存在则变更URL格式
+            //親ディレクトリに同名コントローラーが存在するか確認，存在する場合は変更URL形式
             if (is_file($controllerFile)) {
                 $baseNameArr = [implode('.', $baseNameArr)];
                 break;
@@ -1348,7 +1348,7 @@ EOD;
     }
 
     /**
-     * 获取控制器相关信息
+     * コントローラー関連情報を取得
      * @param $module
      * @param $controller
      * @param $table
@@ -1360,7 +1360,7 @@ EOD;
     }
 
     /**
-     * 获取模型相关信息
+     * モデル関連情報を取得
      * @param $module
      * @param $model
      * @param $table
@@ -1372,7 +1372,7 @@ EOD;
     }
 
     /**
-     * 获取验证器相关信息
+     * バリデーター関連情報を取得
      * @param $module
      * @param $validate
      * @param $table
@@ -1384,11 +1384,11 @@ EOD;
     }
 
     /**
-     * 获取已解析相关信息
-     * @param string $module 模块名称
-     * @param string $name   自定义名称
-     * @param string $table  数据表名
-     * @param string $type   解析类型，本例中为controller、model、validate
+     * 解析済み関連情報を取得
+     * @param string $module モジュール名
+     * @param string $name   カスタム名
+     * @param string $table  テーブル名
+     * @param string $type   解析タイプ，本例ではcontroller、model、validate
      * @return array
      */
     protected function getParseNameData($module, $name, $table, $type)
@@ -1404,7 +1404,7 @@ EOD;
         $parseName = ucfirst(array_pop($arr));
         $parseArr = $arr;
         array_push($parseArr, $parseName);
-        //类名不能为内部关键字
+        //クラス名は内部キーワードにはできません
         if (in_array(strtolower($parseName), $this->internalKeywords)) {
             throw new Exception('Unable to use internal variable:' . $parseName);
         }
@@ -1416,7 +1416,7 @@ EOD;
     }
 
     /**
-     * 写入到文件
+     * ファイルへ書き込み
      * @param string $name
      * @param array  $data
      * @param string $pathname
@@ -1437,7 +1437,7 @@ EOD;
     }
 
     /**
-     * 获取替换后的数据
+     * 置換後のデータを取得
      * @param string $name
      * @param array  $data
      * @return string
@@ -1464,7 +1464,7 @@ EOD;
     }
 
     /**
-     * 获取基础模板
+     * ベーステンプレートを取得
      * @param string $name
      * @return string
      */
@@ -1487,7 +1487,7 @@ EOD;
                         list($key, $value) = $valArr;
                         $itemArr[$field . ' ' . $key] = $value;
                         if ($this->headingFilterField == $field) {
-                            $itemArr['Set ' . $field . ' to ' . $key] = '设为' . $value;
+                            $itemArr['Set ' . $field . ' to ' . $key] = 'に設定すると' . $value;
                         }
                         $this->fieldMaxLen = strlen($field . ' ' . $key) > $this->fieldMaxLen ? strlen($field . ' ' . $key) : $this->fieldMaxLen;
                     }
@@ -1506,7 +1506,7 @@ EOD;
     }
 
     /**
-     * 读取数据和语言数组列表
+     * データと言語配列リストを読み込む
      * @param array   $arr
      * @param boolean $withTpl
      * @return array
@@ -1521,7 +1521,7 @@ EOD;
     }
 
     /**
-     * 将数据转换成带字符串
+     * データを文字列付きに変換する
      * @param array $arr
      * @return string
      */
@@ -1602,35 +1602,35 @@ EOD;
                 break;
         }
         $fieldsName = $v['COLUMN_NAME'];
-        // 指定后缀说明也是个时间字段
+        // 指定されたサフィックスは時間フィールドであることを示します
         if ($this->isMatchSuffix($fieldsName, $this->intDateSuffix)) {
             $inputType = 'datetime';
         }
-        // 指定后缀结尾且类型为enum,说明是个单选框
+        // 指定されたサフィックスで終わり、かつタイプがenum,ラジオボタンであることを示します
         if ($this->isMatchSuffix($fieldsName, $this->enumRadioSuffix) && $v['DATA_TYPE'] == 'enum') {
             $inputType = "radio";
         }
-        // 指定后缀结尾且类型为set,说明是个复选框
+        // 指定されたサフィックスで終わり、かつタイプがset,チェックボックスであることを示します
         if ($this->isMatchSuffix($fieldsName, $this->setCheckboxSuffix) && $v['DATA_TYPE'] == 'set') {
             $inputType = "checkbox";
         }
-        // 指定后缀结尾且类型为char或tinyint且长度为1,说明是个Switch复选框
+        // 指定されたサフィックスで終わり、かつタイプがcharまたはtinyintかつ長さが1,であることを示すSwitchチェックボックス
         if ($this->isMatchSuffix($fieldsName, $this->switchSuffix) && ($v['COLUMN_TYPE'] == 'tinyint(1)' || $v['COLUMN_TYPE'] == 'char(1)') && $v['COLUMN_DEFAULT'] !== '' && $v['COLUMN_DEFAULT'] !== null) {
             $inputType = "switch";
         }
-        // 指定后缀结尾城市选择框
+        // 指定されたサフィックスで終わる都市選択ボックス
         if ($this->isMatchSuffix($fieldsName, $this->citySuffix) && ($v['DATA_TYPE'] == 'varchar' || $v['DATA_TYPE'] == 'char')) {
             $inputType = "citypicker";
         }
-        // 指定后缀结尾城市选择框
+        // 指定されたサフィックスで終わる都市選択ボックス
         if ($this->isMatchSuffix($fieldsName, $this->rangeSuffix) && ($v['DATA_TYPE'] == 'varchar' || $v['DATA_TYPE'] == 'char')) {
             $inputType = "datetimerange";
         }
-        // 指定后缀结尾JSON配置
+        // 指定されたサフィックスで終わるJSON設定
         if ($this->isMatchSuffix($fieldsName, $this->jsonSuffix) && ($v['DATA_TYPE'] == 'varchar' || $v['DATA_TYPE'] == 'text')) {
             $inputType = "fieldlist";
         }
-        // 指定后缀结尾标签配置
+        // 指定されたサフィックスで終わるタグ設定
         if ($this->isMatchSuffix($fieldsName, $this->tagSuffix) && ($v['DATA_TYPE'] == 'varchar' || $v['DATA_TYPE'] == 'text')) {
             $inputType = "tagsinput";
         }
@@ -1638,9 +1638,9 @@ EOD;
     }
 
     /**
-     * 判断是否符合指定后缀
-     * @param string $field     字段名称
-     * @param mixed  $suffixArr 后缀
+     * 指定されたサフィックスに合致するかどうかを判定
+     * @param string $field     フィールド名
+     * @param mixed  $suffixArr サフィックス
      * @return boolean
      */
     protected function isMatchSuffix($field, $suffixArr)
@@ -1655,7 +1655,7 @@ EOD;
     }
 
     /**
-     * 获取表单分组数据
+     * フォームグループデータを取得
      * @param string $field
      * @param string $content
      * @return string
@@ -1674,7 +1674,7 @@ EOD;
     }
 
     /**
-     * 获取图片模板数据
+     * 画像テンプレートデータを取得
      * @param string $field
      * @param string $content
      * @return string
@@ -1703,7 +1703,7 @@ EOD;
     }
 
     /**
-     * 获取JS列数据
+     * 取得JS列データ
      * @param string $field
      * @param string $datatype
      * @param string $extend
@@ -1745,7 +1745,7 @@ EOD;
             $html .= ", searchList: " . $searchList;
         }
 
-        // 文件、图片、权重等字段默认不加入搜索栏，字符串类型默认LIKE
+        // ファイル、画像、権重などのフィールドはデフォルトで検索バーに追加しません，文字列型はデフォルトでLIKE
         $noSearchFiles = ['file$', 'files$', 'image$', 'images$', '^weigh$'];
         if (preg_match("/" . implode('|', $noSearchFiles) . "/i", $field)) {
             $html .= ", operate: false";

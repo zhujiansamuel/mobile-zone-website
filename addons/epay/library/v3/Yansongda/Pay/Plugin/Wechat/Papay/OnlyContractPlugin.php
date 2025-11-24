@@ -16,7 +16,7 @@ use function Yansongda\Pay\get_wechat_config;
 use function Yansongda\Pay\get_wechat_sign_v2;
 
 /**
- * 返回只签约（委托代扣）参数.
+ * 契約のみを返す（自動引き落としの委任）パラメーター.
  *
  * @see https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_3.shtml
  */

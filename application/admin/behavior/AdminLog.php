@@ -6,7 +6,7 @@ class AdminLog
 {
     public function run(&$response)
     {
-        //只记录POST请求的日志
+        //のみ記録POSTリクエストのログ
         if (request()->isPost() && config('fastadmin.auto_record_log')) {
             \app\admin\model\AdminLog::record();
         }

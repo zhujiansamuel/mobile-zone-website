@@ -11,33 +11,33 @@ class Email
 {
 
     /**
-     * 单例对象
+     * シングルトンオブジェクト
      */
     protected static $instance;
 
     /**
-     * phpmailer对象
+     * phpmailerオブジェクト
      */
     protected $mail = null;
 
     /**
-     * 错误内容
+     * エラー内容
      */
     protected $error = '';
 
     /**
-     * 默认配置
+     * デフォルト設定
      */
     public $options = [
-        'charset'   => 'utf-8', //编码格式
-        'debug'     => false, //调式模式
-        'mail_type' => 0, //状态
+        'charset'   => 'utf-8', //エンコード形式
+        'debug'     => false, //デバッグモード
+        'mail_type' => 0, //ステータス
     ];
 
     /**
-     * 初始化
+     * 初期化
      * @access public
-     * @param array $options 参数
+     * @param array $options パラメーター
      * @return Email
      */
     public static function instance($options = [])
@@ -50,7 +50,7 @@ class Email
     }
 
     /**
-     * 构造函数
+     * コンストラクタ
      * @param array $options
      */
     public function __construct($options = [])
@@ -67,13 +67,13 @@ class Email
         $this->mail->setServer($this->options['mail_smtp_host'], $this->options['mail_smtp_port'], $secure);
         $this->mail->setAuth($this->options['mail_from'], $this->options['mail_smtp_pass']);
 
-        //设置发件人
+        //送信者を設定
         $this->from($this->options['mail_from'], $this->options['mail_smtp_user']);
     }
 
     /**
-     * 设置邮件主题
-     * @param string $subject 邮件主题
+     * メール件名を設定
+     * @param string $subject メール件名
      * @return $this
      */
     public function subject($subject)
@@ -83,9 +83,9 @@ class Email
     }
 
     /**
-     * 设置发件人
-     * @param string $email 发件人邮箱
-     * @param string $name  发件人名称
+     * 送信者を設定
+     * @param string $email 送信元メールアドレス
+     * @param string $name  送信者名
      * @return $this
      */
     public function from($email, $name = '')
@@ -95,8 +95,8 @@ class Email
     }
 
     /**
-     * 设置收件人
-     * @param mixed $email 收件人,多个收件人以,进行分隔
+     * 受信者を設定
+     * @param mixed $email 受信者,多个受信者以,で区切る
      * @return $this
      */
     public function to($email)
@@ -110,9 +110,9 @@ class Email
     }
 
     /**
-     * 设置抄送
-     * @param mixed  $email 收件人,多个收件人以,进行分隔
-     * @param string $name  收件人名称
+     * Cc を設定
+     * @param mixed  $email 受信者,多个受信者以,で区切る
+     * @param string $name  受信者名
      * @return Email
      */
     public function cc($email, $name = '')
@@ -128,9 +128,9 @@ class Email
     }
 
     /**
-     * 设置密送
-     * @param mixed  $email 收件人,多个收件人以,进行分隔
-     * @param string $name  收件人名称
+     * Bcc を設定
+     * @param mixed  $email 受信者,多个受信者以,で区切る
+     * @param string $name  受信者名
      * @return Email
      */
     public function bcc($email, $name = '')
@@ -146,9 +146,9 @@ class Email
     }
 
     /**
-     * 设置邮件正文
-     * @param string  $body   邮件下方
-     * @param boolean $ishtml 是否HTML格式
+     * メール本文を設定
+     * @param string  $body   メール下部
+     * @param boolean $ishtml かどうかHTML形式
      * @return $this
      */
     public function message($body, $ishtml = true)
@@ -158,9 +158,9 @@ class Email
     }
 
     /**
-     * 添加附件
-     * @param string $path 附件路径
-     * @param string $name 附件名称
+     * 添付ファイルを追加
+     * @param string $path 添付ファイルパス
+     * @param string $name 添付ファイル名
      * @return Email
      */
     public function attachment($path, $name = '')
@@ -170,8 +170,8 @@ class Email
     }
 
     /**
-     * 构建Email地址
-     * @param mixed $emails Email数据
+     * ビルドEmailアドレス
+     * @param mixed $emails Emailデータ
      * @return array
      */
     protected function buildAddress($emails)
@@ -186,7 +186,7 @@ class Email
     }
 
     /**
-     * 获取最后产生的错误
+     * 最後に発生したエラーを取得
      * @return string
      */
     public function getError()
@@ -195,8 +195,8 @@ class Email
     }
 
     /**
-     * 设置错误
-     * @param string $error 信息信息
+     * エラーを設定
+     * @param string $error メッセージ情報
      */
     protected function setError($error)
     {
@@ -204,7 +204,7 @@ class Email
     }
 
     /**
-     * 发送邮件
+     * メール送信
      * @return boolean
      */
     public function send()
@@ -227,7 +227,7 @@ class Email
 
             $this->setError($result ? '' : $this->getError());
         } else {
-            //邮件功能已关闭
+            //メール機能は無効になっています
             $this->setError(__('Mail already closed'));
         }
         return $result;

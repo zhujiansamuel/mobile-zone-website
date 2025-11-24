@@ -8,12 +8,12 @@ class AuthRule extends Validate
 {
 
     /**
-     * 正则
+     * 正規表現
      */
     protected $regex = ['format' => '[a-z0-9_\/]+'];
 
     /**
-     * 验证规则
+     * 検証ルール
      */
     protected $rule = [
         'name'  => 'require|unique:AuthRule',
@@ -21,20 +21,20 @@ class AuthRule extends Validate
     ];
 
     /**
-     * 提示消息
+     * メッセージ
      */
     protected $message = [
-        'name.format' => 'URL规则只能是小写字母、数字、下划线和/组成'
+        'name.format' => 'URLルールは小文字のアルファベットのみ使用可能、数値、アンダースコアと/から構成'
     ];
 
     /**
-     * 字段描述
+     * フィールドの説明
      */
     protected $field = [
     ];
 
     /**
-     * 验证场景
+     * 検証シナリオ
      */
     protected $scene = [
     ];

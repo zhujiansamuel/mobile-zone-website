@@ -17,7 +17,7 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                         $color = colorArr[(!isNaN($nums) ? $nums : $nums.length) % $colorNums];
                         $class = 'label';
                     }
-                    //必须nums大于0才显示
+                    //必須numsより大きい0場合のみ表示
                     badgeList[$url] = $nums > 0 ? '<small class="' + $class + ' pull-right bg-' + $color + '">' + $nums + '</small>' : '';
                 });
                 $.each(badgeList, function (k, v) {
@@ -42,7 +42,7 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                     } else {
                         var baseurl = url.substr(0, url.indexOf("?") > -1 ? url.indexOf("?") : url.length);
                         leftlink = top.window.$(dom.replace(/\{url\}/, baseurl));
-                        //能找到相对地址
+                        //相対パスを見つけられる
                         if (leftlink.length > 0) {
                             icon = typeof icon !== 'undefined' ? icon : leftlink.find("i").attr("class");
                             title = typeof title !== 'undefined' ? title : leftlink.find("span:first").text();
@@ -52,7 +52,7 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                         if (navnode.length > 0) {
                             navnode.trigger("click");
                         } else {
-                            //追加新的tab
+                            //新規を追加tab
                             var id = Math.floor(new Date().valueOf() * Math.random());
                             icon = typeof icon !== 'undefined' ? icon : 'fa fa-circle-o';
                             title = typeof title !== 'undefined' ? title : '';
@@ -77,7 +77,7 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                         } else {
                             var baseurl = url.substr(0, url.indexOf("?") > -1 ? url.indexOf("?") : url.length);
                             navlink = top.window.$(dom.replace(/\{url\}/, baseurl));
-                            //能找到相对地址
+                            //相対パスを見つけられる
                             if (navlink.length === 0) {
                                 navlink = top.window.$(".nav-tabs ul li a[node-url='" + url + "']");
                             }
@@ -89,7 +89,7 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                 }
             },
             replaceids: function (elem, url) {
-                //如果有需要替换ids的
+                //置換が必要な場合idsの
                 if (url.indexOf("{ids}") > -1) {
                     var ids = 0;
                     var tableId = $(elem).data("table-id");
@@ -129,14 +129,14 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
             },
         },
         init: function () {
-            //公共代码
-            //添加ios-fix兼容iOS下的iframe
+            //共通コード
+            //追加ios-fix互換iOS下のiframe
             if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
                 $("html").addClass("ios-fix");
             }
-            //配置Toastr的参数
+            //設定Toastrのパラメータ
             Toastr.options.positionClass = Config.controllername === 'index' ? "toast-top-right-index" : "toast-top-right";
-            //点击包含.btn-dialog的元素时弹出dialog
+            //を含むものをクリックすると.btn-dialogの要素をクリックした時にポップアップするdialog
             $(document).on('click', '.btn-dialog,.dialogit', function (e) {
                 var that = this;
                 var options = $.extend({}, $(that).data() || {});
@@ -156,7 +156,7 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                 }
                 return false;
             });
-            //点击包含.btn-addtabs的元素时新增选项卡
+            //を含むものをクリックすると.btn-addtabsの要素をクリックした時に新しいタブを追加
             $(document).on('click', '.btn-addtabs,.addtabsit', function (e) {
                 var that = this;
                 var options = $.extend({}, $(that).data() || {});
@@ -173,7 +173,7 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                 }
                 return false;
             });
-            //点击包含.btn-ajax的元素时发送Ajax请求
+            //を含むものをクリックすると.btn-ajaxの要素をクリックした時に送信Ajaxリクエスト
             $(document).on('click', '.btn-ajax,.ajaxit', function (e) {
                 var that = this;
                 var options = $.extend({}, $(that).data() || {});
@@ -194,7 +194,7 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                         error = button.error;
                     }
                 }
-                //如果未设备成功的回调,设定了自动刷新的情况下自动进行刷新
+                //成功時コールバックが未設定の場合,自動更新が設定されている場合は自動的にリフレッシュを実行
                 if (!success && typeof options.tableId !== 'undefined' && typeof options.refresh !== 'undefined' && options.refresh) {
                     success = function () {
                         $("#" + options.tableId).bootstrapTable('refresh');
@@ -232,15 +232,15 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
                 }
                 return false;
             });
-            //修复含有fixed-footer类的body边距
+            //を含むfixed-footerクラスのbodyマージンを修正
             if ($(".fixed-footer").length > 0) {
                 $(document.body).css("padding-bottom", $(".fixed-footer").outerHeight());
             }
-            //修复不在iframe时layer-footer隐藏的问题
+            //iframe内でない場合のiframeのときはlayer-footer非表示の問題を修正
             if ($(".layer-footer").length > 0 && self === top) {
                 $(".layer-footer").show();
             }
-            //tooltip和popover
+            //tooltipとpopover
             if (!('ontouchstart' in document.documentElement)) {
                 $('body').tooltip({selector: '[data-toggle="tooltip"]', trigger: 'hover'});
             }
@@ -248,11 +248,11 @@ define(['fast', 'template', 'moment'], function (Fast, Template, Moment) {
         }
     };
     Backend.api = $.extend(Fast.api, Backend.api);
-    //将Template渲染至全局,以便于在子框架中调用
+    //をTemplateグローバルへレンダリング,サブフレームから呼び出せるようにする
     window.Template = Template;
-    //将Moment渲染至全局,以便于在子框架中调用
+    //をMomentグローバルへレンダリング,サブフレームから呼び出せるようにする
     window.Moment = Moment;
-    //将Backend渲染至全局,以便于在子框架中调用
+    //をBackendグローバルへレンダリング,サブフレームから呼び出せるようにする
     window.Backend = Backend;
 
     Backend.init();

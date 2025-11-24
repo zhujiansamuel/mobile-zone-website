@@ -26,7 +26,7 @@ class WapPayPlugin implements PluginInterface
      */
     public function assembly(Rocket $rocket, Closure $next): Rocket
     {
-        Logger::debug('[alipay][WapPayPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[alipay][WapPayPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $this->loadAlipayServiceProvider($rocket);
 
@@ -42,7 +42,7 @@ class WapPayPlugin implements PluginInterface
             ])
         ;
 
-        Logger::info('[alipay][WapPayPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[alipay][WapPayPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $next($rocket);
     }

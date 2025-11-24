@@ -8,7 +8,7 @@ use app\common\model\User;
 use think\Hook;
 
 /**
- * 手机短信接口
+ * 携帯SMSインターフェース
  */
 class Sms extends Api
 {
@@ -16,11 +16,11 @@ class Sms extends Api
     protected $noNeedRight = '*';
 
     /**
-     * 发送验证码
+     * 認証コードを送信
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="mobile", type="string", required=true, description="手机号")
-     * @ApiParams (name="event", type="string", required=true, description="事件名称")
+     * @ApiParams (name="mobile", type="string", required=true, description="携帯番号")
+     * @ApiParams (name="event", type="string", required=true, description="イベント名")
      */
     public function send()
     {
@@ -29,47 +29,47 @@ class Sms extends Api
         $event = $event ? $event : 'register';
 
         if (!$mobile || !\think\Validate::regex($mobile, "^1\d{10}$")) {
-            $this->error(__('手机号不正确'));
+            $this->error(__('携帯番号が正しくありません'));
         }
         $last = Smslib::get($mobile, $event);
         if ($last && time() - $last['createtime'] < 60) {
-            $this->error(__('发送频繁'));
+            $this->error(__('送信が頻繁すぎます'));
         }
         $ipSendTotal = \app\common\model\Sms::where(['ip' => $this->request->ip()])->whereTime('createtime', '-1 hours')->count();
         if ($ipSendTotal >= 5) {
-            $this->error(__('发送频繁'));
+            $this->error(__('送信が頻繁すぎます'));
         }
         if ($event) {
             $userinfo = User::getByMobile($mobile);
             if ($event == 'register' && $userinfo) {
-                //已被注册
-                $this->error(__('已被注册'));
+                //すでに登録されています
+                $this->error(__('すでに登録されています'));
             } elseif (in_array($event, ['changemobile']) && $userinfo) {
-                //被占用
-                $this->error(__('已被占用'));
+                //占有されています
+                $this->error(__('すでに占有されています'));
             } elseif (in_array($event, ['changepwd', 'resetpwd']) && !$userinfo) {
-                //未注册
-                $this->error(__('未注册'));
+                //未登録です
+                $this->error(__('未登録です'));
             }
         }
         if (!Hook::get('sms_send')) {
-            $this->error(__('请在后台插件管理安装短信验证插件'));
+            $this->error(__('管理画面のプラグイン管理でSMS認証プラグインをインストールしてください'));
         }
         $ret = Smslib::send($mobile, null, $event);
         if ($ret) {
-            $this->success(__('发送成功'));
+            $this->success(__('送信に成功しました'));
         } else {
-            $this->error(__('发送失败，请检查短信配置是否正确'));
+            $this->error(__('送信に失敗しました，SMS設定が正しいかご確認ください'));
         }
     }
 
     /**
-     * 检测验证码
+     * 認証コードをチェック
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="mobile", type="string", required=true, description="手机号")
-     * @ApiParams (name="event", type="string", required=true, description="事件名称")
-     * @ApiParams (name="captcha", type="string", required=true, description="验证码")
+     * @ApiParams (name="mobile", type="string", required=true, description="携帯番号")
+     * @ApiParams (name="event", type="string", required=true, description="イベント名")
+     * @ApiParams (name="captcha", type="string", required=true, description="認証コード")
      */
     public function check()
     {
@@ -79,26 +79,26 @@ class Sms extends Api
         $captcha = $this->request->post("captcha");
 
         if (!$mobile || !\think\Validate::regex($mobile, "^1\d{10}$")) {
-            $this->error(__('手机号不正确'));
+            $this->error(__('携帯番号が正しくありません'));
         }
         if ($event) {
             $userinfo = User::getByMobile($mobile);
             if ($event == 'register' && $userinfo) {
-                //已被注册
-                $this->error(__('已被注册'));
+                //すでに登録されています
+                $this->error(__('すでに登録されています'));
             } elseif (in_array($event, ['changemobile']) && $userinfo) {
-                //被占用
-                $this->error(__('已被占用'));
+                //占有されています
+                $this->error(__('すでに占有されています'));
             } elseif (in_array($event, ['changepwd', 'resetpwd']) && !$userinfo) {
-                //未注册
-                $this->error(__('未注册'));
+                //未登録です
+                $this->error(__('未登録です'));
             }
         }
         $ret = Smslib::check($mobile, $captcha, $event);
         if ($ret) {
             $this->success(__('成功'));
         } else {
-            $this->error(__('验证码不正确'));
+            $this->error(__('認証コードが正しくありません'));
         }
     }
 }

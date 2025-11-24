@@ -19,7 +19,7 @@
     var self = this;
     var dom, settings, callback;
 
-    // 分配参数
+    // パラメーターを割り当てる
     for (var i = 0, l = arguments.length; i < l; i++) {
       if (cxSelect.isJquery(arguments[i]) || cxSelect.isZepto(arguments[i])) {
         dom = arguments[i];
@@ -112,15 +112,15 @@
     self.setOptions();
     self.attach();
 
-    // 使用独立接口获取数据
+    // 個別インターフェースでデータを取得
     if (!theSelect.settings.url && !theSelect.settings.data) {
       cxSelect.start.apply(theSelect);
 
-    // 设置自定义数据
+    // カスタムデータを設定
     } else if ($.isArray(theSelect.settings.data)) {
       cxSelect.start.call(theSelect, theSelect.settings.data);
 
-    // 设置 URL，通过 Ajax 获取数据
+    // 設定を行う URL，経由で Ajax データを取得
     } else if (typeof theSelect.settings.url === 'string' && theSelect.settings.url.length) {
       $.getJSON(theSelect.settings.url, function(json) {
         cxSelect.start.call(theSelect, json);
@@ -128,7 +128,7 @@
     };
   };
 
-  // 设置参数
+  // パラメーター設定
   cxSelect.setOptions = function(opts) {
     var self = this;
 
@@ -136,7 +136,7 @@
       $.extend(self.settings, opts);
     };
 
-    // 初次或重设选择器组
+    // 初回またはセレクターグループをリセット
     if (!$.isArray(self.selectArray) || !self.selectArray.length || (opts && opts.selects)) {
       self.selectArray = [];
 
@@ -165,7 +165,7 @@
     };
   };
 
-  // 绑定
+  // バインド
   cxSelect.attach = function() {
     var self = this;
 
@@ -180,14 +180,14 @@
     self.attachStatus = true;
   };
 
-  // 移除绑定
+  // バインドを解除
   cxSelect.detach = function() {
     var self = this;
     self.dom.box.off('change', 'select', self.changeEvent);
     self.attachStatus = false;
   };
 
-  // 清空选项
+  // オプションをクリア
   cxSelect.clear = function(index) {
     var self = this;
     var _style = {
@@ -197,7 +197,7 @@
 
     index = isNaN(index) ? 0 : index;
 
-    // 清空后面的 select
+    // 後続をクリア select
     for (var i = index, l = self.selectArray.length; i < l; i++) {
       self.selectArray[i].empty().prop('disabled', true);
 
@@ -220,7 +220,7 @@
 
     if (!self.selectArray.length) {return};
 
-    // 保存默认值
+    // デフォルト値を保存
     for (var i = 0, l = self.selectArray.length; i < l; i++) {
       if (typeof self.selectArray[i].attr('data-value') !== 'string' && self.selectArray[i][0].options.length) {
         self.selectArray[i].attr('data-value', self.selectArray[i].val());
@@ -237,7 +237,7 @@
     };
   };
 
-  // 获取选项数据
+  // オプションデータを取得
   cxSelect.getOptionData = function(index) {
     var self = this;
 
@@ -256,7 +256,7 @@
 
     cxSelect.clear.call(self, index);
 
-    // 使用独立接口
+    // 個別インターフェースを使用
     if (typeof _dataUrl === 'string' && _dataUrl.length) {
       if (index > 0) {
         for (var i = 0, j = 1; i < index; i++, j++) {
@@ -278,7 +278,7 @@
         cxSelect.buildOption.call(self, index, _selectData);
       });
 
-    // 使用整合数据
+    // 統合データを使用
     } else if (self.settings.data && typeof self.settings.data === 'object') {
       _selectData = self.settings.data;
 
@@ -297,7 +297,7 @@
     };
   };
 
-  // 构建选项列表
+  // オプションリストを構築
   cxSelect.buildOption = function(index, data) {
     var self = this;
 
@@ -312,9 +312,9 @@
 
     var _html = !_required ? '<option value="' + String(_firstValue) + '">' + String(_firstTitle) + '</option>' : '';
 
-    // 区分标题、值的数据
+    // タイトルを区別、値データ
     if (typeof _jsonName === 'string' && _jsonName.length) {
-      // 无值字段时使用标题作为值
+      // 値フィールドがない場合タイトルを値として使用
       if (typeof _jsonValue !== 'string' || !_jsonValue.length) {
         _jsonValue = _jsonName;
       };
@@ -323,7 +323,7 @@
         _html += '<option value="' + String(data[i][_jsonValue]) + '">' + String(data[i][_jsonName]) + '</option>';
       };
 
-    // 数组即为值的数据
+    // 配列をそのまま値データとして使用
     } else {
       for (var i = 0, l = data.length; i < l; i++) {
         _html += '<option value="' + String(data[i]) + '">' + String(data[i]) + '</option>';
@@ -335,7 +335,7 @@
       'visibility': ''
     });
 
-    // 初次加载设置默认值
+    // 初回読み込み時にデフォルト値を設定
     if (typeof _select.attr('data-value') === 'string') {
       _select.val(String(_select.attr('data-value'))).removeAttr('data-value');
 
@@ -350,7 +350,7 @@
 
   };
 
-  // 改变选择时的处理
+  // 選択変更時の処理
   cxSelect.selectChange = function(name) {
     var self = this;
 
@@ -361,7 +361,7 @@
     name = name.replace(/\s+/g, ',');
     name = ',' + name + ',';
 
-    // 获取当前 select 位置
+    // 現在の取得 select 位置
     for (var i = 0, l = self.selectArray.length; i < l; i++) {
       if (name.indexOf(',' + self.settings.selects[i] + ',') > -1) {
         index = i;
@@ -379,19 +379,19 @@
     return cxSelect.apply(this, arguments);
   };
 
-  // 默认值
+  // デフォルト値
   $.cxSelect.defaults = {
-    selects: [],            // 下拉选框组
-    url: null,              // 列表数据文件路径（URL）或数组数据
-    data: null,             // 自定义数据
-    emptyStyle: null,       // 无数据状态显示方式
-    required: false,        // 是否为必选
-    firstTitle: '请选择',    // 第一个选项的标题
-    firstValue: '',         // 第一个选项的值
-    jsonSpace: '',          // 数据命名空间
-    jsonName: 'n',          // 数据标题字段名称
-    jsonValue: '',          // 数据值字段名称
-    jsonSub: 's'            // 子集数据字段名称
+    selects: [],            // ドロップダウン選択ボックスグループ
+    url: null,              // リストデータファイルパス（URL）または配列データ
+    data: null,             // カスタムデータ
+    emptyStyle: null,       // データ未取得時の表示方法
+    required: false,        // 必須かどうか
+    firstTitle: '選択してください',    // 最初のオプションのタイトル
+    firstValue: '',         // 最初のオプションの値
+    jsonSpace: '',          // データ名前空間
+    jsonName: 'n',          // データタイトルフィールド名
+    jsonValue: '',          // データ値フィールド名
+    jsonSub: 's'            // サブセットデータフィールド名
   };
 
   $.fn.cxSelect = function(settings, callback) {

@@ -5,16 +5,16 @@ namespace app\common\model;
 use think\Model;
 
 /**
- * 配置模型
+ * モデルを設定
  */
 class Config extends Model
 {
 
-    // 表名,不含前缀
+    // テーブル名,プレフィックスを含まない
     protected $name = 'config';
-    // 自动写入时间戳字段
+    // タイムスタンプフィールドを自動書き込み
     protected $autoWriteTimestamp = false;
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = false;
     protected $updateTime = false;
     // 追加属性
@@ -26,7 +26,7 @@ class Config extends Model
     ];
 
     /**
-     * 读取配置类型
+     * 設定タイプを読み込む
      * @return array
      */
     public static function getTypeList()
@@ -62,21 +62,21 @@ class Config extends Model
     public static function getRegexList()
     {
         $regexList = [
-            'required' => '必选',
-            'digits'   => '数字',
-            'letters'  => '字母',
-            'date'     => '日期',
-            'time'     => '时间',
-            'email'    => '邮箱',
-            'url'      => '网址',
-            'qq'       => 'QQ号',
-            'IDcard'   => '身份证',
-            'tel'      => '座机电话',
-            'mobile'   => '手机号',
-            'zipcode'  => '邮编',
-            'chinese'  => '中文',
-            'username' => '用户名',
-            'password' => '密码'
+            'required' => '必須',
+            'digits'   => '数値',
+            'letters'  => '英字',
+            'date'     => '日付',
+            'time'     => '時間',
+            'email'    => 'メールアドレス',
+            'url'      => 'URL',
+            'qq'       => 'QQ記号',
+            'IDcard'   => '身分証明書',
+            'tel'      => '固定電話',
+            'mobile'   => '携帯番号',
+            'zipcode'  => '郵便番号',
+            'chinese'  => '中国語',
+            'username' => 'ユーザー名',
+            'password' => 'パスワード'
         ];
         return $regexList;
     }
@@ -92,7 +92,7 @@ class Config extends Model
     }
 
     /**
-     * 读取分类分组列表
+     * カテゴリグループ一覧を読み込む
      * @return array
      */
     public static function getGroupList()
@@ -127,7 +127,7 @@ class Config extends Model
     }
 
     /**
-     * 将字符串解析成键值数组
+     * 文字列を解析してキー値配列にする
      * @param string $text
      * @return array
      */
@@ -145,7 +145,7 @@ class Config extends Model
     }
 
     /**
-     * 将键值数组转换为字符串
+     * キー値配列を文字列に変換
      * @param array $array
      * @return string
      */
@@ -163,7 +163,7 @@ class Config extends Model
     }
 
     /**
-     * 本地上传配置信息
+     * ローカルアップロードの設定情報
      * @return array
      */
     public static function upload()
@@ -197,11 +197,11 @@ class Config extends Model
     }
 
     /**
-     * 刷新配置文件
+     * 設定ファイルを更新
      */
     public static function refreshFile()
     {
-        //如果没有配置权限无法进行修改
+        //権限がない場合は設定を変更できません
         if (!\app\admin\library\Auth::instance()->check('general/config/edit')) {
             return false;
         }

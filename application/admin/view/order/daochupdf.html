@@ -4,9 +4,9 @@
         <table class="table table-striped" >
             <!-- <thead>
             <tr>
-                <th>{:__('打卡位置')}</th>
-                <th>{:__('拍照图片')}</th>
-                <th>{:__('时间')}</th>
+                <th>{:__('打刻位置')}</th>
+                <th>{:__('撮影画像')}</th>
+                <th>{:__('時間')}</th>
             </tr>
             </thead> -->
             <tbody>
@@ -20,11 +20,11 @@
                 <td>{$user['email']}</td>
             </tr>
             <tr>
-                <th width="30%">個人法人区分</th>
+                <th width="30%">個人／法人区分</th>
                 <td>{:getConfigOther('persion_type_list', $user['persion_type'])}</td>
             </tr>
             <tr>
-                <th width="30%">お電話番号</th>
+                <th width="30%">電話番号</th>
                 <td>{$user['mobile']}</td>
             </tr>
             <tr>
@@ -40,16 +40,16 @@
                 <td>{:getCategoryName($user['occupation'])}</td>
             </tr>
             <tr>
-                <th width="30%">個人書類種別</th>
+                <th width="30%">本人確認書類種別</th>
                 <td>{:getCategoryName($user['szb'])}</td>
             </tr>
         {else /}
-            暂无数据
+            データがありません
         {/if}  
 
             </tbody>
         </table>
-        <h4 style="text-align: center;">個人書類アップロード </h4>
+        <h4 style="text-align: center;">本人確認書類アップロード </h4>
         <div>
             {volist name="$user['szb_image']" id="item"}
                 <img src="{$item|getDomainName}" width="150">
@@ -90,18 +90,18 @@
             </tbody>
         </table>
         
-        <h4 style="text-align: center;">合计</h4>
+        <h4 style="text-align: center;">合計</h4>
         <table class="table table-striped"  style="width:100%">
       
             <tbody>
             <tr>
-                <th width="40%">商品价格</th>
+                <th width="40%">商品価格</th>
                 <td>
                 {$row['price']}
                 </td>
             </tr>
             <tr>
-                <th width="40%">共</th>
+                <th width="40%">全</th>
                 <td>
                 {$row['total_price']}
                 </td>
@@ -115,13 +115,13 @@
 <table class="table table-striped" style="margin-top: 45px;">
     <thead>
     <tr>
-        <th width="20%">{:__('商品名称')}</th>
+        <th width="20%">{:__('商品名')}</th>
         <th>{:__('備考')}</th>
-        <th>{:__('商品图片')}</th>
-        <th>{:__('商品规格')}</th>
-        <th>{:__('数量')}</th>
-        <th>{:__('单价')}</th>
-        <!-- <th>{:__('类型')}</th> -->
+        <th>{:__('商品画像')}</th>
+        <th>{:__('商品仕様')}</th>
+        <th>{:__('数')}</th>
+        <th>{:__('単価')}</th>
+        <!-- <th>{:__('タイプ')}</th> -->
     </tr>
     </thead>
     <tbody>

@@ -6,18 +6,18 @@ use think\Db;
 use think\Model;
 
 /**
- * 会员模型
- * @method static mixed getByUsername($str) 通过用户名查询用户
- * @method static mixed getByNickname($str) 通过昵称查询用户
- * @method static mixed getByMobile($str) 通过手机查询用户
- * @method static mixed getByEmail($str) 通过邮箱查询用户
+ * 会員モデル
+ * @method static mixed getByUsername($str) ユーザー名でユーザーを検索
+ * @method static mixed getByNickname($str) ニックネームでユーザーを検索
+ * @method static mixed getByMobile($str) 携帯番号でユーザーを検索
+ * @method static mixed getByEmail($str) メールアドレスでユーザーを検索
  */
 class User extends Model
 {
 
-    // 开启自动写入时间戳字段
+    // 自動タイムスタンプ書き込みを有効にする
     protected $autoWriteTimestamp = 'int';
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
     // 追加属性
@@ -26,7 +26,7 @@ class User extends Model
     ];
 
     /**
-     * 获取个人URL
+     * 個人情報を取得URL
      * @param string $value
      * @param array  $data
      * @return string
@@ -37,7 +37,7 @@ class User extends Model
     }
 
     /**
-     * 获取头像
+     * アバターを取得
      * @param string $value
      * @param array  $data
      * @return string
@@ -51,7 +51,7 @@ class User extends Model
     }
 
     /**
-     * 获取会员的组别
+     * 会員のグループを取得
      */
     public function getGroupAttr($value, $data)
     {
@@ -59,7 +59,7 @@ class User extends Model
     }
 
     /**
-     * 获取验证字段数组值
+     * 認証フィールドの配列値を取得
      * @param string $value
      * @param array  $data
      * @return  object
@@ -72,7 +72,7 @@ class User extends Model
     }
 
     /**
-     * 设置验证字段
+     * 認証フィールドを設定
      * @param mixed $value
      * @return string
      */
@@ -83,10 +83,10 @@ class User extends Model
     }
 
     /**
-     * 变更会员余额
-     * @param int    $money   余额
-     * @param int    $user_id 会员ID
-     * @param string $memo    备注
+     * 会員残高を変更
+     * @param int    $money   残高
+     * @param int    $user_id 会員ID
+     * @param string $memo    備考
      */
     public static function money($money, $user_id, $memo)
     {
@@ -97,9 +97,9 @@ class User extends Model
                 $before = $user->money;
                 //$after = $user->money + $money;
                 $after = function_exists('bcadd') ? bcadd($user->money, $money, 2) : $user->money + $money;
-                //更新会员信息
+                //会員情報を更新
                 $user->save(['money' => $after]);
-                //写入日志
+                //ログに書き込む
                 MoneyLog::create(['user_id' => $user_id, 'money' => $money, 'before' => $before, 'after' => $after, 'memo' => $memo]);
             }
             Db::commit();
@@ -109,10 +109,10 @@ class User extends Model
     }
 
     /**
-     * 变更会员积分
-     * @param int    $score   积分
-     * @param int    $user_id 会员ID
-     * @param string $memo    备注
+     * 会員ポイントを変更
+     * @param int    $score   ポイント
+     * @param int    $user_id 会員ID
+     * @param string $memo    備考
      */
     public static function score($score, $user_id, $memo)
     {
@@ -123,9 +123,9 @@ class User extends Model
                 $before = $user->score;
                 $after = $user->score + $score;
                 $level = self::nextlevel($after);
-                //更新会员信息
+                //会員情報を更新
                 $user->save(['score' => $after, 'level' => $level]);
-                //写入日志
+                //ログに書き込む
                 ScoreLog::create(['user_id' => $user_id, 'score' => $score, 'before' => $before, 'after' => $after, 'memo' => $memo]);
             }
             Db::commit();
@@ -135,8 +135,8 @@ class User extends Model
     }
 
     /**
-     * 根据积分获取等级
-     * @param int $score 积分
+     * ポイントに応じてランクを取得
+     * @param int $score ポイント
      * @return int
      */
     public static function nextlevel($score = 0)

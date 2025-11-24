@@ -7,7 +7,7 @@
 
     $.fn.bootstrapTable.locales['ja-JP'] = {
         formatLoadingMessage: function () {
-            return '読み込み中です。少々お待ちください。';
+            return '読み込み中です。少々々お待ちください。';
         },
         formatRecordsPerPage: function (pageNumber) {
             return 'ページ当たり最大' + pageNumber + '件';

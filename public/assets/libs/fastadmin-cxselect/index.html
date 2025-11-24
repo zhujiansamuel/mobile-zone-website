@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>cxSelect 联动下拉菜单 &raquo; 在线演示 - 前端开发仓库</title>
+<title>cxSelect cxSelect 連動ドロップダウンメニュー &raquo; オンラインデモ - フロントエンド開発リポジトリ</title>
 <style>
 body{background:#ddd;font:14px/1.7 tahoma,'\5fae\8f6f\96c5\9ed1',sans-serif;}
 h1,h2,h3{font-size:36px;line-height:1;}
@@ -18,66 +18,66 @@ a:hover{color:#00f;}
 </head>
 <body>
 <div class="wrap">
-  <h1>cxSelect 联动下拉菜单</h1>
+  <h1>cxSelect cxSelect 連動ドロップダウンメニュー</h1>
 
-  <h2>示例</h2>
-  <p>如果无法通过 AJAX 获取数据，请运行在服务器环境下。</p>
+  <h2>サンプル</h2>
+  <p>AJAX でデータを取得できない場合は AJAX データを取得，サーバー環境で実行してください。</p>
 
   <fieldset id="city_china">
-    <legend>默认</legend>
-    <p>省份：<select class="province other">
-      <option>请选择</option>
+    <legend>デフォルト</legend>
+    <p>省：<select class="province other">
+      <option>選択してください</option>
     </select></p>
-    <p>城市：<select class="city">
-      <option>请选择</option>
+    <p>市区町村：<select class="city">
+      <option>選択してください</option>
     </select></p>
-    <p>地区：<select class="area">
-      <option>请选择</option>
+    <p>地域：<select class="area">
+      <option>選択してください</option>
     </select></p>
   </fieldset>
 
   <fieldset id="city_china_val">
-    <legend>设置默认值及选项标题</legend>
-    <p>所在地区：
-      <select class="province other" data-first-title="选择省">
-        <option value="">请选择</option>
+    <legend>デフォルト値と項目タイトルの設定</legend>
+    <p>所在地：
+      <select class="province other" data-first-title="省を選択">
+        <option value="">選択してください</option>
         <option value="浙江省" selected>浙江省</option>
       </select>
-      <select class="city" data-first-title="选择市">
-        <option value="">请选择</option>
+      <select class="city" data-first-title="市を選択">
+        <option value="">選択してください</option>
         <option value="杭州市" selected>杭州市</option>
       </select>
-      <select class="area" data-first-title="选择地区">
-        <option value="">请选择</option>
+      <select class="area" data-first-title="地域を選択">
+        <option value="">選択してください</option>
         <option value="西湖区" selected>西湖区</option>
       </select>
     </p>
   </fieldset>
 
   <!-- <fieldset id="city_china_val">
-    <legend>多种设置默认值的方式</legend>
+    <legend>デフォルト値を設定するさまざまな方法</legend>
 
-    <p>方法一：使用 option 的 value 和 selected 属性</p>
+    <p>方法1：使用 option の value と selected 属性</p>
     <p><select class="province">
       <option>浙江省</option>
     </select></p>
 
-    <p>如果有多个 option ，需要使用 selected 属性指定选中项</p>
+    <p>複数の option がある場合は option ，selected を使用して selected 選択項目を指定する必要があります</p>
     <p><select class="city">
-      <option>请选择</option>
+      <option>選択してください</option>
       <option value="杭州市" selected>杭州市</option>
     </select></p>
 
-    <p>方法二：使用 select 的 data-value 属性</p>
+    <p>方法2：使用 select の data-value 属性</p>
     <p><select class="area" data-value="西湖区">
-      <option>请选择</option>
+      <option>選択してください</option>
     </select></p>
   </fieldset> -->
       
   <fieldset id="global_location">
-    <legend>全球主要国家城市联动</legend>
-    <p>所在地区：
-      <select class="country" data-first-title="选择国家"></select>
+    <legend>世界主要国・都市の連動</legend>
+    <p>所在地：
+      <select class="country" data-first-title="国を選択"></select>
       <select class="state" data-required="true"></select>
       <select class="city" data-required="true"></select>
       <select class="region" data-required="true"></select>
@@ -85,19 +85,19 @@ a:hover{color:#00f;}
   </fieldset>
   
   <fieldset id="custom_data">
-    <legend>自定义选项</legend>
-    <p>一：<select class="first"></select></p>
-    <p>二：<select class="second"></select></p>
-    <p>三：<select class="third"></select></p>
-    <p>四：<select class="fourth"></select></p>
-    <p>五：<select class="fifth"></select></p>
+    <legend>カスタムオプション</legend>
+    <p>月：<select class="first"></select></p>
+    <p>火：<select class="second"></select></p>
+    <p>水：<select class="third"></select></p>
+    <p>木：<select class="fourth"></select></p>
+    <p>金：<select class="fifth"></select></p>
   </fieldset>
 
   <fieldset>
-    <legend>API 接口</legend>
+    <legend>API インターフェース</legend>
     <div id="api_data">
       <dl>
-        <dt>选择器组 A</dt>
+        <dt>セレクターグループ A</dt>
         <dd>
           <select class="province select"></select>
           <select class="city select"></select>
@@ -105,7 +105,7 @@ a:hover{color:#00f;}
         </dd>
       </dl>
       <dl>
-        <dt>选择器组 B</dt>
+        <dt>セレクターグループ B</dt>
         <dd>
           <select class="first select"></select>
           <select class="second select"></select>
@@ -122,22 +122,22 @@ a:hover{color:#00f;}
       <button type="button" class="button green" name="clear" value="">clear</button>
     </p>
     <p>
-      <button type="button" class="button green" name="setSelect" value="b">更换 select 组</button>
-      <button type="button" class="button green" name="setData" value="china">更换数据：国内数据</button>
-      <button type="button" class="button green" name="setData" value="global">更换数据：全球数据</button>
-      <button type="button" class="button green" name="setData" value="custom">更换数据：自定义数据</button>
+      <button type="button" class="button green" name="setSelect" value="b">切り替え select グループ</button>
+      <button type="button" class="button green" name="setData" value="china">データを切り替え：国内データ</button>
+      <button type="button" class="button green" name="setData" value="global">データを切り替え：グローバルデータ</button>
+      <button type="button" class="button green" name="setData" value="custom">データを切り替え：カスタムデータ</button>
     </p>
     <p>
-      <button type="button" class="button green" name="required" value="0">更改 required</button>
-      <button type="button" class="button green" name="emptyStyle" value="">更改 emptyStyle</button>
-      <button type="button" class="button green" name="firstTitle" value="请选择">更改 firstTitle</button>
+      <button type="button" class="button green" name="required" value="0">変更 required</button>
+      <button type="button" class="button green" name="emptyStyle" value="">変更 emptyStyle</button>
+      <button type="button" class="button green" name="firstTitle" value="選択してください">変更 firstTitle</button>
     </p>
   </fieldset>
 
-  <h2>文档</h2>
+  <h2>ドキュメント</h2>
   <ul>
     <li><a target="_blank" href="https://github.com/ciaoca/cxSelect">Github</a></li>
-    <li><a target="_blank" href="http://code.ciaoca.com/jquery/cxSelect/">中文文档</a></li>
+    <li><a target="_blank" href="http://code.ciaoca.com/jquery/cxSelect/">中国語ドキュメント</a></li>
   </ul>
   
   <h2>作者</h2>
@@ -153,19 +153,19 @@ a:hover{color:#00f;}
   var urlChina = 'js/cityData.min.json';
   var urlGlobal = 'js/globalData.min.json';
   var dataCustom = [
-    {'v': '1', 'n': '第一级 >', 's': [
-      {'v': '2', 'n': '第二级 >', 's': [
-        {'v': '3', 'n': '第三级 >', 's': [
-          {'v': '4', 'n': '第四级 >', 's': [
-            {'v': '5', 'n': '第五级 >', 's': [
-              {'v': '6', 'n': '第六级 >'}
+    {'v': '1', 'n': '第1階層 >', 's': [
+      {'v': '2', 'n': '第2階層 >', 's': [
+        {'v': '3', 'n': '第3階層 >', 's': [
+          {'v': '4', 'n': '第4階層 >', 's': [
+            {'v': '5', 'n': '第5階層 >', 's': [
+              {'v': '6', 'n': '第6階層 >'}
             ]}
           ]}
         ]}
       ]}
     ]},
-    {'v': 'test number', 'n': '测试数字', 's': [
-      {'v': 'text', 'n': '文本类型', 's': [
+    {'v': 'test number', 'n': 'テスト数値', 's': [
+      {'v': 'text', 'n': 'テキスト型', 's': [
         {'v': '4', 'n': '4'},
         {'v': '5', 'n': '5'},
         {'v': '6', 'n': '6'},
@@ -174,7 +174,7 @@ a:hover{color:#00f;}
         {'v': '9', 'n': '9'},
         {'v': '10', 'n': '10'}
       ]},
-      {'v': 'number', 'n': '数值类型', 's': [
+      {'v': 'number', 'n': '数値型', 's': [
         {'v': 11, 'n': 11},
         {'v': 12, 'n': 12},
         {'v': 13, 'n': 13},
@@ -184,49 +184,49 @@ a:hover{color:#00f;}
         {'v': 17, 'n': 17}
       ]}
     ]},
-    {'v': 'test boolean','n': '测试 Boolean 类型', 's': [
+    {'v': 'test boolean','n': 'テスト Boolean タイプ', 's': [
       {'v': true ,'n': true},
       {'v': false ,'n': false}
     ]},
-    {v: 'test quotes', n: '测试属性不加引号', s: [
-      {v: 'quotes', n: '引号'}
+    {v: 'test quotes', n: '属性を引用符なしでテスト', s: [
+      {v: 'quotes', n: '引用符'}
     ]},
-    {v: 'test other', n: '测试奇怪的值', s: [
-      {v: '[]', n: '数组（空）'},
-      {v: [1,2,3], n: '数组（数值）'},
-      {v: ['a','b','c'], n: '数组（文字）'},
-      {v: new Date(), n: '日期'},
-      {v: new RegExp('\\d+'), n: '正则对象'},
-      {v: /\d+/, n: '正则直接量'},
-      {v: {}, n: '对象'},
+    {v: 'test other', n: '変わった値をテスト', s: [
+      {v: '[]', n: '配列（空）'},
+      {v: [1,2,3], n: '配列（数値）'},
+      {v: ['a','b','c'], n: '配列（テキスト）'},
+      {v: new Date(), n: '日付'},
+      {v: new RegExp('\\d+'), n: '正規表現オブジェクト'},
+      {v: /\d+/, n: '正規表現リテラル'},
+      {v: {}, n: 'オブジェクト'},
       {v: document.getElementById('custom_data'), n: 'DOM'},
       {v: null, n: 'Null'},
-      {n: '未设置 value'}
+      {n: '未設定 value'}
     ]},
-    {'v': '' , 'n': '无子级'}
+    {'v': '' , 'n': '子階層なし'}
   ];
 
   $.cxSelect.defaults.url = urlChina;
 
-  // 默认
+  // デフォルト
   $('#city_china').cxSelect({
     selects: ['province', 'city', 'area']
   });
 
-  // 设置默认值及选项标题
+  // デフォルト値と項目タイトルの設定
   $('#city_china_val').cxSelect({
     selects: ['province', 'city', 'area'],
     emptyStyle: 'none'
   });
 
-  // 全球主要国家城市联动
+  // 世界主要国・都市の連動
   $('#global_location').cxSelect({
     url: urlGlobal,
     selects: ['country', 'state', 'city', 'region'],
     emptyStyle: 'none'
   });
 
-  // 自定义选项
+  // カスタムオプション
   $('#custom_data').cxSelect({
     selects: ['first', 'second', 'third', 'fourth', 'fifth'],
     // required: true,
@@ -234,7 +234,7 @@ a:hover{color:#00f;}
     data: dataCustom
   });
 
-  // API 接口
+  // API インターフェース
   var apiBox = $('#api_data');
   var cxSelectApi;
 
@@ -287,7 +287,7 @@ a:hover{color:#00f;}
         break;
 
       case 'firstTitle':
-        _value = _value === '请选择' ? '选择吧' : '请选择';
+        _value = _value === '選択してください' ? '選んでみて' : '選択してください';
         cxSelectApi.setOptions({
           firstTitle: _value
         });

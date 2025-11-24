@@ -12,10 +12,10 @@ use think\Db;
 use think\Exception;
 
 /**
- * 插件管理
+ * プラグイン管理
  *
  * @icon   fa fa-cube
- * @remark 可在线安装、卸载、禁用、启用、配置、升级插件，插件升级前请做好备份。
+ * @remark オンラインでインストール可能、アンインストール、無効化、有効化、設定、プラグインのアップグレード，プラグインをアップグレードする前に必ずバックアップを取ってください。
  */
 class Addon extends Backend
 {
@@ -31,7 +31,7 @@ class Addon extends Backend
     }
 
     /**
-     * 插件列表
+     * プラグイン一覧
      */
     public function index()
     {
@@ -46,7 +46,7 @@ class Addon extends Backend
     }
 
     /**
-     * 配置
+     * 設定
      */
     public function config($name = null)
     {
@@ -78,11 +78,11 @@ class Addon extends Backend
                 }
                 try {
                     $addon = get_addon_instance($name);
-                    //插件自定义配置实现逻辑
+                    //プラグインのカスタム設定ロジックを実装
                     if (method_exists($addon, 'config')) {
                         $addon->config($name, $config);
                     } else {
-                        //更新配置文件
+                        //設定ファイルを更新
                         set_addon_fullconfig($name, $config);
                         Service::refresh();
                     }
@@ -97,7 +97,7 @@ class Addon extends Backend
         $groupList = [];
         $ungroupList = [];
         foreach ($config as $index => &$item) {
-            //如果有设置分组
+            //グループが設定されている場合
             if (isset($item['group']) && $item['group']) {
                 if (!in_array($item['group'], $groupList)) {
                     $groupList["custom" . (count($groupList) + 1)] = $item['group'];
@@ -111,7 +111,7 @@ class Addon extends Backend
             }
         }
         if ($ungroupList) {
-            $groupList['other'] = '其它';
+            $groupList['other'] = 'その他';
         }
         $this->view->assign("groupList", $groupList);
         $this->view->assign("addon", ['info' => $info, 'config' => $config, 'tips' => $tips]);
@@ -121,7 +121,7 @@ class Addon extends Backend
     }
 
     /**
-     * 安装
+     * インストール
      */
     public function install()
     {
@@ -156,7 +156,7 @@ class Addon extends Backend
     }
 
     /**
-     * 卸载
+     * アンインストール
      */
     public function uninstall()
     {
@@ -169,7 +169,7 @@ class Addon extends Backend
         if (!preg_match("/^[a-zA-Z0-9]+$/", $name)) {
             $this->error(__('Addon name incorrect'));
         }
-        //只有开启调试且为超级管理员才允许删除相关数据库
+        //デバッグを有効にし、かつスーパー管理者のみ関連データベースを削除できます
         $tables = [];
         if ($droptables && Config::get("app_debug") && $this->auth->isSuperAdmin()) {
             $tables = get_addon_tables($name);
@@ -178,9 +178,9 @@ class Addon extends Backend
             Service::uninstall($name, $force);
             if ($tables) {
                 $prefix = Config::get('database.prefix');
-                //删除插件关联表
+                //プラグイン関連テーブルを削除
                 foreach ($tables as $index => $table) {
-                    //忽略非插件标识的表名
+                    //プラグイン識別子以外のテーブル名を無視
                     if (!preg_match("/^{$prefix}{$name}/", $table)) {
                         continue;
                     }
@@ -196,7 +196,7 @@ class Addon extends Backend
     }
 
     /**
-     * 禁用启用
+     * 無効化/有効化
      */
     public function state()
     {
@@ -211,7 +211,7 @@ class Addon extends Backend
         }
         try {
             $action = $action == 'enable' ? $action : 'disable';
-            //调用启用、禁用的方法
+            //有効化・無効化メソッドを呼び出す、無効化のメソッド
             Service::$action($name, $force);
             Cache::rm('__menu__');
         } catch (AddonException $e) {
@@ -223,7 +223,7 @@ class Addon extends Backend
     }
 
     /**
-     * 本地上传
+     * ローカルアップロード
      */
     public function local()
     {
@@ -254,7 +254,7 @@ class Addon extends Backend
     }
 
     /**
-     * 更新插件
+     * プラグインを更新
      */
     public function upgrade()
     {
@@ -284,7 +284,7 @@ class Addon extends Backend
                 'oldversion' => $info['version'] ?? '',
                 'faversion'  => $faversion
             ];
-            //调用更新的方法
+            //更新メソッドを呼び出す
             $info = Service::upgrade($name, $extend);
             Cache::rm('__menu__');
         } catch (AddonException $e) {
@@ -296,7 +296,7 @@ class Addon extends Backend
     }
 
     /**
-     * 测试数据
+     * テストデータ
      */
     public function testdata()
     {
@@ -319,7 +319,7 @@ class Addon extends Backend
     }
 
     /**
-     * 已装插件
+     * インストール済みプラグイン
      */
     public function downloaded()
     {
@@ -368,7 +368,7 @@ class Addon extends Backend
     }
 
     /**
-     * 检测
+     * チェック
      */
     public function isbuy()
     {
@@ -392,7 +392,7 @@ class Addon extends Backend
     }
 
     /**
-     * 刷新授权
+     * 認証を更新
      */
     public function authorization()
     {
@@ -410,7 +410,7 @@ class Addon extends Backend
     }
 
     /**
-     * 获取插件相关表
+     * プラグイン関連テーブルを取得
      */
     public function get_table_list()
     {
@@ -421,7 +421,7 @@ class Addon extends Backend
         $tables = get_addon_tables($name);
         $prefix = Config::get('database.prefix');
         foreach ($tables as $index => $table) {
-            //忽略非插件标识的表名
+            //プラグイン識別子以外のテーブル名を無視
             if (!preg_match("/^{$prefix}{$name}/", $table)) {
                 unset($tables[$index]);
             }

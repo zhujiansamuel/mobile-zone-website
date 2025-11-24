@@ -1,4 +1,4 @@
-// 定义模板引擎的语法
+// テンプレートエンジンの構文を定義
 
 
 defaults.openTag = '{{';
@@ -91,10 +91,10 @@ defaults.parser = function (code, options) {
 
         default:
 
-            // 过滤器（辅助方法）
+            // フィルタ（補助メソッド）（ヘルパーメソッド）
             // {{value | filterA:'abcd' | filterB}}
             // >>> $helpers.filterB($helpers.filterA(value, 'abcd'))
-            // TODO: {{ddd||aaa}} 不包含空格
+            // TODO: {{ddd||aaa}} 空白を含まない
             if (/^\s*\|\s*[\w\$]/.test(args)) {
 
                 var escape = true;
@@ -116,12 +116,12 @@ defaults.parser = function (code, options) {
 
                 code = (escape ? '=' : '=#') + val;
 
-            // 即将弃用 {{helperName value}}
+            // まもなく非推奨 {{helperName value}}
             } else if (template.helpers[key]) {
                 
                 code = '=#' + key + '(' + split.join(',') + ');';
             
-            // 内容直接输出 {{value}}
+            // 内容をそのまま出力 {{value}}
             } else {
 
                 code = '=' + code;

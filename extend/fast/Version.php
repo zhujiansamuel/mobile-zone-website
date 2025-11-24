@@ -3,13 +3,13 @@
 namespace fast;
 
 /**
- * 版本检测和对比
+ * バージョンの検出と比較
  */
 class Version
 {
 
     /**
-     * 检测版本是否的版本要求的数据中
+     * バージョンが要件を満たしているかをデータ内で検査
      *
      * @param string $version
      * @param array  $data
@@ -17,7 +17,7 @@ class Version
      */
     public static function check($version, $data = [])
     {
-        //版本号以.分隔
+        //バージョン番号を.で区切る
         $data = is_array($data) ? $data : [$data];
         if ($data) {
             if (in_array("*", $data) || in_array($version, $data)) {
@@ -26,7 +26,7 @@ class Version
             $ver = explode('.', $version);
             if ($ver) {
                 $versize = count($ver);
-                //验证允许的版本
+                //許可されたバージョンを検証
                 foreach ($data as $m) {
                     $c = explode('.', $m);
                     if (!$c || $versize != count($c)) {
@@ -50,7 +50,7 @@ class Version
     }
 
     /**
-     * 比较两个版本号
+     * 2つのバージョン番号を比較
      *
      * @param string $v1
      * @param string $v2

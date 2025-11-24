@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use app\common\controller\Backend;
 
 /**
- * 订单详情管理
+ * 注文詳細管理
  *
  * @icon fa fa-circle-o
  */
@@ -13,7 +13,7 @@ class OrderDetails extends Backend
 {
 
     /**
-     * OrderDetails模型对象
+     * OrderDetailsモデルオブジェクト
      * @var \app\admin\model\OrderDetails
      */
     protected $model = null;

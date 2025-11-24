@@ -9,7 +9,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
             Form.api.bindevent($("form.edit-form"));
 
-            //不可见的元素不验证
+            //非表示要素は検証しない
             $("form#add-form").data("validator-options", {
                 ignore: ':hidden',
                 rules: {
@@ -27,7 +27,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }, 1500);
             });
 
-            //渲染关联显示字段和存储字段
+            //関連する表示フィールドと保存フィールドをレンダリング
             var renderselect = function (id, data, defaultvalue) {
                 var html = [];
                 for (var i = 0; i < data.length; i++) {
@@ -40,7 +40,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     select.selectpicker('refresh');
                 }
             };
-            //关联表切换
+            //関連テーブルの切り替え
             $(document).on('change', "#c-selectpage-table", function (e, first) {
                 var that = this;
                 Fast.api.ajax({
@@ -53,18 +53,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
                 return false;
             });
-            //如果编辑模式则渲染已知数据
+            //編集モードの場合は既知のデータをレンダリング
             if (['selectpage', 'selectpages'].indexOf($("#c-type").val()) > -1) {
                 $("#c-selectpage-table").trigger("change", true);
             }
 
-            //切换类型时
+            //タイプ切り替え時
             $(document).on("change", "#c-type", function () {
                 var value = $(this).val();
                 $(".tf").addClass("hidden");
                 $(".tf.tf-" + value).removeClass("hidden");
                 if (["selectpage", "selectpages"].indexOf(value) > -1 && $("#c-selectpage-table option").length == 1) {
-                    //异步加载表列表
+                    //テーブル一覧を非同期で読み込み
                     Fast.api.ajax({
                         url: "general/config/get_table_list",
                     }, function (data, ret) {
@@ -74,12 +74,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }
             });
 
-            //切换显示隐藏变量字典列表
+            //変数辞書リストの表示／非表示を切り替え
             $(document).on("change", "form#add-form select[name='row[type]']", function (e) {
                 $("#add-content-container").toggleClass("hide", ['select', 'selects', 'checkbox', 'radio'].indexOf($(this).val()) > -1 ? false : true);
             });
 
-            //选择规则
+            //ルールを選択
             $(document).on("click", ".rulelist > li > a", function () {
                 var ruleArr = $("#rule").val() == '' ? [] : $("#rule").val().split(";");
                 var rule = $(this).data("value");
@@ -93,7 +93,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $(this).parent().toggleClass("active");
             });
 
-            //添加向发件人发送测试邮件按钮和方法
+            //送信者にテストメールを送信するボタンとメソッドを追加
             $('input[name="row[mail_from]"]').parent().next().append('<a class="btn btn-info testmail">' + __('Send a test message') + '</a>');
             $(document).on("click", ".testmail", function () {
                 var that = this;
@@ -106,12 +106,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             });
 
-            //删除配置
+            //設定を削除
             $(document).on("click", ".btn-delcfg", function () {
                 var that = this;
                 Layer.confirm(__('Are you sure you want to delete this item?'), {
                     icon: 3,
-                    title: '提示'
+                    title: 'ヒント'
                 }, function (index) {
                     Backend.api.ajax({
                         url: "general/config/del",

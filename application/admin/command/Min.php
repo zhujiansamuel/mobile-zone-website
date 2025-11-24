@@ -12,7 +12,7 @@ class Min extends Command
 {
 
     /**
-     * 路径和文件名配置
+     * パスとファイル名の設定
      */
     protected $options = [
         'cssBaseUrl'  => 'public/assets/css/',
@@ -55,13 +55,13 @@ class Min extends Command
 
         if (!$nodeExec) {
             if (IS_WIN) {
-                // Winsows下请手动配置配置该值,一般将该值配置为 '"C:\Program Files\nodejs\node.exe"'，除非你的Node安装路径有变更
+                // Winsowsではこの値を手動で設定してください,通常はこの値を次のように設定します '"C:\Program Files\nodejs\node.exe"'，あなたのNodeインストールパスが変更されている場合を除き
                 $nodeExec = 'C:\Program Files\nodejs\node.exe';
                 if (file_exists($nodeExec)) {
                     $nodeExec = '"' . $nodeExec . '"';
                 } else {
-                    // 如果 '"C:\Program Files\nodejs\node.exe"' 不存在，可能是node安装路径有变更
-                    // 但安装node会自动配置环境变量，直接执行 '"node.exe"' 提高第一次使用压缩打包的成功率
+                    // もし '"C:\Program Files\nodejs\node.exe"' 存在しない，である可能性がありますnodeインストールパスが変更されている場合を除き
+                    // ただしインストールするとnode環境変数が自動的に設定されるため，直接実行される '"node.exe"' 初回の圧縮パッケージ化の成功率を高めます
                     $nodeExec = '"node.exe"';
                 }
             } else {
@@ -90,7 +90,7 @@ class Min extends Command
                     'ds'          => DS,
                 ];
 
-                //源文件
+                //ソースファイル
                 $from = $data["{$res}BasePath"] . $data["{$res}BaseName"] . '.' . $res;
                 if (!is_file($from)) {
                     $output->error("{$res} source file not found!file:{$from}");
@@ -107,12 +107,12 @@ class Min extends Command
                     $config = preg_replace("/('tableexport'):(.*)\,\n/", "'tableexport': 'empty:',\n", $config);
                     $data['config'] = $config;
                 }
-                // 生成压缩文件
+                // 圧縮ファイルを生成
                 $this->writeToFile($res, $data, $tempFile);
 
                 $output->info("Compress " . $data["{$res}BaseName"] . ".{$res}");
 
-                // 执行压缩
+                // 圧縮を実行
                 $command = "{$nodeExec} \"{$minPath}r.js\" -o \"{$tempFile}\" >> \"{$minPath}node.log\"";
                 if ($output->isDebug()) {
                     $output->warning($command);
@@ -129,7 +129,7 @@ class Min extends Command
     }
 
     /**
-     * 写入到文件
+     * ファイルへ書き込み
      * @param string $name
      * @param array $data
      * @param string $pathname
@@ -152,7 +152,7 @@ class Min extends Command
     }
 
     /**
-     * 获取基础模板
+     * ベーステンプレートを取得
      * @param string $name
      * @return string
      */

@@ -6,17 +6,17 @@ use think\Cache;
 use think\Model;
 
 /**
- * 地区数据模型
+ * エリアデータモデル
  */
 class Area extends Model
 {
 
     /**
-     * 根据经纬度获取当前地区信息
+     * 経度・緯度から現在のエリア情報を取得
      *
-     * @param string $lng 经度
-     * @param string $lat 纬度
-     * @return Area 城市信息
+     * @param string $lng 経度
+     * @param string $lat 緯度
+     * @return Area 都市情報
      */
     public static function getAreaFromLngLat($lng, $lat, $level = 3)
     {
@@ -24,7 +24,7 @@ class Area extends Model
         $rangearr = [1 => 15000, 2 => 1000, 3 => 200];
         $geoname = $namearr[$level] ?? $namearr[3];
         $georange = $rangearr[$level] ?? $rangearr[3];
-        // 读取范围内的ID
+        // 範囲内のIDを読み取るID
         $redis = Cache::store('redis')->handler();
         $georadiuslist = [];
         if (method_exists($redis, 'georadius')) {
@@ -39,10 +39,10 @@ class Area extends Model
     }
 
     /**
-     * 根据经纬度获取省份
+     * 経度・緯度から都道府県を取得
      *
-     * @param string $lng 经度
-     * @param string $lat 纬度
+     * @param string $lng 経度
+     * @param string $lat 緯度
      * @return Area
      */
     public static function getProvinceFromLngLat($lng, $lat)
@@ -56,10 +56,10 @@ class Area extends Model
     }
 
     /**
-     * 根据经纬度获取城市
+     * 経度・緯度から都市を取得
      *
-     * @param string $lng 经度
-     * @param string $lat 纬度
+     * @param string $lng 経度
+     * @param string $lat 緯度
      * @return Area
      */
     public static function getCityFromLngLat($lng, $lat)
@@ -73,10 +73,10 @@ class Area extends Model
     }
 
     /**
-     * 根据经纬度获取地区
+     * 経度・緯度から地域を取得
      *
-     * @param string $lng 经度
-     * @param string $lat 纬度
+     * @param string $lng 経度
+     * @param string $lat 緯度
      * @return Area
      */
     public static function getDistrictFromLngLat($lng, $lat)

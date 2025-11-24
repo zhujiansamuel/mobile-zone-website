@@ -25,12 +25,12 @@ abstract class GeneralPlugin implements PluginInterface
      */
     public function assembly(Rocket $rocket, Closure $next): Rocket
     {
-        Logger::debug('[wechat][GeneralPlugin] 通用插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[wechat][GeneralPlugin] 汎用プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $rocket->setRadar($this->getRequest($rocket));
         $this->doSomething($rocket);
 
-        Logger::info('[wechat][GeneralPlugin] 通用插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[wechat][GeneralPlugin] 汎用プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $next($rocket);
     }

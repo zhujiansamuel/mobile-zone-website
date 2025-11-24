@@ -13,7 +13,7 @@ use think\Config;
 use think\Hook;
 
 /**
- * 公共接口
+ * 共通インターフェース
  */
 class Common extends Api
 {
@@ -24,9 +24,9 @@ class Common extends Api
     {
 
         if (isset($_SERVER['HTTP_ORIGIN'])) {
-            header('Access-Control-Expose-Headers: __token__');//跨域让客户端获取到
+            header('Access-Control-Expose-Headers: __token__');//クロスドメインでクライアントが取得できるようにする
         }
-        //跨域检测
+        //クロスドメイン検出
         check_cors_request();
 
         if (!isset($_COOKIE['PHPSESSID'])) {
@@ -36,11 +36,11 @@ class Common extends Api
     }
 
     /**
-     * 加载初始化
+     * 初期化をロード
      *
-     * @ApiParams (name="version", type="string", required=true, description="版本号")
-     * @ApiParams (name="lng", type="string", required=true, description="经度")
-     * @ApiParams (name="lat", type="string", required=true, description="纬度")
+     * @ApiParams (name="version", type="string", required=true, description="バージョン番号")
+     * @ApiParams (name="lng", type="string", required=true, description="経度")
+     * @ApiParams (name="lat", type="string", required=true, description="緯度")
      */
     public function init()
     {
@@ -48,15 +48,15 @@ class Common extends Api
             $lng = $this->request->request('lng');
             $lat = $this->request->request('lat');
 
-            //配置信息
+            //設定情報
             $upload = Config::get('upload');
-            //如果非服务端中转模式需要修改为中转
+            //サーバー中継モードでない場合は中継に変更する必要があります
             if ($upload['storage'] != 'local' && isset($upload['uploadmode']) && $upload['uploadmode'] != 'server') {
-                //临时修改上传模式为服务端中转
+                //一時的にアップロードモードをサーバー中継に変更
                 set_addon_config($upload['storage'], ["uploadmode" => "server"], false);
 
                 $upload = \app\common\model\Config::upload();
-                // 上传信息配置后
+                // アップロード情報設定後
                 Hook::listen("upload_config_init", $upload);
 
                 $upload = Config::set('upload', array_merge(Config::get('upload'), $upload));
@@ -78,14 +78,14 @@ class Common extends Api
     }
 
     /**
-     * 上传文件
+     * アップロードファイル
      * @ApiMethod (POST)
-     * @ApiParams (name="file", type="file", required=true, description="文件流")
+     * @ApiParams (name="file", type="file", required=true, description="ファイルストリーム")
      */
     public function upload()
     {
         Config::set('default_return_type', 'json');
-        //必须设定cdnurl为空,否则cdnurl函数计算错误
+        //を設定する必要があるcdnurl空,それ以外の場合cdnurl関数の計算が誤ります
         Config::set('upload.cdnurl', '');
         $chunkid = $this->request->post("chunkid");
         if ($chunkid) {
@@ -99,7 +99,7 @@ class Common extends Api
             $method = $this->request->method(true);
             if ($action == 'merge') {
                 $attachment = null;
-                //合并分片文件
+                //分割ファイルを結合する
                 try {
                     $upload = new Upload();
                     $attachment = $upload->merge($chunkid, $chunkcount, $filename);
@@ -108,7 +108,7 @@ class Common extends Api
                 }
                 $this->success(__('Uploaded successful'), ['url' => $attachment->url, 'fullurl' => cdnurl($attachment->url, true)]);
             } elseif ($method == 'clean') {
-                //删除冗余的分片文件
+                //不要な分割ファイルを削除する
                 try {
                     $upload = new Upload();
                     $upload->clean($chunkid);
@@ -117,8 +117,8 @@ class Common extends Api
                 }
                 $this->success();
             } else {
-                //上传分片文件
-                //默认普通上传文件
+                //分割ファイルをアップロードする
+                //デフォルトは通常のファイルアップロード
                 $file = $this->request->file('file');
                 try {
                     $upload = new Upload($file);
@@ -130,7 +130,7 @@ class Common extends Api
             }
         } else {
             $attachment = null;
-            //默认普通上传文件
+            //デフォルトは通常のファイルアップロード
             $file = $this->request->file('file');
             try {
                 $upload = new Upload($file);
@@ -147,8 +147,8 @@ class Common extends Api
     }
 
     /**
-     * 验证码
-     * @ApiParams (name="id", type="string", required=true, description="要生成验证码的标识")
+     * 認証コード
+     * @ApiParams (name="id", type="string", required=true, description="認証コードを生成するための識別子")
      * @return \think\Response
      */
     public function captcha($id = "")

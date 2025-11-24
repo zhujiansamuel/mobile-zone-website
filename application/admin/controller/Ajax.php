@@ -16,7 +16,7 @@ use think\Response;
 use think\Validate;
 
 /**
- * Ajax异步请求接口
+ * Ajax非同期リクエストAPI
  * @internal
  */
 class Ajax extends Backend
@@ -29,19 +29,19 @@ class Ajax extends Backend
     {
         parent::_initialize();
 
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['trim', 'strip_tags', 'htmlspecialchars']);
     }
 
     /**
-     * 加载语言包
+     * 言語パックを読み込む
      */
     public function lang()
     {
         $this->request->get(['callback' => 'define']);
         $header = ['Content-Type' => 'application/javascript'];
         if (!config('app_debug')) {
-            $offset = 30 * 60 * 60 * 24; // 缓存一个月
+            $offset = 30 * 60 * 60 * 24; // 1か月間キャッシュ
             $header['Cache-Control'] = 'public';
             $header['Pragma'] = 'cache';
             $header['Expires'] = gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
@@ -50,13 +50,13 @@ class Ajax extends Backend
         $controllername = $this->request->get('controllername');
         $lang = $this->request->get('lang');
         if (!$lang || !in_array($lang, config('allow_lang_list')) || !$controllername || !preg_match("/^[a-z0-9_\.]+$/i", $controllername)) {
-            return jsonp(['errmsg' => '参数错误'], 200, [], ['json_encode_param' => JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE]);
+            return jsonp(['errmsg' => 'パラメーターエラー'], 200, [], ['json_encode_param' => JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE]);
         }
 
         $controllername = input("controllername");
         $className = Loader::parseClass($this->request->module(), 'controller', $controllername, false);
 
-        //存在对应的类才加载
+        //対応するクラスが存在する場合のみ読み込む
         if (class_exists($className)) {
             $this->loadlang($controllername);
         }
@@ -65,13 +65,13 @@ class Ajax extends Backend
     }
 
     /**
-     * 上传文件
+     * アップロードファイル
      */
     public function upload()
     {
         Config::set('default_return_type', 'json');
 
-        //必须还原upload配置,否则分片及cdnurl函数计算错误
+        //必ず元に戻すupload設定,そうでないと分割アップロードおよびcdnurl関数の計算が誤ります
         Config::load(APP_PATH . 'extra/upload.php', 'upload');
 
         $chunkid = $this->request->post("chunkid");
@@ -86,7 +86,7 @@ class Ajax extends Backend
             $method = $this->request->method(true);
             if ($action == 'merge') {
                 $attachment = null;
-                //合并分片文件
+                //分割ファイルを結合する
                 try {
                     $upload = new Upload();
                     $attachment = $upload->merge($chunkid, $chunkcount, $filename);
@@ -95,7 +95,7 @@ class Ajax extends Backend
                 }
                 $this->success(__('Uploaded successful'), '', ['url' => $attachment->url, 'fullurl' => cdnurl($attachment->url, true)]);
             } elseif ($method == 'clean') {
-                //删除冗余的分片文件
+                //不要な分割ファイルを削除する
                 try {
                     $upload = new Upload();
                     $upload->clean($chunkid);
@@ -104,8 +104,8 @@ class Ajax extends Backend
                 }
                 $this->success();
             } else {
-                //上传分片文件
-                //默认普通上传文件
+                //分割ファイルをアップロードする
+                //デフォルトは通常のファイルアップロード
                 $file = $this->request->file('file');
                 try {
                     $upload = new Upload($file);
@@ -117,7 +117,7 @@ class Ajax extends Backend
             }
         } else {
             $attachment = null;
-            //默认普通上传文件
+            //デフォルトは通常のファイルアップロード
             $file = $this->request->file('file');
             try {
                 $upload = new Upload($file);
@@ -131,34 +131,34 @@ class Ajax extends Backend
     }
 
     /**
-     * 通用排序
+     * 汎用ソート
      */
     public function weigh()
     {
-        //排序的数组
+        //ソート対象の配列
         $ids = $this->request->post("ids");
-        //拖动的记录ID
+        //ドラッグしたレコードID
         $changeid = $this->request->post("changeid");
-        //操作字段
+        //操作フィールド
         $field = $this->request->post("field");
-        //操作的数据表
+        //操作するデータテーブル
         $table = $this->request->post("table");
         if (!Validate::is($table, "alphaDash")) {
             $this->error();
         }
-        //主键
+        //主キー
         $pk = $this->request->post("pk");
-        //排序的方式
+        //ソート方式
         $orderway = strtolower($this->request->post("orderway", ""));
         $orderway = $orderway == 'asc' ? 'ASC' : 'DESC';
         $sour = $weighdata = [];
         $ids = explode(',', $ids);
         $prikey = $pk && preg_match("/^[a-z0-9\-_]+$/i", $pk) ? $pk : (Db::name($table)->getPk() ?: 'id');
         $pid = $this->request->post("pid", "");
-        //限制更新的字段
+        //更新を制限するフィールド
         $field = in_array($field, ['weigh']) ? $field : 'weigh';
 
-        // 如果设定了pid的值,此时只匹配满足条件的ID,其它忽略
+        // もし設定されている場合pidの値,この時、条件を満たすものだけをマッチさせID,その他は無視する
         if ($pid !== '') {
             $hasids = [];
             $list = Db::name($table)->where($prikey, 'in', $ids)->where('pid', 'in', $pid)->field("{$prikey},pid")->select();
@@ -174,7 +174,7 @@ class Ajax extends Backend
             $weighdata[$v[$prikey]] = $v[$field];
         }
         $position = array_search($changeid, $ids);
-        $desc_id = $sour[$position] ?? end($sour);    //移动到目标的ID值,取出所处改变前位置的值
+        $desc_id = $sour[$position] ?? end($sour);    //移動先のID値,取出所处改变前位置的値
         $sour_id = $changeid;
         $weighids = [];
         $temp = array_values(array_diff_assoc($ids, $sour));
@@ -198,7 +198,7 @@ class Ajax extends Backend
     }
 
     /**
-     * 清空系统缓存
+     * システムキャッシュをクリア
      */
     public function wipecache()
     {
@@ -207,7 +207,7 @@ class Ajax extends Backend
             switch ($type) {
                 case 'all':
                 case 'content':
-                    //内容缓存
+                    //コンテンツキャッシュ
                     rmdirs(CACHE_PATH, false);
                     Cache::clear();
                     if ($type == 'content') {
@@ -215,22 +215,22 @@ class Ajax extends Backend
                     }
                     // no break
                 case 'template':
-                    // 模板缓存
+                    // テンプレートキャッシュ
                     rmdirs(TEMP_PATH, false);
                     if ($type == 'template') {
                         break;
                     }
                     // no break
                 case 'addons':
-                    // 插件缓存
+                    // プラグインキャッシュ
                     Service::refresh();
                     if ($type == 'addons') {
                         break;
                     }
                     // no break
                 case 'browser':
-                    // 浏览器缓存
-                    // 只有生产环境下才修改
+                    // ブラウザーキャッシュ
+                    // 本番環境下のみ変更する
                     if (!config('app_debug')) {
                         $version = config('site.version');
                         $newversion = preg_replace_callback("/(.*)\.([0-9]+)\$/", function ($match) {
@@ -261,7 +261,7 @@ class Ajax extends Backend
     }
 
     /**
-     * 读取分类数据,联动列表
+     * カテゴリーデータを読み込む,連動リスト
      */
     public function category()
     {
@@ -282,7 +282,7 @@ class Ajax extends Backend
     }
 
     /**
-     * 读取省市区数据,联动列表
+     * 省市区データを読み込む,連動リスト
      */
     public function area()
     {
@@ -309,7 +309,7 @@ class Ajax extends Backend
     }
 
     /**
-     * 生成后缀图标
+     * 拡張子アイコンを生成
      */
     public function icon()
     {
@@ -317,7 +317,7 @@ class Ajax extends Backend
         $suffix = $suffix ? $suffix : "FILE";
         $data = build_suffix_image($suffix);
         $header = ['Content-Type' => 'image/svg+xml'];
-        $offset = 30 * 60 * 60 * 24; // 缓存一个月
+        $offset = 30 * 60 * 60 * 24; // 1か月間キャッシュ
         $header['Cache-Control'] = 'public';
         $header['Pragma'] = 'cache';
         $header['Expires'] = gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";

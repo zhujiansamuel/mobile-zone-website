@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'Title'      => '标题',
-    'Image'      => '图片',
+    'Title'      => '見出し',
+    'Image'      => '画像',
     'Content'    => '内容',
-    'Weigh'      => '权重',
-    'Createtime' => '创建时间'
+    'Weigh'      => '重み',
+    'Createtime' => '作成時間'
 ];

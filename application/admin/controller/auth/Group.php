@@ -9,10 +9,10 @@ use think\Db;
 use think\Exception;
 
 /**
- * 角色组
+ * ロールグループ
  *
  * @icon   fa fa-group
- * @remark 角色组可以有多个,角色有上下级层级关系,如果子角色有角色组和管理员的权限则可以派生属于自己组别下级的角色组或管理员
+ * @remark ロールグループは複数設定できます,ロールには上下関係の階層があります,子ロールがロールグループと管理者の権限を持つ場合、自分のグループ配下のロールグループや管理者を派生させることができます
  */
 class Group extends Backend
 {
@@ -21,12 +21,12 @@ class Group extends Backend
      * @var \app\admin\model\AuthGroup
      */
     protected $model = null;
-    //当前登录管理员所有子组别
+    //現在ログイン中の管理者の全ての子グループ
     protected $childrenGroupIds = [];
-    //当前组别列表数据
+    //現在のグループの一覧データ
     protected $grouplist = [];
     protected $groupdata = [];
-    //无需要权限判断的方法
+    //権限チェックが不要なメソッド
     protected $noNeedRight = ['roletree'];
 
     public function _initialize()
@@ -68,7 +68,7 @@ class Group extends Backend
     }
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {
@@ -83,7 +83,7 @@ class Group extends Backend
     }
 
     /**
-     * 添加
+     * 追加
      */
     public function add()
     {
@@ -98,14 +98,14 @@ class Group extends Backend
             if (!$parentmodel) {
                 $this->error(__('The parent group can not found'));
             }
-            // 父级别的规则节点
+            // 親レベルのルールノード
             $parentrules = explode(',', $parentmodel->rules);
-            // 当前组别的规则节点
+            // 現在のグループのルールノード
             $currentrules = $this->auth->getRuleIds();
             $rules = $params['rules'];
-            // 如果父组不是超级管理员则需要过滤规则节点,不能超过父组别的权限
+            // 親グループがスーパー管理者でない場合は、ルールノードをフィルタリングする必要があります,親グループの権限を超えることはできません
             $rules = in_array('*', $parentrules) ? $rules : array_intersect($parentrules, $rules);
-            // 如果当前组别不是超级管理员则需要过滤规则节点,不能超当前组别的权限
+            // 現在のグループがスーパー管理者でない場合は、ルールノードをフィルタリングする必要があります,現在のグループの権限を超えることはできません
             $rules = in_array('*', $currentrules) ? $rules : array_intersect($currentrules, $rules);
             $params['rules'] = implode(',', $rules);
             if ($params) {
@@ -118,7 +118,7 @@ class Group extends Backend
     }
 
     /**
-     * 编辑
+     * 編集
      */
     public function edit($ids = null)
     {
@@ -132,11 +132,11 @@ class Group extends Backend
         if ($this->request->isPost()) {
             $this->token();
             $params = $this->request->post("row/a", [], 'strip_tags');
-            //父节点不能是非权限内节点
+            //親ノードを権限外のノードにすることはできません
             if (!in_array($params['pid'], $this->childrenGroupIds)) {
                 $this->error(__('The parent group exceeds permission limit'));
             }
-            // 父节点不能是它自身的子节点或自己本身
+            // 親ノードをその自身の子ノードまたは自分自身にすることはできません
             if (in_array($params['pid'], Tree::instance()->getChildrenIds($row->id, true))) {
                 $this->error(__('The parent group can not be its own child or itself'));
             }
@@ -146,14 +146,14 @@ class Group extends Backend
             if (!$parentmodel) {
                 $this->error(__('The parent group can not found'));
             }
-            // 父级别的规则节点
+            // 親レベルのルールノード
             $parentrules = explode(',', $parentmodel->rules);
-            // 当前组别的规则节点
+            // 現在のグループのルールノード
             $currentrules = $this->auth->getRuleIds();
             $rules = $params['rules'];
-            // 如果父组不是超级管理员则需要过滤规则节点,不能超过父组别的权限
+            // 親グループがスーパー管理者でない場合は、ルールノードをフィルタリングする必要があります,親グループの権限を超えることはできません
             $rules = in_array('*', $parentrules) ? $rules : array_intersect($parentrules, $rules);
-            // 如果当前组别不是超级管理员则需要过滤规则节点,不能超当前组别的权限
+            // 現在のグループがスーパー管理者でない場合は、ルールノードをフィルタリングする必要があります,現在のグループの権限を超えることはできません
             $rules = in_array('*', $currentrules) ? $rules : array_intersect($currentrules, $rules);
             $params['rules'] = implode(',', $rules);
             if ($params) {
@@ -182,7 +182,7 @@ class Group extends Backend
     }
 
     /**
-     * 删除
+     * 削除
      */
     public function del($ids = "")
     {
@@ -196,20 +196,20 @@ class Group extends Backend
             $group_ids = array_map(function ($group) {
                 return $group['id'];
             }, $grouplist);
-            // 移除掉当前管理员所在组别
+            // 現在の管理者が所属するグループを除外
             $ids = array_diff($ids, $group_ids);
 
-            // 循环判断每一个组别是否可删除
+            // 各グループが削除可能かを順に判定
             $grouplist = $this->model->where('id', 'in', $ids)->select();
             $groupaccessmodel = model('AuthGroupAccess');
             foreach ($grouplist as $k => $v) {
-                // 当前组别下有管理员
+                // 現在のグループ配下に管理者が存在します
                 $groupone = $groupaccessmodel->get(['group_id' => $v['id']]);
                 if ($groupone) {
                     $ids = array_diff($ids, [$v['id']]);
                     continue;
                 }
-                // 当前组别下有子组别
+                // 現在のグループ配下に子グループが存在します
                 $groupone = $this->model->get(['pid' => $v['id']]);
                 if ($groupone) {
                     $ids = array_diff($ids, [$v['id']]);
@@ -228,17 +228,17 @@ class Group extends Backend
     }
 
     /**
-     * 批量更新
+     * 一括更新
      * @internal
      */
     public function multi($ids = "")
     {
-        // 组别禁止批量操作
+        // グループは一括操作を禁止します
         $this->error();
     }
 
     /**
-     * 读取角色权限树
+     * ロール権限ツリーを読み込む
      *
      * @internal
      */
@@ -257,7 +257,7 @@ class Group extends Backend
         if (($pid || $parentGroupModel) && (!$id || $currentGroupModel)) {
             $id = $id ? $id : null;
             $ruleList = collection(model('AuthRule')->order('weigh', 'desc')->order('id', 'asc')->select())->toArray();
-            //读取父类角色所有节点列表
+            //親ロールのすべてのノード一覧を読み込む
             $parentRuleList = [];
             if (in_array('*', explode(',', $parentGroupModel->rules))) {
                 $parentRuleList = $ruleList;
@@ -272,16 +272,16 @@ class Group extends Backend
 
             $ruleTree = new Tree();
             $groupTree = new Tree();
-            //当前所有正常规则列表
+            //現在有効なすべてのルール一覧
             $ruleTree->init($parentRuleList);
-            //角色组列表
+            //ロールグループ一覧
             $groupTree->init(collection(model('AuthGroup')->where('id', 'in', $this->childrenGroupIds)->select())->toArray());
 
-            //读取当前角色下规则ID集合
+            //現在のロール配下のルールを読み込むIDIDのコレクション
             $adminRuleIds = $this->auth->getRuleIds();
-            //是否是超级管理员
+            //スーパー管理者かどうか
             $superadmin = $this->auth->isSuperAdmin();
-            //当前拥有的规则ID集合
+            //現在所持しているルールIDIDのコレクション
             $currentRuleIds = $id ? explode(',', $currentGroupModel->rules) : [];
 
             if (!$id || !in_array($pid, $this->childrenGroupIds) || !in_array($pid, $groupTree->getChildrenIds($id, true))) {

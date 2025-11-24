@@ -9,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: luofei614 <weibo.com/luofei614>
 // +----------------------------------------------------------------------
-// | 修改者: anuo (本权限类在原3.2.3的基础上修改过来的)
+// | 修正者: anuo (本権限クラスは元の3.2.3をベースに修正されたものです)
 // +----------------------------------------------------------------------
 
 namespace fast;
@@ -20,40 +20,40 @@ use think\Session;
 use think\Request;
 
 /**
- * 权限认证类
- * 功能特性：
- * 1，是对规则进行认证，不是对节点进行认证。用户可以把节点当作规则名称实现对节点进行认证。
- *      $auth=new Auth();  $auth->check('规则名称','用户id')
- * 2，可以同时对多条规则进行认证，并设置多条规则的关系（or或者and）
- *      $auth=new Auth();  $auth->check('规则1,规则2','用户id','and')
- *      第三个参数为and时表示，用户需要同时具有规则1和规则2的权限。 当第三个参数为or时，表示用户值需要具备其中一个条件即可。默认为or
- * 3，一个用户可以属于多个用户组(think_auth_group_access表 定义了用户所属用户组)。我们需要设置每个用户组拥有哪些规则(think_auth_group 定义了用户组权限)
- * 4，支持规则表达式。
- *      在think_auth_rule 表中定义一条规则，condition字段就可以定义规则表达式。 如定义{score}>5  and {score}<100
- * 表示用户的分数在5-100之间时这条规则才会通过。
+ * 権限認証クラス
+ * 機能特性：
+ * 1，はルールに対して認証を行うものであり，ノードに対して認証を行うものではありません。ユーザーはノードをルール名として扱うことでノードに対する認証を実現できます。
+ *      $auth=new Auth();  $auth->check('ルール名','ユーザーid')
+ * 2，複数のルールを同時に認証できます，かつ複数ルール間の関係を設定できます（orまたはand）
+ *      $auth=new Auth();  $auth->check('ルール1,ルール2','ユーザーid','and')
+ *      3番目のパラメータがandのときは，ユーザーは同時にルール1とルール2の権限を持っている必要があります。 当3番目のパラメータがorのときは，ユーザーはいずれか一つの条件を満たせばよいことを意味します。デフォルトはor
+ * 3，1人のユーザーは複数のユーザーグループに所属できます(think_auth_group_accessテーブル はユーザーが所属するユーザーグループを定義します)。各ユーザーグループがどのルールを持つかを設定する必要があります(think_auth_group はユーザーグループの権限を定義します)
+ * 4，ルール式をサポート。
+ *      でthink_auth_rule テーブルに1件のルールを定義し，conditionフィールドでルール式を定義できます。 例えば{score}>5  and {score}<100
+ * ユーザーのスコアが5-100の範囲にある場合のみこのルールが通過します。
  */
 class Auth
 {
 
     /**
-     * @var object 对象实例
+     * @var object オブジェクトインスタンス
      */
     protected static $instance;
     protected $rules = [];
 
     /**
-     * 当前请求实例
+     * 現在のリクエストインスタンス
      * @var Request
      */
     protected $request;
-    //默认配置
+    //デフォルト設定
     protected $config = [
-        'auth_on'           => 1, // 权限开关
-        'auth_type'         => 1, // 认证方式，1为实时认证；2为登录认证。
-        'auth_group'        => 'auth_group', // 用户组数据表名
-        'auth_group_access' => 'auth_group_access', // 用户-用户组关系表
-        'auth_rule'         => 'auth_rule', // 权限规则表
-        'auth_user'         => 'user', // 用户信息表
+        'auth_on'           => 1, // 権限スイッチ
+        'auth_type'         => 1, // 認証方式，1リアルタイム認証；2ログイン時認証。
+        'auth_group'        => 'auth_group', // ユーザーグループテーブル名
+        'auth_group_access' => 'auth_group_access', // ユーザー-ユーザー组关系表
+        'auth_rule'         => 'auth_rule', // 権限ルールテーブル
+        'auth_user'         => 'user', // ユーザー情報テーブル
     ];
 
     public function __construct()
@@ -61,14 +61,14 @@ class Auth
         if ($auth = Config::get('auth')) {
             $this->config = array_merge($this->config, $auth);
         }
-        // 初始化request
+        // 初期化request
         $this->request = Request::instance();
     }
 
     /**
-     * 初始化
+     * 初期化
      * @access public
-     * @param array $options 参数
+     * @param array $options パラメーター
      * @return Auth
      */
     public static function instance($options = [])
@@ -81,19 +81,19 @@ class Auth
     }
 
     /**
-     * 检查权限
-     * @param string|array $name     需要验证的规则列表,支持逗号分隔的权限规则或索引数组
-     * @param int          $uid      认证用户的id
-     * @param string       $relation 如果为 'or' 表示满足任一条规则即通过验证;如果为 'and'则表示需满足所有规则才能通过验证
-     * @param string       $mode     执行验证的模式,可分为url,normal
-     * @return bool 通过验证返回true;失败返回false
+     * 権限チェック
+     * @param string|array $name     検証が必要なルール一覧,カンマ区切りの権限ルールまたはインデックス配列をサポート
+     * @param int          $uid      認証ユーザーのid
+     * @param string       $relation もし 'or' いずれか1つのルールを満たせば検証を通過することを示す;もし 'and'すべてのルールを満たしてはじめて検証を通過できることを示す
+     * @param string       $mode     検証を実行するモード,はurl,normal
+     * @return bool 検証に合格した場合はtrue;失敗した場合はfalse
      */
     public function check($name, $uid, $relation = 'or', $mode = 'url')
     {
         if (!$this->config['auth_on']) {
             return true;
         }
-        // 获取用户需要验证的所有有效规则列表
+        // ユーザーが検証する必要のあるすべての有効なルール一覧を取得
         $rulelist = $this->getRuleList($uid);
         if (in_array('*', $rulelist)) {
             return true;
@@ -107,18 +107,18 @@ class Auth
                 $name = [$name];
             }
         }
-        $list = []; //保存验证通过的规则名
+        $list = []; //検証を通過したルール名を保存
         if ('url' == $mode) {
             $REQUEST = unserialize(strtolower(serialize($this->request->param())));
         }
         foreach ($rulelist as $rule) {
             $query = preg_replace('/^.+\?/U', '', $rule);
             if ('url' == $mode && $query != $rule) {
-                parse_str($query, $param); //解析规则中的param
+                parse_str($query, $param); //ルール内のparam
                 $intersect = array_intersect_assoc($REQUEST, $param);
                 $rule = preg_replace('/\?.*$/U', '', $rule);
                 if (in_array($rule, $name) && $intersect == $param) {
-                    //如果节点相符且url参数满足
+                    //ノードが一致し、かつurlパラメーターが満たされる場合
                     $list[] = $rule;
                 }
             } else {
@@ -139,10 +139,10 @@ class Auth
     }
 
     /**
-     * 根据用户id获取用户组,返回值为数组
-     * @param int $uid  用户id
-     * @return array       用户所属的用户组 array(
-     *                  array('uid'=>'用户id','group_id'=>'用户组id','name'=>'用户组名称','rules'=>'用户组拥有的规则id,多个,号隔开'),
+     * ユーザーに応じてidユーザーグループを取得,戻り値は配列
+     * @param int $uid  ユーザーid
+     * @return array       ユーザーが所属するユーザーグループ array(
+     *                  array('uid'=>'ユーザーid','group_id'=>'ユーザー组id','name'=>'ユーザー组名称','rules'=>'ユーザー组拥有的规则id,複数を,で区切る'),
      *                  ...)
      */
     public function getGroups($uid)
@@ -152,7 +152,7 @@ class Auth
             return $groups[$uid];
         }
 
-        // 执行查询
+        // クエリを実行
         $user_groups = Db::name($this->config['auth_group_access'])
             ->alias('aga')
             ->join('__' . strtoupper($this->config['auth_group']) . '__ ag', 'aga.group_id = ag.id', 'LEFT')
@@ -164,13 +164,13 @@ class Auth
     }
 
     /**
-     * 获得权限规则列表
-     * @param int $uid 用户id
+     * 権限ルール一覧を取得
+     * @param int $uid ユーザーid
      * @return array
      */
     public function getRuleList($uid)
     {
-        static $_rulelist = []; //保存用户验证通过的权限列表
+        static $_rulelist = []; //ユーザーが検証を通過した権限一覧を保存
         if (isset($_rulelist[$uid])) {
             return $_rulelist[$uid];
         }
@@ -178,33 +178,33 @@ class Auth
             return Session::get('_rule_list_' . $uid);
         }
 
-        // 读取用户规则节点
+        // ユーールノードを読み込む
         $ids = $this->getRuleIds($uid);
         if (empty($ids)) {
             $_rulelist[$uid] = [];
             return [];
         }
 
-        // 筛选条件
+        // 絞り込み条件
         $where = [
             'status' => 'normal'
         ];
         if (!in_array('*', $ids)) {
             $where['id'] = ['in', $ids];
         }
-        //读取用户组所有权限规则
+        //ユーザーグループのすべての権限ルールを読み込む
         $this->rules = Db::name($this->config['auth_rule'])->where($where)->field('id,pid,condition,icon,name,title,ismenu')->select();
 
-        //循环规则，判断结果。
+        //ルールをループ，結果を判定。
         $rulelist = []; //
         if (in_array('*', $ids)) {
             $rulelist[] = "*";
         }
         foreach ($this->rules as $rule) {
-            //超级管理员无需验证condition
+            //スーパー管理者は検証不要condition
             if (!empty($rule['condition']) && !in_array('*', $ids)) {
-                //根据condition进行验证
-                $user = $this->getUserInfo($uid); //获取用户信息,一维数组
+                //に基づいてcondition検証を行う
+                $user = $this->getUserInfo($uid); //ユーザー情報を取得,一次元配列
                 $nums = 0;
                 $condition = str_replace(['&&', '||'], "\r\n", $rule['condition']);
                 $condition = preg_replace('/\{(\w*?)\}/', '\\1', $condition);
@@ -219,14 +219,14 @@ class Auth
                     $rulelist[$rule['id']] = strtolower($rule['name']);
                 }
             } else {
-                //只要存在就记录
+                //存在していれば記録する
                 $rulelist[$rule['id']] = strtolower($rule['name']);
             }
         }
         $_rulelist[$uid] = $rulelist;
-        //登录验证则需要保存规则列表
+        //ログイン認証の場合はルールリストを保存する必要があります
         if (2 == $this->config['auth_type']) {
-            //规则列表结果保存到session
+            //ルールリストの結果を保存する場所session
             Session::set('_rule_list_' . $uid, $rulelist);
         }
         return array_unique($rulelist);
@@ -234,9 +234,9 @@ class Auth
 
     public function getRuleIds($uid)
     {
-        //读取用户所属用户组
+        //ユーザーが所属するユーザーグループを読み込む
         $groups = $this->getGroups($uid);
-        $ids = []; //保存用户所属用户组设置的所有权限规则id
+        $ids = []; //ユーザーが所属するユーザーグループで設定されたすべての権限ルールを保存id
         foreach ($groups as $g) {
             $ids = array_merge($ids, explode(',', trim($g['rules'], ',')));
         }
@@ -245,8 +245,8 @@ class Auth
     }
 
     /**
-     * 获得用户资料
-     * @param int $uid 用户id
+     * ユーザー情報を取得
+     * @param int $uid ユーザーid
      * @return mixed
      */
     protected function getUserInfo($uid)
@@ -254,7 +254,7 @@ class Auth
         static $user_info = [];
 
         $user = Db::name($this->config['auth_user']);
-        // 获取用户表主键
+        // ユーザーテーブルの主キーを取得
         $_pk = is_string($user->getPk()) ? $user->getPk() : 'uid';
         if (!isset($user_info[$uid])) {
             $user_info[$uid] = $user->where($_pk, $uid)->find();

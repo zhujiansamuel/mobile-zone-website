@@ -19,11 +19,11 @@ class Auth
     protected $_logined = false;
     protected $_user = null;
     protected $_token = '';
-    //Token默认有效时长
+    //Tokenデフォルト有効期間
     protected $keeptime = 2592000;
     protected $requestUri = '';
     protected $rules = [];
-    //默认配置
+    //デフォルト設定
     protected $config = [];
     protected $options = [];
     protected $allowFields = ['id', 'name', 'persion_type', 'email', 'zip_code','address','szb','mobile','birthday'];
@@ -38,7 +38,7 @@ class Auth
 
     /**
      *
-     * @param array $options 参数
+     * @param array $options パラメーター
      * @return Auth
      */
     public static function instance($options = [])
@@ -51,7 +51,7 @@ class Auth
     }
 
     /**
-     * 获取User模型
+     * 取得Userモデル
      * @return User
      */
     public function getUser()
@@ -60,7 +60,7 @@ class Auth
     }
 
     /**
-     * 兼容调用user模型的属性
+     * userモデルのプロパティを互換呼び出しuserモデルのプロパティ
      *
      * @param string $name
      * @return mixed
@@ -71,7 +71,7 @@ class Auth
     }
 
     /**
-     * 兼容调用user模型的属性
+     * userモデルのプロパティを互換呼び出しuserモデルのプロパティ
      */
     public function __isset($name)
     {
@@ -79,7 +79,7 @@ class Auth
     }
 
     /**
-     * 根据Token初始化
+     * に基づいてToken初期化
      *
      * @param string $token Token
      * @return boolean
@@ -111,7 +111,7 @@ class Auth
             $this->_logined = true;
             $this->_token = $token;
 
-            //初始化成功的事件
+            //初期化成功イベント
             Hook::listen("user_init_successed", $this->_user);
 
             return true;
@@ -122,18 +122,18 @@ class Auth
     }
 
     /**
-     * 注册用户
+     * ユーザー登録
      *
-     * @param string $username 用户名
-     * @param string $password 密码
-     * @param string $email    邮箱
-     * @param string $mobile   手机号
-     * @param array  $extend   扩展参数
+     * @param string $username ユーザー名
+     * @param string $password パスワード
+     * @param string $email    メールアドレス
+     * @param string $mobile   携帯番号
+     * @param array  $extend   拡張パラメータ
      * @return boolean
      */
     public function register($username, $password, $email = '', $mobile = '', $extend = [])
     {
-        // 检测用户名、昵称、邮箱、手机号是否存在
+        // ユーザー名を検証、ニックネーム、メールアドレス、携帯番号の存在を確認
         if (User::getByUsername($username)) {
             $this->setError('Username already exist');
             return false;
@@ -169,21 +169,21 @@ class Auth
         $params['password'] = $this->getEncryptPassword($password, $params['salt']);
         $params = array_merge($params, $extend);
 
-        //账号注册时需要开启事务,避免出现垃圾数据
+        //アカウント登録時はトランザクションを開始する必要があります,不要データの発生を防ぐ
         Db::startTrans();
         try {
             $user = User::create($params, true);
 
             $this->_user = User::get($user->id);
 
-            //设置Token
+            //設定を行うToken
             $this->_token = Random::uuid();
             Token::set($this->_token, $user->id, $this->keeptime);
 
-            //设置登录状态
+            //ログイン状態を設定
             $this->_logined = true;
 
-            //注册成功的事件
+            //登録成功時のイベント
             Hook::listen("user_register_successed", $this->_user, $data);
             Db::commit();
         } catch (Exception $e) {
@@ -195,10 +195,10 @@ class Auth
     }
 
     /**
-     * 用户登录
+     * ユーザーログイン
      *
-     * @param string $account  账号,用户名、邮箱、手机号
-     * @param string $password 密码
+     * @param string $account  アカウント,ユーザー名、メールアドレス、携帯番号
+     * @param string $password パスワード
      * @return boolean
      */
     public function login($account, $password)
@@ -226,12 +226,12 @@ class Auth
             return false;
         }
 
-        //直接登录会员
+        //会員を直接ログイン
         return $this->direct($user->id);
     }
 
     /**
-     * 退出
+     * ログアウト
      *
      * @return boolean
      */
@@ -241,20 +241,20 @@ class Auth
             $this->setError('You are not logged in');
             return false;
         }
-        //设置登录标识
+        //ログインフラグを設定
         $this->_logined = false;
-        //删除Token
+        //削除Token
         Token::delete($this->_token);
-        //退出成功的事件
+        //ログアウト成功時のイベント
         Hook::listen("user_logout_successed", $this->_user);
         return true;
     }
 
     /**
-     * 修改密码
-     * @param string $newpassword       新密码
-     * @param string $oldpassword       旧密码
-     * @param bool   $ignoreoldpassword 忽略旧密码
+     * パスワードを変更
+     * @param string $newpassword       新しいパスワード
+     * @param string $oldpassword       旧パスワード
+     * @param bool   $ignoreoldpassword 旧パスワードを無視
      * @return boolean
      */
     public function changepwd($newpassword, $oldpassword = '', $ignoreoldpassword = false)
@@ -263,7 +263,7 @@ class Auth
             $this->setError('You are not logged in');
             return false;
         }
-        //判断旧密码是否正确
+        //旧パスワードが正しいか判定
         if ($this->_user->password == $this->getEncryptPassword($oldpassword, $this->_user->salt) || $ignoreoldpassword) {
             Db::startTrans();
             try {
@@ -272,7 +272,7 @@ class Auth
                 $this->_user->save(['loginfailure' => 0, 'password' => $newpassword, 'salt' => $salt]);
 
                 Token::delete($this->_token);
-                //修改密码成功的事件
+                //パスワード変更成功時のイベント
                 Hook::listen("user_changepwd_successed", $this->_user);
                 Db::commit();
             } catch (Exception $e) {
@@ -288,7 +288,7 @@ class Auth
     }
 
     /**
-     * 直接登录账号
+     * アカウントに直接ログイン
      * @param int $user_id
      * @return boolean
      */
@@ -301,17 +301,17 @@ class Auth
                 $ip = request()->ip();
                 $time = time();
 
-                //判断连续登录和最大连续登录
+                //連続ログインおよび最大連続ログインを判定
                 if ($user->logintime < \fast\Date::unixtime('day')) {
                     $user->successions = $user->logintime < \fast\Date::unixtime('day', -1) ? 1 : $user->successions + 1;
                     $user->maxsuccessions = max($user->successions, $user->maxsuccessions);
                 }
 
                 $user->prevtime = $user->logintime;
-                //记录本次登录的IP和时间
+                //今回のログインのIPと時間を記録
                 $user->loginip = $ip;
                 $user->logintime = $time;
-                //重置登录失败次数
+                //ログイン失敗回数をリセット
                 $user->loginfailure = 0;
 
                 $user->save();
@@ -323,7 +323,7 @@ class Auth
 
                 $this->_logined = true;
 
-                //登录成功的事件
+                //ログイン成功時のイベント
                 Hook::listen("user_login_successed", $this->_user);
                 Db::commit();
             } catch (Exception $e) {
@@ -338,9 +338,9 @@ class Auth
     }
 
     /**
-     * 检测是否是否有对应权限
-     * @param string $path   控制器/方法
-     * @param string $module 模块 默认为当前模块
+     * 対応する権限があるかを検証
+     * @param string $path   コントローラー/メソッド
+     * @param string $module モジュール 默认为当前モジュール
      * @return boolean
      */
     public function check($path = null, $module = null)
@@ -360,7 +360,7 @@ class Auth
     }
 
     /**
-     * 判断是否登录
+     * ログインしているか判定
      * @return boolean
      */
     public function isLogin()
@@ -372,7 +372,7 @@ class Auth
     }
 
     /**
-     * 获取当前Token
+     * 現在の取得Token
      * @return string
      */
     public function getToken()
@@ -381,7 +381,7 @@ class Auth
     }
 
     /**
-     * 获取会员基本信息
+     * 会員の基本情報を取得
      */
     public function getUserinfo()
     {
@@ -393,7 +393,7 @@ class Auth
     }
 
     /**
-     * 获取会员组别规则列表
+     * 会員グループのルール一覧を取得
      * @return array|bool|\PDOStatement|string|\think\Collection
      */
     public function getRuleList()
@@ -411,7 +411,7 @@ class Auth
     }
 
     /**
-     * 获取当前请求的URI
+     * 現在のリクエストの〜を取得URI
      * @return string
      */
     public function getRequestUri()
@@ -420,7 +420,7 @@ class Auth
     }
 
     /**
-     * 设置当前请求的URI
+     * 現在のリクエストのURI
      * @param string $uri
      */
     public function setRequestUri($uri)
@@ -429,7 +429,7 @@ class Auth
     }
 
     /**
-     * 获取允许输出的字段
+     * 出力を許可する項目を取得
      * @return array
      */
     public function getAllowFields()
@@ -438,7 +438,7 @@ class Auth
     }
 
     /**
-     * 设置允许输出的字段
+     * 出力を許可する項目を設定
      * @param array $fields
      */
     public function setAllowFields($fields)
@@ -447,8 +447,8 @@ class Auth
     }
 
     /**
-     * 删除一个指定会员
-     * @param int $user_id 会员ID
+     * 指定した会員を削除
+     * @param int $user_id 会員ID
      * @return boolean
      */
     public function delete($user_id)
@@ -459,9 +459,9 @@ class Auth
         }
         Db::startTrans();
         try {
-            // 删除会员
+            // 会員を削除
             User::destroy($user_id);
-            // 删除会员指定的所有Token
+            // 会員指定のすべてのToken
             Token::clear($user_id);
 
             Hook::listen("user_delete_successed", $user);
@@ -475,9 +475,9 @@ class Auth
     }
 
     /**
-     * 获取密码加密后的字符串
-     * @param string $password 密码
-     * @param string $salt     密码盐
+     * パスワードを暗号化した文字列を取得
+     * @param string $password パスワード
+     * @param string $salt     ソルト
      * @return string
      */
     public function getEncryptPassword($password, $salt = '')
@@ -486,9 +486,9 @@ class Auth
     }
 
     /**
-     * 检测当前控制器和方法是否匹配传递的数组
+     * 現在のコントローラーとメソッドが渡された配列と一致するかを検出
      *
-     * @param array $arr 需要验证权限的数组
+     * @param array $arr 権限検証が必要な配列
      * @return boolean
      */
     public function match($arr = [])
@@ -499,18 +499,18 @@ class Auth
             return false;
         }
         $arr = array_map('strtolower', $arr);
-        // 是否存在
+        // 存在するかどうか
         if (in_array(strtolower($request->action()), $arr) || in_array('*', $arr)) {
             return true;
         }
 
-        // 没找到匹配
+        // 一致が見つかりません
         return false;
     }
 
     /**
-     * 设置会话有效时间
-     * @param int $keeptime 默认为永久
+     * セッション有効期間を設定
+     * @param int $keeptime デフォルトは無期限
      */
     public function keeptime($keeptime = 0)
     {
@@ -518,11 +518,11 @@ class Auth
     }
 
     /**
-     * 渲染用户数据
-     * @param array  $datalist  二维数组
-     * @param mixed  $fields    加载的字段列表
-     * @param string $fieldkey  渲染的字段
-     * @param string $renderkey 结果字段
+     * ユーザーデータをレンダリング
+     * @param array  $datalist  2次元配列
+     * @param mixed  $fields    読み込む項目リスト
+     * @param string $fieldkey  レンダリングする項目
+     * @param string $renderkey 結果項目
      * @return array
      */
     public function render(&$datalist, $fields = [], $fieldkey = 'user_id', $renderkey = 'userinfo')
@@ -554,9 +554,9 @@ class Auth
     }
 
     /**
-     * 设置错误信息
+     * エラーメッセージを設定
      *
-     * @param string $error 错误信息
+     * @param string $error エラーメッセージ
      * @return Auth
      */
     public function setError($error)
@@ -566,7 +566,7 @@ class Auth
     }
 
     /**
-     * 获取错误信息
+     * エラーメッセージを取得
      * @return string
      */
     public function getError()

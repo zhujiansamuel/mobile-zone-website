@@ -111,7 +111,7 @@
             return string.replace(/,/g, '،');
         },
         week: {
-            // GB/T 7408-1994《数据元和交换格式·信息交换·日期和时间表示法》与ISO 8601:1988等效
+            // GB/T 7408-1994《データ要素および交換形式·情報交換·日付および時刻の表記方法》とISO 8601:1988同等
             dow: 1, // Monday is the first day of the week.
             doy: 7, // The week that contains Jan 1st is the first week of the year.
         },

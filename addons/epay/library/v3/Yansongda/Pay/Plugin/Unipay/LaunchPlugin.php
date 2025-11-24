@@ -30,7 +30,7 @@ class LaunchPlugin implements PluginInterface
         /* @var Rocket $rocket */
         $rocket = $next($rocket);
 
-        Logger::debug('[unipay][LaunchPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[unipay][LaunchPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         if (should_do_http_request($rocket->getDirection())) {
             $response = Collection::wrap($rocket->getDestination());
@@ -46,7 +46,7 @@ class LaunchPlugin implements PluginInterface
             $rocket->setDestination($response);
         }
 
-        Logger::info('[unipay][LaunchPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[unipay][LaunchPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $rocket;
     }

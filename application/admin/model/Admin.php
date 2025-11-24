@@ -8,9 +8,9 @@ use think\Session;
 class Admin extends Model
 {
 
-    // 开启自动写入时间戳字段
+    // 自動タイムスタンプ書き込みを有効にする
     protected $autoWriteTimestamp = 'int';
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
     protected $hidden = [
@@ -22,7 +22,7 @@ class Admin extends Model
     {
         self::beforeWrite(function ($row) {
             $changed = $row->getChangedData();
-            //如果修改了用户或或密码则需要重新登录
+            //ユーザー名またはパスワードを変更した場合は、再ログインが必要です
             if (isset($changed['username']) || isset($changed['password']) || isset($changed['salt'])) {
                 $row->token = '';
             }

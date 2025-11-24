@@ -1,7 +1,7 @@
 define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], function ($, undefined, Backend, undefined, AdminLTE, Form) {
     var Controller = {
         index: function () {
-            //双击重新加载页面
+            //ダブルクリックでページを再読み込み
             $(document).on("dblclick", ".sidebar-menu li > a", function (e) {
                 $("#con_" + $(this).attr("addtabs") + " iframe").attr('src', function (i, val) {
                     return val;
@@ -9,7 +9,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 e.stopPropagation();
             });
 
-            //修复在移除窗口时下拉框不隐藏的BUG
+            //ウィンドウ削除時にドロップダウンが非表示にならない不具合を修正BUG
             $(window).on("blur", function () {
                 $("[data-toggle='dropdown']").parent().removeClass("open");
                 if ($("body").hasClass("sidebar-open")) {
@@ -17,7 +17,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 }
             });
 
-            //快捷搜索
+            //クイック検索
             $(".menuresult").width($("form.sidebar-form > .input-group").width());
             var searchResult = $(".menuresult");
             $("form.sidebar-form").on("blur", "input[name=q]", function () {
@@ -47,20 +47,20 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                     searchResult.addClass("hide");
                 }
             });
-            //快捷搜索点击事件
+            //クイック検索クリックイベント
             $("form.sidebar-form").on('mousedown click', '.menuresult a[data-url]', function () {
                 Backend.api.addtabs($(this).data("url"));
             });
 
-            //切换左侧sidebar显示隐藏
+            //左側を切り替えsidebar表示／非表示
             $(document).on("click fa.event.toggleitem", ".sidebar-menu li > a", function (e) {
                 var nextul = $(this).next("ul");
                 if (nextul.length == 0 && (!$(this).parent("li").hasClass("treeview") || ($("body").hasClass("multiplenav") && $(this).parent().parent().hasClass("sidebar-menu")))) {
                     $(".sidebar-menu li").not($(this).parents("li")).removeClass("active");
                 }
-                //当外部触发隐藏的a时,触发父辈a的事件
+                //外部で非表示のaのときは,の親要素をトリガーaのイベント
                 if (!$(this).closest("ul").is(":visible")) {
-                    //如果不需要左侧的菜单栏联动可以注释下面一行即可
+                    //左側メニューの連動が不要な場合は、下記の1行をコメントアウトしてください
                     $(this).closest("ul").prev().trigger("click");
                 }
 
@@ -73,7 +73,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 e.stopPropagation();
             });
 
-            //清除缓存
+            //キャッシュをクリア
             $(document).on('click', "ul.wipecache li a,a.wipecache", function () {
                 $.ajax({
                     url: 'ajax/wipecache',
@@ -97,7 +97,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 });
             });
 
-            //全屏事件
+            //フルスクリーンイベント
             $(document).on('click', "[data-toggle='fullscreen']", function () {
                 var doc = document.documentElement;
                 if ($(document.body).hasClass("full-screen")) {
@@ -113,7 +113,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
             var firstnav = $("#firstnav .nav-addtabs");
             var nav = multiplenav ? $("#secondnav .nav-addtabs") : firstnav;
 
-            //刷新菜单事件
+            //メニュー更新イベント
             $(document).on('refresh', '.sidebar-menu', function () {
                 Fast.api.ajax({
                     url: 'index/index',
@@ -135,7 +135,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
 
             if (multiplenav) {
                 firstnav.css("overflow", "inherit");
-                //一级菜单自适应
+                //第1階層メニュー自動調整
                 $(window).resize(function () {
                     var siblingsWidth = 0;
                     firstnav.siblings().each(function () {
@@ -145,7 +145,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                     firstnav.refreshAddtabs();
                 });
 
-                //点击顶部第一级菜单栏
+                //上部第1階層メニューをクリック
                 firstnav.on("click", "li a", function () {
                     $("li", firstnav).removeClass("active");
                     $(this).closest("li").addClass("active");
@@ -173,7 +173,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                     mobilenav.append($(this).clone().addClass("btn btn-app"));
                 });
 
-                //点击移动端一级菜单
+                //モバイル端末の第1階層メニューをクリック
                 mobilenav.on("click", "a", function () {
                     $("a", mobilenav).removeClass("active");
                     $(this).addClass("active");
@@ -184,7 +184,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                     }
                 });
 
-                //点击左侧菜单栏
+                //左側メニューをクリック
                 $(document).on('click', '.sidebar-menu li a[addtabs]', function (e) {
                     var parents = $(this).parentsUntil("ul.sidebar-menu", "li");
                     var top = parents[parents.length - 1];
@@ -204,10 +204,10 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 });
             }
 
-            //这一行需要放在点击左侧链接事件之前
+            //この行は左側リンククリックイベントの前に記述する必要があります
             var addtabs = Config.referer ? sessionStorage.getItem("addtabs") : null;
 
-            //绑定tabs事件,如果需要点击强制刷新iframe,则请将iframeForceRefresh置为true,iframeForceRefreshTable只强制刷新表格
+            //バインドtabsイベント,クリックで強制リフレッシュが必要な場合はiframe,をiframeForceRefreshに設定するtrue,iframeForceRefreshTableテーブルのみを強制的にリフレッシュ
             nav.addtabs({iframeHeight: "100%", iframeForceRefresh: false, iframeForceRefreshTable: true, nav: nav});
 
             if ($("ul.sidebar-menu li.active a").length > 0) {
@@ -220,7 +220,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 }
             }
 
-            //如果是刷新操作则直接返回刷新前的页面
+            //リフレッシュ操作の場合はリフレッシュ前のページにそのまま戻る
             if (Config.referer) {
                 if (Config.referer === $(addtabs).attr("url")) {
                     var active = $("ul.sidebar-menu li a[addtabs=" + $(addtabs).attr("addtabs") + "]");
@@ -233,7 +233,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                         $(addtabs).appendTo(document.body).addClass("hide").trigger("click");
                     }
                 } else {
-                    //刷新页面后跳到到刷新前的页面
+                    //ページ更新後に更新前のページへ移動
                     Backend.api.addtabs(Config.referer);
                 }
             }
@@ -266,7 +266,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 "skin-black-pink",
             ];
 
-            // 皮肤切换
+            // テーマ切り替え
             $("[data-skin]").on('click', function (e) {
                 var skin = $(this).data('skin');
                 if (!$("body").hasClass(skin)) {
@@ -280,18 +280,18 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 return false;
             });
 
-            // 收起菜单栏切换
+            // メニューをたたむ切り替え
             $("[data-layout='sidebar-collapse']").on('click', function () {
                 $(".sidebar-toggle").trigger("click");
             });
 
-            // 切换子菜单显示和菜单小图标的显示
+            // サブメニュー表示とメニューアイコン表示の切り替え
             $("[data-menu='show-submenu']").on('click', function () {
                 createCookie('show_submenu', $(this).prop("checked") ? 1 : 0);
                 location.reload();
             });
 
-            // 右侧控制栏切换
+            // 右サイドコントロールバーの切り替え
             $("[data-controlsidebar]").on('click', function () {
                 var cls = $(this).data('controlsidebar');
                 $("body").toggleClass(cls);
@@ -311,7 +311,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                     $('.control-sidebar').removeClass('control-sidebar-open');
             });
 
-            // 右侧控制栏背景切换
+            // 右サイドコントロールバー背景の切り替え
             $("[data-sidebarskin='toggle']").on('click', function () {
                 var sidebar = $(".control-sidebar");
                 if (sidebar.hasClass("control-sidebar-dark")) {
@@ -323,7 +323,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 }
             });
 
-            // 菜单栏展开或收起
+            // メニューを展開／折りたたみ
             $("[data-enable='expandOnHover']").on('click', function () {
                 $.AdminLTE.options.sidebarExpandOnHover = $(this).prop("checked") ? 1 : 0;
                 localStorage.setItem('sidebarExpandOnHover', $.AdminLTE.options.sidebarExpandOnHover);
@@ -331,7 +331,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 $.AdminLTE.layout.fixSidebar();
             });
 
-            // 切换菜单栏
+            // メニュー切り替え
             $(document).on("click", ".sidebar-toggle", function () {
                 setTimeout(function(){
                     var value = $("body").hasClass("sidebar-collapse") ? 1 : 0;
@@ -342,21 +342,21 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 }, 0);
             });
 
-            // 切换多级菜单
+            // 多階層メニューの切り替え
             $(document).on("click", "[data-config='multiplenav']", function () {
                 var value = $(this).prop("checked") ? 1 : 0;
                 createCookie('multiplenav', value);
                 location.reload();
             });
 
-            // 切换多选项卡
+            // 複数タブの切り替え
             $(document).on("click", "[data-config='multipletab']", function () {
                 var value = $(this).prop("checked") ? 1 : 0;
                 $("body").toggleClass("multipletab", value);
                 createCookie('multipletab', value);
             });
 
-            // 重设选项
+            // オプションをリセット
             if ($('body').hasClass('fixed')) {
                 $("[data-layout='fixed']").attr('checked', 'checked');
             }
@@ -392,10 +392,10 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 $("#profile-name").val(lastlogin.username);
             }
 
-            //让错误提示框居中
+            //エラーのポップアップを中央に表示
             Fast.config.toastr.positionClass = "toast-top-center";
 
-            //本地验证未通过时提示
+            //ローカル検証に失敗した場合のメッセージ
             $("#login-form").data("validator-options", {
                 invalid: function (form, errors) {
                     $.each(errors, function (i, j) {
@@ -405,7 +405,7 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'adminlte', 'form'], functi
                 target: '#errtips'
             });
 
-            //为表单绑定事件
+            //フォームにイベントをバインド
             Form.api.bindevent($("#login-form"), function (data) {
                 localStorage.setItem("lastlogin", JSON.stringify({
                     id: data.id,

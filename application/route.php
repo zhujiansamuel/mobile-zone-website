@@ -34,13 +34,13 @@ Route::rule('gdetails/:id','index/index/goods_details');
 Route::rule('ndetails/:id','index/index/news_details');
 Route::rule('odetails/:id','index/user/order_details');
 return [
-    //别名配置,别名只能是映射到控制器且访问时必须加上请求的方法
+    //エイリアス設定,エイリアスはコントローラーへのマッピングのみ可能で、アクセス時には必ずリクエストメソッドを付加する必要があります
     '__alias__'   => [
     ],
-    //变量规则
+    //変数ルール
     '__pattern__' => [
     ],
-//        域名绑定到模块
+//        ドメインをモジュールにバインド
 //        '__domain__'  => [
 //            'admin' => 'admin',
 //            'api'   => 'api',

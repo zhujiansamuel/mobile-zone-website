@@ -16,7 +16,7 @@ class AgreementUnsignPlugin implements PluginInterface
 {
     public function assembly(Rocket $rocket, Closure $next): Rocket
     {
-        Logger::debug('[alipay][AgreementUnsignPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[alipay][AgreementUnsignPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $rocket->mergePayload([
             'method' => 'alipay.user.agreement.unsign',
@@ -26,7 +26,7 @@ class AgreementUnsignPlugin implements PluginInterface
             ),
         ]);
 
-        Logger::info('[alipay][AgreementUnsignPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[alipay][AgreementUnsignPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $next($rocket);
     }

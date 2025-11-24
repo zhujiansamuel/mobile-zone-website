@@ -8,15 +8,15 @@ use think\Model;
 class AuthRule extends Model
 {
 
-    // 开启自动写入时间戳字段
+    // 自動タイムスタンプ書き込みを有効にする
     protected $autoWriteTimestamp = 'int';
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
-    // 数据自动完成字段
+    // データ自動補完フィールド
     protected $insert = ['py', 'pinyin'];
     protected $update = ['py', 'pinyin'];
-    // 拼音对象
+    // ピンインオブジェクト
     protected static $pinyin = null;
 
     protected static function init()

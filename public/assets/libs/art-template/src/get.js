@@ -1,17 +1,17 @@
 /**
- * 获取编译缓存（可由外部重写此方法）
- * @param   {String}    模板名
- * @param   {Function}  编译好的函数
+ * コンパイルキャッシュを取得（外部からこのメソッドを上書き可能）（外部からこのメソッドを上書き可能）
+ * @param   {String}    テンプレート名
+ * @param   {Function}  コンパイル済み関数
  */
 template.get = function (filename) {
 
     var cache;
     
     if (cacheStore[filename]) {
-        // 使用内存缓存
+        // メモリキャッシュを使用
         cache = cacheStore[filename];
     } else if (typeof document === 'object') {
-        // 加载模板并编译
+        // テンプレートを読み込みコンパイル
         var elem = document.getElementById(filename);
         
         if (elem) {

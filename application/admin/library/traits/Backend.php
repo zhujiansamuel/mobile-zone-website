@@ -20,7 +20,7 @@ use think\response\Json;
 trait Backend
 {
     /**
-     * 排除前台提交过来的字段
+     * フロントエンドから送信されたフィールドを除外
      * @param $params
      * @return array
      */
@@ -39,7 +39,7 @@ trait Backend
     }
 
     /**
-     * 查看
+     * 表示
      *
      * @return string|Json
      * @throws \think\Exception
@@ -47,7 +47,7 @@ trait Backend
      */
     public function index()
     {
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['strip_tags', 'trim']);
         if (false === $this->request->isAjax()) {
             return $this->view->fetch();
@@ -74,7 +74,7 @@ trait Backend
             $this->relationSearch = true;
             $orderParam = $param['orderParam'];
         }
-        //如果发送的来源是 Selectpage，则转发到 Selectpage
+        //送信元が Selectpage，の場合は、次に転送する Selectpage
         if ($this->request->request('keyField')) {
             return $this->selectpage();
         }
@@ -101,14 +101,14 @@ trait Backend
     }
 
     /**
-     * 回收站
+     * ゴミ箱
      *
      * @return string|Json
      * @throws \think\Exception
      */
     public function recyclebin()
     {
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['strip_tags', 'trim']);
         if (false === $this->request->isAjax()) {
             return $this->view->fetch();
@@ -124,7 +124,7 @@ trait Backend
     }
 
     /**
-     * 添加
+     * 追加
      *
      * @return string
      * @throws \think\Exception
@@ -151,7 +151,7 @@ trait Backend
         $result = false;
         Db::startTrans();
         try {
-            //是否采用模型验证
+            //モデル検証を採用するかどうか
             if ($this->modelValidate) {
                 $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.add' : $name) : $this->modelValidate;
@@ -175,7 +175,7 @@ trait Backend
     }
 
     /**
-     * 编辑
+     * 編集
      *
      * @param $ids
      * @return string
@@ -215,7 +215,7 @@ trait Backend
         $result = false;
         Db::startTrans();
         try {
-            //是否采用模型验证
+            //モデル検証を採用するかどうか
             if ($this->modelValidate) {
                 $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
@@ -238,7 +238,7 @@ trait Backend
     }
 
     /**
-     * 删除
+     * 削除
      *
      * @param $ids
      * @return void
@@ -286,7 +286,7 @@ trait Backend
     }
 
     /**
-     * 真实删除
+     * 物理削除
      *
      * @param $ids
      * @return void
@@ -324,7 +324,7 @@ trait Backend
     }
 
     /**
-     * 还原
+     * 復元
      *
      * @param $ids
      * @return void
@@ -362,7 +362,7 @@ trait Backend
     }
 
     /**
-     * 批量更新
+     * 一括更新
      *
      * @param $ids
      * @return void
@@ -408,7 +408,7 @@ trait Backend
     }
 
     /**
-     * 导入
+     * インポート
      *
      * @return void
      * @throws PDOException
@@ -424,7 +424,7 @@ trait Backend
         if (!is_file($filePath)) {
             $this->error(__('No results were found'));
         }
-        //实例化reader
+        //インスタンス化reader
         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
         if (!in_array($ext, ['csv', 'xls', 'xlsx'])) {
             $this->error(__('Unknown data format'));
@@ -456,7 +456,7 @@ trait Backend
             $reader = new Xlsx();
         }
 
-        //导入文件首行类型,默认是注释,如果需要使用字段名称请使用name
+        //インポートファイルの先頭行のタイプ,デフォルトはコメント,フィールド名を使用する必要がある場合は、を使用してくださいname
         $importHeadType = isset($this->importHeadType) ? $this->importHeadType : 'comment';
 
         $table = $this->model->getQuery()->getTable();
@@ -465,22 +465,22 @@ trait Backend
         $list = db()->query("SELECT COLUMN_NAME,COLUMN_COMMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?", [$table, $database]);
         foreach ($list as $k => $v) {
             if ($importHeadType == 'comment') {
-                $v['COLUMN_COMMENT'] = explode(':', $v['COLUMN_COMMENT'])[0]; //字段备注有:时截取
+                $v['COLUMN_COMMENT'] = explode(':', $v['COLUMN_COMMENT'])[0]; //フィールド備考に:がある場合は切り出す
                 $fieldArr[$v['COLUMN_COMMENT']] = $v['COLUMN_NAME'];
             } else {
                 $fieldArr[$v['COLUMN_NAME']] = $v['COLUMN_NAME'];
             }
         }
 
-        //加载文件
+        //ファイルを読み込む
         $insert = [];
         try {
             if (!$PHPExcel = $reader->load($filePath)) {
                 $this->error(__('Unknown data format'));
             }
-            $currentSheet = $PHPExcel->getSheet(0);  //读取文件中的第一个工作表
-            $allColumn = $currentSheet->getHighestDataColumn(); //取得最大的列号
-            $allRow = $currentSheet->getHighestRow(); //取得一共有多少行
+            $currentSheet = $PHPExcel->getSheet(0);  //ファイル内の最初のワークシートを読み込む
+            $allColumn = $currentSheet->getHighestDataColumn(); //最大の列番号を取得
+            $allRow = $currentSheet->getHighestRow(); //合計行数を取得
             $maxColumnNumber = Coordinate::columnIndexFromString($allColumn);
             $fields = [];
             for ($currentRow = 1; $currentRow <= 1; $currentRow++) {
@@ -515,7 +515,7 @@ trait Backend
         }
 
         try {
-            //是否包含admin_id字段
+            //含まれているかどうかadmin_idフィールド
             $has_admin_id = false;
             foreach ($fieldArr as $name => $key) {
                 if ($key == 'admin_id') {
@@ -535,7 +535,7 @@ trait Backend
         } catch (PDOException $exception) {
             $msg = $exception->getMessage();
             if (preg_match("/.+Integrity constraint violation: 1062 Duplicate entry '(.+)' for key '(.+)'/is", $msg, $matches)) {
-                $msg = "导入失败，包含【{$matches[1]}】的记录已存在";
+                $msg = "インポートに失敗しました，を含む【{$matches[1]}】のレコードはすでに存在します";
             };
             $this->error($msg);
         } catch (Exception $e) {

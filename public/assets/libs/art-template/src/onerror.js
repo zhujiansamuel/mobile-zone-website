@@ -1,5 +1,5 @@
 /**
- * 模板错误事件（可由外部重写此方法）
+ * テンプレートエラーイベント（外部からこのメソッドを上書き可能）
  * @name    template.onerror
  * @event
  */
@@ -15,7 +15,7 @@ template.onerror = function (e) {
 };
 
 
-// 模板调试器
+// テンプレートデバッガ
 var showDebugInfo = function (e) {
 
     template.onerror(e);

@@ -7,7 +7,7 @@ use think\Cache;
 use think\Session;
 
 /**
- * 微信授权
+ * WeChat 認可
  *
  */
 class Wechat
@@ -23,7 +23,7 @@ class Wechat
     }
 
     /**
-     * 获取微信授权链接
+     * WeChat 認可リンクを取得
      *
      * @return string
      */
@@ -37,7 +37,7 @@ class Wechat
     }
 
     /**
-     * 获取微信openid
+     * WeChat を取得openid
      *
      * @return mixed|string
      */
@@ -69,7 +69,7 @@ class Wechat
     }
 
     /**
-     * 获取授权token网页授权
+     * 認可を取得tokenウェブ認可
      *
      * @param string $code
      * @return mixed|string

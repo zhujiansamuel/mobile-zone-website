@@ -11,7 +11,7 @@ use think\File;
 use think\Hook;
 
 /**
- * 文件上传类
+ * ファイルアップロードクラス
  */
 class Upload
 {
@@ -39,7 +39,7 @@ class Upload
     }
 
     /**
-     * 设置分片目录
+     * チャンクディレクトリを設定
      * @param $dir
      */
     public function setChunkDir($dir)
@@ -48,7 +48,7 @@ class Upload
     }
 
     /**
-     * 获取文件
+     * ファイルを取得
      * @return File
      */
     public function getFile()
@@ -57,7 +57,7 @@ class Upload
     }
 
     /**
-     * 设置文件
+     * ファイルを設定
      * @param $file
      * @throws UploadException
      */
@@ -80,13 +80,13 @@ class Upload
     }
 
     /**
-     * 检测是否为可执行脚本
+     * 実行可能スクリプトかどうかをチェック
      * @return bool
      * @throws UploadException
      */
     protected function checkExecutable()
     {
-        //禁止上传PHP和HTML文件
+        //アップロードを禁止PHPとHTMLファイル
         if (in_array($this->fileInfo['type'], ['text/x-php', 'text/html']) || in_array($this->fileInfo['suffix'], ['php', 'html', 'htm', 'phar', 'phtml']) || preg_match("/^php(.*)/i", $this->fileInfo['suffix'])) {
             throw new UploadException(__('Uploaded file format is limited'));
         }
@@ -94,7 +94,7 @@ class Upload
     }
 
     /**
-     * 检测文件类型
+     * ファイルタイプをチェック
      * @return bool
      * @throws UploadException
      */
@@ -102,11 +102,11 @@ class Upload
     {
         $mimetypeArr = explode(',', strtolower($this->config['mimetype']));
         $typeArr = explode('/', $this->fileInfo['type']);
-        //Mimetype值不正确
+        //Mimetype値が正しくありません
         if (stripos($this->fileInfo['type'], '/') === false) {
             throw new UploadException(__('Uploaded file format is limited'));
         }
-        //验证文件后缀
+        //ファイル拡張子を検証
         if ($this->config['mimetype'] === '*'
             || in_array($this->fileInfo['suffix'], $mimetypeArr) || in_array('.' . $this->fileInfo['suffix'], $mimetypeArr)
             || in_array($typeArr[0] . "/*", $mimetypeArr) || (in_array($this->fileInfo['type'], $mimetypeArr) && stripos($this->fileInfo['type'], '/') !== false)) {
@@ -116,14 +116,14 @@ class Upload
     }
 
     /**
-     * 检测是否图片
+     * 画像かどうかをチェック
      * @param bool $force
      * @return bool
      * @throws UploadException
      */
     protected function checkImage($force = false)
     {
-        //验证是否为图片文件
+        //画像ファイルかどうかを検証
         if (in_array($this->fileInfo['type'], ['image/gif', 'image/jpg', 'image/jpeg', 'image/bmp', 'image/png', 'image/webp']) || in_array($this->fileInfo['suffix'], ['gif', 'jpg', 'jpeg', 'bmp', 'png', 'webp'])) {
             $imgInfo = getimagesize($this->fileInfo['tmp_name']);
             if (!$imgInfo || !isset($imgInfo[0]) || !isset($imgInfo[1])) {
@@ -138,7 +138,7 @@ class Upload
     }
 
     /**
-     * 检测文件大小
+     * ファイルサイズを検査
      * @throws UploadException
      */
     protected function checkSize()
@@ -158,7 +158,7 @@ class Upload
     }
 
     /**
-     * 获取后缀
+     * 拡張子を取得
      * @return string
      */
     public function getSuffix()
@@ -167,11 +167,11 @@ class Upload
     }
 
     /**
-     * 获取存储的文件名
-     * @param string $savekey  保存路径
-     * @param string $filename 文件名
-     * @param string $md5      文件MD5
-     * @param string $category 分类
+     * 保存ファイル名を取得
+     * @param string $savekey  保存パス
+     * @param string $filename ファイル名
+     * @param string $md5      ファイルMD5
+     * @param string $category カテゴリ
      * @return mixed|null
      */
     public function getSavekey($savekey = null, $filename = null, $md5 = null, $category = null)
@@ -211,7 +211,7 @@ class Upload
     }
 
     /**
-     * 清理分片文件
+     * 分割ファイルをクリーンアップ
      * @param $chunkid
      */
     public function clean($chunkid)
@@ -229,7 +229,7 @@ class Upload
     }
 
     /**
-     * 合并分片文件
+     * 分割ファイルを結合する
      * @param string $chunkid
      * @param int    $chunkcount
      * @param string $filename
@@ -245,7 +245,7 @@ class Upload
         $filePath = $this->chunkDir . DS . $chunkid;
 
         $completed = true;
-        //检查所有分片是否都存在
+        //すべてのチャンクが存在するか確認
         for ($i = 0; $i < $chunkcount; $i++) {
             if (!file_exists("{$filePath}-{$i}.part")) {
                 $completed = false;
@@ -257,14 +257,14 @@ class Upload
             throw new UploadException(__('Chunk file info error'));
         }
 
-        //如果所有文件分片都上传完毕，开始合并
+        //すべてのファイルチャンクのアップロードが完了した場合，マージを開始
         $uploadPath = $filePath;
 
         if (!$destFile = @fopen($uploadPath, "wb")) {
             $this->clean($chunkid);
             throw new UploadException(__('Chunk file merge error'));
         }
-        if (flock($destFile, LOCK_EX)) { // 进行排他型锁定
+        if (flock($destFile, LOCK_EX)) { // 排他ロックを行う
             for ($i = 0; $i < $chunkcount; $i++) {
                 $partFile = "{$filePath}-{$i}.part";
                 if (!$handle = @fopen($partFile, "rb")) {
@@ -274,7 +274,7 @@ class Upload
                     fwrite($destFile, $buff);
                 }
                 @fclose($handle);
-                @unlink($partFile); //删除分片
+                @unlink($partFile); //チャンクを削除
             }
 
             flock($destFile, LOCK_UN);
@@ -294,13 +294,13 @@ class Upload
             $file->setSaveName($filename)->setUploadInfo($info);
             $file->isTest(true);
 
-            //重新设置文件
+            //ファイルを再設定
             $this->setFile($file);
 
             unset($file);
             $this->merging = true;
 
-            //允许大文件
+            //大容量ファイルを許可
             $this->config['maxsize'] = "1024G";
 
             $attachment = $this->upload();
@@ -312,7 +312,7 @@ class Upload
     }
 
     /**
-     * 分片上传
+     * チャンクアップロード
      * @throws UploadException
      */
     public function chunk($chunkid, $chunkindex, $chunkcount, $chunkfilesize = null, $chunkfilename = null, $direct = false)
@@ -348,7 +348,7 @@ class Upload
     }
 
     /**
-     * 普通上传
+     * 通常アップロード
      * @return \app\common\model\attachment|\think\Model
      * @throws UploadException
      */
@@ -372,7 +372,7 @@ class Upload
 
         $sha1 = $this->file->hash();
 
-        //如果是合并文件
+        //マージファイルの場合
         if ($this->merging) {
             if (!$this->file->check()) {
                 throw new UploadException($this->file->getError());
@@ -390,7 +390,7 @@ class Upload
         } else {
             $file = $this->file->move($destDir, $fileName);
             if (!$file) {
-                // 上传失败获取错误信息
+                // アップロード失敗時のエラー情報を取得
                 throw new UploadException($this->file->getError());
             }
         }
@@ -424,7 +424,7 @@ class Upload
     }
 
     /**
-     * 设置错误信息
+     * エラーメッセージを設定
      * @param $msg
      */
     public function setError($msg)
@@ -433,7 +433,7 @@ class Upload
     }
 
     /**
-     * 获取错误信息
+     * エラーメッセージを取得
      * @return string
      */
     public function getError()

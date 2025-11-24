@@ -7,7 +7,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
             validator: function (form, success, error, submit) {
                 if (!form.is("form"))
                     return;
-                //绑定表单事件
+                //フォームイベントをバインド
                 form.validator($.extend({
                     rules: {
                         username: [/^\w{3,30}$/, __('Username must be 3 to 30 characters')],
@@ -45,7 +45,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                         var that = this, submitBtn = $(".layer-footer [type=submit]", form);
                         that.holdSubmit(true);
                         submitBtn.addClass("disabled");
-                        //验证通过提交表单
+                        //検証通過後にフォーム送信
                         var submitResult = Form.api.submit($(ret), function (data, ret) {
                             that.holdSubmit(false);
                             submitBtn.removeClass("disabled");
@@ -57,7 +57,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                                     return false;
                                 }
                             }
-                            //提示及关闭当前窗口
+                            //メッセージ表示と現在ウィンドウを閉じる
                             var msg = ret.hasOwnProperty("msg") && ret.msg !== "" ? ret.msg : __('Operation completed');
                             parent.Toastr.success(msg);
                             parent.$(".btn-refresh").trigger("click");
@@ -78,7 +78,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                                 }
                             }
                         }, submit);
-                        //如果提交失败则释放锁定
+                        //送信に失敗した場合はロックを解除
                         if (!submitResult) {
                             that.holdSubmit(false);
                             submitBtn.removeClass("disabled");
@@ -87,9 +87,9 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                     }
                 }, form.data("validator-options") || {}));
 
-                //移除提交按钮的disabled类
+                //送信ボタンのdisabledクラス
                 $(".layer-footer [type=submit],.fixed-footer [type=submit],.normal-footer [type=submit]", form).removeClass("disabled");
-                //自定义关闭按钮事件
+                //カスタム閉じるボタンイベント
                 form.on("click", ".layer-close", function () {
                     if (window.name) {
                         var index = parent.Layer.getFrameIndex(window.name);
@@ -99,7 +99,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 });
             },
             selectpicker: function (form) {
-                //绑定select元素事件
+                //バインドselect要素イベント
                 if ($(".selectpicker", form).length > 0) {
                     require(['bootstrap-select', 'bootstrap-select-lang'], function () {
                         $.fn.selectpicker.Constructor.BootstrapVersion = '3';
@@ -113,7 +113,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 }
             },
             selectpage: function (form) {
-                //绑定selectpage元素事件
+                //バインドselectpage要素イベント
                 if ($(".selectpage", form).length > 0) {
                     require(['selectpage'], function () {
                         $('.selectpage', form).selectPage({
@@ -124,7 +124,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                             }
                         });
                     });
-                    //给隐藏的元素添加上validate验证触发事件
+                    //非表示要素に追加するvalidate検証トリガーイベント
                     $(document).on("change", ".sp_hidden", function () {
                         $(this).trigger("validate");
                     });
@@ -143,7 +143,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 }
             },
             cxselect: function (form) {
-                //绑定cxselect元素事件
+                //バインドcxselect要素イベント
                 if ($("[data-toggle='cxselect']", form).length > 0) {
                     require(['cxselect'], function () {
                         $.cxSelect.defaults.jsonName = 'name';
@@ -154,7 +154,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 }
             },
             citypicker: function (form) {
-                //绑定城市远程插件
+                //都市リモートプラグインをバインド
                 if ($("[data-toggle='city-picker']", form).length > 0) {
                     require(['citypicker'], function () {
                         $(form).on("reset", function () {
@@ -166,7 +166,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 }
             },
             datetimepicker: function (form) {
-                //绑定日期时间元素事件
+                //日時要素イベントをバインド
                 if ($(".datetimepicker", form).length > 0) {
                     require(['bootstrap-datetimepicker'], function () {
                         var options = {
@@ -193,7 +193,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 }
             },
             daterangepicker: function (form) {
-                //绑定日期时间元素事件
+                //日時要素イベントをバインド
                 if ($(".datetimerange", form).length > 0) {
                     require(['bootstrap-daterangepicker'], function () {
                         var ranges = {};
@@ -235,7 +235,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 }
             },
             /**
-             * 绑定上传事件
+             * アップロードイベントをバインド
              * @param form
              * @deprecated Use faupload instead.
              */
@@ -243,17 +243,17 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 Form.events.faupload(form);
             },
             /**
-             * 绑定上传事件
+             * アップロードイベントをバインド
              * @param form
              */
             faupload: function (form) {
-                //绑定上传元素事件
+                //アップロード要素イベントをバインド
                 if ($(".plupload,.faupload", form).length > 0) {
                     Upload.api.upload($(".plupload,.faupload", form));
                 }
             },
             faselect: function (form) {
-                //绑定fachoose选择附件事件
+                //バインドfachoose添付ファイル選択イベント
                 if ($(".faselect,.fachoose", form).length > 0) {
                     $(".faselect,.fachoose", form).off('click').on('click', function () {
                         var that = this;
@@ -296,7 +296,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                                     $("#" + input_id).val(url).trigger("change").trigger("validate");
                                 }
 
-                                // 触发选择文件自定义事件
+                                // ファイル選択のカスタムイベントをトリガー
                                 button.trigger("fa.event.selectedfile", data);
                             }
                         });
@@ -305,10 +305,10 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 }
             },
             fieldlist: function (form) {
-                //绑定fieldlist
+                //バインドfieldlist
                 if ($(".fieldlist", form).length > 0) {
                     require(['dragsort', 'template'], function (undefined, Template) {
-                        //刷新隐藏textarea的值
+                        //非表示を更新textareaの値
                         var refresh = function (container) {
                             var data = {};
                             var name = container.data("name");
@@ -325,9 +325,9 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                                 }
                                 data[match[1]][match[2]] = j.value;
                             });
-                            //使用数组保存
+                            //配列で保存する
                             var usearray = container.data("usearray") || false;
-                            //保留空数据
+                            //空データを保持
                             var keepempty = container.data("keepempty") || false;
 
                             var result = template || usearray ? [] : {};
@@ -346,7 +346,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                                                 result['__PLACEHOLDKEY__' + j.key] = j.value;
                                             }
                                         } else {
-                                            //一维数组
+                                            //一次元配列
                                             result.push(j.value);
                                         }
                                     } else {
@@ -356,7 +356,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                             });
                             textarea.val(JSON.stringify(result).replace(/__PLACEHOLDKEY__/g, ''));
                         };
-                        //追加一行数据
+                        //1 行データを追加
                         var append = function (container, row, initial) {
                             var tagName = container.data("tag") || (container.is("table") ? "tr" : "dd");
                             var index = container.data("index");
@@ -381,50 +381,50 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                             obj.attr("fieldlist-item", true);
                             obj.insertAfter($(tagName + "[fieldlist-item]", container).length > 0 ? $(tagName + "[fieldlist-item]:last", container) : $(tagName + ":first", container));
                             if ($(".btn-append,.append", container).length > 0) {
-                                //兼容旧版本事件
+                                //旧バージョンとの互換イベント
                                 $(".btn-append,.append", container).trigger("fa.event.appendfieldlist", obj);
                             } else {
-                                //新版本事件
+                                //新バージョンイベント
                                 container.trigger("fa.event.appendfieldlist", obj);
                             }
                             return obj;
                         };
                         var fieldlist = $(".fieldlist", form);
-                        //表单重置
+                        //フォームリセット
                         form.on("reset", function () {
                             setTimeout(function () {
                                 fieldlist.trigger("fa.event.refreshfieldlist");
                             });
                         });
-                        //监听文本框改变事件
+                        //テキストボックス変更イベントを監視
                         $(document).on('change keyup changed', ".fieldlist input,.fieldlist textarea,.fieldlist select", function () {
                             var container = $(this).closest(".fieldlist");
                             refresh(container);
                         });
-                        //追加控制(点击按钮)
+                        //コントロールを追加(ボタンをクリック)
                         fieldlist.on("click", ".btn-append,.append", function (e, row) {
                             var container = $(this).closest(".fieldlist");
                             append(container, row);
                             refresh(container);
                         });
-                        //移除控制(点击按钮)
+                        //コントロールを削除(ボタンをクリック)
                         fieldlist.on("click", ".btn-remove", function () {
                             var container = $(this).closest(".fieldlist");
                             var tagName = container.data("tag") || (container.is("table") ? "tr" : "dd");
                             $(this).closest(tagName).remove();
                             refresh(container);
                         });
-                        //追加控制(通过事件)
+                        //コントロールを追加(イベント経由)
                         fieldlist.on("fa.event.appendtofieldlist", function (e, row) {
                             var container = $(this);
                             append(container, row);
                             refresh(container);
                         });
-                        //根据textarea内容重新渲染
+                        //に基づいてtextarea内容を再レンダリング
                         fieldlist.on("fa.event.refreshfieldlist", function () {
                             var container = $(this);
                             var textarea = $("textarea[name='" + container.data("name") + "']", form);
-                            //先清空已有的数据
+                            //既存データを先にクリア
                             $("[fieldlist-item]", container).remove();
                             var json = {};
                             try {
@@ -436,7 +436,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                                 append(container, {key: i.toString().replace("__PLACEHOLDERKEY__", ""), value: j}, true);
                             });
                         });
-                        //拖拽排序
+                        //ドラッグ並べ替え
                         fieldlist.each(function () {
                             var container = $(this);
                             var tagName = container.data("tag") || (container.is("table") ? "tr" : "dd");
@@ -452,7 +452,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                                 $(".btn-append,.append", container).hide();
                             }
                             $("textarea[name='" + container.data("name") + "']", form).on("fa.event.refreshfieldlist", function () {
-                                //兼容旧版本事件
+                                //旧バージョンとの互換イベント
                                 $(this).closest(".fieldlist").trigger("fa.event.refreshfieldlist");
                             });
                         });
@@ -631,7 +631,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                     });
                 });
 
-                //追加上忽略元素
+                //無視要素を追加
                 setTimeout(function () {
                     var validator = form.data('validator');
                     if (validator) {
@@ -645,7 +645,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
         api: {
             submit: function (form, success, error, submit) {
                 if (form.length === 0) {
-                    Toastr.error("表单未初始化完成,无法提交");
+                    Toastr.error("フォームの初期化が完了していないため,送信できません");
                     return false;
                 }
                 if (typeof submit === 'function') {
@@ -657,7 +657,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 type = type && (type === 'GET' || type === 'POST') ? type : 'GET';
                 url = form.attr("action");
                 url = url ? url : location.href;
-                //修复当存在多选项元素时提交的BUG
+                //マルチオプション要素が存在する場合の送信のBUG
                 var params = {};
                 var multipleList = $("[name$='[]']", form);
                 if (multipleList.length > 0) {
@@ -670,7 +670,7 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                         }
                     });
                 }
-                //调用Ajax请求方法
+                //呼び出しAjaxリクエストメソッド
                 Fast.api.ajax({
                     type: type,
                     url: url,
@@ -685,11 +685,11 @@ define(['jquery', 'bootstrap', 'upload', 'validator', 'validator-lang'], functio
                 }, function (data, ret) {
                     $('.form-group', form).removeClass('has-feedback has-success has-error');
                     if (data && typeof data === 'object') {
-                        //刷新客户端token
+                        //クライアントを更新token
                         if (typeof data.token !== 'undefined') {
                             $("input[name='__token__']").val(data.token);
                         }
-                        //调用客户端事件
+                        //クライアントイベントを呼び出す
                         if (typeof data.callback !== 'undefined' && typeof data.callback === 'function') {
                             data.callback.call(form, data);
                         }

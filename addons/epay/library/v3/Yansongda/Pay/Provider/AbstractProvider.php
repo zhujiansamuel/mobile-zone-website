@@ -63,7 +63,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function pay(array $plugins, array $params)
     {
-        Logger::info('[AbstractProvider] 即将进行 pay 操作', func_get_args());
+        Logger::info('[AbstractProvider] まもなく実行 pay 操作', func_get_args());
 
         Event::dispatch(new Event\PayStarted($plugins, $params, null));
 
@@ -110,7 +110,7 @@ abstract class AbstractProvider implements ProviderInterface
             throw new InvalidConfigException(Exception::HTTP_CLIENT_CONFIG_ERROR);
         }
 
-        Logger::info('[AbstractProvider] 准备请求支付服务商 API', $rocket->toArray());
+        Logger::info('[AbstractProvider] 決済サービスプロバイダーへのリクエストを準備中 API', $rocket->toArray());
 
         Event::dispatch(new Event\ApiRequesting($rocket));
 
@@ -123,12 +123,12 @@ abstract class AbstractProvider implements ProviderInterface
                 ->setDestinationOrigin($response->withBody(Utils::streamFor($contents)))
             ;
         } catch (Throwable $e) {
-            Logger::error('[AbstractProvider] 请求支付服务商 API 出错', ['message' => $e->getMessage(), 'rocket' => $rocket->toArray(), 'trace' => $e->getTrace()]);
+            Logger::error('[AbstractProvider] 決済サービスプロバイダーへのリクエスト API エラー', ['message' => $e->getMessage(), 'rocket' => $rocket->toArray(), 'trace' => $e->getTrace()]);
 
             throw new InvalidResponseException(Exception::REQUEST_RESPONSE_ERROR, $e->getMessage(), [], $e);
         }
 
-        Logger::info('[AbstractProvider] 请求支付服务商 API 成功', ['response' => $response, 'rocket' => $rocket->toArray()]);
+        Logger::info('[AbstractProvider] 決済サービスプロバイダーへのリクエスト API 成功', ['response' => $response, 'rocket' => $rocket->toArray()]);
 
         Event::dispatch(new Event\ApiRequested($rocket));
 

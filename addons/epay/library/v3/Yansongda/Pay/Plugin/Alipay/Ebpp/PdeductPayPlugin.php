@@ -16,7 +16,7 @@ class PdeductPayPlugin implements PluginInterface
 {
     public function assembly(Rocket $rocket, Closure $next): Rocket
     {
-        Logger::debug('[alipay][PdeductPayPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[alipay][PdeductPayPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $rocket->mergePayload([
             'method' => 'alipay.ebpp.pdeduct.pay',
@@ -28,7 +28,7 @@ class PdeductPayPlugin implements PluginInterface
             ),
         ]);
 
-        Logger::info('[alipay][PdeductPayPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[alipay][PdeductPayPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $next($rocket);
     }

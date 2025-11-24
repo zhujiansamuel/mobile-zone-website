@@ -136,7 +136,7 @@ $(function(){
 			$('#img_src_show1').attr('src', this.result)
 		})
 	})
-	//商品价格变动
+	//商品の価格変更
 	$(document).on('change', '.select_spec', function(){
 		var v = $(this).val();
 		var arrs = [];
@@ -148,7 +148,7 @@ $(function(){
 		$('.proDeta5 span').html( arrs[v] );
 		//console.log( arrs );
 	})
-	//添加购物车
+	//カートに追加
 	$('.addshopping').on('click', function(){
 	    var obj = $("#addshopping-form");
 	    var jsonData = obj.serializeArray();
@@ -168,7 +168,7 @@ $(function(){
 		        }
 	       },
 	       error: function(xhr, status, error) {
-	            // 处理错误响应
+	            // エラー応答を処理
 	            if(xhr.status == 401){
 	            	tanchuang('ログイン後に操作してください');
 	            }
@@ -176,7 +176,7 @@ $(function(){
 	    });
 	    return false;
 	})
-	//修改购物车数量
+	//カート数量を変更
 	$('.updateshopping').on('input', function(){
 	    var obj = $(this);
 	    var shopping_id = obj.parents('.pr_info2').attr('data-id');
@@ -195,7 +195,7 @@ $(function(){
 		        }
 	       },
 	       error: function(xhr, status, error) {
-	            // 处理错误响应
+	            // エラー応答を処理
 	            if(xhr.status == 401){
 	            	tanchuang('ログイン後に操作してください');
 	            	
@@ -218,7 +218,7 @@ $(function(){
 		}
 		window.location.href="/applyfor/"+type;
 	})
-	//删除购物车
+	//カートから削除
 	$('.delshopping').on('click', function(){
 	    var obj = $(this);
 	    var shopping_id = obj.parents('tr').attr('data-id');
@@ -236,7 +236,7 @@ $(function(){
 		        }
 	       },
 	       error: function(xhr, status, error) {
-	            // 处理错误响应
+	            // エラー応答を処理
 	            if(xhr.status == 401){
 	            	tanchuang('ログイン後に操作してください');
 	            }
@@ -244,7 +244,7 @@ $(function(){
 	    });
 	    return false;
 	})
-	//登录
+	//ログイン
 	$('.submitlogin').on('click', function(){
 	    var obj = $("#login-form");
 	    var jsonData = obj.serializeArray();
@@ -267,7 +267,7 @@ $(function(){
 	    return false;
 	})
 	
-	//注册
+	//新規登録
 	$('.submitregister').on('click', function(){
 	    var obj = $("#register-form");
 	    var jsonData = obj.serializeArray();
@@ -286,7 +286,7 @@ $(function(){
 	    });
 	    return false;
 	})
-	//修改用户信息
+	//ユーザー情報を変更
 	$('.edituser').on('click', function(){
 	    var obj = $("#edituser-form");
 	    var jsonData = obj.serializeArray();
@@ -318,25 +318,25 @@ $(function(){
 	$('#imgs_file').change(function() {
 		var file = this.files[0];
 
-		//验证文件格式
-			var allowedExtensions = /(\.png|\.jpg|\.jpeg|\.gif)$/i; // 定义允许的扩展名正则表达式
+		//ファイル形式を検証
+			var allowedExtensions = /(\.png|\.jpg|\.jpeg|\.gif)$/i; // 許可される拡張子の正規表現を定義
 
-			var formData = new FormData(); // 创建一个 FormData 对象
-			formData.append('file', file); // 将文件添加到 FormData 对象中
+			var formData = new FormData(); // 1 つのを作成 FormData オブジェクト
+			formData.append('file', file); // ファイルを追加 FormData オブジェクトに
 
 			if (!allowedExtensions.exec(file.name)) {
-			    alert('请上传PNG、JPG、JPEG或GIF格式的图片！');
-			    return false; // 如果格式不正确，阻止后续操作
+			    alert('アップロードしてくださいPNG、JPG、JPEGまたはGIF形式の画像！');
+			    return false; // 形式が正しくない場合，後続の処理を中止する
 			}
-			// ... 处理文件 ...
+			// ... ファイルを処理 ...
 			$.ajax({
-			    url: '/api/common/upload', // 服务器端处理文件上传的脚本地址
+			    url: '/api/common/upload', // サーバー側でファイルアップロードを処理するスクリプトのアドレス
 			    type: 'POST',
 			    data: formData,
-			    processData: false, // 告诉 jQuery 不要处理发送的数据
-			    contentType: false, // 告诉 jQuery 不要设置内容类型头信息
+			    processData: false, // 知らせる jQuery 送信データを処理しないようにする
+			    contentType: false, // 知らせる jQuery Content-Typeヘッダー情報を設定しないようにする
 			    success: function(data) {
-			        // 上传成功后的回调函数，data 是服务器返回的数据
+			        // アップロード成功後のコールバック関数，data はサーバーが返すデータです
 			        if(data.code == 1){
 			   //      	var r = new FileReader();
 						// r.readAsDataURL(file);
@@ -350,12 +350,12 @@ $(function(){
 			        	
 			        	$(".orderLeft14").append('<span><img alt="" src="'+data.data.url+'"/><img class="newclose" alt="" src="/img/close.png"/><input type="hidden" name="szb_image[]" value="'+data.data.url+'"/></span>')
 			        }
-			        console.log('上传成功');
+			        console.log('アップロード成功');
 			        console.log(data);
 			    },
 			    error: function(jqXHR, textStatus, errorThrown) {
-			        // 上传失败后的回调函数，jqXHR 是 XMLHttpRequest 对象，textStatus 是请求状态，errorThrown 是异常信息
-			        console.log('上传失败');
+			        // アップロード失敗時のコールバック関数，jqXHR はい XMLHttpRequest オブジェクト，textStatus はい请求状态，errorThrown はい异常信息
+			        console.log('アップロード失敗');
 			        console.log(textStatus);
 			        console.log(errorThrown);
 			    }
@@ -368,7 +368,7 @@ $(function(){
 	    
 	})
 	
-	//设置到店时间
+	//来店時間を設定
 	$('#go_store_time').on('click', function(){
 	    var dateInput = $('#dateInput').val();
 	    for (var i = 11; i < 18; i++) {
@@ -376,7 +376,7 @@ $(function(){
 	    }
 	})
 
-	//联系我们
+	//お問い合わせ
 	$('.submitcontactus').on('click', function(){
 	    var obj = $("#contactus-form");
 	    var jsonData = obj.serializeArray();
@@ -402,7 +402,7 @@ $(function(){
 	    });
 	    return false;
 	})
-	//提交订单
+	//注文を送信
 	$('.submitorder').on('click', function(){
 	    var obj = $("#order-form");
 	    var jsonData = obj.serializeArray();
@@ -421,7 +421,7 @@ $(function(){
 	    });
 	    return false;
 	})
-	//取消确认订单
+	//注文確定をキャンセル
 	$('.cancle').on('click', function(){
 	    var obj = $(this);
 	    var order_id = obj.parents('.record1').attr('data-id');
@@ -441,7 +441,7 @@ $(function(){
         $('.querenbox').hide();
 	})
 
-	//取消订单
+	//注文をキャンセル
 	$(document).on('click','.cancle_confirm', function(){
 	    var obj = $(this);
 	    var order_id = obj.attr('data-id');
@@ -458,7 +458,7 @@ $(function(){
 		        }
 	       },
 	       error: function(xhr, status, error) {
-	            // 处理错误响应
+	            // エラー応答を処理
 	            if(xhr.status == 401){
 	            	tanchuang('ログイン後に操作してください');
 	            }
@@ -472,7 +472,7 @@ $(function(){
 		window.location.href="/goods?kwd="+keywords;
 	})
 
-	//重置密码
+	//パスワードをリセット
 	$('.submitresetpwd').on('click', function(){
 	    var obj = $("#resetpwd-form");
 	    var jsonData = obj.serializeArray();
@@ -517,7 +517,7 @@ $(function(){
     })
 	
 	/**
-     * 获取验证码
+     * 認証コードを取得
      */
     function getcode(email, obj) {
         if (lockCode) {

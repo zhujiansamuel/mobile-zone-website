@@ -14,7 +14,7 @@ use Yansongda\Pay\Exceptions\GatewayException;
 use Yansongda\Pay\Pay;
 
 /**
- * API接口控制器
+ * APIAPIコントローラー
  *
  * @package addons\epay\controller
  */
@@ -25,7 +25,7 @@ class Api extends Controller
     protected $config = [];
 
     /**
-     * 默认方法
+     * デフォルトメソッド
      */
     public function index()
     {
@@ -33,7 +33,7 @@ class Api extends Controller
     }
 
     /**
-     * 外部提交
+     * 外部送信
      */
     public function submit()
     {
@@ -49,11 +49,11 @@ class Api extends Controller
         $returnurl = $this->request->request('returnurl', '');
 
         if (!$amount || $amount < 0) {
-            $this->error("支付金额必须大于0");
+            $this->error("支払金額は次の値より大きくなければなりません0");
         }
 
         if (!$type || !in_array($type, ['alipay', 'wechat'])) {
-            $this->error("支付类型错误");
+            $this->error("支払種別エラー");
         }
 
         $params = [
@@ -71,7 +71,7 @@ class Api extends Controller
     }
 
     /**
-     * 微信支付(公众号支付&PC扫码支付)
+     * WeChat決済(公式アカウント決済&PCスキャン決済)
      */
     public function wechat()
     {
@@ -82,7 +82,7 @@ class Api extends Controller
         $this->view->assign("isWechat", $isWechat);
         $this->view->assign("isMobile", $isMobile);
 
-        //发起PC支付(Scan支付)(PC扫码模式)
+        //開始PC支払い(Scan支払い)(PCスキャンモード)
         if ($this->request->isAjax()) {
             $pay = Pay::wechat($config);
             $orderid = $this->request->post("orderid");
@@ -90,18 +90,18 @@ class Api extends Controller
                 $result = Service::isVersionV3() ? $pay->find(['out_trade_no' => $orderid]) : $pay->find($orderid, 'scan');
                 $this->success("", "", ['status' => $result['trade_state'] ?? 'NOTPAY']);
             } catch (GatewayException $e) {
-                $this->error("查询失败(1001)");
+                $this->error("照会に失敗しました(1001)");
             }
         }
 
         $orderData = Session::get("wechatorderdata");
         if (!$orderData) {
-            $this->error("请求参数错误");
+            $this->error("リクエストパラメーターエラー");
         }
         if ($isWechat && $isMobile) {
-            //发起公众号(jsapi支付),openid必须
+            //公式アカウント支払いを開始(jsapi支払い),openid必須
 
-            //如果没有openid，则自动去获取openid
+            //もし存在しない場合openid，自動的に取得しますopenid
             if (!isset($orderData['openid']) || !$orderData['openid']) {
                 $orderData['openid'] = Service::getOpenid();
             }
@@ -110,26 +110,26 @@ class Api extends Controller
             $type = 'jsapi';
             $payData = Service::submitOrder($orderData);
             if (!isset($payData['paySign'])) {
-                $this->error("创建订单失败，请返回重试", "");
+                $this->error("注文の作成に失敗しました，戻って再試行してください", "");
             }
         } else {
             $orderData['method'] = 'scan';
             $type = 'pc';
             $payData = Service::submitOrder($orderData);
             if (!isset($payData['code_url'])) {
-                $this->error("创建订单失败，请返回重试", "");
+                $this->error("注文の作成に失敗しました，戻って再試行してください", "");
             }
         }
         $this->view->assign("orderData", $orderData);
         $this->view->assign("payData", $payData);
         $this->view->assign("type", $type);
 
-        $this->view->assign("title", "微信支付");
+        $this->view->assign("title", "WeChat決済");
         return $this->view->fetch();
     }
 
     /**
-     * 支付宝支付(PC扫码支付)
+     * Alipay支払い(PCスキャン決済)
      */
     public function alipay()
     {
@@ -148,67 +148,67 @@ class Api extends Controller
                 if ($result['code'] == '10000' && $result['trade_status'] == 'TRADE_SUCCESS') {
                     $this->success("", "", ['status' => $result['trade_status']]);
                 } else {
-                    $this->error("查询失败");
+                    $this->error("照会に失敗しました");
                 }
             } catch (GatewayException $e) {
-                $this->error("查询失败(1001)");
+                $this->error("照会に失敗しました(1001)");
             }
         }
 
-        //发起PC支付(Scan支付)(PC扫码模式)
+        //開始PC支払い(Scan支払い)(PCスキャンモード)
         $orderData = Session::get("alipayorderdata");
         if (!$orderData) {
-            $this->error("请求参数错误");
+            $this->error("リクエストパラメーターエラー");
         }
 
         $orderData['method'] = 'scan';
         $payData = Service::submitOrder($orderData);
         if (!isset($payData['qr_code'])) {
-            $this->error("创建订单失败，请返回重试");
+            $this->error("注文の作成に失敗しました，戻って再試行してください");
         }
 
         $type = 'pc';
         $this->view->assign("orderData", $orderData);
         $this->view->assign("payData", $payData);
         $this->view->assign("type", $type);
-        $this->view->assign("title", "支付宝支付");
+        $this->view->assign("title", "Alipay支払い");
         return $this->view->fetch();
     }
 
     /**
-     * 支付成功回调
+     * 支払い成功コールバック
      */
     public function notifyx()
     {
         $paytype = $this->request->param('paytype');
         $pay = Service::checkNotify($paytype);
         if (!$pay) {
-            return json(['code' => 'FAIL', 'message' => '失败'], 500, ['Content-Type' => 'application/json']);
+            return json(['code' => 'FAIL', 'message' => '失敗'], 500, ['Content-Type' => 'application/json']);
         }
 
-        // 获取回调数据，V3和V2的回调接收不同
+        // コールバックデータを取得，V3とV2のコールバック受信が異なります
         $data = Service::isVersionV3() ? $pay->callback() : $pay->verify();
 
         try {
-            //微信支付V3返回和V2不同
+            //WeChat決済V3戻り値とV2異なります
             if (Service::isVersionV3() && $paytype === 'wechat') {
                 $data = $data['resource']['ciphertext'];
                 $data['total_fee'] = $data['amount']['total'];
             }
 
             \think\Log::record($data);
-            //获取支付金额、订单号
+            //支払金額を取得、注文番号
             $payamount = $paytype == 'alipay' ? $data['total_amount'] : $data['total_fee'] / 100;
             $out_trade_no = $data['out_trade_no'];
 
-            \think\Log::record("回调成功，订单号：{$out_trade_no}，金额：{$payamount}");
+            \think\Log::record("コールバック成功，注文番号：{$out_trade_no}，金額：{$payamount}");
 
-            //你可以在此编写订单逻辑
+            //ここで注文処理ロジックを記述できます
         } catch (Exception $e) {
-            \think\Log::record("回调逻辑处理错误:" . $e->getMessage(), "error");
+            \think\Log::record("コールバックロジック処理エラー:" . $e->getMessage(), "error");
         }
 
-        //下面这句必须要执行,且在此之前不能有任何输出
+        //以下の一文は必ず実行してください,かつその前に何も出力してはいけません
         if (Service::isVersionV3()) {
             return $pay->success()->getBody()->getContents();
         } else {
@@ -217,18 +217,18 @@ class Api extends Controller
     }
 
     /**
-     * 支付成功返回
+     * 支払い成功レスポンス
      */
     public function returnx()
     {
         $paytype = $this->request->param('paytype');
         if (Service::checkReturn($paytype)) {
-            echo '签名错误';
+            echo '署名が誤っている';
             return;
         }
 
-        //你可以在这里定义你的提示信息,但切记不可在此编写逻辑
-        $this->success("恭喜你！支付成功!", addon_url("epay/index/index"));
+        //ここでメッセージ内容を定義できます,ただしここでロジックを記述しないでください
+        $this->success("おめでとうございます！支払い成功!", addon_url("epay/index/index"));
     }
 
 }

@@ -1,7 +1,7 @@
 /*!
 
- @Name：layer mobile v2.0 弹层组件移动版
- @Author：贤心
+ @Name：layer mobile v2.0 レイヤーコンポーネント モバイル版
+ @Author：賢心
  @License：MIT
     
  */
@@ -14,13 +14,13 @@ var doc = document, query = 'querySelectorAll', claname = 'getElementsByClassNam
   return doc[query](s);
 };
 
-//默认配置
+//デフォルト設定
 var config = {
   type: 0
   ,shade: true
   ,shadeClose: true
   ,fixed: true
-  ,anim: 'scale' //默认动画类型
+  ,anim: 'scale' //デフォルトのアニメーションタイプ
 };
 
 var ready = {
@@ -34,7 +34,7 @@ var ready = {
   timer: {}, end: {}
 };
 
-//点触事件
+//タップイベント
 ready.touch = function(elem, fn){
   elem.addEventListener('click', function(e){
     fn.call(this, e);
@@ -54,7 +54,7 @@ Layer.prototype.view = function(){
   layerbox.setAttribute('class', classs[0] + ' ' + classs[0]+(config.type || 0));
   layerbox.setAttribute('index', index);
   
-  //标题区域
+  //タイトルエリア
   var title = (function(){
     var titype = typeof config.title === 'object';
     return config.title
@@ -62,7 +62,7 @@ Layer.prototype.view = function(){
     : '';
   }());
   
-  //按钮区域
+  //ボタンエリア
   var button = (function(){
     typeof config.btn === 'string' && (config.btn = [config.btn]);
     var btns = (config.btn || []).length, btndom;
@@ -118,14 +118,14 @@ Layer.prototype.view = function(){
 Layer.prototype.action = function(config, elem){
   var that = this;
   
-  //自动关闭
+  //自動クローズ
   if(config.time){
     ready.timer[that.index] = setTimeout(function(){
       layer.close(that.index);
     }, config.time*1000);
   }
   
-  //确认取消
+  //確認とキャンセル
   var btn = function(){
     var type = this.getAttribute('type');
     if(type == 0){
@@ -142,7 +142,7 @@ Layer.prototype.action = function(config, elem){
     }
   }
   
-  //点遮罩关闭
+  //マスクをクリックして閉じる
   if(config.shade && config.shadeClose){
     var shade = elem[claname]('layui-m-layershade')[0];
     ready.touch(shade, function(){
@@ -157,7 +157,7 @@ win.layer = {
   v: '2.0',
   index: index,
   
-  //核心方法
+  //コアメソッド
   open: function(options){
     var o = new Layer(options || {});
     return o.index;
@@ -174,7 +174,7 @@ win.layer = {
     delete ready.end[index];
   },
   
-  //关闭所有layer层
+  //すべて閉じるlayerレイヤー
   closeAll: function(){
     var boxs = doc[claname](classs[0]);
     for(var i = 0, len = boxs.length; i < len; i++){
@@ -190,7 +190,7 @@ win.layer = {
   var js = document.scripts, script = js[js.length - 1], jsPath = script.src;
   var path = jsPath.substring(0, jsPath.lastIndexOf("/") + 1);
   
-  //如果合并方式，则需要单独引入layer.css
+  //もし結合方式の場合，個別に読み込む必要がありますlayer.css
   if(script.getAttribute('merge')) return; 
   
   document.head.appendChild(function(){

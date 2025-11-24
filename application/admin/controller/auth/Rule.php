@@ -8,10 +8,10 @@ use fast\Tree;
 use think\Cache;
 
 /**
- * 规则管理
+ * ルール管理
  *
  * @icon   fa fa-list
- * @remark 规则通常对应一个控制器的方法,同时左侧的菜单栏数据也从规则中体现,通常建议通过控制台进行生成规则节点
+ * @remark ルールは通常、1つのコントローラーメソッドに対応します,同時に左側メニューのデータもルールから反映されます,通常はコンソールからルールノードを生成することを推奨します
  */
 class Rule extends Backend
 {
@@ -30,7 +30,7 @@ class Rule extends Backend
             $this->error(__('Access is allowed only to the super management group'));
         }
         $this->model = model('AuthRule');
-        // 必须将结果集转换为数组
+        // 結果セットを必ず配列に変換する必要がある
         $ruleList = \think\Db::name("auth_rule")->field('type,condition,remark,createtime,updatetime', true)->order('weigh DESC,id ASC')->select();
         foreach ($ruleList as $k => &$v) {
             $v['title'] = __($v['title']);
@@ -52,7 +52,7 @@ class Rule extends Backend
     }
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {
@@ -67,7 +67,7 @@ class Rule extends Backend
     }
 
     /**
-     * 添加
+     * 追加
      */
     public function add()
     {
@@ -90,7 +90,7 @@ class Rule extends Backend
     }
 
     /**
-     * 编辑
+     * 編集
      */
     public function edit($ids = null)
     {
@@ -114,7 +114,7 @@ class Rule extends Backend
                         $this->error(__('Can not change the parent to child'));
                     }
                 }
-                //这里需要针对name做唯一验证
+                //ここではname一意性チェックを行う必要があります
                 $ruleValidate = \think\Loader::validate('AuthRule');
                 $ruleValidate->rule([
                     'name' => 'require|unique:AuthRule,name,' . $row->id,
@@ -132,7 +132,7 @@ class Rule extends Backend
     }
 
     /**
-     * 删除
+     * 削除
      */
     public function del($ids = "")
     {

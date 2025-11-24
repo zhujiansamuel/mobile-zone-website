@@ -10,16 +10,16 @@ use fast\Date;
 use think\Db;
 
 /**
- * 控制台
+ * ダッシュボード
  *
  * @icon   fa fa-dashboard
- * @remark 用于展示当前系统中的统计数据、统计报表及重要实时数据
+ * @remark 現在のシステム内の統計データを表示するために使用します、統計レポートおよび重要なリアルタイムデータ
  */
 class Dashboard extends Backend
 {
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {

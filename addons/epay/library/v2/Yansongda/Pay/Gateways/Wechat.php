@@ -20,41 +20,41 @@ use Yansongda\Supports\Config;
 use Yansongda\Supports\Str;
 
 /**
- * @method Response         app(array $config)          APP 支付
- * @method Collection       groupRedpack(array $config) 分裂红包
- * @method Collection       miniapp(array $config)      小程序支付
- * @method Collection       mp(array $config)           公众号支付
- * @method Collection       pos(array $config)          刷卡支付
- * @method Collection       redpack(array $config)      普通红包
- * @method Collection       scan(array $config)         扫码支付
- * @method Collection       transfer(array $config)     企业付款
- * @method RedirectResponse web(array $config)          Web 扫码支付
- * @method RedirectResponse wap(array $config)          H5 支付
+ * @method Response         app(array $config)          APP 支払い
+ * @method Collection       groupRedpack(array $config) 分割お年玉
+ * @method Collection       miniapp(array $config)      ミニプログラム決済
+ * @method Collection       mp(array $config)           公式アカウント決済
+ * @method Collection       pos(array $config)          カード決済
+ * @method Collection       redpack(array $config)      通常お年玉
+ * @method Collection       scan(array $config)         スキャン決済
+ * @method Collection       transfer(array $config)     企業送金
+ * @method RedirectResponse web(array $config)          Web スキャン決済
+ * @method RedirectResponse wap(array $config)          H5 支払い
  */
 class Wechat implements GatewayApplicationInterface
 {
     /**
-     * 普通模式.
+     * 通常モード.
      */
     const MODE_NORMAL = 'normal';
 
     /**
-     * 沙箱模式.
+     * サンドボックスモード.
      */
     const MODE_DEV = 'dev';
 
     /**
-     * 香港钱包 API.
+     * 香港ウォレット API.
      */
     const MODE_HK = 'hk';
 
     /**
-     * 境外 API.
+     * 海外 API.
      */
     const MODE_US = 'us';
 
     /**
-     * 服务商模式.
+     * サービスプロバイダーモード.
      */
     const MODE_SERVICE = 'service';
 

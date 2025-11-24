@@ -2,7 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'auth/admin/index',
@@ -15,7 +15,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             var table = $("#table");
 
-            //在表格内容渲染完成后回调的事件
+            //テーブル内容のレンダリング完了後に呼び出されるイベント
             table.on('post-body.bs.table', function (e, json) {
                 $("tbody tr[data-index]", this).each(function () {
                     if (parseInt($("td:eq(1)", this).text()) == Config.admin.id) {
@@ -24,7 +24,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
             });
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 columns: [
@@ -48,7 +48,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ]
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
         },
         add: function () {

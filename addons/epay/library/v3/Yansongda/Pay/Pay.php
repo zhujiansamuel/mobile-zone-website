@@ -37,17 +37,17 @@ use Yansongda\Pay\Service\WechatServiceProvider;
 class Pay
 {
     /**
-     * 正常模式.
+     * 通常モード.
      */
     public const MODE_NORMAL = 0;
 
     /**
-     * 沙箱模式.
+     * サンドボックスモード.
      */
     public const MODE_SANDBOX = 1;
 
     /**
-     * 服务商模式.
+     * サービスプロバイダーモード.
      */
     public const MODE_SERVICE = 2;
 

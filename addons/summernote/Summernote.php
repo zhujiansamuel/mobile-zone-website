@@ -5,13 +5,13 @@ namespace addons\summernote;
 use think\Addons;
 
 /**
- * Summernote富文本编辑器
+ * Summernoteリッチテキストエディター
  */
 class Summernote extends Addons
 {
 
     /**
-     * 插件安装方法
+     * プラグインのインストール方法
      * @return bool
      */
     public function install()
@@ -20,7 +20,7 @@ class Summernote extends Addons
     }
 
     /**
-     * 插件卸载方法
+     * プラグインのアンインストール方法
      * @return bool
      */
     public function uninstall()

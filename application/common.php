@@ -1,6 +1,6 @@
 <?php
 
-// 公共助手函数
+// 共通ヘルパー関数
 
 use think\exception\HttpResponseException;
 use think\Response;
@@ -8,10 +8,10 @@ use think\Response;
 if (!function_exists('__')) {
 
     /**
-     * 获取语言变量值
-     * @param string $name 语言变量名
-     * @param string | array  $vars 动态变量值
-     * @param string $lang 语言
+     * 言語変数値の取得
+     * @param string $name 言語変数名
+     * @param string | array  $vars 動的変数値
+     * @param string $lang 言語
      * @return mixed
      */
     function __($name, $vars = [], $lang = '')
@@ -29,7 +29,7 @@ if (!function_exists('__')) {
 }
 if (!function_exists('orderStoreSendEmail')) {
     /**
-     * 添加订单 -店头买取+现金支付 / 【邮送买取 +银行支付】
+     * 注文を追加 -店頭買取+現金払い / 【郵送買取 +銀行振込】
      */
     function orderStoreSendEmail($orderDate, $orderNo,$receiver='', $extend = [])
     {
@@ -41,16 +41,16 @@ if (!function_exists('orderStoreSendEmail')) {
                 //$order_details .= ($val['type'] == 1 ? '新品' : '中古').'<br>';
                 $order_details .=  $val['color']."&nbsp;".$val['specs_name'].'<br>';
                 $order_details .=  '¥'.number_format($val['price']).'(税込)'.'<br>';
-                $order_details .=  $val['num'].' 点<br>';
+                $order_details .=  $val['num'].' 時<br>';
             }
             $order_details .= '<br><br>合計金額:￥'.number_format($extend['order']['total_price']).'(税込)';
-            //类型:1=门店,2=邮寄
+            //タイプ:1=店舗,2=郵送
             if($extend['order']['type'] == 1){
                 $storeInfo .= '買取方法:店頭買取<br>
                         来店場所:'.$extend['order']['store']['name'].'<br>
                         来店時間:'.$extend['order']['go_store_date'].' '.$extend['order']['go_store_time'].'<br>';
             }else{
-                $storeInfo .= '買取方法:鄄送買取<br>';
+                $storeInfo .= '買取方法:郵送買取<br>';
                 $storeInfo .= '配送情報:お客様情報と同じ<br>';
             }
             if($extend['order']['pay_mode'] == 1){
@@ -63,7 +63,7 @@ if (!function_exists('orderStoreSendEmail')) {
                 $storeInfo .= '支店号:'.$extend['order']['bank_branch_no'].'<br>';
                 $storeInfo .= '預金種目:'.($extend['order']['bank_account_type'] == 1 ? '普通預金' : '当座預金').'<br>';
                 $storeInfo .= '振込口座番号:'.$extend['order']['bank_account'].'<br>';
-                $storeInfo .= '振込口座名羲:'.$extend['order']['bank_account_name'].'<br>';
+                $storeInfo .= '振込口座名義:'.$extend['order']['bank_account_name'].'<br>';
             }
             
         }
@@ -82,13 +82,13 @@ if (!function_exists('orderStoreSendEmail')) {
         }
         $html = 'このメールは自動送信です。<br>
 
-この度、「Mobile Zone」でお申し込みしていただき、誠にありがとうでさいました。<br>
+この度、「Mobile Zone」でお申し込みいただき、誠にありがとうございました。<br>
 
 現在は「仮予約」の状態です。スタッフによる承認後、正式予約として確定いたします。<br>
 
-買取金額変更の場合がごさいます、ご了承ください。<br>
+買取金額が変更となる場合がございます、ご了承ください。<br>
 
-お申し込み情報は下記となり、ご確認ください。マイページの「予約履歴」にもで確認していただきます。<br>
+お申し込み情報は下記の通りとなり、ご確認ください。マイページの「予約履歴」からもご確認いただけます。<br>
 
 --------------------------------------------------------------<br>
 お申し込み日:'.$orderDate.'<br>
@@ -112,7 +112,7 @@ if (!function_exists('orderStoreSendEmail')) {
 
 繁忙期の場合は 2~3日以内 に入金いたします。<br>
 
-なお、振込完了後ので連絡はいたしませんので、各自でで自身のロ座にてで確認をお願いいたします。<br>
+なお、振込完了後のご連絡はいたしませんので、各自ご自身の口座にてご確認をお願いいたします。<br>
 --------------------------------------------------------------<br>
 
 ※このメールは送信専用のため返信はお受けできません。<br>
@@ -126,14 +126,14 @@ TEL:'.config('site.tel').'<br>
 MAIL:'.config('site.mail').'<br>
 
 2025 Mobile Zone';
-        $result = sendEmail('この度は「Mobile Zone」にお申し込みいただき、誠にありがとうごさいます',$html,$receiver);
+        $result = sendEmail('この度は「Mobile Zone」にお申し込みいただき、誠にありがとうございます',$html,$receiver);
         return $result;
     }
 }
 if (!function_exists('orderStoreManualYuYueSendEmail')) {
     /**
-     * 手动发送 - 预约邮件
-     * 添加订单 -店头买取+现金支付 / 【邮送买取 +银行支付】
+     * 手動送信 - 予約メール
+     * 注文を追加 -店頭買取+現金払い / 【郵送買取 +銀行振込】
      */
     function orderStoreManualYuYueSendEmail($orderDate, $orderNo,$receiver='', $extend = [])
     {
@@ -146,16 +146,16 @@ if (!function_exists('orderStoreManualYuYueSendEmail')) {
                 //$order_details .= ($val['type'] == 1 ? '新品' : '中古').'<br>';
                 $order_details .=  $val['color']."&nbsp;".$val['specs_name'].'<br>';
                 $order_details .=  '¥'.number_format($val['price']).'(税込)'.'<br>';
-                $order_details .=  $val['num'].' 点<br>';
+                $order_details .=  $val['num'].' 時<br>';
             }
             $order_details .= '<br><br>合計金額:￥'.number_format($extend['order']['total_price']).'(税込)';
-            //类型:1=门店,2=邮寄
+            //タイプ:1=店舗,2=郵送
             if($extend['order']['type'] == 1){
                 $storeInfo .= '買取方法:店頭買取<br>
                         来店場所:'.$extend['order']['store']['name'].'<br>
                         来店時間:'.$extend['order']['go_store_date'].' '.$extend['order']['go_store_time'].'<br>';
             }else{
-                $storeInfo .= '買取方法:鄄送買取<br>';
+                $storeInfo .= '買取方法:郵送買取<br>';
                 $storeInfo .= '配送情報:お客様情報と同じ<br>';
             }
             if($extend['order']['pay_mode'] == 1){
@@ -168,7 +168,7 @@ if (!function_exists('orderStoreManualYuYueSendEmail')) {
                 $storeInfo .= '支店号:'.$extend['order']['bank_branch_no'].'<br>';
                 $storeInfo .= '預金種目:'.($extend['order']['bank_account_type'] == 1 ? '普通預金' : '当座預金').'<br>';
                 $storeInfo .= '振込口座番号:'.$extend['order']['bank_account'].'<br>';
-                $storeInfo .= '振込口座名羲:'.$extend['order']['bank_account_name'].'<br>';
+                $storeInfo .= '振込口座名義:'.$extend['order']['bank_account_name'].'<br>';
             }
             $orderMemo = $extend['order']['memo'];
         }
@@ -185,21 +185,21 @@ if (!function_exists('orderStoreManualYuYueSendEmail')) {
 
             $storeInfo .= '書類種別:'.getCategoryName($extend['user']['szb']).'<br>';
         }
-        $html = 'この度、「Mobile Zone」でお申し込みしていただき、誠にありがとうごさいました。<br>
+        $html = 'この度、「Mobile Zone」でお申し込みいただき、誠にありがとうございました。<br>
 
-このメール受信してから正式予約となります。お客様の梱包発送/ご来店お待ちしております。<br>
+このメールを受信してから正式予約となります。お客様の梱包発送/ご来店をお待ちしております。<br>
 
-郵送金额保証:(到着時間指定必要ありません)<br>
+郵送金額保証:(到着時間指定は必要ありません)<br>
 
 東北、関東、中部、近畿、翌日着<br>
 
-北海道、中国·四国、九州冲翌々日まで着<br>
+北海道、中国·四国、九州沖々日までに到着<br>
 
-来店金額保証:予約当日<br>
+来店買取金額保証:ご予約当日<br>
 
-商品状態より買取査定金額変更の場合がでさいます、予めご了承ください。<br>
+商品の状態により買取査定金額が変更となる場合がございます、あらかじめご了承ください。<br>
 
-お申し込み情報は下記となり、ご確認ください。マイページの「予約履歴」にもで確認していただきます。<br>
+お申し込み情報は下記の通りとなり、ご確認ください。マイページの「予約履歴」からもご確認いただけます。<br>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 お申し込み日:'.$orderDate.'<br>
@@ -221,15 +221,15 @@ if (!function_exists('orderStoreManualYuYueSendEmail')) {
 '.$storeInfo.'<br>
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 
-法人のお客様と個人事業者のお客様は適格請求書発行事業者登録番号が必須となります。<br>
+法人のお客様と個人事業主のお客様は、適格請求書発行事業者登録番号のご入力が必須となります。<br>
 
-※申込する際に 登録番号付きの請求書を発行ください。<br>
+※お申し込みの際は 登録番号付きの請求書を発行してください。<br>
 
-(単価が税込み表示、合計も税込みでその下の欄に消費税総額表示<br>
+(単価は税込み表示、合計も税込みで、その下の欄に消費税総額を表示<br>
 
-個人関しては変わりなく今まで通りご利用いただけます。<br>
+個人のお客様は、従来どおり変更なくご利用いただけます。<br>
 
-買取申込書に適格請求書発行事業者ではない旨のチエック項目が追加されますのでチエックが必要になります。<br>
+買取申込書に、適格請求書発行事業者ではない旨のチェック項目が追加されますので、チェックが必要となります。<br>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 振込予定について<br>
@@ -238,38 +238,38 @@ if (!function_exists('orderStoreManualYuYueSendEmail')) {
 
 繁忙期の場合は 2~3日以内 に入金いたします。<br>
 
-なお、振込完了後ので連絡はいたしませんので、各自でで自身のロ座にてで確認をお願いいたします。<br>
+なお、振込完了後のご連絡はいたしませんので、各自ご自身の口座にてご確認をお願いいたします。<br>
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 
-郵送買取流れ:<br>
+郵送買取の流れ:<br>
 
-1、買取金額保証は予約完了連絡した日の翌日到着分となります。(北海道・中国・四国・九州・沖縄 翌々日まで着)<br>
+1、買取金額保証は、予約完了のご連絡をした日の翌々日までに到着日到着分となります。(北海道・中国・四国・九州・沖縄 翌々日までに到着々日までに到着)<br>
 
-週明けの月曜日到着分の買取値段は全て月曜日到着日の相場値段となります。大きな変動がなければそのまま送金となります。<br>
+週明けの月曜日到着分の買取金額は、すべて月曜日到着日の相場金額となります。大きな変動がなければ、そのまま送金となります。<br>
 
-(単価 2000-3000 円超える変動がある場合は当社から連絡致します)<br>
+(単価 2000-3000 円を超える変動がある場合は、当社からご連絡いたします)<br>
 
-(到着日、値段希望の場合買取依頼書に到着日值段を必ずで記载ください)<br>
+(到着日、到着日の金額をご希望の場合は、買取依頼書に到着日の金額を必ずご記載ください)<br>
 
-2.買取依賴品物と添付書類を梱包して元払いでで送付ください。(着払い発送の場合は着払い送料を引いてから送金となります)<br>
+2.買取依頼品と添付書類を梱包し、元払いでご送付ください。(着払いでの発送の場合は、着払い送料を差し引いてからのご送金となります)<br>
 
-3. 商品到着、品、入金<br>
+3. 商検品到着、検品、入金<br>
 
-ⓘ現金書留の場合は到着の翌日に郵便局で出します。(但し金・土曜日到着分は週明け郵便局始業日に出します)、お客様手元に屆くには 2-3日ほどかかります。<br>
+ⓘ現金書留の場合は、到着の翌日に郵便局から発送いたします。(ただし金・土曜日到着分は、週明けの郵便局営業日に発送いたします)、お客様のお手元に届くまでには 2-3日ほどかかります。<br>
 
-間い合わせ番号は原則お知らせしませんが、発送からЗ日間以上経っても届かない場合は気軽にお間い合わせください。<br>
+お問い合わせ番号は原則お知らせいたしませんが、発送からЗ日間以上経っても届かない場合は、お気軽にお問い合わせください。<br>
 
-(50万円每手数料一律2,000 円お客様負担となります、50 万円を超えの場合は送金まで数日かかる場合でさいますので予めで了承ください)<br>
+(50万円ごとに手数料一律2,000 円はお客様ご負担となります、50 万円を超える場合は、送金まで数日かかる場合がございますので、あらかじめご了承ください)<br>
 
-2)振込送金ご利用の場合:<br>
+2)振込送金をご利用の場合:<br>
 
-振込手数料当社負担<br>
+振込手数料は当社負担<br>
 
-振込送金は到着日の翌日まで振込致します。<br>
+振込送金は、到着日の翌日までにお振込いたします。<br>
 
-(できる限り当日振込手続きしますが、郵送買取依頼件数が増加しており、当日終業まで検品終わらない場合も多くなっており)。<br>
+(可能な限り当日中に振込手続きをいたしますが、郵送買取のご依頼件数が増加しており、当日終業時間までに検品が終わらない場合も多くなっております)。<br>
 
-原則振込のご連絡は致しません。各自ご入金の確認をしてください。<br>
+原則として振込完了のご連絡はいたしません。各自で入金状況のご確認をお願いいたします。<br>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 
@@ -290,8 +290,8 @@ MAIL:'.config('site.mail').'<br>
 }
 if (!function_exists('orderStoreManualQueDingSendEmail')) {
     /**
-     * 手动发送 - 查定邮件
-     * 添加订单 -店头买取+现金支付 / 【邮送买取 +银行支付】
+     * 手動送信 - 査定メール
+     * 注文を追加 -店頭買取+現金払い / 【郵送買取 +銀行振込】
      */
     function orderStoreManualQueDingSendEmail($orderDate, $orderNo,$receiver='', $extend = [])
     {
@@ -304,16 +304,16 @@ if (!function_exists('orderStoreManualQueDingSendEmail')) {
                 //$order_details .= ($val['type'] == 1 ? '新品' : '中古').'<br>';
                 $order_details .=  $val['color']."&nbsp;".$val['specs_name'].'<br>';
                 $order_details .=  '¥'.number_format($val['price']).'(税込)'.'<br>';
-                $order_details .=  $val['num'].' 点<br>';
+                $order_details .=  $val['num'].' 時<br>';
             }
             $order_details .= '<br><br>合計金額:￥'.number_format($extend['order']['total_price']).'(税込)';
-            //类型:1=门店,2=邮寄
+            //タイプ:1=店舗,2=郵送
             if($extend['order']['type'] == 1){
                 $storeInfo .= '買取方法:店頭買取<br>
                         来店場所:'.$extend['order']['store']['name'].'<br>
                         来店時間:'.$extend['order']['go_store_date'].' '.$extend['order']['go_store_time'].'<br>';
             }else{
-                $storeInfo .= '買取方法:鄄送買取<br>';
+                $storeInfo .= '買取方法:郵送買取<br>';
                 $storeInfo .= '配送情報:お客様情報と同じ<br>';
             }
             if($extend['order']['pay_mode'] == 1){
@@ -326,7 +326,7 @@ if (!function_exists('orderStoreManualQueDingSendEmail')) {
                 $storeInfo .= '支店号:'.$extend['order']['bank_branch_no'].'<br>';
                 $storeInfo .= '預金種目:'.($extend['order']['bank_account_type'] == 1 ? '普通預金' : '当座預金').'<br>';
                 $storeInfo .= '振込口座番号:'.$extend['order']['bank_account'].'<br>';
-                $storeInfo .= '振込口座名羲:'.$extend['order']['bank_account_name'].'<br>';
+                $storeInfo .= '振込口座名義:'.$extend['order']['bank_account_name'].'<br>';
             }
             $orderMemo = $extend['order']['determine_memo'];
         }
@@ -343,11 +343,11 @@ if (!function_exists('orderStoreManualQueDingSendEmail')) {
 
             $storeInfo .= '書類種別:'.getCategoryName($extend['user']['szb']).'<br>';
         }
-        $html = '「Mobile Zone」をご利用いただき、誠にありがとうごさいました。<br>
+        $html = '「Mobile Zone」をご利用いただき、誠にありがとうございました。<br>
 
-この度はお申込みの買取内容の査定が完了致しました。<br>
+この度はお申込みいただいた買取内容の査定が完了いたしました。<br>
 
-査定結果をお知らせいたしますので、ご確認よろしくお願い申し上けます。<br>
+査定結果をお知らせいたしますので、ご確認のほどよろしくお願い申し上げます。<br>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 お申し込み日:'.$orderDate.'<br>
@@ -371,15 +371,15 @@ if (!function_exists('orderStoreManualQueDingSendEmail')) {
 '.$storeInfo.'<br>
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 
-法人のお客様と個人事業者のお客様は適格請求書発行事業者登録番号が必須となります。<br>
+法人のお客様と個人事業主のお客様は、適格請求書発行事業者登録番号のご入力が必須となります。<br>
 
-※申込する際に 登録番号付きの請求書を発行ください。<br>
+※お申し込みの際は 登録番号付きの請求書を発行してください。<br>
 
-(単価が税込み表示、合計も税込みでその下の欄に消費税総額表示<br>
+(単価は税込み表示、合計も税込みで、その下の欄に消費税総額を表示<br>
 
-個人関しては変わりなく今まで通りご利用いただけます。<br>
+個人のお客様は、従来どおり変更なくご利用いただけます。<br>
 
-買取申込書に適格請求書発行事業者ではない旨のチエック項目が追加されますのでチエックが必要になります。<br>
+買取申込書に、適格請求書発行事業者ではない旨のチェック項目が追加されますので、チェックが必要となります。<br>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 振込予定について<br>
@@ -388,26 +388,26 @@ if (!function_exists('orderStoreManualQueDingSendEmail')) {
 
 繁忙期の場合は 2~3日以内 に入金いたします。<br>
 
-なお、振込完了後ので連絡はいたしませんので、各自でで自身のロ座にてで確認をお願いいたします。<br>
+なお、振込完了後のご連絡はいたしませんので、各自ご自身の口座にてご確認をお願いいたします。<br>
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 
 商品到着、検品、入金<br>
 
-ⓘ現金書留の場合は到着の翌日に郵便局で出します。(但し金·土曜日到着分は週明け郵便局始業日に出します)、お客様手元に届くには 2-3日ほどかかります。<br>
+ⓘ現金書留の場合は、到着の翌日に郵便局から発送いたします。(ただし·ただし金曜・土曜到着分は週明けの郵便局営業日に発送いたします)、お客様のお手元に届くまでには 2-3日ほどかかります。<br>
 
-間い合わせ番号は原則お知らせしませんが、発送から3日間以上経っても届かない場合は気軽にお問い合わせください。<br>
+お問い合わせ番号は原則お知らせいたしませんが、発送から3日間以上経っても届かない場合はお気軽にお問い合わせください。<br>
 
-(50万円每手数料一律2.000 円お客様負担となります、50 万円を超えの場合は送金まで数日かかる場合でさいますので予めで了承ください)<br>
+(50万円ごとに手数料一律2.000 円はお客様ご負担となります、50 万円を超える場合は、送金まで数日かかる場合がございますので、あらかじめご了承ください)<br>
 
-2)振込送金ご利用の場合:<br>
+2)振込送金をご利用の場合:<br>
 
-振込手数料当社負担<br>
+振込手数料は当社負担<br>
 
-振込送金は到着日の翌日まで振込致します。<br>
+振込送金は、到着日の翌日までにお振込いたします。<br>
 
-(できる限り当日振込手続きしますが、郵送買取依賴件数が増加しており、当日終業まで検品終わらない場合も多くなっており)。
+(可能な限り当日中に振込手続きをいたしますが、郵送買取のご依頼件数が増加しており、当日終業時間までに検品が終わらない場合も多くなっております)。
 
-原則振込のご連絡は致しません。各自ご入金の確認をしてください。<br>
+原則として振込完了のご連絡はいたしません。各自で入金状況のご確認をお願いいたします。<br>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 
@@ -428,14 +428,14 @@ MAIL:'.config('site.mail').'<br>
 }
 if (!function_exists('registerSendEmail')) {
     /**
-     * 注册成功发送邮件
+     * 登録成功メール送信
      */
     function registerSendEmail($username, $password,$receiver='')
     {
-        $result = sendEmail('ア力ウント情報「Mobile Zone」',
-                '「Mobile Zone」の会員を登録していただき、誠にありがとうごさいました。<br>
+        $result = sendEmail('アカウント情報「Mobile Zone」',
+                '「Mobile Zone」の会員にご登録いただき、誠にありがとうございました。<br>
 
-アカウント情報をお送りします。大切に保管いただきますようお願いいたします。<br>
+アカウント情報をお送りします。大切に保管くださいますようお願いいたします。<br>
 
 --------------------------------------------------------------<br>
 アカウント:<br>
@@ -461,7 +461,7 @@ MAIL:'.config('site.mail').'<br>
 }
 if (!function_exists('orderStoreManualCancelSendEmail')) {
     /**
-     * 手动发送 - 订单取消邮件
+     * 手動送信 - 注文キャンセルメール
      */
     function orderStoreManualCancelSendEmail($orderDate, $orderNo,$receiver='', $extend = [])
     {
@@ -474,7 +474,7 @@ if (!function_exists('orderStoreManualCancelSendEmail')) {
                 //$order_details .= ($val['type'] == 1 ? '新品' : '中古').'<br>';
                 $order_details .=  $val['color']."&nbsp;".$val['specs_name'].'<br>';
                 $order_details .=  '¥'.number_format($val['price']).'(税込)'.'<br>';
-                $order_details .=  $val['num'].' 点<br>';
+                $order_details .=  $val['num'].' 時<br>';
             }
             $order_details .= '<br><br>合計金額:￥'.number_format($extend['order']['total_price']).'(税込)';
             $orderMemo = $extend['order']['cancel_memo'];
@@ -485,7 +485,7 @@ if (!function_exists('orderStoreManualCancelSendEmail')) {
         }
         $html = $userName.'  様<br>
 
-ご利用いただき誠にありがとうごさいます。<br>
+ご利用いただき誠にありがとうございます。<br>
 
 大変恐れ入りますが、ご注文をキャンセルとさせていただきます。<br>
 
@@ -506,9 +506,9 @@ if (!function_exists('orderStoreManualCancelSendEmail')) {
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 
-またの機会がごさいましたらよるしくお願いいたします。<br>
+またの機会がございましたらよろしくお願いいたします。<br>
 
-どうでよるしくお願い申し上げます。<br>
+どうぞよろしくお願い申し上げます。<br>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
 
@@ -529,14 +529,14 @@ MAIL:'.config('site.mail').'<br>
 }
 if (!function_exists('registerSendEmail')) {
     /**
-     * 注册成功发送邮件
+     * 登録成功メール送信
      */
     function registerSendEmail($username, $password,$receiver='')
     {
-        $result = sendEmail('ア力ウント情報「Mobile Zone」',
-                '「Mobile Zone」の会員を登録していただき、誠にありがとうごさいました。<br>
+        $result = sendEmail('アカウント情報「Mobile Zone」',
+                '「Mobile Zone」の会員にご登録いただき、誠にありがとうございました。<br>
 
-アカウント情報をお送りします。大切に保管いただきますようお願いいたします。<br>
+アカウント情報をお送りします。大切に保管くださいますようお願いいたします。<br>
 
 --------------------------------------------------------------<br>
 アカウント:<br>
@@ -562,7 +562,7 @@ MAIL:'.config('site.mail').'<br>
 }
 if (!function_exists('sendEmail')) {
     /**
-     * 发送邮件
+     * メール送信
      */
     function sendEmail($subject='',$messageTitle='', $receiver='')
     {
@@ -614,7 +614,7 @@ if (!function_exists('isValidChineseMobile')) {
 }
 if (!function_exists('hideMobile')) {
     /**
-     * 隐藏手机号中间四位
+     * 携帯番号の中央4桁を非表示にする
      * @access public
      * @param  int $number 
      * @return bool
@@ -693,10 +693,10 @@ if (!function_exists('setContentImageDomainName')) {
 if (!function_exists('format_bytes')) {
 
     /**
-     * 将字节转换为可读文本
-     * @param int    $size      大小
-     * @param string $delimiter 分隔符
-     * @param int    $precision 小数位数
+     * バイト数を読みやすいテキストに変換する
+     * @param int    $size      サイズ
+     * @param string $delimiter 区切り文字
+     * @param int    $precision 小数点桁数
      * @return string
      */
     function format_bytes($size, $delimiter = '', $precision = 2)
@@ -712,9 +712,9 @@ if (!function_exists('format_bytes')) {
 if (!function_exists('datetime')) {
 
     /**
-     * 将时间戳转换为日期时间
-     * @param int    $time   时间戳
-     * @param string $format 日期时间格式
+     * タイムスタンプを日時に変換する
+     * @param int    $time   タイムスタンプ
+     * @param string $format 日時フォーマット
      * @return string
      */
     function datetime($time, $format = 'Y-m-d H:i:s')
@@ -727,9 +727,9 @@ if (!function_exists('datetime')) {
 if (!function_exists('human_date')) {
 
     /**
-     * 获取语义化时间
-     * @param int $time  时间
-     * @param int $local 本地时间
+     * セマンティックな時間表現を取得する
+     * @param int $time  時間
+     * @param int $local ローカル時刻
      * @return string
      */
     function human_date($time, $local = null)
@@ -741,9 +741,9 @@ if (!function_exists('human_date')) {
 if (!function_exists('cdnurl')) {
 
     /**
-     * 获取上传资源的CDN的地址
-     * @param string  $url    资源相对地址
-     * @param boolean $domain 是否显示域名 或者直接传入域名
+     * アップロードしたリソースのCDNのアドレス
+     * @param string  $url    リソースの相対パス
+     * @param boolean $domain ドメイン名を表示するかどうか またはドメイン名を直接渡す
      * @return string
      */
     function cdnurl($url, $domain = false)
@@ -765,8 +765,8 @@ if (!function_exists('cdnurl')) {
 if (!function_exists('is_really_writable')) {
 
     /**
-     * 判断文件或文件夹是否可写
-     * @param string $file 文件或目录
+     * ファイルまたはフォルダが書き込み可能か判定する
+     * @param string $file ファイルまたはディレクトリ
      * @return    bool
      */
     function is_really_writable($file)
@@ -794,9 +794,9 @@ if (!function_exists('is_really_writable')) {
 if (!function_exists('rmdirs')) {
 
     /**
-     * 删除文件夹
-     * @param string $dirname  目录
-     * @param bool   $withself 是否删除自身
+     * フォルダを削除する
+     * @param string $dirname  ディレクトリ
+     * @param bool   $withself 自身を削除するかどうか
      * @return boolean
      */
     function rmdirs($dirname, $withself = true)
@@ -823,9 +823,9 @@ if (!function_exists('rmdirs')) {
 if (!function_exists('copydirs')) {
 
     /**
-     * 复制文件夹
-     * @param string $source 源文件夹
-     * @param string $dest   目标文件夹
+     * フォルダをコピーする
+     * @param string $source ソースフォルダ
+     * @param string $dest   ターゲットフォルダ
      */
     function copydirs($source, $dest)
     {
@@ -860,9 +860,9 @@ if (!function_exists('mb_ucfirst')) {
 if (!function_exists('addtion')) {
 
     /**
-     * 附加关联字段数据
-     * @param array $items  数据列表
-     * @param mixed $fields 渲染的来源字段
+     * 関連フィールドデータを付加する
+     * @param array $items  データリスト
+     * @param mixed $fields レンダリング元フィールド
      * @return array
      */
     function addtion($items, $fields)
@@ -910,7 +910,7 @@ if (!function_exists('addtion')) {
             if ($v['model']) {
                 $model = new $v['model'];
             } else {
-                // 优先判断使用table的配置
+                // 優先的に使用を判定するtableの設定
                 $model = $v['table'] ? \think\Db::table($v['table']) : \think\Db::name($v['name']);
             }
             $primary = $v['primary'] ?: $model->getPk();
@@ -934,9 +934,9 @@ if (!function_exists('addtion')) {
 if (!function_exists('var_export_short')) {
 
     /**
-     * 使用短标签打印或返回数组结构
+     * ショートタグを使用して配列構造を出力または返却する
      * @param mixed   $data
-     * @param boolean $return 是否返回数据
+     * @param boolean $return データを返すかどうか
      * @return string
      */
     function var_export_short($data, $return = true)
@@ -947,7 +947,7 @@ if (!function_exists('var_export_short')) {
 
 if (!function_exists('letter_avatar')) {
     /**
-     * 首字母头像
+     * 頭文字アイコン
      * @param $text
      * @return string
      */
@@ -1020,7 +1020,7 @@ if (!function_exists('hsv2rgb')) {
 
 if (!function_exists('check_nav_active')) {
     /**
-     * 检测会员中心导航是否高亮
+     * 会員センターナビがハイライトされているかを検出
      */
     function check_nav_active($url, $classname = 'active')
     {
@@ -1033,7 +1033,7 @@ if (!function_exists('check_nav_active')) {
 
 if (!function_exists('check_cors_request')) {
     /**
-     * 跨域检测
+     * クロスドメイン検出
      */
     function check_cors_request()
     {
@@ -1044,7 +1044,7 @@ if (!function_exists('check_cors_request')) {
             if (in_array("*", $domainArr) || in_array($_SERVER['HTTP_ORIGIN'], $domainArr) || (isset($info['host']) && in_array($info['host'], $domainArr))) {
                 header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
             } else {
-                $response = Response::create('跨域检测无效', 'html', 403);
+                $response = Response::create('クロスドメイン検出が無効です', 'html', 403);
                 throw new HttpResponseException($response);
             }
 
@@ -1067,7 +1067,7 @@ if (!function_exists('check_cors_request')) {
 
 if (!function_exists('xss_clean')) {
     /**
-     * 清理XSS
+     * クリーニングXSS
      */
     function xss_clean($content, $is_image = false)
     {
@@ -1077,7 +1077,7 @@ if (!function_exists('xss_clean')) {
 
 if (!function_exists('url_clean')) {
     /**
-     * 清理URL
+     * クリーニングURL
      */
     function url_clean($url)
     {
@@ -1090,8 +1090,8 @@ if (!function_exists('url_clean')) {
 
 if (!function_exists('check_ip_allowed')) {
     /**
-     * 检测IP是否允许
-     * @param string $ip IP地址
+     * チェックIP許可するかどうか
+     * @param string $ip IPアドレス
      */
     function check_ip_allowed($ip = null)
     {
@@ -1100,7 +1100,7 @@ if (!function_exists('check_ip_allowed')) {
         $forbiddenipArr = !$forbiddenipArr ? [] : $forbiddenipArr;
         $forbiddenipArr = is_array($forbiddenipArr) ? $forbiddenipArr : array_filter(explode("\n", str_replace("\r\n", "\n", $forbiddenipArr)));
         if ($forbiddenipArr && \Symfony\Component\HttpFoundation\IpUtils::checkIp($ip, $forbiddenipArr)) {
-            $response = Response::create('请求无权访问', 'html', 403);
+            $response = Response::create('このリクエストにはアクセス権限がありません', 'html', 403);
             throw new HttpResponseException($response);
         }
     }
@@ -1108,13 +1108,13 @@ if (!function_exists('check_ip_allowed')) {
 
 if (!function_exists('check_url_allowed')) {
     /**
-     * 检测URL是否允许
+     * チェックURL許可するかどうか
      * @param string $url URL
      * @return bool
      */
     function check_url_allowed($url = '')
     {
-        //允许的主机列表
+        //許可ホスト一覧
         $allowedHostArr = [
             strtolower(request()->host())
         ];
@@ -1123,12 +1123,12 @@ if (!function_exists('check_url_allowed')) {
             return true;
         }
 
-        //如果是站内相对链接则允许
+        //サイト内の相対リンクであれば許可
         if (preg_match("/^[\/a-z][a-z0-9][a-z0-9\.\/]+((\?|#).*)?\$/i", $url) && substr($url, 0, 2) !== '//') {
             return true;
         }
 
-        //如果是站外链接则需要判断HOST是否允许
+        //サイト外リンクの場合は判定が必要HOST許可するかどうか
         if (preg_match("/((http[s]?:\/\/)+((?>[a-z\-0-9]{2,}\.)+[a-z]{2,8}|((?>([0-9]{1,3}\.)){3}[0-9]{1,3}))(:[0-9]{1,5})?)(?:\s|\/)/i", $url)) {
             $chkHost = parse_url(strtolower($url), PHP_URL_HOST);
             if ($chkHost && in_array($chkHost, $allowedHostArr)) {
@@ -1142,8 +1142,8 @@ if (!function_exists('check_url_allowed')) {
 
 if (!function_exists('build_suffix_image')) {
     /**
-     * 生成文件后缀图片
-     * @param string $suffix 后缀
+     * ファイル拡張子アイコンを生成
+     * @param string $suffix サフィックス
      * @param null   $background
      * @return string
      */

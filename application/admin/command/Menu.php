@@ -27,22 +27,22 @@ class Menu extends Command
             ->addOption('force', 'f', Option::VALUE_OPTIONAL, 'force delete menu,without tips', null)
             ->addOption('equal', 'e', Option::VALUE_OPTIONAL, 'the controller must be equal', null)
             ->setDescription('Build auth menu from controller');
-        //要执行的controller必须一样，不适用模糊查询
+        //実行対象のcontroller同一でなければならない，あいまい検索は使用しない
     }
 
     protected function execute(Input $input, Output $output)
     {
         $this->model = new AuthRule();
         $adminPath = dirname(__DIR__) . DS;
-        //控制器名
+        //コントローラー名
         $controller = $input->getOption('controller') ?: '';
         if (!$controller) {
             throw new Exception("please input controller name");
         }
         $force = $input->getOption('force');
-        //是否为删除模式
+        //削除モードかどうか
         $delete = $input->getOption('delete');
-        //是否控制器完全匹配
+        //コントローラーを完全一致させるかどうか
         $equal = $input->getOption('equal');
 
 
@@ -115,12 +115,12 @@ class Menu extends Command
             }
         } else {
             $authRuleList = AuthRule::select();
-            //生成权限规则备份文件
+            //権限ルールのバックアップファイルを生成
             file_put_contents(RUNTIME_PATH . 'authrule.json', json_encode(collection($authRuleList)->toArray()));
 
             $this->model->where('id', '>', 0)->delete();
             $controllerDir = $adminPath . 'controller' . DS;
-            // 扫描新的节点信息并导入
+            // 新しいノード情報をスキャンしてインポート
             $treelist = $this->import($this->scandir($controllerDir));
         }
         Cache::rm("__menu__");
@@ -128,7 +128,7 @@ class Menu extends Command
     }
 
     /**
-     * 递归扫描文件夹
+     * フォルダを再帰的にスキャン
      * @param string $dir
      * @return array
      */
@@ -149,7 +149,7 @@ class Menu extends Command
     }
 
     /**
-     * 导入规则节点
+     * ルールノードをインポート
      * @param array $dirarr
      * @param array $parentdir
      * @return array
@@ -159,15 +159,15 @@ class Menu extends Command
         $menuarr = [];
         foreach ($dirarr as $k => $v) {
             if (is_array($v)) {
-                //当前是文件夹
+                //現在はフォルダです
                 $nowparentdir = array_merge($parentdir, [$k]);
                 $this->import($v, $nowparentdir);
             } else {
-                //只匹配PHP文件
+                //一致対象はPHPファイル
                 if (!preg_match('/^(\w+)\.php$/', $v, $matchone)) {
                     continue;
                 }
-                //导入文件
+                //ファイルをインポート
                 $controller = ($parentdir ? implode('/', $parentdir) . '/' : '') . $matchone[1];
                 $this->importRule($controller);
             }
@@ -199,26 +199,26 @@ class Menu extends Command
         $classContent = str_replace("class " . $controllerArr[$key] . $classSuffix . " ", 'class ' . $uniqueName . ' ', $classContent);
         $classContent = preg_replace("/namespace\s(.*);/", 'namespace ' . __NAMESPACE__ . ";", $classContent);
 
-        //临时的类文件
+        //一時クラスファイル
         $tempClassFile = __DIR__ . DS . $uniqueName . ".php";
         file_put_contents($tempClassFile, $classContent);
         $className = "\\app\\admin\\command\\" . $uniqueName;
 
-        //删除临时文件
+        //一時ファイルを削除
         register_shutdown_function(function () use ($tempClassFile) {
             if ($tempClassFile) {
-                //删除临时文件
+                //一時ファイルを削除
                 @unlink($tempClassFile);
             }
         });
 
-        //反射机制调用类的注释和方法名
+        //リフレクションでクラスのコメントとメソッド名を取得
         $reflector = new ReflectionClass($className);
 
-        //只匹配公共的方法
+        //パブリックメソッドのみを一致させる
         $methods = $reflector->getMethods(ReflectionMethod::IS_PUBLIC);
         $classComment = $reflector->getDocComment();
-        //判断是否有启用软删除
+        //ソフトデリートが有効かどうかを判定
         $softDeleteMethods = ['destroy', 'restore', 'recyclebin'];
         $withSofeDelete = false;
         $modelRegexArr = ["/\\\$this\->model\s*=\s*model\(['|\"](\w+)['|\"]\);/", "/\\\$this\->model\s*=\s*new\s+([a-zA-Z\\\]+);/"];
@@ -231,14 +231,14 @@ class Menu extends Command
                 $withSofeDelete = true;
             }
         }
-        //忽略的类
+        //無視するクラス
         if (stripos($classComment, "@internal") !== false) {
             return;
         }
         preg_match_all('#(@.*?)\n#s', $classComment, $annotations);
         $controllerIcon = 'fa fa-circle-o';
         $controllerRemark = '';
-        //判断注释中是否设置了icon值
+        //コメント内で設定されているかどうかを判定icon値
         if (isset($annotations[1])) {
             foreach ($annotations[1] as $tag) {
                 if (stripos($tag, '@icon') !== false) {
@@ -249,17 +249,17 @@ class Menu extends Command
                 }
             }
         }
-        //过滤掉其它字符
+        //その他の文字をフィルタリング
         $controllerTitle = trim(preg_replace(array('/^\/\*\*(.*)[\n\r\t]/u', '/[\s]+\*\//u', '/\*\s@(.*)/u', '/[\s|\*]+/u'), '', $classComment));
 
-        //导入中文语言包
+        //中国語言語パックをインポート
         \think\Lang::load(dirname(__DIR__) . DS . 'lang/zh-cn.php');
 
-        //先导入菜单的数据
+        //先にメニューのデータをインポート
         $pid = 0;
         foreach ($controllerArr as $k => $v) {
             $key = $k + 1;
-            //驼峰转下划线
+            //キャメルケースをスネークケースに変換
             $controllerNameArr = array_slice($controllerArr, 0, $key);
             foreach ($controllerNameArr as &$val) {
                 $val = strtolower(trim(preg_replace("/[A-Z]/", "_\\0", $val), "_"));
@@ -283,30 +283,30 @@ class Menu extends Command
         }
         $ruleArr = [];
         foreach ($methods as $m => $n) {
-            //过滤特殊的类
+            //特殊なクラスをフィルタリング
             if (substr($n->name, 0, 2) == '__' || $n->name == '_initialize') {
                 continue;
             }
-            //未启用软删除时过滤相关方法
+            //ソフトデリート未使用時に関連メソッドをフィルタリング
             if (!$withSofeDelete && in_array($n->name, $softDeleteMethods)) {
                 continue;
             }
-            //只匹配符合的方法
+            //条件に合うメソッドのみを一致させる
             if (!preg_match('/^(\w+)' . Config::get('action_suffix') . '/', $n->name, $matchtwo)) {
                 unset($methods[$m]);
                 continue;
             }
             $comment = $reflector->getMethod($n->name)->getDocComment();
-            //忽略的方法
+            //無視するメソッド
             if (stripos($comment, "@internal") !== false) {
                 continue;
             }
-            //过滤掉其它字符
+            //その他の文字をフィルタリング
             $comment = preg_replace(array('/^\/\*\*(.*)[\n\r\t]/u', '/[\s]+\*\//u', '/\*\s@(.*)/u', '/[\s|\*]+/u'), '', $comment);
 
             $title = $comment ? $comment : ucfirst($n->name);
 
-            //获取主键，作为AuthRule更新依据
+            //主キーを取得，としてAuthRule更新の基準
             $id = $this->getAuthRulePK($name . "/" . strtolower($n->name));
 
             $ruleArr[] = array('id' => $id, 'pid' => $pid, 'name' => $name . "/" . strtolower($n->name), 'icon' => 'fa fa-circle-o', 'title' => $title, 'ismenu' => 0, 'status' => 'normal');
@@ -314,7 +314,7 @@ class Menu extends Command
         $this->model->isUpdate(false)->saveAll($ruleArr);
     }
 
-    //获取主键
+    //主キーを取得
     protected function getAuthRulePK($name)
     {
         if (!empty($name)) {

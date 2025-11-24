@@ -33,12 +33,12 @@ class InvokePrepayPlugin implements PluginInterface
         /* @var Rocket $rocket */
         $rocket = $next($rocket);
 
-        Logger::debug('[wechat][InvokePrepayPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[wechat][InvokePrepayPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $prepayId = $rocket->getDestination()->get('prepay_id');
 
         if (is_null($prepayId)) {
-            Logger::error('[wechat][InvokePrepayPlugin] 预下单失败：响应缺少 prepay_id 参数，请自行检查参数是否符合微信要求', $rocket->getDestination()->all());
+            Logger::error('[wechat][InvokePrepayPlugin] 事前注文に失敗しました：レスポンスに不足しています prepay_id パラメーター，请自行检查パラメーター是否符合微信要求', $rocket->getDestination()->all());
 
             throw new InvalidResponseException(Exception::RESPONSE_MISSING_NECESSARY_PARAMS, 'Prepay Response Error: Missing PrepayId', $rocket->getDestination()->all());
         }
@@ -47,7 +47,7 @@ class InvokePrepayPlugin implements PluginInterface
 
         $rocket->setDestination($config);
 
-        Logger::info('[wechat][InvokePrepayPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[wechat][InvokePrepayPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $rocket;
     }

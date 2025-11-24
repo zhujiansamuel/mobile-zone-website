@@ -7,11 +7,11 @@ use think\Model;
 class UserGroup extends Model
 {
 
-    // 表名
+    // テーブル名
     protected $name = 'user_group';
-    // 自动写入时间戳字段
+    // タイムスタンプフィールドを自動書き込み
     protected $autoWriteTimestamp = 'int';
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
     // 追加属性

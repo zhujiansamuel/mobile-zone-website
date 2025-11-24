@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'Category_id' => '分类',
-    'Title'       => '标题',
-    'Weigh'       => '权重',
+    'Category_id' => 'カテゴリ',
+    'Title'       => '見出し',
+    'Weigh'       => '重み',
     'Content'     => '内容',
-    'Createtime'  => '创建时间'
+    'Createtime'  => '作成時間'
 ];

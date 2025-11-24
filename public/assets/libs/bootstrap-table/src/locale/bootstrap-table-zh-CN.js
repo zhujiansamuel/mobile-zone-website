@@ -7,40 +7,40 @@
 
     $.fn.bootstrapTable.locales['zh-CN'] = {
         formatLoadingMessage: function () {
-            return '正在努力地加载数据中，请稍候……';
+            return 'データを読み込んでいます，しばらくお待ちください……';
         },
         formatRecordsPerPage: function (pageNumber) {
-            return '每页显示 ' + pageNumber + ' 条记录';
+            return '1ページあたり ' + pageNumber + ' 件のレコード';
         },
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
-            return '显示第 ' + pageFrom + ' 到第 ' + pageTo + ' 条记录，总共 ' + totalRows + ' 条记录';
+            return '表示中:  ' + pageFrom + '  から  ' + pageTo + ' 件のレコード，合計 ' + totalRows + ' 件のレコード';
         },
         formatDetailPagination: function (totalRows) {
-            return '总共 ' + totalRows + ' 条记录';
+            return '合計 ' + totalRows + ' 件のレコード';
         },
         formatSearch: function () {
-            return '搜索';
+            return '検索';
         },
         formatNoMatches: function () {
-            return '没有找到匹配的记录';
+            return '一致するレコードが見つかりません';
         },
         formatPaginationSwitch: function () {
-            return '隐藏/显示分页';
+            return '非表示/ページネーションを表示';
         },
         formatRefresh: function () {
-            return '刷新';
+            return '更新';
         },
         formatToggle: function () {
-            return '切换';
+            return '切り替え';
         },
         formatColumns: function () {
             return '列';
         },
         formatExport: function () {
-            return '导出数据';
+            return 'データをエクスポート';
         },
         formatClearFilters: function () {
-            return '清空过滤';
+            return 'フィルターをクリア';
         }
     };
 

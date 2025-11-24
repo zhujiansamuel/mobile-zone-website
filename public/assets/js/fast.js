@@ -1,7 +1,7 @@
 define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefined, Toastr, Layer, Lang) {
     var Fast = {
         config: {
-            //toastr默认配置
+            //toastrデフォルト設定
             toastr: {
                 "closeButton": true,
                 "debug": false,
@@ -21,7 +21,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
             }
         },
         events: {
-            //请求成功的回调
+            //リクエスト成功時のコールバック
             onAjaxSuccess: function (ret, onAjaxSuccess) {
                 var data = typeof ret.data !== 'undefined' ? ret.data : null;
                 var msg = typeof ret.msg !== 'undefined' && ret.msg ? ret.msg : __('Operation completed');
@@ -33,7 +33,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                 }
                 Toastr.success(msg);
             },
-            //请求错误的回调
+            //リクエストエラー時のコールバック
             onAjaxError: function (ret, onAjaxError) {
                 var data = typeof ret.data !== 'undefined' ? ret.data : null;
                 if (typeof onAjaxError === 'function') {
@@ -44,7 +44,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                 }
                 Toastr.error(ret.msg);
             },
-            //服务器响应数据后
+            //サーバーがデータを返した後
             onAjaxResponse: function (response) {
                 try {
                     var ret = typeof response === 'object' ? response : JSON.parse(response);
@@ -58,7 +58,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
             }
         },
         api: {
-            //发送Ajax请求
+            //送信Ajaxリクエスト
             ajax: function (options, success, error) {
                 options = typeof options === 'string' ? {url: options} : options;
                 var index;
@@ -88,7 +88,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                 }, options);
                 return $.ajax(options);
             },
-            //修复URL
+            //修復URL
             fixurl: function (url) {
                 if (url.substr(0, 1) !== "/") {
                     var r = new RegExp('^(?:[a-z]+:)?//', 'i');
@@ -100,7 +100,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                 }
                 return url;
             },
-            //获取修复后可访问的cdn链接
+            //修復後にアクセス可能なcdnリンク
             cdnurl: function (url, domain) {
                 var rule = new RegExp("^((?:[a-z]+:)?\\/\\/|data:image\\/)", "i");
                 var cdnurl = Config.upload.cdnurl;
@@ -113,7 +113,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                 }
                 return url;
             },
-            //查询Url参数
+            //クエリUrlパラメーター
             query: function (name, url) {
                 if (!url) {
                     url = window.location.href;
@@ -129,7 +129,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                     return '';
                 return decodeURIComponent(results[2].replace(/\+/g, " "));
             },
-            //打开一个弹出窗口
+            //ポップアップウィンドウを開く
             open: function (url, title, options) {
                 title = options && options.title ? options.title : (title ? title : "");
                 url = Fast.api.fixurl(url);
@@ -151,7 +151,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                     zIndex: Layer.zIndex,
                     success: function (layero, index) {
                         var that = this;
-                        //存储callback事件
+                        //保存callbackイベント
                         $(layero).data("callback", that.callback);
                         //$(layero).removeClass("layui-layer-border");
                         Layer.setTop(layero);
@@ -160,25 +160,25 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                             var layerfooter = frame.find(".layer-footer");
                             Fast.api.layerfooter(layero, index, that);
 
-                            //绑定事件
+                            //イベントをバインド
                             if (layerfooter.length > 0) {
-                                // 监听窗口内的元素及属性变化
-                                // Firefox和Chrome早期版本中带有前缀
+                                // ウィンドウ内の要素および属性の変化を監視
+                                // FirefoxとChrome初期バージョンではプレフィックス付き
                                 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
                                 if (MutationObserver) {
-                                    // 选择目标节点
+                                    // 対象ノードを選択
                                     var target = layerfooter[0];
-                                    // 创建观察者对象
+                                    // オブザーバーオブジェクトを作成
                                     var observer = new MutationObserver(function (mutations) {
                                         Fast.api.layerfooter(layero, index, that);
                                         mutations.forEach(function (mutation) {
                                         });
                                     });
-                                    // 配置观察选项:
+                                    // 監視オプションを設定:
                                     var config = {attributes: true, childList: true, characterData: true, subtree: true}
-                                    // 传入目标节点和观察选项
+                                    // 対象ノードと監視オプションを渡す
                                     observer.observe(target, config);
-                                    // 随后,你还可以停止观察
+                                    // その後,監視を停止することもできます
                                     // observer.disconnect();
                                 }
                             }
@@ -186,7 +186,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
 
                         }
                         if ($(layero).height() > $(window).height()) {
-                            //当弹出窗口大于浏览器可视高度时,重定位
+                            //ポップアップウィンドウがブラウザの表示高さより大きい場合,位置を再調整
                             Layer.style(index, {
                                 top: 0,
                                 height: $(window).height()
@@ -206,13 +206,13 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                 }
                 return Layer.open(options);
             },
-            //关闭窗口并回传数据
+            //ウィンドウを閉じてデータを返す
             close: function (data) {
                 var index = parent.Layer.getFrameIndex(window.name);
                 var callback = parent.$("#layui-layer" + index).data("callback");
-                //再执行关闭
+                //続いて閉じる処理を実行
                 parent.Layer.close(index);
-                //再调用回传函数
+                //続いてコールバック関数を呼び出す
                 if (typeof callback === 'function') {
                     callback.call(undefined, data);
                 }
@@ -228,7 +228,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                         $(">", footer).wrapAll("<div class='row'></div>");
                     }
                     footer.insertAfter(layero.find('.layui-layer-content'));
-                    //绑定事件
+                    //イベントをバインド
                     footer.on("click", ".btn", function () {
                         if ($(this).hasClass("disabled") || $(this).parent().hasClass("disabled")) {
                             return;
@@ -239,10 +239,10 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
 
                     var titHeight = layero.find('.layui-layer-title').outerHeight() || 0;
                     var btnHeight = layero.find('.layui-layer-btn').outerHeight() || 0;
-                    //重设iframe高度
+                    //再設定iframe高さ
                     $("iframe", layero).height(layero.height() - titHeight - btnHeight);
                 }
-                //修复iOS下弹出窗口的高度和iOS下iframe无法滚动的BUG
+                //修復iOS下ポップアップウィンドウの高さとiOS下iframeスクロール不可のBUG
                 if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
                     var titHeight = layero.find('.layui-layer-title').outerHeight() || 0;
                     var btnHeight = layero.find('.layui-layer-btn').outerHeight() || 0;
@@ -339,13 +339,13 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
             });
         },
         init: function () {
-            // jQuery兼容处理
+            // jQuery互換処理
             $.fn.extend({
                 size: function () {
                     return $(this).length;
                 }
             });
-            // 对相对地址进行处理
+            // 相対パスを処理
             $.ajaxSetup({
                 beforeSend: function (xhr, setting) {
                     setting.url = Fast.api.fixurl(setting.url);
@@ -354,7 +354,7 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
             Layer.config({
                 skin: 'layui-layer-fast'
             });
-            // 绑定ESC关闭窗口事件
+            // バインドESCウィンドウを閉じるイベント
             $(window).keyup(function (e) {
                 if (e.keyCode == 27) {
                     if ($(".layui-layer").length > 0) {
@@ -369,21 +369,21 @@ define(['jquery', 'bootstrap', 'toastr', 'layer', 'lang'], function ($, undefine
                 }
             });
 
-            //公共代码
-            //配置Toastr的参数
+            //共通コード
+            //設定Toastrのパラメータ
             Toastr.options = Fast.config.toastr;
         }
     };
-    //将Layer暴露到全局中去
+    //をLayerグローバルに公開する
     window.Layer = Layer;
-    //将Toastr暴露到全局中去
+    //をToastrグローバルに公開する
     window.Toastr = Toastr;
-    //将语言方法暴露到全局中去
+    //言語メソッドをグローバルに公開する
     window.__ = Fast.lang;
-    //将Fast渲染至全局
+    //をFastグローバルへレンダリング
     window.Fast = Fast;
 
-    //默认初始化执行的代码
+    //デフォルト初期化時に実行するコード
     Fast.init();
     return Fast;
 });

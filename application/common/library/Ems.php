@@ -6,28 +6,28 @@ use fast\Random;
 use think\Hook;
 
 /**
- * 邮箱验证码类
+ * メール認証コードクラス
  */
 class Ems
 {
 
     /**
-     * 验证码有效时长
+     * 認証コードの有効期間
      * @var int
      */
     protected static $expire = 120;
 
     /**
-     * 最大允许检测的次数
+     * 検証の最大許可回数
      * @var int
      */
     protected static $maxCheckNums = 10;
 
     /**
-     * 获取最后一次邮箱发送的数据
+     * 最後に送信したメールデータを取得
      *
-     * @param int    $email 邮箱
-     * @param string $event 事件
+     * @param int    $email メールアドレス
+     * @param string $event イベント
      * @return  Ems|null
      */
     public static function get($email, $event = 'default')
@@ -40,11 +40,11 @@ class Ems
     }
 
     /**
-     * 发送验证码
+     * 認証コードを送信
      *
-     * @param int    $email 邮箱
-     * @param int    $code  验证码,为空时将自动生成4位数字
-     * @param string $event 事件
+     * @param int    $email メールアドレス
+     * @param int    $code  認証コード,空の場合は自動的に生成されます4桁の数字
+     * @param string $event イベント
      * @return  boolean
      */
     public static function send($email, $code = null, $event = 'default')
@@ -58,8 +58,8 @@ class Ems
             case 'register':
                 $subject = '新規登録「Mobile Zone」';
                 $message = '
-「Mobile Zone」の会員を登録していただき、誠にありがとうごさいました。<br>
-下記の認証コードを会員登録欄に入カしてください。<br>
+「Mobile Zone」の会員にご登録いただき、誠にありがとうございました。<br>
+下記の認証コードを会員登録欄に入力してください。<br>
 --------------------------------------------------------------<br>
 新規登録用認証コード:<br>
 '.$code.'<br>
@@ -78,7 +78,7 @@ MAIL:'.config('site.mail').'<br>
                 break;
             case 'resetpwd':
                 $subject = 'パスワード再設定「Mobile Zone」';
-                $message = '下記の認証コードをパスワード再設定の欄に入カしてください。<br>
+                $message = '下記の認証コードをパスワード再設定の欄に入力してください。<br>
 --------------------------------------------------------------<br>
 パスワード再設定用認証コード:<br>
 '.$code.'<br>
@@ -105,8 +105,8 @@ MAIL:'.config('site.mail').'<br>
             ->from(config('site.mail_from'), 'Mobile Zone')
             ->subject($subject)
             ->message($message)
-            //->subject(__('请查收你的验证码！'))
-            //->message(__("你的验证码是：%s，%s分钟内有效。", $code,ceil(self::$expire / 60)))
+            //->subject(__('認証コードをご確認ください！'))
+            //->message(__("あなたの認証コードは：%s，%s分以内有効です。", $code,ceil(self::$expire / 60)))
             ->send();
      
         if (!$result) {
@@ -118,11 +118,11 @@ MAIL:'.config('site.mail').'<br>
     }
 
     /**
-     * 发送通知
+     * 通知を送信
      *
-     * @param mixed  $email    邮箱,多个以,分隔
-     * @param string $msg      消息内容
-     * @param string $template 消息模板
+     * @param mixed  $email    メールアドレス,複数指定する場合は,で区切る
+     * @param string $msg      メッセージ内容
+     * @param string $template メッセージテンプレート
      * @return  boolean
      */
     public static function notice($email, $msg = '', $template = null)
@@ -133,9 +133,9 @@ MAIL:'.config('site.mail').'<br>
             'template' => $template
         ];
         if (!Hook::get('ems_notice')) {
-            //采用框架默认的邮件推送
+            //フレームワーク標準のメール配信を採用
             Hook::add('ems_notice', function ($params) {
-                $subject = '你收到一封新的邮件！';
+                $subject = '新しいメールが届いています！';
                 $content = $params['msg'];
                 $email = new Email();
                 $result = $email->to($params['email'])
@@ -150,11 +150,11 @@ MAIL:'.config('site.mail').'<br>
     }
 
     /**
-     * 校验验证码
+     * 認証コードを検証
      *
-     * @param int    $email 邮箱
-     * @param int    $code  验证码
-     * @param string $event 事件
+     * @param int    $email メールアドレス
+     * @param int    $code  認証コード
+     * @param string $event イベント
      * @return  boolean
      */
     public static function check($email, $code, $event = 'default')
@@ -175,7 +175,7 @@ MAIL:'.config('site.mail').'<br>
                     return true;
                 }
             } else {
-                // 过期则清空该邮箱验证码
+                // 有効期限切れの場合は該当メールの認証コードを削除
                 self::flush($email, $event);
                 return false;
             }
@@ -185,10 +185,10 @@ MAIL:'.config('site.mail').'<br>
     }
 
     /**
-     * 清空指定邮箱验证码
+     * 指定メールアドレスの認証コードを削除
      *
-     * @param int    $email 邮箱
-     * @param string $event 事件
+     * @param int    $email メールアドレス
+     * @param string $event イベント
      * @return  boolean
      */
     public static function flush($email, $event = 'default')

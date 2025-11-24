@@ -1,20 +1,20 @@
 define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table', 'bootstrap-table-lang', 'bootstrap-table-export', 'bootstrap-table-commonsearch', 'bootstrap-table-template', 'bootstrap-table-jumpto', 'bootstrap-table-fixed-columns'], function ($, undefined, Moment) {
     var Table = {
         list: {},
-        // Bootstrap-table 基础配置
+        // Bootstrap-table 基本設定
         defaults: {
             url: '',
             sidePagination: 'server',
-            method: 'get', //请求方法
-            toolbar: ".toolbar", //工具栏
-            search: true, //是否启用快速搜索
+            method: 'get', //リクエストメソッド
+            toolbar: ".toolbar", //ツールバー
+            search: true, //クイック検索を有効にするかどうか
             cache: false,
-            commonSearch: true, //是否启用通用搜索
-            searchFormVisible: false, //是否始终显示搜索表单
-            titleForm: '', //为空则不显示标题，不定义默认显示：普通搜索
+            commonSearch: true, //共通検索を有効にするかどうか
+            searchFormVisible: false, //常に検索フォームを表示するかどうか
+            titleForm: '', //空の場合はタイトルを表示しない，未定義の場合のデフォルト表示：通常検索
             idTable: 'commonTable',
             showExport: true,
-            exportDataType: "auto", //支持auto,selected,all 当设定为auto时自动时有选中则导出选中，没有选中则导出全部
+            exportDataType: "auto", //サポートauto,selected,all をautoに設定した場合auto自動的に選択がある場合は選択行のみをエクスポートし，選択がない場合はすべてをエクスポート
             exportTypes: ['json', 'xml', 'csv', 'txt', 'doc', 'excel'],
             exportOptions: {
                 fileName: 'export_' + Moment().format("YYYY-MM-DD"),
@@ -24,14 +24,14 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         return !isNaN($(cell).text()) ? '\\@' : '';
                     },
                 },
-                ignoreColumn: [0, 'operate'] //默认不导出第一列(checkbox)与操作(operate)列
+                ignoreColumn: [0, 'operate'] //デフォルトでは1列目をエクスポートしない(checkbox)と操作列(operate)列
             },
             pageSize: Config.pagesize || localStorage.getItem("pagesize") || 10,
             pageList: [10, 15, 20, 25, 50, 'All'],
             pagination: true,
-            clickToSelect: true, //是否启用点击选中
-            dblClickToEdit: true, //是否启用双击编辑
-            singleSelect: false, //是否启用单选
+            clickToSelect: true, //クリック選択を有効にするかどうか
+            dblClickToEdit: true, //ダブルクリック編集を有効にするかどうか
+            singleSelect: false, //単一選択を有効にするかどうか
             showRefresh: false,
             showJumpto: true,
             locale: Config.language === 'zh-cn' ? 'zh-CN' : 'en-US',
@@ -44,12 +44,12 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             paginationPreText: __("Previous"),
             paginationNextText: __("Next"),
             paginationLastText: __("Last"),
-            cardView: false, //卡片视图
-            iosCardView: true, //ios卡片视图
-            checkOnInit: true, //是否在初始化时判断
-            escape: true, //是否对内容进行转义
-            fixDropdownPosition: true, //是否修复下拉的定位
-            dragCheckboxMultiselect: true, //拖拽时复选框是否多选模式
+            cardView: false, //カードビュー
+            iosCardView: true, //iosカードビュー
+            checkOnInit: true, //初期化時に判定するかどうか
+            escape: true, //内容をエスケープするかどうか
+            fixDropdownPosition: true, //ドロップダウンの位置を補正するかどうか
+            dragCheckboxMultiselect: true, //ドラッグ時にチェックボックスを複数選択モードにするかどうか
             selectedIds: [],
             selectedData: [],
             extend: {
@@ -62,7 +62,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 dragsort_url: 'ajax/weigh',
             }
         },
-        // Bootstrap-table 列配置
+        // Bootstrap-table 列設定
         columnDefaults: {
             align: 'center',
             valign: 'middle',
@@ -121,11 +121,11 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     localStorage.setItem('pagesize', this.options.pageSize);
                     return false;
                 };
-                // 写入bootstrap-table默认配置
+                // 書き込みbootstrap-tableデフォルト設定
                 $.extend(true, $.fn.bootstrapTable.defaults, Table.defaults, defaults);
-                // 写入bootstrap-table column配置
+                // 書き込みbootstrap-table column設定
                 $.extend($.fn.bootstrapTable.columnDefaults, Table.columnDefaults, columnDefaults);
-                // 写入bootstrap-table locale配置
+                // 書き込みbootstrap-table locale設定
                 $.extend($.fn.bootstrapTable.locales[Table.defaults.locale], {
                     formatCommonSearch: function () {
                         return __('Common search');
@@ -146,7 +146,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         return __('Go');
                     }
                 }, locales);
-                // 如果是iOS设备则判断是否启用卡片视图
+                // もし〜ならiOSデバイスの場合はカードビューを有効にするか判定
                 if ($.fn.bootstrapTable.defaults.iosCardView && navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
                     Table.defaults.cardView = true;
                     $.fn.bootstrapTable.defaults.cardView = true;
@@ -155,61 +155,61 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     $.fn.bootstrapTable.defaults.exportTypes = defaults.exportTypes;
                 }
             },
-            // 绑定事件
+            // イベントをバインド
             bindevent: function (table) {
-                //Bootstrap-table的父元素,包含table,toolbar,pagnation
+                //Bootstrap-tableの親要素,を含むtable,toolbar,pagnation
                 var parenttable = table.closest('.bootstrap-table');
-                //Bootstrap-table配置
+                //Bootstrap-table設定
                 var options = table.bootstrapTable('getOptions');
-                //Bootstrap操作区
+                //Bootstrap操作エリア
                 var toolbar = $(options.toolbar, parenttable);
-                //跨页提示按钮
+                //ページ跨ぎ時の通知ボタン
                 var tipsBtn = $(".btn-selected-tips", parenttable);
                 if (tipsBtn.length === 0) {
                     tipsBtn = $('<a href="javascript:" class="btn btn-warning-light btn-selected-tips hide" data-animation="false" data-toggle="tooltip" data-title="' + __("Click to uncheck all") + '"><i class="fa fa-info-circle"></i> ' + __("Multiple selection mode: %s checked", "<b>0</b>") + '</a>').appendTo(toolbar);
                 }
-                //点击提示按钮
+                //通知ボタンをクリックした時
                 tipsBtn.off("click").on("click", function (e) {
                     table.trigger("uncheckbox");
                     table.bootstrapTable("refresh");
                 });
-                //当刷新表格时
+                //テーブルをリフレッシュする時
                 table.on('uncheckbox', function (status, res, e) {
                     options.selectedIds = [];
                     options.selectedData = [];
                     tipsBtn.tooltip('hide');
                     tipsBtn.addClass('hide');
                 });
-                //表格加载出错时
+                //テーブルの読み込みエラー時
                 table.on('load-error.bs.table', function (status, res, e) {
                     if (e.status === 0) {
                         return;
                     }
                     Toastr.error(__('Unknown data format'));
                 });
-                //当加载数据成功时
+                //データ読み込み成功時
                 table.on('load-success.bs.table', function (e, data) {
                     if (typeof data.rows === 'undefined' && typeof data.code != 'undefined') {
                         Toastr.error(data.msg);
                     }
                 });
-                //当刷新表格时
+                //テーブルをリフレッシュする時
                 table.on('refresh.bs.table', function (e, settings, data) {
                     $(Table.config.refreshbtn, toolbar).find(".fa").addClass("fa-spin");
-                    //移除指定浮动弹窗
+                    //指定したフローティングポップアップを削除
                     $(".layui-layer-autocontent").remove();
                 });
-                //当执行搜索时
+                //検索を実行したとき
                 table.on('search.bs.table common-search.bs.table', function (e, settings, data) {
                     table.trigger("uncheckbox");
                 });
                 if (options.dblClickToEdit) {
-                    //当双击单元格时
+                    //セルをダブルクリックしたとき
                     table.on('dbl-click-row.bs.table', function (e, row, element, field) {
                         $(Table.config.editonebtn, element).trigger("click");
                     });
                 }
-                //渲染内容前
+                //内容をレンダリングする前
                 table.on('pre-body.bs.table', function (e, data) {
                     if (options.maintainSelected) {
                         $.each(data, function (i, row) {
@@ -217,11 +217,11 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         });
                     }
                 });
-                //当内容渲染完成后
+                //内容のレンダリング完了後
                 table.on('post-body.bs.table', function (e, data) {
                     $(Table.config.refreshbtn, toolbar).find(".fa").removeClass("fa-spin");
                     if ($(Table.config.checkboxtd + ":first", table).find("input[type='checkbox'][data-index]").length > 0) {
-                        //拖拽选择复选框
+                        //ドラッグしてチェックボックスを選択
                         var posx, posy, dragdiv, drag = false, prepare = false;
                         var mousemove = function (e) {
                             if (drag) {
@@ -276,7 +276,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         };
 
                         $(Table.config.checkboxtd, table).on("mousedown", function (e) {
-                            //禁止鼠标右键事件和文本框
+                            //マウス右クリックイベントとテキストボックスを禁止
                             if (e.button === 2 || $(e.target).is("input")) {
                                 return false;
                             }
@@ -300,7 +300,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     }
                 });
                 var exportDataType = options.exportDataType;
-                // 处理选中筛选框后按钮的状态统一变更
+                // フィルターボックス選択後にボタンの状態を一括変更
                 table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table post-body.bs.table', function (e) {
                     var allIds = [];
                     $.each(table.bootstrapTable("getData"), function (i, item) {
@@ -308,7 +308,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     });
                     var selectedIds = Table.api.selectedids(table, true),
                         selectedData = Table.api.selecteddata(table, true);
-                    //开启分页checkbox分页记忆
+                    //ページネーションを有効にするcheckboxページネーション記憶
                     if (options.maintainSelected) {
                         options.selectedIds = options.selectedIds.filter(function (element, index, self) {
                             return $.inArray(element, allIds) === -1;
@@ -327,18 +327,18 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         options.selectedData = selectedData;
                     }
 
-                    //如果导出类型为auto时则自动判断
+                    //エクスポートタイプがautoの場合は自動判定
                     if (exportDataType === 'auto') {
                         options.exportDataType = selectedIds.length > 0 ? 'selected' : 'all';
                         if ($(".export .exporttips").length === 0) {
                             $(".export .dropdown-menu").prepend("<li class='exporttips alert alert-warning-light mb-0 no-border p-2'></li>")
                         }
-                        $(".export .exporttips").html("导出记录：" + (selectedIds.length > 0 ? "选中" : "全部"));
+                        $(".export .exporttips").html("エクスポート記録：" + (selectedIds.length > 0 ? "選択済み" : "すべて"));
 
                     }
                     $(Table.config.disabledbtn, toolbar).toggleClass('disabled', !options.selectedIds.length);
                 });
-                // 提交通用搜索时判断是否和Tabs筛选一致
+                // 共通検索の送信時に、TabsのTabsフィルターと一致するか判定
                 table.on('common-search.bs.table', function (e, setting, query) {
                     var tabs = $('.panel-heading [data-field]', table.closest(".panel-intro"));
                     var field = tabs.data("field");
@@ -348,7 +348,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         $("li > a[data-value='" + query.filter[field] + "']", tabs).parent().addClass("active");
                     }
                 });
-                // 绑定TAB事件
+                // バインドTABイベント
                 $('.panel-heading [data-field] a[data-toggle="tab"]', table.closest(".panel-intro")).on('shown.bs.tab', function (e) {
                     var field = $(this).closest("[data-field]").data("field");
                     var value = $(this).data("value");
@@ -363,7 +363,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     table.bootstrapTable('refresh', {pageNumber: 1});
                     return false;
                 });
-                // 修复重置事件
+                // リセットイベントを修正
                 $("form", table.closest(".bootstrap-table").find(".commonsearch-table")).on('reset', function () {
                     setTimeout(function () {
                         // $('.panel-heading [data-field] li.active a[data-toggle="tab"]').trigger('shown.bs.tab');
@@ -371,11 +371,11 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     $('.panel-heading [data-field] li', table.closest(".panel-intro")).removeClass('active');
                     $('.panel-heading [data-field] li:first', table.closest(".panel-intro")).addClass('active');
                 });
-                // 刷新按钮事件
+                // 更新ボタンイベント
                 toolbar.on('click', Table.config.refreshbtn, function () {
                     table.bootstrapTable('refresh');
                 });
-                // 添加按钮事件
+                // 追加ボタンイベント
                 toolbar.on('click', Table.config.addbtn, function () {
                     var ids = Table.api.selectedids(table);
                     var url = options.extend.add_url;
@@ -384,7 +384,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     }
                     Fast.api.open(url, $(this).data("original-title") || $(this).attr("title") || __('Add'), $(this).data() || {});
                 });
-                // 导入按钮事件
+                // インポートボタンイベント
                 if ($(Table.config.importbtn, toolbar).length > 0) {
                     require(['upload'], function (Upload) {
                         Upload.api.upload($(Table.config.importbtn, toolbar), function (data, ret) {
@@ -398,7 +398,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         });
                     });
                 }
-                // 批量编辑按钮事件
+                // 一括編集ボタンイベント
                 toolbar.on('click', Table.config.editbtn, function () {
                     var that = this;
                     var ids = Table.api.selectedids(table);
@@ -408,7 +408,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     var title = $(that).data('title') || $(that).attr("title") || __('Edit');
                     var data = $(that).data() || {};
                     delete data.title;
-                    //循环弹出多个编辑框
+                    //複数の編集ダイアログをループ表示
                     $.each(Table.api.selecteddata(table), function (index, row) {
                         var url = options.extend.edit_url;
                         row = $.extend({}, row ? row : {}, {ids: row[options.pk]});
@@ -416,7 +416,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         Fast.api.open(url, typeof title === 'function' ? title.call(table, row) : title, data);
                     });
                 });
-                //清空回收站
+                //ゴミ箱を空にする
                 $(document).on('click', Table.config.destroyallbtn, function () {
                     var that = this;
                     Layer.confirm(__('Are you sure you want to truncate?'), function () {
@@ -431,7 +431,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     });
                     return false;
                 });
-                //全部还原
+                //すべて復元
                 $(document).on('click', Table.config.restoreallbtn, function () {
                     var that = this;
                     var url = $(that).data("url") ? $(that).data("url") : $(that).attr("href");
@@ -444,7 +444,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     });
                     return false;
                 });
-                //销毁或删除
+                //完全削除または削除
                 $(document).on('click', Table.config.restoreonebtn + ',' + Table.config.destroyonebtn, function () {
                     var that = this;
                     var url = $(that).data("url") ? $(that).data("url") : $(that).attr("href");
@@ -458,12 +458,12 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     });
                     return false;
                 });
-                // 批量操作按钮事件
+                // 一括操作ボタンイベント
                 toolbar.on('click', Table.config.multibtn, function () {
                     var ids = Table.api.selectedids(table);
                     Table.api.multi($(this).data("action"), ids, table, this);
                 });
-                // 批量删除按钮事件
+                // 一括削除ボタンイベント
                 toolbar.on('click', Table.config.delbtn, function () {
                     var that = this;
                     var ids = Table.api.selectedids(table);
@@ -476,9 +476,9 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         }
                     );
                 });
-                // 拖拽排序
+                // ドラッグ並べ替え
                 require(['dragsort'], function () {
-                    //绑定拖动排序
+                    //ドラッグ並べ替えをバインド
                     $("tbody", table).dragsort({
                         itemSelector: 'tr:visible',
                         dragSelector: "a.btn-dragsort",
@@ -487,7 +487,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                             var data = table.bootstrapTable('getData');
                             var current = data[parseInt($(this).data("index"))];
                             var options = table.bootstrapTable('getOptions');
-                            //改变的值和改变的ID集合
+                            //変更された値と変更されたIDIDのコレクション
                             var ids = $.map($("tbody tr:visible", table), function (tr) {
                                 return data[parseInt($(tr).data("index"))][options.pk];
                             });
@@ -599,7 +599,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     $(document).off("mousedown", mousedown).on("mousedown", mousedown);
                 });
 
-                //修复dropdown定位溢出的情况
+                //修復dropdownドロップダウンの位置がはみ出す場合の対応
                 if (options.fixDropdownPosition) {
                     var tableBody = table.closest(".fixed-table-body");
                     table.on('show.bs.dropdown fa.event.refreshdropdown', ".btn-group", function (e) {
@@ -638,7 +638,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 Table.list[id] = table;
                 return table;
             },
-            // 批量操作请求
+            // 一括操作リクエスト
             multi: function (action, ids, table, element) {
                 var options = table.bootstrapTable('getOptions');
                 var data = element ? $(element).data() : {};
@@ -664,7 +664,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     }
                 });
             },
-            // 单元格元素事件
+            // セル要素イベント
             events: {
                 operate: {
                     'click .btn-editone': function (e, value, row, index) {
@@ -700,7 +700,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                             }
                         );
                     }
-                },//单元格图片预览
+                },//セル画像プレビュー
                 image: {
                     'click .img-center': function (e, value, row, index) {
                         var data = [];
@@ -719,17 +719,17 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                                 "start": $(this).parent().index(),
                                 "data": data
                             },
-                            anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                            anim: 5 //0-6の選択，ポップアップ画像のアニメーションタイプを指定，デフォルトはランダム（ご注意ください，3.0以前のバージョンではshiftパラメーター）
                         });
                     },
                 }
             },
-            // 单元格数据格式化
+            // セルデータのフォーマット
             formatter: {
                 icon: function (value, row, index) {
                     value = value === null ? '' : value.toString();
                     value = value.indexOf(" ") > -1 ? value : "fa fa-" + value;
-                    //渲染fontawesome图标
+                    //をレンダリングfontawesomeアイコン
                     return '<i class="' + value + '"></i> ' + value;
                 },
                 image: function (value, row, index) {
@@ -744,7 +744,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     $.each(arr, function (i, value) {
                         value = value ? value : '/assets/img/blank.gif';
                         url = Fast.api.cdnurl(value, true);
-                        //匹配本地、data:image、或已包含标识符首字符
+                        //ローカルをマッチ、data:image、または識別子の先頭文字をすでに含む場合
                         url = !Config.upload.thumbstyle || url.match(/^(\/|data:image\/)/) || url.indexOf(Config.upload.thumbstyle.substring(0, 1)) > -1 ? url : url + Config.upload.thumbstyle;
                         html.push('<a href="javascript:"><img class="' + classname + '" src="' + url + '" /></a>');
                     });
@@ -854,7 +854,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     var that = this;
                     value = value == null || value.length === 0 ? '' : value.toString();
                     var colorArr = {index: 'success', hot: 'warning', recommend: 'danger', 'new': 'info'};
-                    //如果字段列有定义custom
+                    //フィールド列にcustom
                     if (typeof this.custom !== 'undefined') {
                         colorArr = $.extend(colorArr, this.custom);
                     }
@@ -886,7 +886,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                         });
                     }
 
-                    //渲染Flag
+                    //をレンダリングFlag
                     var html = [];
                     var arr = $.isArray(value) ? value : value != '' ? value.split(',') : [];
                     var color, display, label;
@@ -918,11 +918,11 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 },
                 operate: function (value, row, index) {
                     var table = this.table;
-                    // 操作配置
+                    // 操作設定
                     var options = table ? table.bootstrapTable('getOptions') : {};
-                    // 默认按钮组
+                    // デフォルトボタングループ
                     var buttons = $.extend([], this.buttons || []);
-                    // 所有按钮名称
+                    // すべてのボタン名
                     var names = [];
                     buttons.forEach(function (item) {
                         names.push(item.name);
@@ -941,7 +941,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 }
                 ,
                 buttons: function (value, row, index) {
-                    // 默认按钮组
+                    // デフォルトボタングループ
                     var buttons = $.extend([], this.buttons || []);
                     return Table.api.buttonlink(this, buttons, value, row, index, 'buttons');
                 }
@@ -1011,13 +1011,13 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 }
                 return html.join(' ');
             },
-            //替换URL中的数据
+            //置換URL内のデータ
             replaceurl: function (url, row, table) {
                 var options = table ? table.bootstrapTable('getOptions') : null;
                 var ids = options ? row[options.pk] : 0;
                 row.ids = ids ? ids : (typeof row.ids !== 'undefined' ? row.ids : 0);
                 url = url == null || url.length === 0 ? '' : url.toString();
-                //自动添加ids参数
+                //自動的に追加idsパラメーター
                 url = !url.match(/(?=([?&]ids=)|(\/ids\/)|(\{ids}))/i) ?
                     url + (url.match(/(\?|&)+/) ? "&ids=" : "/ids/") + '{ids}' : url;
                 url = url.replace(/\{(.*?)\}/gi, function (matched) {
@@ -1030,10 +1030,10 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 });
                 return url;
             },
-            // 获取选中的条目ID集合
+            // 選択された項目を取得IDIDのコレクション
             selectedids: function (table, current) {
                 var options = table.bootstrapTable('getOptions');
-                //如果有设置翻页记忆模式
+                //ページ切り替え記憶モードが設定されている場合
                 if (!current && options.maintainSelected) {
                     return options.selectedIds;
                 }
@@ -1041,30 +1041,30 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     return row[options.pk];
                 });
             },
-            //获取选中的数据
+            //選択されたデータを取得
             selecteddata: function (table, current) {
                 var options = table.bootstrapTable('getOptions');
-                //如果有设置翻页记忆模式
+                //ページ切り替え記憶モードが設定されている場合
                 if (!current && options.maintainSelected) {
                     return options.selectedData;
                 }
                 return table.bootstrapTable('getSelections');
             },
-            // 切换复选框状态
+            // チェックボックスの状態を切り替え
             toggleattr: function (table) {
                 $("input[type='checkbox']", table).trigger('click');
             },
-            // 根据行索引获取行数据
+            // 行インデックスに基づいて行データを取得
             getrowdata: function (table, index) {
                 index = parseInt(index);
                 var data = table.bootstrapTable('getData');
                 return typeof data[index] !== 'undefined' ? data[index] : null;
             },
-            // 根据行索引获取行数据
+            // 行インデックスに基づいて行データを取得
             getrowbyindex: function (table, index) {
                 return Table.api.getrowdata(table, index);
             },
-            // 根据主键ID获取行数据
+            // 主キーに基づいてID行データを取得
             getrowbyid: function (table, id) {
                 var row = {};
                 var options = table.bootstrapTable("getOptions");

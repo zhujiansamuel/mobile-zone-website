@@ -14,7 +14,7 @@
 <h1><%=title%></h1>
 <ul>
     <% for (var i = 0; i < list.length; i ++) { %>
-        <li>索引 <%= i + 1 %> ：<%= list[i] %></li>
+        <li>インデックス <%= i + 1 %> ：<%= list[i] %></li>
     <% } %>
 </ul>
 
@@ -23,9 +23,9 @@
 
 <script>
 var data = {
-	title: '基本例子',
+	title: '基本例',
 	isAdmin: true,
-	list: ['文艺', '博客', '摄影', '电影', '民谣', '旅行', '吉他']
+	list: ['アート', 'ブログ', '写真撮影', '映画', 'フォークソング', '旅行', 'ギター']
 };
 var html = template('test', data);
 document.getElementById('content').innerHTML = html;

@@ -2,7 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'auth/adminlog/index',
@@ -15,7 +15,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 fixedColumns: true,
@@ -26,7 +26,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: 'ID', operate: false},
                         {field: 'admin_id', title: __('Admin_id'), formatter: Table.api.formatter.search, visible: false},
                         {field: 'username', title: __('Username'), formatter: Table.api.formatter.search},
-                        {field: 'title', title: __('Title'), operate: 'LIKE %...%', placeholder: '模糊搜索'},
+                        {field: 'title', title: __('Title'), operate: 'LIKE %...%', placeholder: 'あいまい検索'},
                         {field: 'url', title: __('Url'), formatter: Table.api.formatter.url},
                         {field: 'ip', title: __('IP'), events: Table.api.events.ip, formatter: Table.api.formatter.search},
                         {field: 'createtime', title: __('Create time'), formatter: Table.api.formatter.datetime, operate: 'RANGE', addclass: 'datetimerange', sortable: true},
@@ -46,7 +46,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ]
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
         },
         api: {

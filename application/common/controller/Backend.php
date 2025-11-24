@@ -14,103 +14,103 @@ use fast\Tree;
 use think\Validate;
 
 /**
- * 后台控制器基类
+ * バックエンドコントローラー基底クラス
  */
 class Backend extends Controller
 {
 
     /**
-     * 无需登录的方法,同时也就不需要鉴权了
+     * ログイン不要のメソッド,同時に権限認証も不要となる
      * @var array
      */
     protected $noNeedLogin = [];
 
     /**
-     * 无需鉴权的方法,但需要登录
+     * 認証不要のメソッド,ただしログインは必要
      * @var array
      */
     protected $noNeedRight = [];
 
     /**
-     * 布局模板
+     * レイアウトテンプレート
      * @var string
      */
     protected $layout = 'default';
 
     /**
-     * 权限控制类
+     * 権限制御クラス
      * @var Auth
      */
     protected $auth = null;
 
     /**
-     * 模型对象
+     * モデルオブジェクト
      * @var \think\Model
      */
     protected $model = null;
 
     /**
-     * 快速搜索时执行查找的字段
+     * クイック検索時に検索を実行するフィールド
      */
     protected $searchFields = 'id';
 
     /**
-     * 是否是关联查询
+     * 関連クエリかどうか
      */
     protected $relationSearch = false;
 
     /**
-     * 是否开启数据限制
-     * 支持auth/personal
-     * 表示按权限判断/仅限个人
-     * 默认为禁用,若启用请务必保证表中存在admin_id字段
+     * データ制限を有効にするかどうか
+     * サポートauth/personal
+     * 権限に基づいて判定することを示します/個人のみ
+     * デフォルトは無効,有効にする場合は必ずテーブルに存在していることを保証してくださいadmin_idフィールド
      */
     protected $dataLimit = false;
 
     /**
-     * 数据限制字段
+     * データ制限フィールド
      */
     protected $dataLimitField = 'admin_id';
 
     /**
-     * 数据限制开启时自动填充限制字段值
+     * データ制限が有効な場合に制限フィールド値を自動入力
      */
     protected $dataLimitFieldAutoFill = true;
 
     /**
-     * 是否开启Validate验证
+     * 有効かどうかValidate検証
      */
     protected $modelValidate = false;
 
     /**
-     * 是否开启模型场景验证
+     * モデルシーン検証を有効にするかどうか
      */
     protected $modelSceneValidate = false;
 
     /**
-     * Multi方法可批量修改的字段
+     * Multiメソッドで一括変更可能なフィールド
      */
     protected $multiFields = 'status';
 
     /**
-     * Selectpage可显示的字段
+     * Selectpage表示可能なフィールド
      */
     protected $selectpageFields = '*';
 
     /**
-     * 前台提交过来,需要排除的字段数据
+     * フロントエンドから送信されてきた,除外が必要なフィールドデータ
      */
     protected $excludeFields = "";
 
     /**
-     * 导入文件首行类型
-     * 支持comment/name
-     * 表示注释或字段名
+     * インポートファイルの先頭行のタイプ
+     * サポートcomment/name
+     * コメントまたはフィールド名を表します
      */
     protected $importHeadType = 'comment';
 
     /**
-     * 引入后台控制器的traits
+     * バックエンドコントローラーのトレイトをインポートtraits
      */
     use \app\admin\library\traits\Backend;
 
@@ -122,25 +122,25 @@ class Backend extends Controller
 
         $path = str_replace('.', '/', $controllername) . '/' . $actionname;
 
-        // 定义是否Addtabs请求
+        // かどうかを定義Addtabsリクエスト
         !defined('IS_ADDTABS') && define('IS_ADDTABS', (bool)input("addtabs"));
 
-        // 定义是否Dialog请求
+        // かどうかを定義Dialogリクエスト
         !defined('IS_DIALOG') && define('IS_DIALOG', (bool)input("dialog"));
 
-        // 定义是否AJAX请求
+        // かどうかを定義AJAXリクエスト
         !defined('IS_AJAX') && define('IS_AJAX', $this->request->isAjax());
 
-        // 检测IP是否允许
+        // チェックIP許可するかどうか
         check_ip_allowed();
 
         $this->auth = Auth::instance();
 
-        // 设置当前请求的URI
+        // 現在のリクエストのURI
         $this->auth->setRequestUri($path);
-        // 检测是否需要验证登录
+        // ログイン検証が必要かをチェック
         if (!$this->auth->match($this->noNeedLogin)) {
-            //检测是否登录
+            //ログインしているか確認
             if (!$this->auth->isLogin()) {
                 Hook::listen('admin_nologin', $this);
                 $url = Session::get('referer');
@@ -151,9 +151,9 @@ class Backend extends Controller
                 }
                 $this->error(__('Please login first'), url('index/login', ['url' => $url]));
             }
-            // 判断是否需要验证权限
+            // 権限検証が必要かを判定
             if (!$this->auth->match($this->noNeedRight)) {
-                // 判断控制器和方法是否有对应权限
+                // コントローラーとメソッドに対応する権限があるかどうかを判定
                 if (!$this->auth->check($path)) {
                     Hook::listen('admin_nopermission', $this);
                     $this->error(__('You have no permission'), '');
@@ -161,7 +161,7 @@ class Backend extends Controller
             }
         }
 
-        // 非选项卡时重定向
+        // タブでない場合にリダイレクト
         if (!$this->request->isPost() && !IS_AJAX && !IS_ADDTABS && !IS_DIALOG && input("ref") == 'addtabs') {
             $url = preg_replace_callback("/([\?|&]+)ref=addtabs(&?)/i", function ($matches) {
                 return $matches[2] == '&' ? $matches[1] : '';
@@ -176,7 +176,7 @@ class Backend extends Controller
             exit;
         }
 
-        // 设置面包屑导航数据
+        // パンくずナビゲーションデータを設定
         $breadcrumb = [];
         if (!IS_DIALOG && !config('fastadmin.multiplenav') && config('fastadmin.breadcrumb')) {
             $breadcrumb = $this->auth->getBreadCrumb($path);
@@ -184,12 +184,12 @@ class Backend extends Controller
         }
         $this->view->breadcrumb = $breadcrumb;
 
-        // 如果有使用模板布局
+        // テンプレートレイアウトを使用している場合
         if ($this->layout) {
             $this->view->engine->layout('layout/' . $this->layout);
         }
 
-        // 语言检测
+        // 言語検出
         $lang = $this->request->langset();
         $lang = preg_match("/^([a-zA-Z\-_]{2,10})\$/i", $lang) ? $lang : 'zh-cn';
 
@@ -197,10 +197,10 @@ class Backend extends Controller
 
         $upload = \app\common\model\Config::upload();
 
-        // 上传信息配置后
+        // アップロード情報設定後
         Hook::listen("upload_config_init", $upload);
 
-        // 配置信息
+        // 設定情報
         $config = [
             'site'           => array_intersect_key($site, array_flip(['name', 'indexurl', 'cdnurl', 'version', 'timezone', 'languages'])),
             'upload'         => $upload,
@@ -216,22 +216,22 @@ class Backend extends Controller
 
         Config::set('upload', array_merge(Config::get('upload'), $upload));
 
-        // 配置信息后
+        // 設定情報の後
         Hook::listen("config_init", $config);
-        //加载当前控制器语言包
+        //現在のコントローラーの言語パックを読み込み
         $this->loadlang($controllername);
-        //渲染站点配置
+        //サイト設定をレンダリング
         $this->assign('site', $site);
-        //渲染配置信息
+        //設定情報をレンダリング
         $this->assign('config', $config);
-        //渲染权限对象
+        //権限オブジェクトをレンダリング
         $this->assign('auth', $this->auth);
-        //渲染管理员对象
+        //管理者オブジェクトをレンダリング
         $this->assign('admin', Session::get('admin'));
     }
 
     /**
-     * 加载语言文件
+     * 言語ファイルを読み込む
      * @param string $name
      */
     protected function loadlang($name)
@@ -244,9 +244,9 @@ class Backend extends Controller
     }
 
     /**
-     * 渲染配置信息
-     * @param mixed $name  键名或数组
-     * @param mixed $value 值
+     * 設定情報をレンダリング
+     * @param mixed $name  キー名または配列
+     * @param mixed $value 値
      */
     protected function assignconfig($name, $value = '')
     {
@@ -254,9 +254,9 @@ class Backend extends Controller
     }
 
     /**
-     * 生成查询所需要的条件,排序方式
-     * @param mixed   $searchfields   快速查询的字段
-     * @param boolean $relationSearch 是否关联查询
+     * クエリに必要な条件を生成,ソート方法
+     * @param mixed   $searchfields   クイック検索のフィールド
+     * @param boolean $relationSearch 関連クエリかどうか
      * @return array
      */
     protected function buildparams($searchfields = null, $relationSearch = null)
@@ -271,7 +271,7 @@ class Backend extends Controller
         $offset = max(0, $this->request->get("offset/d", 0));
         $limit = max(0, $this->request->get("limit/d", 0));
         $limit = $limit ?: 999999;
-        //新增自动计算页码
+        //ページ番号の自動計算を追加
         $page = $limit ? intval($offset / $limit) + 1 : 1;
         if ($this->request->has("page")) {
             $page = max(0, $this->request->get("page/d", 1));
@@ -327,7 +327,7 @@ class Backend extends Controller
             }
             $v = !is_array($v) ? trim($v) : $v;
             $sym = strtoupper($op[$k] ?? $sym);
-            //null和空字符串特殊处理
+            //nullnull と空文字列の特別処理
             if (!is_array($v)) {
                 if (in_array(strtoupper($v), ['NULL', 'NOT NULL'])) {
                     $sym = strtoupper($v);
@@ -380,7 +380,7 @@ class Backend extends Controller
                     })) {
                         continue 2;
                     }
-                    //当出现一边为空时改变操作符
+                    //一方が空の場合に演算子を変更
                     if ($arr[0] === '') {
                         $sym = $sym == 'BETWEEN' ? '<=' : '>';
                         $arr = $arr[1];
@@ -397,7 +397,7 @@ class Backend extends Controller
                     if (stripos($v, ',') === false || !array_filter($arr)) {
                         continue 2;
                     }
-                    //当出现一边为空时改变操作符
+                    //一方が空の場合に演算子を変更
                     if ($arr[0] === '') {
                         $sym = $sym == 'RANGE' ? '<=' : '>';
                         $arr = $arr[1];
@@ -408,7 +408,7 @@ class Backend extends Controller
                     $tableArr = explode('.', $k);
                     if (count($tableArr) > 1 && $tableArr[0] != $name && !in_array($tableArr[0], $alias)
                         && !empty($this->model) && $this->relationSearch) {
-                        //修复关联模型下时间无法搜索的BUG
+                        //関連モデル下で時間が検索できないバグを修正BUG
                         $relation = Loader::parseName($tableArr[0], 1, false);
                         $alias[$this->model->$relation()->getTable()] = $tableArr[0];
                     }
@@ -446,8 +446,8 @@ class Backend extends Controller
     }
 
     /**
-     * 获取数据限制的管理员ID
-     * 禁用数据限制时返回的是null
+     * データ制限の管理者IDを取得ID
+     * データ制限を無効にした場合に返されるのはnull
      * @return mixed
      */
     protected function getDataLimitAdminIds()
@@ -466,36 +466,36 @@ class Backend extends Controller
     }
 
     /**
-     * Selectpage的实现方法
+     * Selectpageの実装方法
      *
-     * 当前方法只是一个比较通用的搜索匹配,请按需重载此方法来编写自己的搜索逻辑,$where按自己的需求写即可
-     * 这里示例了所有的参数，所以比较复杂，实现上自己实现只需简单的几行即可
+     * 現在のメソッドはあくまで汎用的な検索マッチングであり,必要に応じてこのメソッドをオーバーライドして、独自の検索ロジックを実装してください,$where要件に応じて記述すれば問題ありません
+     * ここではすべてのパラメーターを例示しています，そのため少し複雑です，実装としては、実際には数行だけで簡単に実現できます
      *
      */
     protected function selectpage()
     {
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['trim', 'strip_tags', 'htmlspecialchars']);
 
-        //搜索关键词,客户端输入以空格分开,这里接收为数组
+        //検索キーワード,クライアント側の入力はスペースで区切ります,ここでは配列として受け取ります
         $word = (array)$this->request->request("q_word/a");
-        //当前页
+        //現在のページ
         $page = $this->request->request("pageNumber");
-        //分页大小
+        //ページサイズ
         $pagesize = $this->request->request("pageSize");
-        //搜索条件
+        //検索条件
         $andor = $this->request->request("andOr", "and", "strtoupper");
-        //排序方式
+        //ソート方法
         $orderby = (array)$this->request->request("orderBy/a");
-        //显示的字段
+        //表示フィールド
         $field = $this->request->request("showField");
-        //主键
+        //主キー
         $primarykey = $this->request->request("keyField");
-        //主键值
+        //主キー値
         $primaryvalue = $this->request->request("keyValue");
-        //搜索字段
+        //検索フィールド
         $searchfield = (array)$this->request->request("searchField/a");
-        //自定义搜索条件
+        //カスタム検索条件
         $custom = (array)$this->request->request("custom/a");
         foreach ($custom as $key => $val) {
             if($key == 'extend'){
@@ -504,7 +504,7 @@ class Backend extends Controller
                 unset($custom[$key]);
             }
         }
-        //是否返回树形结构
+        //ツリー構造で返すかどうか
         $istree = $this->request->request("isTree", 0);
         $ishtml = $this->request->request("isHtml", 0);
         if ($istree) {
@@ -517,7 +517,7 @@ class Backend extends Controller
         }
         $field = $field ? $field : 'name';
 
-        //如果有primaryvalue,说明当前是初始化传值
+        //存在する場合primaryvalue,現在は初期値の受け渡しであることを示します
         if ($primaryvalue !== null) {
             $where = [$primarykey => ['in', $primaryvalue]];
             $pagesize = 999999;
@@ -562,10 +562,10 @@ class Backend extends Controller
 
             $fields = is_array($this->selectpageFields) ? $this->selectpageFields : ($this->selectpageFields && $this->selectpageFields != '*' ? explode(',', $this->selectpageFields) : []);
 
-            //如果有primaryvalue,说明当前是初始化传值,按照选择顺序排序
+            //存在する場合primaryvalue,現在は初期値の受け渡しであることを示します,選択順にソートします
             if ($primaryvalue !== null && preg_match("/^[a-z0-9_\-]+$/i", $primarykey)) {
                 $primaryvalue = array_unique(is_array($primaryvalue) ? $primaryvalue : explode(',', $primaryvalue));
-                //修复自定义data-primary-key为字符串内容时，给排序字段添加上引号
+                //カスタムの修正data-primary-key文字列内容である場合，ソートフィールドに引用符を付与します
                 $primaryvalue = array_map(function ($value) {
                     return '\'' . $value . '\'';
                 }, $primaryvalue);
@@ -610,23 +610,23 @@ class Backend extends Controller
                 }
             }
         }
-        //这里一定要返回有list这个字段,total是可选的,如果total<=list的数量,则会隐藏分页按钮
+        //ここでは必ずlistこのフィールドを返す必要があります,totalは任意です,もしtotal<=listの件数,の場合はページネーションボタンを非表示にします
         return json(['list' => $list, 'total' => $total]);
     }
 
     /**
-     * 刷新Token
+     * 更新Token
      */
     protected function token()
     {
         $token = $this->request->param('__token__');
 
-        //验证Token
+        //検証Token
         if (!Validate::make()->check(['__token__' => $token], ['__token__' => 'require|token'])) {
             $this->error(__('Token verification error'), '', ['__token__' => $this->request->token()]);
         }
 
-        //刷新Token
+        //更新Token
         $this->request->token();
     }
 }

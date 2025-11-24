@@ -5,69 +5,69 @@ namespace app\api\controller;
 use app\common\controller\Api;
 
 /**
- * 示例接口
+ * サンプルインターフェース
  */
 class Demo extends Api
 {
 
-    //如果$noNeedLogin为空表示所有接口都需要登录才能请求
-    //如果$noNeedRight为空表示所有接口都需要验证权限才能请求
-    //如果接口已经设置无需登录,那也就无需鉴权了
+    //もし$noNeedLogin空の場合、すべてのインターフェースはログインが必要です
+    //もし$noNeedRight空の場合、すべてのインターフェースは権限の検証が必要です
+    //インターフェースがログイン不要に設定されている場合,認可も不要となります
     //
-    // 无需登录的接口,*表示全部
+    // ログイン不要のインターフェース,*すべてを表示
     protected $noNeedLogin = ['test', 'test1'];
-    // 无需鉴权的接口,*表示全部
+    // 認証不要のインターフェース,*すべてを表示
     protected $noNeedRight = ['test2'];
 
     /**
-     * 测试方法
+     * テストメソッド
      *
-     * @ApiTitle    (测试名称)
-     * @ApiSummary  (测试描述信息)
+     * @ApiTitle    (テスト名)
+     * @ApiSummary  (テストの説明情報)
      * @ApiMethod   (POST)
      * @ApiRoute    (/api/demo/test/id/{id}/name/{name})
-     * @ApiHeaders  (name=token, type=string, required=true, description="请求的Token")
-     * @ApiParams   (name="id", type="integer", required=true, description="会员ID")
-     * @ApiParams   (name="name", type="string", required=true, description="用户名")
-     * @ApiParams   (name="data", type="object", sample="{'user_id':'int','user_name':'string','profile':{'email':'string','age':'integer'}}", description="扩展数据")
+     * @ApiHeaders  (name=token, type=string, required=true, description="リクエストのToken")
+     * @ApiParams   (name="id", type="integer", required=true, description="会員ID")
+     * @ApiParams   (name="name", type="string", required=true, description="ユーザー名")
+     * @ApiParams   (name="data", type="object", sample="{'user_id':'int','user_name':'string','profile':{'email':'string','age':'integer'}}", description="拡張データ")
      * @ApiReturnParams   (name="code", type="integer", required=true, sample="0")
-     * @ApiReturnParams   (name="msg", type="string", required=true, sample="返回成功")
-     * @ApiReturnParams   (name="data", type="object", sample="{'user_id':'int','user_name':'string','profile':{'email':'string','age':'integer'}}", description="扩展数据返回")
+     * @ApiReturnParams   (name="msg", type="string", required=true, sample="返却成功")
+     * @ApiReturnParams   (name="data", type="object", sample="{'user_id':'int','user_name':'string','profile':{'email':'string','age':'integer'}}", description="拡張データ返却")
      * @ApiReturn   ({
          'code':'1',
-         'msg':'返回成功'
+         'msg':'返却成功'
         })
      */
     public function test()
     {
-        $this->success('返回成功', $this->request->param());
+        $this->success('返却成功', $this->request->param());
     }
 
     /**
-     * 无需登录的接口
+     * ログイン不要のインターフェース
      *
      */
     public function test1()
     {
-        $this->success('返回成功', ['action' => 'test1']);
+        $this->success('返却成功', ['action' => 'test1']);
     }
 
     /**
-     * 需要登录的接口
+     * ログインが必要なインターフェース
      *
      */
     public function test2()
     {
-        $this->success('返回成功', ['action' => 'test2']);
+        $this->success('返却成功', ['action' => 'test2']);
     }
 
     /**
-     * 需要登录且需要验证有相应组的权限
+     * ログインが必要かつ対応するグループの権限検証が必要
      *
      */
     public function test3()
     {
-        $this->success('返回成功', ['action' => 'test3']);
+        $this->success('返却成功', ['action' => 'test3']);
     }
 
 }

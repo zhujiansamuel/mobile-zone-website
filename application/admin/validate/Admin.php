@@ -8,7 +8,7 @@ class Admin extends Validate
 {
 
     /**
-     * 验证规则
+     * 検証ルール
      */
     protected $rule = [
         'username' => 'require|regex:\w{3,30}|unique:admin',
@@ -19,19 +19,19 @@ class Admin extends Validate
     ];
 
     /**
-     * 提示消息
+     * メッセージ
      */
     protected $message = [
     ];
 
     /**
-     * 字段描述
+     * フィールドの説明
      */
     protected $field = [
     ];
 
     /**
-     * 验证场景
+     * 検証シナリオ
      */
     protected $scene = [
         'add'  => ['username', 'nickname', 'password'],

@@ -7,17 +7,17 @@ use think\Validate;
 class News extends Validate
 {
     /**
-     * 验证规则
+     * 検証ルール
      */
     protected $rule = [
     ];
     /**
-     * 提示消息
+     * メッセージ
      */
     protected $message = [
     ];
     /**
-     * 验证场景
+     * 検証シナリオ
      */
     protected $scene = [
         'add'  => [],

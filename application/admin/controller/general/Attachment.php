@@ -5,10 +5,10 @@ namespace app\admin\controller\general;
 use app\common\controller\Backend;
 
 /**
- * 附件管理
+ * 添付ファイル管理
  *
  * @icon   fa fa-circle-o
- * @remark 主要用于管理上传到服务器或第三方存储的数据
+ * @remark サーバーまたはサードパーティストレージにアップロードされたデータを管理するために使用します
  */
 class Attachment extends Backend
 {
@@ -31,11 +31,11 @@ class Attachment extends Backend
     }
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['strip_tags', 'trim']);
         if ($this->request->isAjax()) {
             $mimetypeQuery = [];
@@ -78,7 +78,7 @@ class Attachment extends Backend
     }
 
     /**
-     * 选择附件
+     * 添付ファイルを選択
      */
     public function select()
     {
@@ -92,7 +92,7 @@ class Attachment extends Backend
     }
 
     /**
-     * 添加
+     * 追加
      */
     public function add()
     {
@@ -103,7 +103,7 @@ class Attachment extends Backend
     }
 
     /**
-     * 删除附件
+     * 添付ファイルを削除
      * @param array $ids
      */
     public function del($ids = "")
@@ -132,7 +132,7 @@ class Attachment extends Backend
     }
 
     /**
-     * 归类
+     * 分類
      */
     public function classify()
     {

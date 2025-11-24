@@ -8,13 +8,13 @@ use think\Config;
 use think\Loader;
 
 /**
- * 微信支付宝整合插件
+ * WeChat・Alipay 統合プラグイン
  */
 class Epay extends Addons
 {
 
     /**
-     * 插件安装方法
+     * プラグインのインストール方法
      * @return bool
      */
     public function install()
@@ -23,7 +23,7 @@ class Epay extends Addons
     }
 
     /**
-     * 插件卸载方法
+     * プラグインのアンインストール方法
      * @return bool
      */
     public function uninstall()
@@ -32,7 +32,7 @@ class Epay extends Addons
     }
 
     /**
-     * 插件启用方法
+     * プラグイン有効化方法
      * @return bool
      */
     public function enable()
@@ -41,7 +41,7 @@ class Epay extends Addons
     }
 
     /**
-     * 插件禁用方法
+     * プラグイン無効化方法
      * @return bool
      */
     public function disable()
@@ -49,25 +49,25 @@ class Epay extends Addons
         return true;
     }
 
-    // 支持自定义加载
+    // カスタム読み込みに対応
     public function epayConfigInit()
     {
         $this->actionBegin();
     }
 
-    // 插件方法加载开始
+    // プラグインメソッド読み込み開始
     public function addonActionBegin()
     {
         $this->actionBegin();
     }
 
-    // 模块控制器方法加载开始
+    // モジュールコントローラーメソッド読み込み開始
     public function actionBegin()
     {
-        //添加命名空间
+        //名前空間を追加
         if (!class_exists('\Yansongda\Pay\Pay')) {
 
-            //SDK版本
+            //SDKバージョン
             $version = Service::getSdkVersion();
 
             $libraryDir = ADDON_PATH . 'epay' . DS . 'library' . DS;
@@ -91,7 +91,7 @@ class Epay extends Addons
                 Loader::addNamespace('Yansongda\Supports', $libraryDir . $version . DS . 'Yansongda' . DS . 'Supports' . DS);
             }
 
-            // V3需载入辅助函数
+            // V3補助関数を読み込む必要があります
             if ($version == Service::SDK_VERSION_V3) {
                 require_once $libraryDir . $version . DS . 'Yansongda' . DS . 'Pay' . DS . 'Functions.php';
             }

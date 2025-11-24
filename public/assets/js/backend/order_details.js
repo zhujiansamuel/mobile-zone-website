@@ -2,7 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'order_details/index' + location.search,
@@ -17,7 +17,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
@@ -53,7 +53,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ]
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
         },
         add: function () {
@@ -71,7 +71,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     // $("#c-color").data("params", function (obj) {
     //     var color_id = $("#c-color").parents('.form-group').attr('data-color_id');
     //     color_id = color_id ? color_id : -1;
-    //     //obj为SelectPage对象
+    //     //objためのSelectPageオブジェクト
     //     return {custom: {id: ["in", color_id]}};
     // });
 
@@ -101,7 +101,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             color = [];
         }
         
-        //后续操作
+        //後続処理
         console.log( data , spec_info);
         $('#c-title').val(data.title);
         $('#c-jan').val(data.jan);
@@ -109,13 +109,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         $('#c-price').val(data.price);
         //$('#c-price').val(data.price);
         //$("#c-color").parents('.form-group').attr('data-color_id', data.color_id);
-        var option = '<option value="">选择</option>';
+        var option = '<option value="">選択</option>';
         for (var i = 0; i < spec_info.length; i++) {
             option += '<option data-price="'+spec_info[i]['price']+'" value="'+spec_info[i]['name']+'">'+spec_info[i]['name']+'</option>';
         }
         $("#c-specs_name").html(option);
 
-        var color_option = '<option value="">选择</option>';
+        var color_option = '<option value="">選択</option>';
         for (var i = 0; i < color.length; i++) {
             color_option += '<option value="'+color[i]+'">'+color[i]+'</option>';
         }

@@ -6,28 +6,28 @@ use fast\Random;
 use think\Hook;
 
 /**
- * 短信验证码类
+ * SMS認証コードクラス
  */
 class Sms
 {
 
     /**
-     * 验证码有效时长
+     * 認証コードの有効期間
      * @var int
      */
     protected static $expire = 120;
 
     /**
-     * 最大允许检测的次数
+     * 検証の最大許可回数
      * @var int
      */
     protected static $maxCheckNums = 10;
 
     /**
-     * 获取最后一次手机发送的数据
+     * 最後に携帯に送信したデータを取得
      *
-     * @param   int    $mobile 手机号
-     * @param   string $event  事件
+     * @param   int    $mobile 携帯番号
+     * @param   string $event  イベント
      * @return  Sms
      */
     public static function get($mobile, $event = 'default')
@@ -40,11 +40,11 @@ class Sms
     }
 
     /**
-     * 发送验证码
+     * 認証コードを送信
      *
-     * @param   int    $mobile 手机号
-     * @param   int    $code   验证码,为空时将自动生成4位数字
-     * @param   string $event  事件
+     * @param   int    $mobile 携帯番号
+     * @param   int    $code   認証コード,空の場合は自動的に生成されます4桁の数字
+     * @param   string $event  イベント
      * @return  boolean
      */
     public static function send($mobile, $code = null, $event = 'default')
@@ -62,11 +62,11 @@ class Sms
     }
 
     /**
-     * 发送通知
+     * 通知を送信
      *
-     * @param   mixed  $mobile   手机号,多个以,分隔
-     * @param   string $msg      消息内容
-     * @param   string $template 消息模板
+     * @param   mixed  $mobile   携帯番号,複数指定する場合は,で区切る
+     * @param   string $msg      メッセージ内容
+     * @param   string $template メッセージテンプレート
      * @return  boolean
      */
     public static function notice($mobile, $msg = '', $template = null)
@@ -81,11 +81,11 @@ class Sms
     }
 
     /**
-     * 校验验证码
+     * 認証コードを検証
      *
-     * @param   int    $mobile 手机号
-     * @param   int    $code   验证码
-     * @param   string $event  事件
+     * @param   int    $mobile 携帯番号
+     * @param   int    $code   認証コード
+     * @param   string $event  イベント
      * @return  boolean
      */
     public static function check($mobile, $code, $event = 'default')
@@ -106,7 +106,7 @@ class Sms
                     return $result;
                 }
             } else {
-                // 过期则清空该手机验证码
+                // 期限切れの場合はその携帯の認証コードをクリア
                 self::flush($mobile, $event);
                 return false;
             }
@@ -116,10 +116,10 @@ class Sms
     }
 
     /**
-     * 清空指定手机号验证码
+     * 指定した携帯番号の認証コードをクリア
      *
-     * @param   int    $mobile 手机号
-     * @param   string $event  事件
+     * @param   int    $mobile 携帯番号
+     * @param   string $event  イベント
      * @return  boolean
      */
     public static function flush($mobile, $event = 'default')

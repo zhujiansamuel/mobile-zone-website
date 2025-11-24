@@ -2,7 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'general/attachment/index',
@@ -16,7 +16,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 sortName: 'id',
@@ -62,7 +62,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                 ],
             });
 
-            // 绑定过滤事件
+            // フィルターイベントをバインド
             $('.filter-type ul li a', table.closest(".panel-intro")).on('click', function (e) {
                 $(this).closest("ul").find("li").removeClass("active");
                 $(this).closest("li").addClass("active");
@@ -78,10 +78,10 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                 table.bootstrapTable('refresh', {pageNumber: 1});
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
 
-            // 附件归类
+            // 添付ファイルの分類
             $(document).on('click', '.btn-classify', function () {
                 var ids = Table.api.selectedids(table);
                 Layer.open({
@@ -106,7 +106,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
 
         },
         select: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'general/attachment/select',
@@ -136,7 +136,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                 });
             });
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 sortName: 'id',
@@ -177,7 +177,7 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                 ]
             });
 
-            // 绑定过滤事件
+            // フィルターイベントをバインド
             $('.filter-type ul li a', table.closest(".panel-intro")).on('click', function (e) {
                 $(this).closest("ul").find("li").removeClass("active");
                 $(this).closest("li").addClass("active");
@@ -193,12 +193,12 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
                 table.bootstrapTable('refresh', {pageNumber: 1});
             });
 
-            // 选中多个
+            // 複数選択
             $(document).on("click", ".btn-choose-multi", function () {
                 Fast.api.close({url: urlArr.join(","), multiple: multiple});
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
             require(['upload'], function (Upload) {
                 $("#toolbar .faupload").data("category", function (file) {
@@ -211,17 +211,17 @@ define(['jquery', 'bootstrap', 'backend', 'form', 'table'], function ($, undefin
             });
         },
         add: function () {
-            //上传完成后刷新父窗口
+            //アップロード完了後に親ウィンドウを更新
             $(".faupload").data("upload-complete", function (files) {
                 setTimeout(function () {
                     window.parent.$(".btn-refresh").trigger("click");
                 }, 100);
             });
-            // 获取上传类别
+            // アップロードカテゴリを取得
             $("#faupload-third,#faupload-third-chunking").data("category", function (file) {
                 return $("#category-third").val();
             });
-            // 获取上传类别
+            // アップロードカテゴリを取得
             $("#faupload-local,#faupload-local-chunking").data("category", function (file) {
                 return $("#category-local").val();
             });

@@ -16,7 +16,7 @@ class AccountQueryPlugin implements PluginInterface
 {
     public function assembly(Rocket $rocket, Closure $next): Rocket
     {
-        Logger::debug('[alipay][AccountQueryPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[alipay][AccountQueryPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $rocket->mergePayload([
             'method' => 'alipay.fund.account.query',
@@ -28,7 +28,7 @@ class AccountQueryPlugin implements PluginInterface
             ),
         ]);
 
-        Logger::info('[alipay][AccountQueryPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[alipay][AccountQueryPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $next($rocket);
     }

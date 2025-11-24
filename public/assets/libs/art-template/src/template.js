@@ -1,9 +1,9 @@
 /**
- * 模板引擎
+ * テンプレートエンジン
  * @name    template
- * @param   {String}            模板名
- * @param   {Object, String}    数据。如果为字符串则编译并缓存编译结果
- * @return  {String, Function}  渲染好的HTML字符串或者渲染方法
+ * @param   {String}            テンプレート名
+ * @param   {Object, String}    データ。文字列の場合はコンパイルして結果をキャッシュする
+ * @return  {String, Function}  レンダリング済みHTML文字列またはレンダリングメソッド
  */
 var template = function (filename, content) {
     return typeof content === 'string'

@@ -6,7 +6,7 @@ use app\common\controller\Api;
 use app\common\model\User;
 
 /**
- * 验证接口
+ * 検証インターフェース
  */
 class Validate extends Api
 {
@@ -20,11 +20,11 @@ class Validate extends Api
     }
 
     /**
-     * 检测邮箱
+     * メールをチェック
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="email", type="string", required=true, description="邮箱")
-     * @ApiParams (name="id", type="string", required=true, description="排除会员ID")
+     * @ApiParams (name="email", type="string", required=true, description="メールアドレス")
+     * @ApiParams (name="id", type="string", required=true, description="除外する会員ID")
      */
     public function check_email_available()
     {
@@ -32,17 +32,17 @@ class Validate extends Api
         $id = (int)$this->request->post('id');
         $count = User::where('email', '=', $email)->where('id', '<>', $id)->count();
         if ($count > 0) {
-            $this->error(__('邮箱已经被占用'));
+            $this->error(__('メールアドレスは既に使用されています'));
         }
         $this->success();
     }
 
     /**
-     * 检测用户名
+     * ユーザー名を検証
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="username", type="string", required=true, description="用户名")
-     * @ApiParams (name="id", type="string", required=true, description="排除会员ID")
+     * @ApiParams (name="username", type="string", required=true, description="ユーザー名")
+     * @ApiParams (name="id", type="string", required=true, description="除外する会員ID")
      */
     public function check_username_available()
     {
@@ -50,17 +50,17 @@ class Validate extends Api
         $id = (int)$this->request->post('id');
         $count = User::where('username', '=', $username)->where('id', '<>', $id)->count();
         if ($count > 0) {
-            $this->error(__('用户名已经被占用'));
+            $this->error(__('ユーザー名は既に使用されています'));
         }
         $this->success();
     }
 
     /**
-     * 检测昵称
+     * ニックネームをチェック
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="nickname", type="string", required=true, description="昵称")
-     * @ApiParams (name="id", type="string", required=true, description="排除会员ID")
+     * @ApiParams (name="nickname", type="string", required=true, description="ニックネーム")
+     * @ApiParams (name="id", type="string", required=true, description="除外する会員ID")
      */
     public function check_nickname_available()
     {
@@ -68,17 +68,17 @@ class Validate extends Api
         $id = (int)$this->request->post('id');
         $count = User::where('nickname', '=', $nickname)->where('id', '<>', $id)->count();
         if ($count > 0) {
-            $this->error(__('昵称已经被占用'));
+            $this->error(__('ニックネームは既に使用されています'));
         }
         $this->success();
     }
 
     /**
-     * 检测手机
+     * 携帯番号をチェック
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="mobile", type="string", required=true, description="手机号")
-     * @ApiParams (name="id", type="string", required=true, description="排除会员ID")
+     * @ApiParams (name="mobile", type="string", required=true, description="携帯番号")
+     * @ApiParams (name="id", type="string", required=true, description="除外する会員ID")
      */
     public function check_mobile_available()
     {
@@ -86,50 +86,50 @@ class Validate extends Api
         $id = (int)$this->request->post('id');
         $count = User::where('mobile', '=', $mobile)->where('id', '<>', $id)->count();
         if ($count > 0) {
-            $this->error(__('该手机号已经占用'));
+            $this->error(__('この携帯番号は既に使用されています'));
         }
         $this->success();
     }
 
     /**
-     * 检测手机
+     * 携帯番号をチェック
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="mobile", type="string", required=true, description="手机号")
+     * @ApiParams (name="mobile", type="string", required=true, description="携帯番号")
      */
     public function check_mobile_exist()
     {
         $mobile = $this->request->post('mobile');
         $count = User::where('mobile', '=', $mobile)->count();
         if (!$count) {
-            $this->error(__('手机号不存在'));
+            $this->error(__('携帯番号が存在しません'));
         }
         $this->success();
     }
 
     /**
-     * 检测邮箱
+     * メールをチェック
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="email", type="string", required=true, description="邮箱")
+     * @ApiParams (name="email", type="string", required=true, description="メールアドレス")
      */
     public function check_email_exist()
     {
         $email = $this->request->post('email');
         $count = User::where('email', '=', $email)->count();
         if (!$count) {
-            $this->error(__('邮箱不存在'));
+            $this->error(__('メールアドレスが存在しません'));
         }
         $this->success();
     }
 
     /**
-     * 检测手机验证码
+     * SMS 認証コードをチェック
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="mobile", type="string", required=true, description="手机号")
-     * @ApiParams (name="captcha", type="string", required=true, description="验证码")
-     * @ApiParams (name="event", type="string", required=true, description="事件")
+     * @ApiParams (name="mobile", type="string", required=true, description="携帯番号")
+     * @ApiParams (name="captcha", type="string", required=true, description="認証コード")
+     * @ApiParams (name="event", type="string", required=true, description="イベント")
      */
     public function check_sms_correct()
     {
@@ -137,18 +137,18 @@ class Validate extends Api
         $captcha = $this->request->post('captcha');
         $event = $this->request->post('event');
         if (!\app\common\library\Sms::check($mobile, $captcha, $event)) {
-            $this->error(__('验证码不正确'));
+            $this->error(__('認証コードが正しくありません'));
         }
         $this->success();
     }
 
     /**
-     * 检测邮箱验证码
+     * メール認証コードをチェック
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="email", type="string", required=true, description="邮箱")
-     * @ApiParams (name="captcha", type="string", required=true, description="验证码")
-     * @ApiParams (name="event", type="string", required=true, description="事件")
+     * @ApiParams (name="email", type="string", required=true, description="メールアドレス")
+     * @ApiParams (name="captcha", type="string", required=true, description="認証コード")
+     * @ApiParams (name="event", type="string", required=true, description="イベント")
      */
     public function check_ems_correct()
     {
@@ -156,7 +156,7 @@ class Validate extends Api
         $captcha = $this->request->post('captcha');
         $event = $this->request->post('event');
         if (!\app\common\library\Ems::check($email, $captcha, $event)) {
-            $this->error(__('验证码不正确'));
+            $this->error(__('認証コードが正しくありません'));
         }
         $this->success();
     }

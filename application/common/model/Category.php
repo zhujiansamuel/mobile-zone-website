@@ -5,14 +5,14 @@ namespace app\common\model;
 use think\Model;
 
 /**
- * 分类模型
+ * カテゴリモデル
  */
 class Category extends Model
 {
 
-    // 开启自动写入时间戳字段
+    // 自動タイムスタンプ書き込みを有効にする
     protected $autoWriteTimestamp = 'int';
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
     // 追加属性
@@ -36,7 +36,7 @@ class Category extends Model
     }
 
     /**
-     * 读取分类类型
+     * カテゴリタイプを読み取る
      * @return array
      */
     public static function getTypeList()
@@ -71,9 +71,9 @@ class Category extends Model
     }
 
     /**
-     * 读取分类列表
-     * @param string $type   指定类型
-     * @param string $status 指定状态
+     * カテゴリ一覧を読み取る
+     * @param string $type   指定タイプ
+     * @param string $status 指定ステータス
      * @return array
      */
     public static function getCategoryArray($type = null, $status = null)

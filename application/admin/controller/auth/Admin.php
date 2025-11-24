@@ -11,10 +11,10 @@ use think\Db;
 use think\Validate;
 
 /**
- * 管理员管理
+ * 管理者管理
  *
  * @icon   fa fa-users
- * @remark 一个管理员可以有多个角色组,左侧的菜单根据管理员所拥有的权限进行生成
+ * @remark 1人の管理者は複数のロールグループを持つことができます,左側メニューは管理者が所持する権限に基づいて生成されます
  */
 class Admin extends Backend
 {
@@ -64,14 +64,14 @@ class Admin extends Backend
     }
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['strip_tags', 'trim']);
         if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
+            //送信元がSelectpage，の場合は、次に転送するSelectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
@@ -115,7 +115,7 @@ class Admin extends Backend
     }
 
     /**
-     * 添加
+     * 追加
      */
     public function add()
     {
@@ -130,14 +130,14 @@ class Admin extends Backend
                     }
                     $params['salt'] = Random::alnum();
                     $params['password'] = $this->auth->getEncryptPassword($params['password'], $params['salt']);
-                    $params['avatar'] = '/assets/img/avatar.png'; //设置新管理员默认头像。
+                    $params['avatar'] = '/assets/img/avatar.png'; //新規管理者のデフォルトアバターを設定。
                     $result = $this->model->validate('Admin.add')->save($params);
                     if ($result === false) {
                         exception($this->model->getError());
                     }
                     $group = $this->request->post("group/a");
 
-                    //过滤不允许的组别,避免越权
+                    //許可されていないグループをフィルタリング,権限の越権を防ぐ
                     $group = array_intersect($this->childrenGroupIds, $group);
                     if (!$group) {
                         exception(__('The parent group exceeds permission limit'));
@@ -161,7 +161,7 @@ class Admin extends Backend
     }
 
     /**
-     * 编辑
+     * 編集
      */
     public function edit($ids = null)
     {
@@ -187,7 +187,7 @@ class Admin extends Backend
                     } else {
                         unset($params['password'], $params['salt']);
                     }
-                    //这里需要针对username和email做唯一验证
+                    //ここではusernameとemail一意性チェックを行う必要があります
                     $adminValidate = \think\Loader::validate('Admin');
                     $adminValidate->rule([
                         'username' => 'require|regex:\w{3,30}|unique:admin,username,' . $row->id,
@@ -200,12 +200,12 @@ class Admin extends Backend
                         exception($row->getError());
                     }
 
-                    // 先移除所有权限
+                    // 先にすべての権限を削除
                     model('AuthGroupAccess')->where('uid', $row->id)->delete();
 
                     $group = $this->request->post("group/a");
 
-                    // 过滤不允许的组别,避免越权
+                    // 許可されていないグループをフィルタリング,権限の越権を防ぐ
                     $group = array_intersect($this->childrenGroupIds, $group);
                     if (!$group) {
                         exception(__('The parent group exceeds permission limit'));
@@ -236,7 +236,7 @@ class Admin extends Backend
     }
 
     /**
-     * 删除
+     * 削除
      */
     public function del($ids = "")
     {
@@ -246,7 +246,7 @@ class Admin extends Backend
         $ids = $ids ? $ids : $this->request->post("ids");
         if ($ids) {
             $ids = array_intersect($this->childrenAdminIds, array_filter(explode(',', $ids)));
-            // 避免越权删除管理员
+            // 越権による管理者削除を避ける
             $childrenGroupIds = $this->childrenGroupIds;
             $adminList = $this->model->where('id', 'in', $ids)->where('id', 'in', function ($query) use ($childrenGroupIds) {
                 $query->name('auth_group_access')->where('group_id', 'in', $childrenGroupIds)->field('uid');
@@ -276,17 +276,17 @@ class Admin extends Backend
     }
 
     /**
-     * 批量更新
+     * 一括更新
      * @internal
      */
     public function multi($ids = "")
     {
-        // 管理员禁止批量操作
+        // 管理者は一括操作を禁止
         $this->error();
     }
 
     /**
-     * 下拉搜索
+     * ドロップダウン検索
      */
     public function selectpage()
     {

@@ -2,7 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'goods/index' + location.search,
@@ -17,7 +17,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
@@ -39,7 +39,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id')},
                         {
                             field: 'recomm',
-                            title: __('首页置顶'),
+                            title: __('トップページ固定表示'),
                             align: 'center',
                             table: table,
                             formatter: Table.api.formatter.toggle
@@ -51,7 +51,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'image', title: __('Image'), operate: false, events: Table.api.events.image, formatter: Table.api.formatter.image},
                         {field: 'title', title: __('Title'), operate: 'LIKE'},
                         {field: 'price', title: __('Price'), operate:'BETWEEN'},
-                        {field: 'weigh', title: __('权重排序'), operate: false},
+                        {field: 'weigh', title: __('優先度ソート'), operate: false},
                         //{field: 'memo', title: __('memo'), operate: 'LIKE'},
                         {field: 'memo', title: __('備考'), operate: 'LIKE'},
                         {field: 'imei', title: __('IMEI'), operate: 'LIKE'},
@@ -69,7 +69,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ]
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
         },
         add: function () {
@@ -88,14 +88,14 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
     $("#c-category_second").data("params", function (obj) {
         var v = $("#c-category_id").val();
         v = v > 0 ? v : -1;
-        //obj为SelectPage对象
+        //objためのSelectPageオブジェクト
         return {custom: {pid: v}};
     });
 
     $("#c-category_three").data("params", function (obj) {
         var v = $("#c-category_second").val();
         v = v > 0 ? v : -1;
-        //obj为SelectPage对象
+        //objためのSelectPageオブジェクト
         return {custom: {pid: v}};
     });
     return Controller;

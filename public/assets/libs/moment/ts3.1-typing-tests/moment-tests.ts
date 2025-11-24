@@ -502,15 +502,15 @@ moment.locale('en', {
 moment.locale('en', {
     meridiem : function (hour: number, minute: number, isLowercase: boolean) {
         if (hour < 9) {
-            return "早上";
+            return "早朝";
         } else if (hour < 11 && minute < 30) {
-            return "上午";
+            return "午前";
         } else if (hour < 13 && minute < 30) {
-            return "中午";
+            return "正午";
         } else if (hour < 18) {
-            return "下午";
+            return "午後";
         } else {
-            return "晚上";
+            return "夜";
         }
     }
 });

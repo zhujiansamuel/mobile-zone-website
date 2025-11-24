@@ -220,7 +220,7 @@
      * @param {Object} option
      */
     var SelectPage = function (input, option) {
-        //特殊字段处理
+        //特殊フィールド処理
         $.each({data: 'source', keyField: 'primaryKey', showField: 'field', pageSize: 'perPage'}, function (i, j) {
             if (typeof option[j] !== 'undefined') {
                 option[i] = option[j];
@@ -382,36 +382,36 @@
                     max_selected: 'You can only select up to max_selected_limit items'
                 };
                 break;
-            // 中文
+            // 中国語
             case 'cn':
             default:
                 message = {
-                    add_btn: '添加按钮',
-                    add_title: '添加区域',
-                    del_btn: '删除按钮',
-                    del_title: '删除区域',
-                    next: '下一页',
+                    add_btn: 'ボタンを追加',
+                    add_title: 'エリアを追加',
+                    del_btn: 'ボタンを削除',
+                    del_title: 'エリアを削除',
+                    next: '次のページ',
                     next_title: '下' + p.pageSize + ' (→)',
-                    prev: '上一页',
-                    prev_title: '上' + p.pageSize + ' (←)',
-                    first_title: '首页 (Shift + ←)',
-                    last_title: '尾页 (Shift + →)',
-                    get_all_btn: '获得全部 (↓)',
-                    get_all_alt: '(按钮)',
-                    close_btn: '关闭 (Tab键)',
-                    close_alt: '(按钮)',
-                    loading: '读取中...',
-                    loading_alt: '(读取中)',
-                    page_info: '第 page_num 页(共page_count页)',
-                    select_ng: '请注意：请从列表中选择.',
-                    select_ok: 'OK : 已经选择.',
-                    not_found: '无查询结果',
-                    ajax_error: '加载数据时发生了错误！',
-                    clear: '清除内容',
-                    select_all: '选择当前页项目',
-                    unselect_all: '取消选择当前页项目',
-                    clear_all: '清除全部已选择项目',
-                    max_selected: '最多只能选择 max_selected_limit 个项目'
+                    prev: '前のページ',
+                    prev_title: '前' + p.pageSize + ' (←)',
+                    first_title: '最初のページ (Shift + ←)',
+                    last_title: '最後のページ (Shift + →)',
+                    get_all_btn: 'すべて取得 (↓)',
+                    get_all_alt: '(ボタン)',
+                    close_btn: '無効 (Tabキー)',
+                    close_alt: '(ボタン)',
+                    loading: '読み込み中...',
+                    loading_alt: '(読み込み中)',
+                    page_info: '第 page_num ページ(全page_countページ)',
+                    select_ng: 'ご注意ください：リストから選択してください.',
+                    select_ok: 'OK : 選択済みです.',
+                    not_found: '検索結果はありません',
+                    ajax_error: 'データの読み込み時にエラーが発生しました！',
+                    clear: '内容をクリア',
+                    select_all: '現在のページの項目を選択',
+                    unselect_all: '現在のページの項目の選択を解除',
+                    clear_all: '選択済みのすべての項目をクリア',
+                    max_selected: '選択できるのは最大で max_selected_limit 件の項目のみです'
                 };
                 break;
         }
@@ -651,10 +651,10 @@
         if (this.option.selectOnly) {
             if ($(this.elem.combo_input).val() !== '') {
                 if ($(this.elem.hidden).val() !== '') {
-                    //选择条件
+                    //選択条件
                     $(this.elem.combo_input).attr('title', this.message.select_ok).removeClass(this.css_class.select_ng).addClass(this.css_class.select_ok);
                 } else {
-                    //输入方式
+                    //入力方式
                     $(this.elem.combo_input).attr('title', this.message.select_ng).removeClass(this.css_class.select_ok).addClass(this.css_class.select_ng);
                 }
             } else {
@@ -1252,7 +1252,7 @@
             searchField: self.option.searchField
         };
         if (p.orderBy !== false) _orgParams.orderBy = p.orderBy;
-        // 这个应该是历史遗留了，没仔细追逻辑，先留着。
+        // これはおそらく歴史的経緯によるものです，ロジックを詳しく追っていません，ひとまず残しておきます。
         _orgParams[searchKey] = q_word[0];
 
         if (_paramsFunc) {
@@ -1332,8 +1332,8 @@
 
         //query keyword filter
         do {
-            //'/\W/g'正则代表全部不是字母，数字，下划线，汉字的字符
-            //将非法字符进行转义
+            //'/\W/g'正規表現はすべての非英字を表します，数値，アンダースコア，漢字の文字
+            //不正な文字をエスケープする
             esc_q[i] = q_word[i].replace(/\W/g, '\\$&').toString();
             arr_reg[i] = new RegExp(esc_q[i], 'gi');
             i++;
@@ -1608,7 +1608,7 @@
                     try {
                         itemText = p.formatItem(json.originalResult[i]);
                     } catch (e) {
-                        console.error('formatItem内容格式化函数内容设置不正确！');
+                        console.error('formatItemformatItem の内容フォーマット関数の設定が正しくありません！');
                         itemText = p.escape ? self.escapeHTML(arr_candidate[i]) : arr_candidate[i];
                     }
                 } else {

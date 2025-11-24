@@ -26,116 +26,116 @@ var __webpack_exports__ = {};
   $.extend($.summernote.lang, {
     'zh-TW': {
       font: {
-        bold: '粗體',
-        italic: '斜體',
-        underline: '底線',
-        clear: '清除格式',
-        height: '行高',
-        name: '字體',
-        strikethrough: '刪除線',
-        subscript: '下標',
-        superscript: '上標',
-        size: '字號'
+        bold: '太字',
+        italic: '斜体',
+        underline: '下線',
+        clear: '書式をクリア',
+        height: '行間',
+        name: 'フォント',
+        strikethrough: '取り消し線',
+        subscript: '下付き',
+        superscript: '上付き',
+        size: 'フォントサイズ'
       },
       image: {
-        image: '圖片',
-        insert: '插入圖片',
-        resizeFull: '縮放至100%',
-        resizeHalf: '縮放至 50%',
-        resizeQuarter: '縮放至 25%',
-        floatLeft: '靠左浮動',
-        floatRight: '靠右浮動',
-        floatNone: '取消浮動',
-        shapeRounded: '形狀: 圓角',
-        shapeCircle: '形狀: 圓',
-        shapeThumbnail: '形狀: 縮略圖',
-        shapeNone: '形狀: 無',
-        dragImageHere: '將圖片拖曳至此處',
+        image: '画像',
+        insert: '画像を挿入',
+        resizeFull: '拡大／縮小100%',
+        resizeHalf: '拡大／縮小 50%',
+        resizeQuarter: '拡大／縮小 25%',
+        floatLeft: '左に回り込み',
+        floatRight: '右に回り込み',
+        floatNone: '回り込みを解除',
+        shapeRounded: '形状: 角丸',
+        shapeCircle: '形状: 丸型',
+        shapeThumbnail: '形状: サムネイル',
+        shapeNone: '形状: なし',
+        dragImageHere: '画像をここにドラッグしてください',
         dropImage: 'Drop image or Text',
-        selectFromFiles: '從本機上傳',
-        maximumFileSize: '文件大小最大值',
-        maximumFileSizeError: '文件大小超出最大值。',
-        url: '圖片網址',
-        remove: '移除圖片',
+        selectFromFiles: 'ローカルからアップロード',
+        maximumFileSize: '最大ファイルサイズ',
+        maximumFileSizeError: 'ファイルサイズが最大値を超えています。',
+        url: '画像 URL',
+        remove: '画像を削除',
         original: 'Original'
       },
       video: {
-        video: '影片',
-        videoLink: '影片連結',
-        insert: '插入影片',
-        url: '影片網址',
-        providers: '(影片網址)'
+        video: '動画',
+        videoLink: '動画リンク',
+        insert: '動画を挿入',
+        url: '動画 URL',
+        providers: '(動画 URL)'
       },
       link: {
-        link: '連結',
-        insert: '插入連結',
-        unlink: '取消連結',
-        edit: '編輯連結',
-        textToDisplay: '顯示文字',
-        url: '連結網址',
-        openInNewWindow: '在新視窗開啟'
+        link: 'リンク',
+        insert: 'リンクを挿入',
+        unlink: 'リンクを解除',
+        edit: 'リンクを編集',
+        textToDisplay: '表示テキスト',
+        url: 'リンク URL',
+        openInNewWindow: '新しいウィンドウで開く'
       },
       table: {
-        table: '表格',
-        addRowAbove: '上方插入列',
-        addRowBelow: '下方插入列',
-        addColLeft: '左方插入欄',
-        addColRight: '右方插入欄',
-        delRow: '刪除列',
-        delCol: '刪除欄',
-        delTable: '刪除表格'
+        table: '表',
+        addRowAbove: '上に行を挿入',
+        addRowBelow: '下に行を挿入',
+        addColLeft: '左に列を挿入',
+        addColRight: '右に列を挿入',
+        delRow: '行を削除',
+        delCol: '列を削除',
+        delTable: '表を削除'
       },
       hr: {
         insert: '水平線'
       },
       style: {
-        style: '樣式',
-        p: '一般',
-        blockquote: '引用區塊',
-        pre: '程式碼區塊',
-        h1: '標題 1',
-        h2: '標題 2',
-        h3: '標題 3',
-        h4: '標題 4',
-        h5: '標題 5',
-        h6: '標題 6'
+        style: 'スタイル',
+        p: '標準',
+        blockquote: '引用ブロック',
+        pre: 'コードブロック',
+        h1: '見出し 1',
+        h2: '見出し 2',
+        h3: '見出し 3',
+        h4: '見出し 4',
+        h5: '見出し 5',
+        h6: '見出し 6'
       },
       lists: {
-        unordered: '項目清單',
-        ordered: '編號清單'
+        unordered: '箇条書き',
+        ordered: '番号付きリスト'
       },
       options: {
-        help: '幫助',
-        fullscreen: '全螢幕',
-        codeview: '原始碼'
+        help: 'ヘルプ',
+        fullscreen: '全画面',
+        codeview: 'ソースコード'
       },
       paragraph: {
         paragraph: '段落',
-        outdent: '取消縮排',
-        indent: '增加縮排',
-        left: '靠右對齊',
-        center: '靠中對齊',
-        right: '靠右對齊',
-        justify: '左右對齊'
+        outdent: 'インデントを減らす',
+        indent: 'インデントを増やす',
+        left: '右揃え',
+        center: '中央揃え',
+        right: '右揃え',
+        justify: '両端揃え'
       },
       color: {
-        recent: '字型顏色',
-        more: '更多',
+        recent: '文字色',
+        more: 'その他',
         background: '背景',
-        foreground: '字體',
+        foreground: 'フォント',
         transparent: '透明',
         setTransparent: '透明',
-        reset: '重設',
-        resetToDefault: '預設'
+        reset: 'リセット',
+        resetToDefault: 'デフォルト'
       },
       shortcut: {
-        shortcuts: '快捷鍵',
-        close: '關閉',
-        textFormatting: '文字格式',
-        action: '動作',
-        paragraphFormatting: '段落格式',
-        documentStyle: '文件格式',
-        extraKeys: '額外按鍵'
+        shortcuts: 'ショートカットキー',
+        close: '閉じる',
+        textFormatting: '文字書式',
+        action: '操作',
+        paragraphFormatting: '段落書式',
+        documentStyle: 'ドキュメントスタイル',
+        extraKeys: '追加キー'
       },
       help: {
         'insertParagraph': 'Insert Paragraph',
@@ -167,8 +167,8 @@ var __webpack_exports__ = {};
         'linkDialog.show': 'Show Link Dialog'
       },
       history: {
-        undo: '復原',
-        redo: '取消復原'
+        undo: '元に戻す',
+        redo: 'やり直し'
       },
       specialChar: {
         specialChar: 'SPECIAL CHARACTERS',

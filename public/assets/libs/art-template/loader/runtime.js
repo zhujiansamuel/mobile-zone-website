@@ -105,10 +105,10 @@ function showDebugInfo(e) {
     var message = e.stack || '';
 
     if (message) {
-        // 利用报错堆栈信息
+        // エラースタック情報を利用
         message = message.split('\n').slice(0, 2).join('\n');
     } else {
-        // 调试版本，直接给出模板语句行
+        // デバッグ版，テンプレート文の行を直接出力
         for (var name in e) {
             message += "<" + name + ">\n" + e[name] + "\n\n";
         }

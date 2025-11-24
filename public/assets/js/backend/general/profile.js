@@ -3,7 +3,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'upload'], function (
     var Controller = {
         index: function () {
 
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 search: true,
                 advancedSearch: true,
@@ -19,7 +19,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'upload'], function (
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 columns: [
@@ -34,17 +34,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'upload'], function (
                 commonSearch: false
             });
 
-            // 为表格绑定事件
-            Table.api.bindevent(table);//当内容渲染完成后
+            // テーブルにイベントをバインド
+            Table.api.bindevent(table);//内容のレンダリング完了後
 
-            // 给上传按钮添加上传成功事件
+            // アップロードボタンにアップロード成功イベントを追加
             $("#faupload-avatar").data("upload-success", function (data) {
                 var url = Backend.api.cdnurl(data.url);
                 $(".profile-user-img").prop("src", url);
-                Toastr.success("上传成功！");
+                Toastr.success("アップロード成功！");
             });
 
-            // 给表单绑定事件
+            // フォームにイベントをバインド
             Form.api.bindevent($("#update-form"), function () {
                 $("input[name='row[password]']").val('');
                 var url = Backend.api.cdnurl($("#c-avatar").val());

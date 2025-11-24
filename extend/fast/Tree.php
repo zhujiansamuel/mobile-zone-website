@@ -5,24 +5,24 @@ namespace fast;
 use think\Config;
 
 /**
- * 通用的树型类
+ * 汎用ツリークラス
  * @author XiaoYao <476552238li@gmail.com>
  */
 class Tree
 {
     protected static $instance;
-    //默认配置
+    //デフォルト設定
     protected $config = [];
     public $options = [];
 
     /**
-     * 生成树型结构所需要的2维数组
+     * ツリー構造を生成するために必要な2次元配列
      * @var array
      */
     public $arr = [];
 
     /**
-     * 生成树型结构所需修饰符号，可以换成图片
+     * ツリー構造生成用の装飾記号，画像に置き換えることも可能
      * @var array
      */
     public $icon = array('│', '├', '└');
@@ -38,9 +38,9 @@ class Tree
     }
 
     /**
-     * 初始化
+     * 初期化
      * @access public
-     * @param array $options 参数
+     * @param array $options パラメーター
      * @return Tree
      */
     public static function instance($options = [])
@@ -53,19 +53,19 @@ class Tree
     }
 
     /**
-     * 初始化方法
-     * @param array  $arr     2维数组，例如：
+     * 初期化メソッド
+     * @param array  $arr     2次元配列，例えば：
      *      array(
-     *      1 => array('id'=>'1','pid'=>0,'name'=>'一级栏目一'),
-     *      2 => array('id'=>'2','pid'=>0,'name'=>'一级栏目二'),
-     *      3 => array('id'=>'3','pid'=>1,'name'=>'二级栏目一'),
-     *      4 => array('id'=>'4','pid'=>1,'name'=>'二级栏目二'),
-     *      5 => array('id'=>'5','pid'=>2,'name'=>'二级栏目三'),
-     *      6 => array('id'=>'6','pid'=>3,'name'=>'三级栏目一'),
-     *      7 => array('id'=>'7','pid'=>3,'name'=>'三级栏目二')
+     *      1 => array('id'=>'1','pid'=>0,'name'=>'第1階層カテゴリ1'),
+     *      2 => array('id'=>'2','pid'=>0,'name'=>'第1階層カテゴリ2'),
+     *      3 => array('id'=>'3','pid'=>1,'name'=>'第2階層カテゴリ1'),
+     *      4 => array('id'=>'4','pid'=>1,'name'=>'第2階層メニュー2'),
+     *      5 => array('id'=>'5','pid'=>2,'name'=>'第2階層メニュー3'),
+     *      6 => array('id'=>'6','pid'=>3,'name'=>'第3階層メニュー1'),
+     *      7 => array('id'=>'7','pid'=>3,'name'=>'第3階層メニュー2')
      *      )
-     * @param string $pidname 父字段名称
-     * @param string $nbsp    空格占位符
+     * @param string $pidname 親フィールド名
+     * @param string $nbsp    空白プレースホルダー
      * @return Tree
      */
     public function init($arr = [], $pidname = null, $nbsp = null)
@@ -81,7 +81,7 @@ class Tree
     }
 
     /**
-     * 得到子级数组
+     * 子レベル配列を取得
      * @param int
      * @return array
      */
@@ -100,9 +100,9 @@ class Tree
     }
 
     /**
-     * 读取指定节点的所有孩子节点
-     * @param int     $myid     节点ID
-     * @param boolean $withself 是否包含自身
+     * 指定ノードのすべての子ノードを読み込む
+     * @param int     $myid     ノードID
+     * @param boolean $withself 自身を含めるかどうか
      * @return array
      */
     public function getChildren($myid, $withself = false)
@@ -123,9 +123,9 @@ class Tree
     }
 
     /**
-     * 读取指定节点的所有孩子节点ID
-     * @param int     $myid     节点ID
-     * @param boolean $withself 是否包含自身
+     * 指定ノードのすべての子ノードを読み込むID
+     * @param int     $myid     ノードID
+     * @param boolean $withself 自身を含めるかどうか
      * @return array
      */
     public function getChildrenIds($myid, $withself = false)
@@ -139,7 +139,7 @@ class Tree
     }
 
     /**
-     * 得到当前位置父辈数组
+     * 現在位置の親レベル配列を取得
      * @param int
      * @return array
      */
@@ -168,9 +168,9 @@ class Tree
     }
 
     /**
-     * 得到当前位置所有父辈数组
+     * 現在位置のすべての親レベル配列を取得
      * @param int
-     * @param bool $withself 是否包含自己
+     * @param bool $withself 自分自身を含めるかどうか
      * @return array
      */
     public function getParents($myid, $withself = false)
@@ -197,7 +197,7 @@ class Tree
     }
 
     /**
-     * 读取指定节点所有父类节点ID
+     * 指定ノードのすべての親ノードを読み込むID
      * @param int     $myid
      * @param boolean $withself
      * @return array
@@ -213,13 +213,13 @@ class Tree
     }
 
     /**
-     * 树型结构Option
-     * @param int    $myid        表示获得这个ID下的所有子级
-     * @param string $itemtpl     条目模板 如："<option value=@id @selected @disabled>@spacer@name</option>"
-     * @param mixed  $selectedids 被选中的ID，比如在做树型下拉框的时候需要用到
-     * @param mixed  $disabledids 被禁用的ID，比如在做树型下拉框的时候需要用到
-     * @param string $itemprefix  每一项前缀
-     * @param string $toptpl      顶级栏目的模板
+     * ツリー構造Option
+     * @param int    $myid        これを取得することを表すID配下のすべての子レベル
+     * @param string $itemtpl     項目テンプレート 例："<option value=@id @selected @disabled>@spacer@name</option>"
+     * @param mixed  $selectedids 選択されたID，ツリー型セレクトボックスを作成するときなどに使用
+     * @param mixed  $disabledids 無効化されたID，ツリー型セレクトボックスを作成するときなどに使用
+     * @param string $itemprefix  各項目のプレフィックス
+     * @param string $toptpl      トップレベルメニューのテンプレート
      * @return string
      */
     public function getTree($myid, $itemtpl = "<option value=@id @selected @disabled>@spacer@name</option>", $selectedids = '', $disabledids = '', $itemprefix = '', $toptpl = '')
@@ -256,13 +256,13 @@ class Tree
     }
 
     /**
-     * 树型结构UL
-     * @param int    $myid        表示获得这个ID下的所有子级
-     * @param string $itemtpl     条目模板 如："<li value=@id @selected @disabled>@name @childlist</li>"
-     * @param string $selectedids 选中的ID
-     * @param string $disabledids 禁用的ID
-     * @param string $wraptag     子列表包裹标签
-     * @param string $wrapattr    子列表包裹属性
+     * ツリー構造UL
+     * @param int    $myid        これを取得することを表すID配下のすべての子レベル
+     * @param string $itemtpl     項目テンプレート 例："<li value=@id @selected @disabled>@name @childlist</li>"
+     * @param string $selectedids 選択中ID
+     * @param string $disabledids 無効ID
+     * @param string $wraptag     子リストのラップ用タグ
+     * @param string $wrapattr    子リストのラップ用属性
      * @return string
      */
     public function getTreeUl($myid, $itemtpl, $selectedids = '', $disabledids = '', $wraptag = 'ul', $wrapattr = '')
@@ -289,7 +289,7 @@ class Tree
     }
 
     /**
-     * 菜单数据
+     * メニューデータ
      * @param int    $myid
      * @param string $itemtpl
      * @param mixed  $selectedids
@@ -336,12 +336,12 @@ class Tree
 
     /**
      * 特殊
-     * @param integer $myid        要查询的ID
-     * @param string  $itemtpl1    第一种HTML代码方式
-     * @param string  $itemtpl2    第二种HTML代码方式
-     * @param mixed   $selectedids 默认选中
-     * @param mixed   $disabledids 禁用
-     * @param string  $itemprefix  前缀
+     * @param integer $myid        検索対象のID
+     * @param string  $itemtpl1    第1種HTMLコード方式
+     * @param string  $itemtpl2    第2種HTMLコード方式
+     * @param mixed   $selectedids デフォルト選択
+     * @param mixed   $disabledids 無効化
+     * @param string  $itemprefix  プレフィックス
      * @return string
      */
     public function getTreeSpecial($myid, $itemtpl1, $itemtpl2, $selectedids = 0, $disabledids = 0, $itemprefix = '')
@@ -379,9 +379,9 @@ class Tree
 
     /**
      *
-     * 获取树状数组
-     * @param string $myid       要查询的ID
-     * @param string $itemprefix 前缀
+     * ツリー配列を取得
+     * @param string $myid       検索対象のID
+     * @param string $itemprefix プレフィックス
      * @return array
      */
     public function getTreeArray($myid, $itemprefix = '')
@@ -413,7 +413,7 @@ class Tree
     }
 
     /**
-     * 将getTreeArray的结果返回为二维数组
+     * をgetTreeArrayの結果を2次元配列として返す
      * @param array  $data
      * @param string $field
      * @return array

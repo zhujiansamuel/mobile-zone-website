@@ -5,13 +5,13 @@ namespace app\common\library\token\driver;
 use app\common\library\token\Driver;
 
 /**
- * Token操作类
+ * Token操作クラス
  */
 class Mysql extends Driver
 {
 
     /**
-     * 默认配置
+     * デフォルト設定
      * @var array
      */
     protected $options = [
@@ -22,8 +22,8 @@ class Mysql extends Driver
 
 
     /**
-     * 构造函数
-     * @param array $options 参数
+     * コンストラクタ
+     * @param array $options パラメーター
      * @access public
      */
     public function __construct($options = [])
@@ -45,10 +45,10 @@ class Mysql extends Driver
     }
 
     /**
-     * 存储Token
+     * 保存Token
      * @param string $token   Token
-     * @param int    $user_id 会员ID
-     * @param int    $expire  过期时长,0表示无限,单位秒
+     * @param int    $user_id 会員ID
+     * @param int    $expire  有効期限,0無制限を表す,単位は秒
      * @return bool
      */
     public function set($token, $user_id, $expire = null)
@@ -60,7 +60,7 @@ class Mysql extends Driver
     }
 
     /**
-     * 获取Token内的信息
+     * 取得Token内の情報
      * @param string $token
      * @return  array
      */
@@ -69,9 +69,9 @@ class Mysql extends Driver
         $data = $this->handler->where('token', $this->getEncryptedToken($token))->find();
         if ($data) {
             if (!$data['expiretime'] || $data['expiretime'] > time()) {
-                //返回未加密的token给客户端使用
+                //暗号化されていないtokenクライアントで使用するため
                 $data['token'] = $token;
-                //返回剩余有效时间
+                //残りの有効時間を返す
                 $data['expires_in'] = $this->getExpiredIn($data['expiretime']);
                 return $data;
             } else {
@@ -82,9 +82,9 @@ class Mysql extends Driver
     }
 
     /**
-     * 判断Token是否可用
+     * 判定Token利用可能かどうか
      * @param string $token   Token
-     * @param int    $user_id 会员ID
+     * @param int    $user_id 会員ID
      * @return  boolean
      */
     public function check($token, $user_id)
@@ -94,7 +94,7 @@ class Mysql extends Driver
     }
 
     /**
-     * 删除Token
+     * 削除Token
      * @param string $token
      * @return  boolean
      */
@@ -105,7 +105,7 @@ class Mysql extends Driver
     }
 
     /**
-     * 删除指定用户的所有Token
+     * 指定ユーザーのすべてのToken
      * @param int $user_id
      * @return  boolean
      */

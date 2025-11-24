@@ -2,7 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'order/index' + location.search,
@@ -17,7 +17,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
@@ -73,8 +73,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             buttons:[
                                 {
                                     name: 'details',
-                                    text:'订单详情',
-                                    title:'订单详情',
+                                    text:'注文詳細',
+                                    title:'注文詳細',
                                     //classname: 'btn btn-xs btn-warning btn-view btn-ajax ',
                                     classname: 'btn btn-xs btn-warning  btn-dialog',
                                     icon: 'fa fa-shopping-cart',
@@ -84,8 +84,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 },
                                 {
                                     name: 'details',
-                                    text:'买取申请书',
-                                    title:'买取申请书',
+                                    text:'買取申込書',
+                                    title:'買取申込書',
                                     //classname: 'btn btn-xs btn-warning btn-view btn-ajax ',
                                     classname: 'btn btn-xs btn-danger',
                                     icon: 'fa fa-shopping-cart',
@@ -94,12 +94,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     
                                 },
                                 {
-                                    text:'预约邮件',
+                                    text:'予約メール',
                                     classname: 'btn btn-xs btn-info btn-view btn-ajax ',
                                     icon: 'fa fa-envelope-o',
                                     url: 'order/sendEms?type=1',
-                                    confirm: function (row, column) { //确认框
-                                        return "确认发送?"
+                                    confirm: function (row, column) { //確認ダイアログ
+                                        return "送信してよろしいですか？?"
                                     },
                                     success:function(data,ret) {
                                         $(".btn-refresh").trigger("click")
@@ -117,12 +117,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     // },
                                 },
                                 {
-                                    text:'查定邮件',
+                                    text:'査定メール',
                                     classname: 'btn btn-xs btn-primary btn-view btn-ajax ',
                                     icon: 'fa fa-envelope-o',
                                     url: 'order/sendEms?type=2',
-                                    confirm: function (row, column) { //确认框
-                                        return "确认发送?"
+                                    confirm: function (row, column) { //確認ダイアログ
+                                        return "送信してよろしいですか？?"
                                     },
                                     success:function(data,ret) {
                                         $(".btn-refresh").trigger("click")
@@ -142,12 +142,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     },
                                 },
                                 {
-                                    text:'订单取消邮件',
+                                    text:'注文キャンセルメール',
                                     classname: 'btn btn-xs btn-danger btn-info btn-view btn-ajax ',
                                     icon: 'fa fa-envelope-o',
                                     url: 'order/sendEms?type=3',
-                                    confirm: function (row, column) { //确认框
-                                        return "确认发送?"
+                                    confirm: function (row, column) { //確認ダイアログ
+                                        return "送信してよろしいですか？?"
                                     },
                                     success:function(data,ret) {
                                         $(".btn-refresh").trigger("click")
@@ -170,22 +170,22 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ]
             });
 
-            //当表格数据加载完成时
+            //テーブルデータの読み込み完了時
             table.on('load-success.bs.table', function (e, data) {
-                //这里可以获取从服务端获取的JSON数据
+                //ここでサーバーから取得したJSONデータ
                 console.log(data);
                 $('.btn-export').attr('data-json', JSON.stringify(data.filter) );
                 //$('.getOrderTotalMoney').html(data.orderTotalMoney);
-                //这里我们手动设置底部的值
+                //ここでフッターの値を手動で設定します
                 //$("#money").text(data.extend.money);
                 //$("#price").text(data.extend.price);
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
         },
         recyclebin: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     'dragsort_url': ''
@@ -194,7 +194,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: 'order/recyclebin' + location.search,
                 pk: 'id',
@@ -240,7 +240,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ]
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
         },
 
@@ -255,18 +255,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         },
         details: function () {
             $(document).on("click", ".edit_order_details", function () {
-                Fast.api.open('order_details/index?order_id='+$(this).attr('data-id'), __('商品明细'), {
+                Fast.api.open('order_details/index?order_id='+$(this).attr('data-id'), __('商品明細'), {
                     area: ["100%", "100%"],
                 });
                 
             });
             $(document).on("click", ".edit_order_memo", function () {
-                Fast.api.open('order/edit_order_info?order_id='+$(this).attr('data-id'), __('备注'), {
+                Fast.api.open('order/edit_order_info?order_id='+$(this).attr('data-id'), __('備考'), {
                     area: ["500px", "540px"],
                 });
                 
             });
-            //修改订单状态
+            //注文ステータスを変更
             $('.edit_status').on('change', function(){
                 var status = $(this).val();
                 var order_id = $('.edit_status_box').attr('data-id');
@@ -307,9 +307,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     for (var i = 0; i < data.length; i++) {
                         html += '<div><a href="'+data[i]['file']+'">'+data[i]['file']+'</a></div>';
                     };
-                    Layer.confirm("请选择导出的选项<br>"+html, {
-                        title: '导出数据',
-                        //btn: ["关闭"],
+                    Layer.confirm("出力するオプションを選択してください<br>"+html, {
+                        title: 'データをエクスポート',
+                        //btn: ["無効"],
                         success: function (layero, index) {
                             $(".layui-layer-btn a", layero).addClass("layui-layer-btn0");
                         }, 

@@ -7,7 +7,7 @@ use think\Validate;
 class User extends Validate
 {
     /**
-     * 验证规则
+     * 検証ルール
      */
     protected $rule = [
         'username' => 'require|regex:\w{3,30}|unique:user',
@@ -18,17 +18,17 @@ class User extends Validate
     ];
 
     /**
-     * 字段描述
+     * フィールドの説明
      */
     protected $field = [
     ];
     /**
-     * 提示消息
+     * メッセージ
      */
     protected $message = [
     ];
     /**
-     * 验证场景
+     * 検証シナリオ
      */
     protected $scene = [
         'add'  => [],

@@ -8,9 +8,9 @@ use think\addons\Controller;
 use Exception;
 
 /**
- * 微信支付宝整合插件首页
+ * WeChat・Alipay統合プラグイン ホーム
  *
- * 此控制器仅用于开发展示说明和测试，请自行添加一个新的控制器进行处理返回和回调事件，同时删除此控制器文件
+ * このコントローラーは開発時の表示説明およびテスト専用です，戻り値およびコールバック処理用の新しいコントローラーを追加してください，あわせてこのコントローラーファイルを削除してください
  *
  * Class Index
  * @package addons\epay\controller
@@ -25,18 +25,18 @@ class Index extends Controller
     {
         parent::_initialize();
         if (!config("app_debug")) {
-            $this->error("仅在开发环境下查看");
+            $this->error("開発環境でのみ閲覧可能");
         }
     }
 
     public function index()
     {
-        $this->view->assign("title", "微信支付宝整合");
+        $this->view->assign("title", "WeChat・Alipay統合");
         return $this->view->fetch();
     }
 
     /**
-     * 体验，仅供开发测试
+     * 体験，開発テスト専用
      */
     public function experience()
     {
@@ -46,24 +46,24 @@ class Index extends Controller
         $openid = $this->request->post('openid', "");
 
         if (!$amount || $amount < 0) {
-            $this->error("支付金额必须大于0");
+            $this->error("支払金額は次の値より大きくなければなりません0");
         }
 
         if (!$type || !in_array($type, ['alipay', 'wechat'])) {
-            $this->error("支付类型不能为空");
+            $this->error("支払種別は空にできません");
         }
 
         if (in_array($method, ['miniapp', 'mp']) && !$openid) {
-            $this->error("openid不能为空");
+            $this->error("openid空にできません");
         }
 
-        //订单号
+        //注文番号
         $out_trade_no = date("YmdHis") . mt_rand(100000, 999999);
 
-        //订单标题
-        $title = '测试订单';
+        //注文タイトル
+        $title = 'テスト注文';
 
-        //回调链接
+        //コールバックURL
         $notifyurl = $this->request->root(true) . '/addons/epay/index/notifyx/paytype/' . $type;
         $returnurl = $this->request->root(true) . '/addons/epay/index/returnx/paytype/' . $type . '/out_trade_no/' . $out_trade_no;
 
@@ -73,39 +73,39 @@ class Index extends Controller
     }
 
     /**
-     * 支付成功，仅供开发测试
+     * 支払い成功，開発テスト専用
      */
     public function notifyx()
     {
         $paytype = $this->request->param('paytype');
         $pay = Service::checkNotify($paytype);
         if (!$pay) {
-            return json(['code' => 'FAIL', 'message' => '失败'], 500, ['Content-Type' => 'application/json']);
+            return json(['code' => 'FAIL', 'message' => '失敗'], 500, ['Content-Type' => 'application/json']);
         }
 
-        // 获取回调数据，V3和V2的回调接收不同
+        // コールバックデータを取得，V3とV2のコールバック受信が異なります
         $data = Service::isVersionV3() ? $pay->callback() : $pay->verify();
 
         try {
-            //微信支付V3返回和V2不同
+            //WeChat決済V3戻り値とV2異なります
             if (Service::isVersionV3() && $paytype === 'wechat') {
                 $data = $data['resource']['ciphertext'];
                 $data['total_fee'] = $data['amount']['total'];
             }
 
             \think\Log::record($data);
-            //获取支付金额、订单号
+            //支払金額を取得、注文番号
             $payamount = $paytype == 'alipay' ? $data['total_amount'] : $data['total_fee'] / 100;
             $out_trade_no = $data['out_trade_no'];
 
-            \think\Log::record("回调成功，订单号：{$out_trade_no}，金额：{$payamount}");
+            \think\Log::record("コールバック成功，注文番号：{$out_trade_no}，金額：{$payamount}");
 
-            //你可以在此编写订单逻辑
+            //ここで注文処理ロジックを記述できます
         } catch (Exception $e) {
-            \think\Log::record("回调逻辑处理错误:" . $e->getMessage(), "error");
+            \think\Log::record("コールバックロジック処理エラー:" . $e->getMessage(), "error");
         }
 
-        //下面这句必须要执行,且在此之前不能有任何输出
+        //以下の一文は必ず実行してください,かつその前に何も出力してはいけません
         if (Service::isVersionV3()) {
             return $pay->success()->getBody()->getContents();
         } else {
@@ -114,7 +114,7 @@ class Index extends Controller
     }
 
     /**
-     * 支付返回，仅供开发测试
+     * 支払い戻り，開発テスト専用
      */
     public function returnx()
     {
@@ -122,10 +122,10 @@ class Index extends Controller
         $out_trade_no = $this->request->param('out_trade_no');
         $pay = Service::checkReturn($paytype);
         if (!$pay) {
-            $this->error('签名错误', '');
+            $this->error('署名が誤っている', '');
         }
 
-        //你可以在这里定义你的提示信息,但切记不可在此编写逻辑
-        $this->success("请返回网站查看支付结果", addon_url("epay/index/index"));
+        //ここでメッセージ内容を定義できます,ただしここでロジックを記述しないでください
+        $this->success("サイトに戻って支払い結果を確認してください", addon_url("epay/index/index"));
     }
 }

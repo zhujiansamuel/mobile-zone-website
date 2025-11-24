@@ -1,13 +1,13 @@
 <?php
 return [
-  # 网站域名
+  # サイトドメイン名
   'WEB_DOMAIN_NAME' => 'http://192.168.1.22:8082',
-  # h5域名
+  # h5ドメイン名
   'WEB_H5_DOMAIN_NAME' => 'http://192.168.1.22:8081/h5',
   'share' => '/share/',
-  # 图片地址
+  # 画像のURL
   'WEB_UPLOAD_URL' => '/uploads/',
-   'source' => '社区服务平台',
+   'source' => 'コミュニティサービスプラットフォーム',
    'appid' => '',
    'secret' => '',
    'goods_type' => [1 => '新品', 2 => '中古'],

@@ -9,7 +9,7 @@ use think\Loader;
 if (!function_exists('build_select')) {
 
     /**
-     * 生成下拉列表
+     * ドロップダウンリストを生成
      * @param string $name
      * @param mixed  $options
      * @param mixed  $selected
@@ -27,7 +27,7 @@ if (!function_exists('build_select')) {
 if (!function_exists('build_radios')) {
 
     /**
-     * 生成单选按钮组
+     * ラジオボタングループを生成
      * @param string $name
      * @param array  $list
      * @param mixed  $selected
@@ -48,7 +48,7 @@ if (!function_exists('build_radios')) {
 if (!function_exists('build_checkboxs')) {
 
     /**
-     * 生成复选按钮组
+     * チェックボックスグループを生成
      * @param string $name
      * @param array  $list
      * @param mixed  $selected
@@ -70,7 +70,7 @@ if (!function_exists('build_checkboxs')) {
 if (!function_exists('build_category_select')) {
 
     /**
-     * 生成分类下拉列表框
+     * カテゴリードロップダウンボックスを生成
      * @param string $name
      * @param string $type
      * @param mixed  $selected
@@ -95,9 +95,9 @@ if (!function_exists('build_category_select')) {
 if (!function_exists('build_toolbar')) {
 
     /**
-     * 生成表格操作按钮栏
-     * @param array $btns 按钮组
-     * @param array $attr 按钮属性值
+     * テーブル操作ボタンバーを生成
+     * @param array $btns ボタングループ
+     * @param array $attr ボタン属性値
      * @return string
      */
     function build_toolbar($btns = null, $attr = [])
@@ -120,7 +120,7 @@ if (!function_exists('build_toolbar')) {
         $btnAttr = array_merge($btnAttr, $attr);
         $html = [];
         foreach ($btns as $k => $v) {
-            //如果未定义或没有权限
+            //未定義または権限がない場合
             if (!isset($btnAttr[$v]) || ($v !== 'refresh' && !$auth->check("{$controller}/{$v}", $auth->id))) {
                 continue;
             }
@@ -131,21 +131,21 @@ if (!function_exists('build_toolbar')) {
                 $template = str_replace('/', '_', $controller);
                 $download = '';
                 if (file_exists("./template/{$template}.xlsx")) {
-                    $download .= "<li><a href=\"/template/{$template}.xlsx\" target=\"_blank\">XLSX模版</a></li>";
+                    $download .= "<li><a href=\"/template/{$template}.xlsx\" target=\"_blank\">XLSXテンプレート</a></li>";
                 }
                 if (file_exists("./template/{$template}.xls")) {
-                    $download .= "<li><a href=\"/template/{$template}.xls\" target=\"_blank\">XLS模版</a></li>";
+                    $download .= "<li><a href=\"/template/{$template}.xls\" target=\"_blank\">XLSテンプレート</a></li>";
                 }
                 if (file_exists("./template/{$template}.csv")) {
                     $download .= empty($download) ? '' : "<li class=\"divider\"></li>";
-                    $download .= "<li><a href=\"/template/{$template}.csv\" target=\"_blank\">CSV模版</a></li>";
+                    $download .= "<li><a href=\"/template/{$template}.csv\" target=\"_blank\">CSVテンプレート</a></li>";
                 }
                 $download .= empty($download) ? '' : "\n                            ";
                 if (!empty($download)) {
                     $html[] = <<<EOT
                         <div class="btn-group">
                             <button type="button" href="{$href}" class="btn btn-info btn-import" title="{$title}" id="btn-import-file" data-url="ajax/upload" data-mimetype="csv,xls,xlsx" data-multiple="false"><i class="{$icon}"></i> {$text}</button>
-                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="下载批量导入模版">
+                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" title="一括インポート用テンプレートをダウンロード">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -166,9 +166,9 @@ EOT;
 if (!function_exists('build_heading')) {
 
     /**
-     * 生成页面Heading
+     * ページを生成Heading
      *
-     * @param string $path 指定的path
+     * @param string $path 指定のpath
      * @return string
      */
     function build_heading($path = null, $container = true)
@@ -179,7 +179,7 @@ if (!function_exists('build_heading')) {
             $controller = str_replace('.', '/', Loader::parseName(request()->controller()));
             $path = strtolower($controller . ($action && $action != 'index' ? '/' . $action : ''));
         }
-        // 根据当前的URI自动匹配父节点的标题和备注
+        // 現在のURI親ノードのタイトルと備考を自動マッチング
         $data = Db::name('auth_rule')->where('name', $path)->field('title,remark')->find();
         if ($data) {
             $title = __($data['title']);

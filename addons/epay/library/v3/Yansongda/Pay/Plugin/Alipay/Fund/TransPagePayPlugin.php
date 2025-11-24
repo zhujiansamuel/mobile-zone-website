@@ -17,7 +17,7 @@ class TransPagePayPlugin implements PluginInterface
 {
     public function assembly(Rocket $rocket, Closure $next): Rocket
     {
-        Logger::debug('[alipay][TransPagePayPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[alipay][TransPagePayPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $rocket->setDirection(ResponseDirection::class)
             ->mergePayload([
@@ -26,7 +26,7 @@ class TransPagePayPlugin implements PluginInterface
             ])
         ;
 
-        Logger::info('[alipay][TransPagePayPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[alipay][TransPagePayPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $next($rocket);
     }

@@ -12,7 +12,7 @@ require(['form', 'upload'], function (Form, Upload) {
     Form.events.bindevent = function (form) {
         _bindevent.apply(this, [form]);
         try {
-            //绑定summernote事件
+            //バインドsummernoteイベント
             if ($(Config.summernote.classname || '.editor', form).length > 0) {
                 var selectUrl = typeof Config !== 'undefined' && Config.modulename === 'index' ? 'user/attachment' : 'general/attachment/select';
                 require(['summernote'], function () {
@@ -71,11 +71,11 @@ require(['form', 'upload'], function (Form, Upload) {
                                 'Arial', 'Arial Black', 'Serif', 'Sans', 'Courier',
                                 'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande',
                                 "Open Sans", "Hiragino Sans GB", "Microsoft YaHei",
-                                '微软雅黑', '宋体', '黑体', '仿宋', '楷体', '幼圆',
+                                'Microsoft YaHei', 'SimSun', 'SimHei', 'FangSong', 'KaiTi', '幼圆体',
                             ],
                             fontNamesIgnoreCheck: [
                                 "Open Sans", "Microsoft YaHei",
-                                '微软雅黑', '宋体', '黑体', '仿宋', '楷体', '幼圆'
+                                'Microsoft YaHei', 'SimSun', 'SimHei', 'FangSong', 'KaiTi', '幼圆体'
                             ],
                             buttons: {
                                 image: imageButton,
@@ -91,7 +91,7 @@ require(['form', 'upload'], function (Form, Upload) {
                                 },
                                 onImageUpload: function (files) {
                                     var that = this;
-                                    //依次上传图片
+                                    //順番に画像をアップロード
                                     for (var i = 0; i < files.length; i++) {
                                         Upload.api.send(files[i], function (data) {
                                             var url = Fast.api.cdnurl(data.url, true);

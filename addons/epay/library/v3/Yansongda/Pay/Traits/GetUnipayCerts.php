@@ -39,7 +39,7 @@ trait GetUnipayCerts
     }
 
     /**
-     * @return array ['cert' => 公钥, 'pkey' => 私钥, 'extracerts' => array]
+     * @return array ['cert' => 公開鍵, 'pkey' => 秘密鍵, 'extracerts' => array]
      *
      * @throws InvalidConfigException
      */

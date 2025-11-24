@@ -1,14 +1,14 @@
 <?php
 
 return [
-    'Url'                                         => '链接',
-    'Username'                                    => '用户名',
-    'Createtime'                                  => '操作时间',
-    'Click to edit'                               => '点击编辑',
-    'Admin log'                                   => '操作日志',
-    'Leave password blank if dont want to change' => '不修改密码请留空',
-    'Please input correct email'                  => '请输入正确的Email地址',
-    'Please input correct password'               => '密码长度必须在6-30位之间，不能包含空格',
-    'Password must be 6 to 30 characters'         => '密码长度必须在6-30位之间，不能包含空格',
-    'Email already exists'                        => '邮箱已经存在',
+    'Url'                                         => 'リンク',
+    'Username'                                    => 'ユーザー名',
+    'Createtime'                                  => '操作時間',
+    'Click to edit'                               => 'クリックして編集',
+    'Admin log'                                   => '操作ログ',
+    'Leave password blank if dont want to change' => 'パスワードを変更しない場合は空欄のままにしてください',
+    'Please input correct email'                  => '正しいEmailアドレス',
+    'Please input correct password'               => 'パスワードの長さは6-30文字の範囲でなければなりません，スペースを含めることはできません',
+    'Password must be 6 to 30 characters'         => 'パスワードの長さは6-30文字の範囲でなければなりません，スペースを含めることはできません',
+    'Email already exists'                        => 'メールアドレスは既に存在します',
 ];

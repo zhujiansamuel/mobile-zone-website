@@ -19,19 +19,19 @@ class Install extends Command
 {
 
     /**
-     * 最低PHP版本
+     * 最低PHPバージョン
      * @var string
      */
     protected $minPhpVersion = '7.4.0';
 
     protected $model = null;
     /**
-     * @var \think\View 视图类实例
+     * @var \think\View ビュークラスインスタンス
      */
     protected $view;
 
     /**
-     * @var \think\Request Request 实例
+     * @var \think\Request Request インスタンス
      */
     protected $request;
 
@@ -51,12 +51,12 @@ class Install extends Command
     }
 
     /**
-     * 命令行安装
+     * コマンドラインインストール
      */
     protected function execute(Input $input, Output $output)
     {
         define('INSTALL_PATH', APP_PATH . 'admin' . DS . 'command' . DS . 'Install' . DS);
-        // 覆盖安装
+        // 上書きインストール
         $force = $input->getOption('force');
         $hostname = $input->getOption('hostname');
         $hostport = $input->getOption('hostport');
@@ -89,7 +89,7 @@ class Install extends Command
     }
 
     /**
-     * PC端安装
+     * PCPC 版インストール
      */
     public function index()
     {
@@ -157,7 +157,7 @@ class Install extends Command
     }
 
     /**
-     * 执行安装
+     * インストールを実行
      */
     protected function installation($mysqlHostname, $mysqlHostport, $mysqlDatabase, $mysqlUsername, $mysqlPassword, $mysqlPrefix, $adminUsername, $adminPassword, $adminEmail = null, $siteName = null)
     {
@@ -184,14 +184,14 @@ class Install extends Command
 
         $sql = str_replace("`fa_", "`{$mysqlPrefix}", $sql);
 
-        // 先尝试能否自动创建数据库
+        // まず自動でデータベースを作成できるか試行
         $config = Config::get('database');
         try {
             $pdo = new PDO("{$config['type']}:host={$mysqlHostname}" . ($mysqlHostport ? ";port={$mysqlHostport}" : ''), $mysqlUsername, $mysqlPassword);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->query("CREATE DATABASE IF NOT EXISTS `{$mysqlDatabase}` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;");
 
-            // 连接install命令中指定的数据库
+            // 接続installinstall コマンドで指定されたデータベースに接続
             $instance = Db::connect([
                 'type'     => "{$config['type']}",
                 'hostname' => "{$mysqlHostname}",
@@ -202,18 +202,18 @@ class Install extends Command
                 'prefix'   => "{$mysqlPrefix}",
             ]);
 
-            // 查询一次SQL,判断连接是否正常
+            // 一度クエリを実行SQL,接続が正常かどうかを判定
             $instance->execute("SELECT 1");
 
-            // 调用原生PDO对象进行批量查询
+            // ネイティブPDOオブジェクトを呼び出して一括クエリを実行
             $instance->getPdo()->exec($sql);
         } catch (\PDOException $e) {
             throw new Exception($e->getMessage());
         }
-        // 后台入口文件
+        // バックエンドエントリーファイル
         $adminFile = ROOT_PATH . 'public' . DS . 'admin.php';
 
-        // 数据库配置文件
+        // データベース設定ファイル
         $envSampleFile = ROOT_PATH . '.env.sample';
         $envFile = ROOT_PATH . '.env';
         if (!file_exists($envFile)) {
@@ -231,13 +231,13 @@ class Install extends Command
         };
         $envText = preg_replace_callback("/(hostname|database|username|password|hostport|prefix)\s*=\s*(.*)/", $callback, $envText);
 
-        // 检测能否成功写入数据库配置
+        // データベース設定を書き込めるかどうかを検査
         $result = @file_put_contents($envFile, $envText);
         if (!$result) {
             throw new Exception(__('The current permissions are insufficient to write the file %s', '.env'));
         }
 
-        // 设置新的Token随机密钥key
+        // 新しい設定Tokenランダムキーkey
         $oldTokenKey = config('token.key');
         $newTokenKey = \fast\Random::alnum(32);
         $coreConfigFile = CONF_PATH . 'config.php';
@@ -250,7 +250,7 @@ class Install extends Command
         }
 
         $avatar = '/assets/img/avatar.png';
-        // 变更默认管理员密码
+        // デフォルト管理者パスワードを変更
         $adminPassword = $adminPassword ? $adminPassword : Random::alnum(8);
         $adminEmail = $adminEmail ? $adminEmail : "admin@admin.com";
         $newSalt = substr(md5(uniqid(true)), 0, 6);
@@ -258,19 +258,19 @@ class Install extends Command
         $data = ['username' => $adminUsername, 'email' => $adminEmail, 'avatar' => $avatar, 'password' => $newPassword, 'salt' => $newSalt];
         $instance->name('admin')->where('username', 'admin')->update($data);
 
-        // 变更前台默认用户的密码,随机生成
+        // フロントエンドのデフォルトユーザーパスワードを変更,ランダム生成
         $newSalt = substr(md5(uniqid(true)), 0, 6);
         $newPassword = md5(md5(Random::alnum(8)) . $newSalt);
         $instance->name('user')->where('username', 'admin')->update(['avatar' => $avatar, 'password' => $newPassword, 'salt' => $newSalt]);
 
-        // 修改后台入口
+        // 管理画面のエントリを変更
         $adminName = '';
         if (is_file($adminFile)) {
             $adminName = Random::alpha(10) . '.php';
             rename($adminFile, ROOT_PATH . 'public' . DS . $adminName);
         }
 
-        //修改站点名称
+        //サイト名を変更
         if ($siteName != config('site.name')) {
             $instance->name('config')->where('name', 'name')->update(['value' => $siteName]);
             $siteConfigFile = CONF_PATH . 'extra' . DS . 'site.php';
@@ -290,14 +290,14 @@ class Install extends Command
         }
 
         $installLockFile = INSTALL_PATH . "install.lock";
-        //检测能否成功写入lock文件
+        //正常に書き込めるかをチェックlockファイル
         $result = @file_put_contents($installLockFile, 1);
         if (!$result) {
             throw new Exception(__('The current permissions are insufficient to write the file %s', 'application/admin/command/Install/install.lock'));
         }
 
         try {
-            //删除安装脚本
+            //インストールスクリプトを削除
             @unlink(ROOT_PATH . 'public' . DS . 'install.php');
         } catch (\Exception $e) {
 
@@ -307,18 +307,18 @@ class Install extends Command
     }
 
     /**
-     * 检测环境
+     * 環境をチェック
      */
     protected function checkenv()
     {
-        // 检测目录是否存在
+        // ディレクトリが存在するかをチェック
         $checkDirs = [
             'thinkphp',
             'vendor',
             'public' . DS . 'assets' . DS . 'libs'
         ];
 
-        //数据库配置文件
+        //データベース設定ファイル
         $dbConfigFile = APP_PATH . 'database.php';
 
         if (version_compare(PHP_VERSION, $this->minPhpVersion, '<')) {

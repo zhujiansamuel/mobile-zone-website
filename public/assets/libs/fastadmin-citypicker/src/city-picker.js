@@ -79,9 +79,9 @@
                     this.getWidthStyle(p.width, true) + '">' +
                     '<div class="city-select-wrap">' +
                     '<div class="city-select-tab">' +
-                    '<a class="active" data-count="province">省份</a>' +
-                    (this.includeDem('city') ? '<a data-count="city">城市</a>' : '') +
-                    (this.includeDem('district') ? '<a data-count="district">区县</a>' : '') + '</div>' +
+                    '<a class="active" data-count="province">省</a>' +
+                    (this.includeDem('city') ? '<a data-count="city">市区町村</a>' : '') +
+                    (this.includeDem('district') ? '<a data-count="district">区・県</a>' : '') + '</div>' +
                     '<div class="city-select-content">' +
                     '<div class="city-select province" data-count="province"></div>' +
                     (this.includeDem('city') ? '<div class="city-select city" data-count="city"></div>' : '') +
@@ -515,12 +515,12 @@
         simplize: function (address, type) {
             address = address || '';
             if (type === PROVINCE) {
-                return address.replace(/[省,市,自治区,壮族,回族,维吾尔,特别行政区]/g, '');
+                return address.replace(/[省,市,自治区,チワン族,回族,ウイグル族,特別行政区]/g, '');
             } else if (type === CITY) {
-                return address.replace(/[市,地区,回族,蒙古,苗族,白族,傣族,景颇族,藏族,彝族,壮族,傈僳族,布依族,侗族]/g, '')
-                    .replace('哈萨克', '').replace('自治州', '').replace(/自治县/, '');
+                return address.replace(/[市,地域,回族,モンゴル族,ミャオ族,ペー族,タイ族,ジンポー族,チベット族,イ族,チワン族,リス族,プイ族,トン族]/g, '')
+                    .replace('カザフ', '').replace('自治州', '').replace(/自治県/, '');
             } else if (type === DISTRICT) {
-                return address.length > 2 ? address.replace(/[市,区,县,旗]/g, '') : address;
+                return address.length > 2 ? address.replace(/[市,区,県,旗]/g, '') : address;
             }
         },
 
@@ -552,8 +552,8 @@
     CityPicker.DEFAULTS = {
         simple: false,
         responsive: true,
-        render: 'text',//填充为代码还是文本，可选code或text
-        placeholder: '请选择省/市/区',
+        render: 'text',//コードとして埋め込むか、テキストとして埋め込むか，選択可能codeまたはtext
+        placeholder: '省を選択してください/市/区',
         level: 'district',
         province: '',
         city: '',
@@ -601,7 +601,7 @@
         return this;
     };
 
-    // 根据code查询地址
+    // に基づいてcode住所を検索
     $.fn.citypicker.getAddressbyCodeId = function(code_id){
         var city = ChineseDistricts;
         var code = city[''+code_id];
@@ -611,7 +611,7 @@
         var city_str = '';
         var county = '';
         if(code_id.substring(0,2)==='44'){
-            province = '广东省';
+            province = '広東省';
             province_code = '440000';
         }else{
             $.each(city['86'], function(i,item) {

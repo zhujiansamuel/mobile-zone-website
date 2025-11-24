@@ -1,5 +1,5 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'jstree'], function ($, undefined, Backend, Table, Form, undefined) {
-    //读取选中的条目
+    //選択した項目を読み取る
     $.jstree.core.prototype.get_all_checked = function (full) {
         var obj = this.get_selected(), i, j;
         for (i = 0, j = obj.length; i < j; i++) {
@@ -17,7 +17,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'jstree'], function (
     };
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'user/group/index',
@@ -31,7 +31,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'jstree'], function (
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
@@ -49,7 +49,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'jstree'], function (
                 ]
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
         },
         add: function () {
@@ -67,11 +67,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'jstree'], function (
                     }
                     return true;
                 });
-                //渲染权限节点树
-                //销毁已有的节点树
+                //権限ノードツリーをレンダリング
+                //既存のノードツリーを破棄
                 $("#treeview").jstree("destroy");
                 Controller.api.rendertree(nodeData);
-                //全选和展开
+                //すべて選択して展開
                 $(document).on("click", "#checkall", function () {
                     $("#treeview").jstree($(this).prop("checked") ? "check_all" : "uncheck_all");
                 });

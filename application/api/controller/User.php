@@ -13,7 +13,7 @@ use think\Exception;
 use think\Db;
 use custom\ConfigStatus as CS;
 /**
- * 会员接口
+ * 会員API
  */
 class User extends Api
 {
@@ -31,7 +31,7 @@ class User extends Api
     }
 
     /**
-     * 联系我们
+     * お問い合わせ
      *
      */
     public function contactus()
@@ -39,11 +39,11 @@ class User extends Api
         try {
             $post = $this->request->post();
             $validate = [
-                'name' => 'require|max:50,名前を入力してください|50文字以内',
+                'name' => 'require|max:50,氏名を入力してください|50文字以内',
                 'katakana' => 'require|max:50,お名前（カナ）を入力してください|50文字以内',
                 //'tel' => 'require|max:50,電話番号を入力してください|30文字以内',
-                'email' => 'require|max:150,メールアドレスを確認してください。|150文字以内',
-                'zip_code' => 'require|number,郵便番号 を入力してください|フォーマットが正しくありません',
+                'email' => 'require|max:150,メールアドレスをご確認ください。|150文字以内',
+                'zip_code' => 'require|number,郵便番号 を入力してください|形式が正しくありません',
                 'address' => 'require|max:150,ご住所 を入力してください|150文字以内',
                 'content' => 'require|max:255,お問い合わせ内容 を入力してください|255文字以内',
             ];
@@ -64,18 +64,18 @@ class User extends Api
             $save['createtime'] = time();
             $res = db('contactus')->insertGetId($save);
             if(!$res){
-                $this->error('失败');
+                $this->error('失敗');
             }
 
             $this->success(__('お問い合わせいただき、ありがとうございます。'));
         }catch (Exception $e){
-            //捕获异常
+            //例外をキャッチ
             $this->error($e->getMessage());
         }
     }
 
     /**
-     * 加入购物车
+     * カートに追加
      *
      */
     public function addshopping()
@@ -90,7 +90,7 @@ class User extends Api
 
             $num = $this->request->post('num');
 
-            //获取商品
+            //商品を取得
             $goods = db('goods')->where('id', $goods_id)->find();
             if(!$goods){
                 $this->error('商品は存在しません');
@@ -138,13 +138,13 @@ class User extends Api
 
             $this->success(__('カートに入りました。'));
         }catch (Exception $e){
-            //捕获异常
+            //例外をキャッチ
             $this->error($e->getMessage());
         }
     }
 
     /**
-     * 修改购物车
+     * ショッピングカートを修正
      *
      */
     public function updateshopping()
@@ -156,13 +156,13 @@ class User extends Api
             $num = $this->request->post('num');
             $shopping = db('shopping')->where('id', $shopping_id)->find();
             if(!$shopping){
-                $this->error(__('数据不存在'));
+                $this->error(__('データが存在しません'));
             }
             
             db('shopping')->where('id', $shopping_id)->update([
                 'num' => $num,
             ]);
-            //获取当前用户下购物车金额
+            //現在のユーザーのカート金額を取得
             $shopping_list = db('shopping')->where('user_id', $shopping['user_id'])->select();
             $totalMoney = 0;
             foreach ($shopping_list as $key => $val) {
@@ -172,13 +172,13 @@ class User extends Api
             $totalMoney = number_format($totalMoney);
             $this->success(__('成功'), ['totalMoney' => $totalMoney]);
         }catch (Exception $e){
-            //捕获异常
+            //例外をキャッチ
             $this->error($e->getMessage());
         }
     }
 
     /**
-     * 删除购物车
+     * カートから削除
      *
      */
     public function delshopping()
@@ -189,20 +189,20 @@ class User extends Api
             $shopping_id = $this->request->post('shopping_id');
             $shopping = db('shopping')->where('id', $shopping_id)->find();
             if(!$shopping){
-                $this->error(__('数据不存在'));
+                $this->error(__('データが存在しません'));
             }
             
             db('shopping')->where('id', $shopping_id)->delete();
             
             $this->success(__('成功'));
         }catch (Exception $e){
-            //捕获异常
+            //例外をキャッチ
             $this->error($e->getMessage());
         }
     }
 
     /**
-     * 创建订单
+     * 注文を作成
      *
      */
     public function addOrder()
@@ -214,7 +214,7 @@ class User extends Api
             $where['user_id'] = $this->auth->id;
             $shopping = db('shopping')->where($where)->select();
             if(!$shopping){
-                //请添加商品后购买
+                //商品を追加してからご購入ください
                 $this->error('商品を追加してご購入ください');
             }
 
@@ -223,16 +223,16 @@ class User extends Api
             }
 
             // if(!$this->auth->name){
-            //     //请设置氏名后提交
+            //     //氏名を設定してから送信してください
             //     $this->error('氏名を設定した後、送信してください');
             // }
             // if(!$this->auth->zip_code){
-            //     //请设置郵便番号后提交
+            //     //郵便番号を設定してから送信してください
             //     $this->error('郵便番号を設定してから送信してください');
             // }
 
             // if(!$this->auth->mobile){
-            //     //请设置お電話番号后提交
+            //     //お電話番号を設定してから送信してください
             //     $this->error('お電話番号を設定して提出してください');
             // }
             
@@ -242,43 +242,43 @@ class User extends Api
             $save['no'] = date('YmdHis').rand(100,999);
             $save['createtime'] = time();
             $store = [];
-            //类型:1=门店,2=邮寄
+            //タイプ:1=店舗,2=郵送
             if($post['type'] == 1){
                 if(empty($post['store_id'])){
-                    $this->error(__('请选择门店'));
+                    $this->error(__('店舗を選択してください'));
                 }
                 if(empty($post['go_store_date'])){
-                    $this->error(__('请选择来店日期'));
+                    $this->error(__('来店日を選択してください'));
                 }
                 if(empty($post['go_store_time'])){
-                    $this->error(__('请选择来店时间'));
+                    $this->error(__('来店時間を選択してください'));
                 }
-                //门店信息
+                //店舗情報
                 $store = db('store')->where('id', $post['store_id'])->find();
                 $save['store_id'] = $post['store_id'];
                 $save['store_name'] = $store['name'];
                 $save['go_store_date'] = $post['go_store_date'];
                 $save['go_store_time'] = $post['go_store_time'];
             }
-            //支付方式:1=现金,2=银行
+            //支払方法:1=現金,2=銀行
             if($post['pay_mode'] == 2){
                 if(empty($post['bank_account_type'])){
-                    $this->error(__('请选择银行账户类型'));
+                    $this->error(__('銀行口座の種類を選択してください'));
                 }
                 if(empty($post['bank'])){
-                    $this->error(__('请输入银行名称'));
+                    $this->error(__('銀行名を入力してください'));
                 }
                 if(empty($post['bank_branch'])){
-                    $this->error(__('请输入支行'));
+                    $this->error(__('支店名を入力してください'));
                 }
                 if(empty($post['bank_branch_no'])){
-                    $this->error(__('请输入支行号'));
+                    $this->error(__('支店番号を入力してください'));
                 }
                 if(empty($post['bank_account'])){
-                    $this->error(__('请输入汇款账户号码'));
+                    $this->error(__('振込口座番号を入力してください'));
                 }
                 if(empty($post['bank_account_name'])){
-                    $this->error(__('请输入汇款账户名称'));
+                    $this->error(__('振込口座名義を入力してください'));
                 }
                 $save['bank_account_type'] = $post['bank_account_type'];
                 $save['bank'] = $post['bank'];
@@ -294,7 +294,7 @@ class User extends Api
                 $totalMoney += $val['num'] * $val['price'];
             }
             $save['price'] = $totalMoney;
-            //手续费
+            //手数料
             $procedures = 0;
             if($procedures){
                 $totalMoney += $procedures;
@@ -302,12 +302,12 @@ class User extends Api
             $save['total_price'] = $totalMoney;
             $save['type'] = $post['type'];
             $save['pay_mode'] = $post['pay_mode'];
-            // 启动事务
+            // トランザクションを開始
             Db::startTrans();
             try {
                 $order_id = db('order')->insertGetId($save);
                 if(!$order_id){
-                    $this->error('失败');
+                    $this->error('失敗');
                 }
 
                 foreach ($shopping as $key => $val) {
@@ -337,10 +337,10 @@ class User extends Api
                 $save['store'] = $store;
                 $save['details'] = $order_details;
                 $extend['order'] = $save;
-                //发送邮件
-                //店头买取+现金支付
-                //type 类型:1=门店,2=邮寄
-                //支付方式:1=现金,2=银行
+                //メール送信
+                //店頭買取+現金払い
+                //type タイプ:1=店舗,2=郵送
+                //支払方法:1=現金,2=銀行
                 if($post['type'] == 1 ){ //&& $post['pay_mode'] == 1
                     orderStoreSendEmail(
                         date('Y/m/d'),
@@ -357,23 +357,23 @@ class User extends Api
                         $extend
                     );
                 }
-                // 提交事务
+                // トランザクションをコミットする
                 Db::commit();
             } catch (\Exception $e) {
-                // 回滚事务
+                // トランザクションをロールバック
                 Db::rollback();
                 throw new \think\Exception($e->getMessage());
             }
             
             $this->success(__('成功'));
         }catch (Exception $e){
-            //捕获异常
+            //例外をキャッチ
             $this->error($e->getMessage());
         }
     }
 
     /**
-     * 取消订单
+     * 注文をキャンセル
      *
      */
     public function cancleOrder()
@@ -384,7 +384,7 @@ class User extends Api
             $order_id = $this->request->post('order_id');
             $order = db('order')->where('id', $order_id)->find();
             if(!$order){
-                $this->error(__('数据不存在'));
+                $this->error(__('データが存在しません'));
             }
             
             db('order')->where('id', $order_id)->update([
@@ -395,17 +395,17 @@ class User extends Api
             
             $this->success(__('成功'));
         }catch (Exception $e){
-            //捕获异常
+            //例外をキャッチ
             $this->error($e->getMessage());
         }
     }
 
     /**
-     * 会员登录
+     * 会員ログイン
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="account", type="string", required=true, description="账号")
-     * @ApiParams (name="password", type="string", required=true, description="密码")
+     * @ApiParams (name="account", type="string", required=true, description="アカウント")
+     * @ApiParams (name="password", type="string", required=true, description="パスワード")
      */
     public function login()
     {
@@ -428,14 +428,14 @@ class User extends Api
     }
 
     /**
-     * 注册会员
+     * 会員登録
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="username", type="string", required=true, description="用户名")
-     * @ApiParams (name="password", type="string", required=true, description="密码")
-     * @ApiParams (name="email", type="string", required=true, description="邮箱")
-     * @ApiParams (name="mobile", type="string", required=true, description="手机号")
-     * @ApiParams (name="code", type="string", required=true, description="验证码")
+     * @ApiParams (name="username", type="string", required=true, description="ユーザー名")
+     * @ApiParams (name="password", type="string", required=true, description="パスワード")
+     * @ApiParams (name="email", type="string", required=true, description="メールアドレス")
+     * @ApiParams (name="mobile", type="string", required=true, description="携帯番号")
+     * @ApiParams (name="code", type="string", required=true, description="認証コード")
      */
     public function register()
     {
@@ -456,7 +456,7 @@ class User extends Api
             $this->error(__('Captcha is incorrect'));
         }
         if($password != $repassword){
-            $this->error(__('两次密码不相同'));
+            $this->error(__('2 回入力したパスワードが一致しません'));
         }
         $ret = $this->auth->register($username, $password, $username, $mobile, []);
         if ($ret) {
@@ -469,7 +469,7 @@ class User extends Api
     }
 
     /**
-     * 退出登录
+     * ログアウト
      * @ApiMethod (POST)
      */
     public function logout()
@@ -482,13 +482,13 @@ class User extends Api
     }
 
     /**
-     * 修改会员个人信息
+     * 会員個人情報を修正
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="avatar", type="string", required=true, description="头像地址")
-     * @ApiParams (name="username", type="string", required=true, description="用户名")
-     * @ApiParams (name="nickname", type="string", required=true, description="昵称")
-     * @ApiParams (name="bio", type="string", required=true, description="个人简介")
+     * @ApiParams (name="avatar", type="string", required=true, description="アバターアドレス")
+     * @ApiParams (name="username", type="string", required=true, description="ユーザー名")
+     * @ApiParams (name="nickname", type="string", required=true, description="ニックネーム")
+     * @ApiParams (name="bio", type="string", required=true, description="自己紹介")
      */
     public function profile()
     {
@@ -497,16 +497,16 @@ class User extends Api
             $post = $this->request->post();
             //$szb_image = $this->request->file('szb_image');
             $validate = [
-                'persion_type' => 'require|number,個人法人区分 を入力してください|フォーマットが正しくありません',
+                'persion_type' => 'require|number,個人／法人区分 を入力してください|形式が正しくありません',
                 'name' => 'require|max:50,氏名を入力してください|50文字以内',
                 'katakana' => 'require|max:50,氏名（カナ）を入力してください|50文字以内',
                 'mobile' => 'require|max:50,電話番号を入力してください|30文字以内',
                 //'email' => 'require|max:150,メールアドレス を入力してください|150文字以内',
                 'zip_code' => 'require|number,郵便番号 を入力してください|郵便番号を確認してください。',
                 'address' => 'require|max:150,ご住所 を入力してください|150文字以内',
-                'occupation' => 'require|number,職業を入力してください|フォーマットが正しくありません',
-                'gender' => 'require|number,性別を入力してください|フォーマットが正しくありません',
-                'szb' => 'require|number,個人書類種別を入力してください|フォーマットが正しくありません',
+                'occupation' => 'require|number,職業を入力してください|形式が正しくありません',
+                'gender' => 'require|number,性別を入力してください|形式が正しくありません',
+                'szb' => 'require|number,個人書類種別を入力してください|形式が正しくありません',
                 'szb_image' => 'require,個人書類写真をアップロードしてください。',
             ];
             $result = $this->verify($post, $validate);
@@ -526,17 +526,17 @@ class User extends Api
             $user->save();
             $this->success(__('成功'));
         }catch (Exception $e){
-            //捕获异常
+            //例外をキャッチ
             $this->error($e->getMessage());
         }
     }
 
     /**
-     * 修改邮箱
+     * メールアドレスを変更
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="email", type="string", required=true, description="邮箱")
-     * @ApiParams (name="captcha", type="string", required=true, description="验证码")
+     * @ApiParams (name="email", type="string", required=true, description="メールアドレス")
+     * @ApiParams (name="captcha", type="string", required=true, description="認証コード")
      */
     public function changeemail()
     {
@@ -567,12 +567,12 @@ class User extends Api
     }
 
     /**
-     * 重置密码
+     * パスワードをリセット
      *
      * @ApiMethod (POST)
-     * @ApiParams (name="mobile", type="string", required=true, description="手机号")
-     * @ApiParams (name="newpassword", type="string", required=true, description="新密码")
-     * @ApiParams (name="captcha", type="string", required=true, description="验证码")
+     * @ApiParams (name="mobile", type="string", required=true, description="携帯番号")
+     * @ApiParams (name="newpassword", type="string", required=true, description="新しいパスワード")
+     * @ApiParams (name="captcha", type="string", required=true, description="認証コード")
      */
     public function resetpwd()
     {
@@ -584,7 +584,7 @@ class User extends Api
         if (!$password || !$captcha) {
             $this->error(__('Invalid parameters'));
         }
-        //验证Token
+        //検証Token
         if (!Validate::make()->check(['password' => $password], ['password' => 'require|regex:\S{6,30}'])) {
             //$this->error(__('Password must be 6 to 30 characters'));
         }
@@ -600,7 +600,7 @@ class User extends Api
             $this->error(__('Captcha is incorrect'));
         }
         Ems::flush($email, 'resetpwd');
-        //模拟一次登录
+        //ログインを一度シミュレート
         $this->auth->direct($user->id);
         $ret = $this->auth->changepwd($password, '', true);
         if ($ret) {

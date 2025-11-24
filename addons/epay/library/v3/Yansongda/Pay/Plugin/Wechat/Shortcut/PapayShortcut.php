@@ -33,7 +33,7 @@ class PapayShortcut implements ShortcutInterface
     }
 
     /**
-     * 返回只签约（委托代扣）参数.
+     * 契約のみを返す（自動引き落としの委任）パラメーター.
      *
      * @see https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_3.shtml
      */
@@ -46,7 +46,7 @@ class PapayShortcut implements ShortcutInterface
     }
 
     /**
-     * 申请代扣.
+     * 自動引き落としを申請.
      *
      * @see https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_8.shtml
      */
@@ -61,7 +61,7 @@ class PapayShortcut implements ShortcutInterface
     }
 
     /**
-     * 支付中签约.
+     * 支払い中に契約.
      *
      * @see https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_5.shtml
      */

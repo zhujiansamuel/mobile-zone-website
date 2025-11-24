@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>语法插件单元测试</title>
+<title>構文プラグイン単体テスト</title>
 <link rel="stylesheet" href="./js/qunit/qunit.css">
 <script src="./js/qunit/qunit.js"></script>
 <script src="../dist/template-debug.js"></script>
@@ -29,42 +29,42 @@ if (!window.console) {
 }
 test('基本', function () {
 	var data = {value: 'hello <em>world</em>'};
-	equal(typeof template.compile('{{value}}'), 'function', '编译成函数');
-	equal(template('default', data), 'hello &#60;em&#62;world&#60;/em&#62;', '编码输出');
-	equal(template('noEscape', data), 'hello <em>world</em>', '原文输出');
+	equal(typeof template.compile('{{value}}'), 'function', '関数にコンパイル');
+	equal(template('default', data), 'hello &#60;em&#62;world&#60;/em&#62;', 'エンコードして出力');
+	equal(template('noEscape', data), 'hello <em>world</em>', '生のテキストを出力');
 });
 
-test('特殊类型变量输出', function () {
+test('特殊な型の変数の出力', function () {
 	var data = {value: 'hello <em>world</em>'};
-	equal(template('default', {value:function(){return 'hello world'}}), 'hello world', '函数类型运算后输出');
-	equal(template('default', {value:0}), '0', 'Number类型输出');
-	equal(template('default', {value:false}), '', 'Boolean(false)类型输出空值');
-	equal(template('default', {value:true}), '', 'Boolean(true)类型输出空值');
-	equal(template('default', {value:{}}), '', 'Object类型输出空值');
+	equal(template('default', {value:function(){return 'hello world'}}), 'hello world', '関数型の演算後の出力');
+	equal(template('default', {value:0}), '0', 'Numberタイプ出力');
+	equal(template('default', {value:false}), '', 'Boolean(false)型の空値出力');
+	equal(template('default', {value:true}), '', 'Boolean(true)型の空値出力');
+	equal(template('default', {value:{}}), '', 'Object型の空値出力');
 });
 
-test('特殊字符输出', function () {
-	equal(template('html', {}), '""\'\'\\\\', '编码输出js特殊字符');
+test('特殊文字の出力', function () {
+	equal(template('html', {}), '""\'\'\\\\', 'エンコードして出力js特殊文字');
 });
 
-test('XSS防范测试', function () {
-	equal(template('default', {value:'<>"\'&'}), '&#60;&#62;&#34;&#39;&#38;', 'HTML字符转义');
+test('XSS防御テスト', function () {
+	equal(template('default', {value:'<>"\'&'}), '&#60;&#62;&#34;&#39;&#38;', 'HTML文字のエスケープ');
 });
 
-test('空值处理', function () {
-	equal(template('default', {value:''}), '', '空字符串输出');
-	equal(template('default', {}), '', 'undefined转成空值');
-	equal(template('default', {value:null}), '', 'null转成空值');
+test('空値の処理', function () {
+	equal(template('default', {value:''}), '', '空文字列の出力');
+	equal(template('default', {}), '', 'undefined空値に変換');
+	equal(template('default', {value:null}), '', 'null空値に変換');
 });
 
-test('内置方法', function () {
+test('ビルトインメソッド', function () {
 	var data = {value: 'hello <em>world</em>', value2: '...', data2: {value: '^^^^^^'}};
 	equal(template('include', data), 'hello <em>world</em>', 'include');
-	equal(template('include2', data), 'hello <em>world</em>^^^^^^', '相同模板多次include');
+	equal(template('include2', data), 'hello <em>world</em>^^^^^^', '同一テンプレートを複数回include');
 	equal(template('print', data), 'hello <em>world</em>...', 'print');
 });
 
-test('辅助方法', function () {
+test('ヘルパーメソッド', function () {
 	var data = {value: 'hello world'};
 	template.helper('test', function (content) {
 		return '<em>' + content + '</em>';
@@ -74,21 +74,21 @@ test('辅助方法', function () {
 		return '<i' + content + 'i>[' + url + ']';
 	});
 
-	equal(template('helper', data), '<em>hello world</em>', '兼容以前的语法');
-	equal(template('helper2', data), '<em>hello world</em>', '使用新的管道风格');
+	equal(template('helper', data), '<em>hello world</em>', '旧構文との互換性');
+	equal(template('helper2', data), '<em>hello world</em>', '新しいパイプスタイルを使用');
 	equal(
 		template.compile("{{value | test | link: 'abcd'}}")({value: '<--->'})
-	, '&#60;i&#60;em&#62;&#60;---&#62;&#60;/em&#62;i&#62;[abcd]', '嵌套使用');
+	, '&#60;i&#60;em&#62;&#60;---&#62;&#60;/em&#62;i&#62;[abcd]', 'ネストして使用');
 
 });
 
-test('沙箱', function () {
-	equal(template('sandbox', {}), 'undefined', '拒绝读取外部对象');
+test('サンドボックス', function () {
+	equal(template('sandbox', {}), 'undefined', '外部オブジェクトの読み取りを拒否');
 	template('sandbox2', {});
-	equal(window.$sandbox, undefined, '防范污染外部对象');
+	equal(window.$sandbox, undefined, '外部オブジェクト汚染の防止');
 });
 
-test('调试', function () {
+test('デバッグ', function () {
 	var onerror = template.onerror;
 
 
@@ -104,7 +104,7 @@ test('调试', function () {
 	}, {
 		name: 'Render Error',
 		message: 'Template not found'
-	}, '没有找到模板');
+	}, 'テンプレートが見つかりません');
 
 
 
@@ -120,7 +120,7 @@ test('调试', function () {
 	}, {
 		name: 'Render Error',
 		line: 1
-	}, '渲染错误调试');
+	}, 'レンダリングエラーのデバッグ');
 
 
 
@@ -134,18 +134,18 @@ test('调试', function () {
 		name: error.name
 	}, {
 		name: 'Syntax Error'
-	}, '语法错误调试');
+	}, '構文エラーのデバッグ');
 
 	template.onerror = onerror;
 });
 
-test('配置功能', function () {
+test('設定機能', function () {
 	template.defaults.escape = false;
 	template.defaults.openTag = '<<';
 	template.defaults.closeTag = '>>';
 	var data = {value: 'hello <em>world</em>'};
-	equal(template.compile('<<value>>')(data), 'hello <em>world</em>', '自定义界定符');
-	equal(template.compile('<<#value>>')(data), 'hello <em>world</em>', '关闭默认编码输出');
+	equal(template.compile('<<value>>')(data), 'hello <em>world</em>', 'カスタムデリミタ');
+	equal(template.compile('<<#value>>')(data), 'hello <em>world</em>', 'デフォルトのエンコード出力を無効化');
 
 	template.defaults.escape = true;
 	template.defaults.openTag = '{{';

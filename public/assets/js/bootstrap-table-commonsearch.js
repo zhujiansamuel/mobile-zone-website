@@ -1,5 +1,5 @@
 /**
- * FastAdmin通用搜索
+ * FastAdmin共通検索
  *
  * @author: pppscn <35696959@qq.com>
  * @update 2017-05-07 <https://gitee.com/pp/fastadmin>
@@ -30,14 +30,14 @@
             form.validator("destroy");
         });
 
-        // 表单提交
+        // フォーム送信
         form.on("submit", function (event) {
             event.preventDefault();
             that.onCommonSearch();
             return false;
         });
 
-        // 重置搜索
+        // 検索条件をリセット
         form.on("click", "button[type=reset]", function (event) {
             form[0].reset();
 
@@ -49,7 +49,7 @@
     };
 
     var createFormCommon = function (pColumns, that) {
-        // 如果有使用模板则直接返回模板的内容
+        // テンプレートを使用している場合はテンプレートの内容をそのまま返す
         if (that.options.searchFormTemplate) {
             return Template(that.options.searchFormTemplate, {columns: pColumns, table: that});
         }
@@ -164,7 +164,7 @@
 
     var isSearchAvailble = function (that) {
 
-        //只支持服务端搜索
+        //サーバーサイド検索のみサポート
         if (!that.options.commonSearch || that.options.sidePagination != 'server' || !that.options.url) {
             return false;
         }
@@ -197,7 +197,7 @@
                     } else {
                         value = '';
                     }
-                    //如果是时间筛选，将operate置为RANGE
+                    //時間フィルターの場合，をoperateに設定するRANGE
                     if ($("[name='" + name + "']:first", that.$commonsearch).hasClass("datetimepicker")) {
                         sym = 'RANGE';
                     }
@@ -224,7 +224,7 @@
 
         params.filter = $.extend({}, params.filter, searchQuery.filter);
         params.op = $.extend({}, params.op, searchQuery.op);
-        //移除empty的值
+        //削除emptyの値
         if (removeempty) {
             $.each(params.filter, function (i, j) {
                 if ((j == '' || j == null || ($.isArray(j) && j.length == 0)) && !params.op[i].match(/null/i)) {
@@ -351,7 +351,7 @@
             }
         });
         var queryParams = that.options.queryParams;
-        //匹配默认搜索值
+        //デフォルト検索値をマッチ
         this.options.queryParams = function (params) {
             return queryParams(getQueryParams(params, getSearchQuery(that, true)));
         };

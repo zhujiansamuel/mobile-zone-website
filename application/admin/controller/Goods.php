@@ -13,7 +13,7 @@ class Goods extends Backend
 {
 
     /**
-     * Goods模型对象
+     * Goodsモデルオブジェクト
      * @var \app\admin\model\Goods
      */
     protected $model = null;

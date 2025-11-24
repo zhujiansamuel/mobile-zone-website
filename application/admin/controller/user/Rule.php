@@ -6,7 +6,7 @@ use app\common\controller\Backend;
 use fast\Tree;
 
 /**
- * 会员规则管理
+ * 会員ルール管理
  *
  * @icon fa fa-circle-o
  */
@@ -25,7 +25,7 @@ class Rule extends Backend
         parent::_initialize();
         $this->model = model('UserRule');
         $this->view->assign("statusList", $this->model->getStatusList());
-        // 必须将结果集转换为数组
+        // 結果セットを必ず配列に変換する必要がある
         $ruleList = collection($this->model->order('weigh', 'desc')->select())->toArray();
         foreach ($ruleList as $k => &$v) {
             $v['title'] = __($v['title']);
@@ -45,7 +45,7 @@ class Rule extends Backend
     }
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {
@@ -61,7 +61,7 @@ class Rule extends Backend
     }
 
     /**
-     * 添加
+     * 追加
      */
     public function add()
     {
@@ -72,7 +72,7 @@ class Rule extends Backend
     }
 
     /**
-     * 编辑
+     * 編集
      */
     public function edit($ids = null)
     {
@@ -83,7 +83,7 @@ class Rule extends Backend
     }
 
     /**
-     * 删除
+     * 削除
      */
     public function del($ids = "")
     {

@@ -6,9 +6,9 @@ class Collection extends \Yansongda\Supports\Collection
 {
 
     /**
-     * 创建 Collection 实例
+     * 作成 Collection インスタンス
      * @access public
-     * @param  array $items 数据
+     * @param  array $items データ
      * @return static
      */
     public static function make($items = [])

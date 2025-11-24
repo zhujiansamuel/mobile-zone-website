@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'Name'            => '组名',
-    'Rules'           => '权限节点',
-    'Change password' => '修改密码',
-    'Createtime'      => '添加时间',
-    'Updatetime'      => '更新时间',
-    'Status'          => '状态'
+    'Name'            => 'グループ名',
+    'Rules'           => '権限ノード',
+    'Change password' => 'パスワードを変更',
+    'Createtime'      => '追加日時',
+    'Updatetime'      => '更新時間',
+    'Status'          => 'ステータス'
 ];

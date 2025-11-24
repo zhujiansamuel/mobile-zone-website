@@ -12,13 +12,13 @@ class Goods extends Model
 
     
 
-    // 表名
+    // テーブル名
     protected $name = 'goods';
     
-    // 自动写入时间戳字段
+    // タイムスタンプフィールドを自動書き込み
     protected $autoWriteTimestamp = 'integer';
 
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = false;
     protected $deleteTime = false;

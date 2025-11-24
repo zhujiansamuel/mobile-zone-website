@@ -3,7 +3,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: Config.api_url ? Config.api_url + '/addon/index' : "addon/downloaded",
@@ -16,7 +16,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
 
             var table = $("#table");
 
-            // 弹窗自适应宽高
+            // ポップアップの幅と高さを自動調整
             var area = Fast.config.openArea != undefined ? Fast.config.openArea : [$(window).width() > 800 ? '800px' : '95%', $(window).height() > 600 ? '600px' : '95%'];
 
             var switch_local = function () {
@@ -83,7 +83,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 };
             });
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pageSize: 50,
@@ -191,10 +191,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 searchFormTemplate: 'searchformtpl',
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
 
-            // 离线安装
+            // オフラインインストール
             require(['upload'], function (Upload) {
                 Upload.api.upload("#faupload-addon", function (data, ret, up, file) {
                     Config['addons'][data.addon.name] = data.addon;
@@ -225,7 +225,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                     });
                     return false;
                 }, function (data, ret, up, file) {
-                    if (ret.msg && ret.msg.match(/(login|登录)/g)) {
+                    if (ret.msg && ret.msg.match(/(login|ログイン)/g)) {
                         return Layer.alert(ret.msg, {
                             title: __('Warning'),
                             btn: [__('Login now')],
@@ -242,7 +242,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                         });
                         return false;
                     } else if (ret && ret.code === -3) {
-                        //插件目录发现影响全局的文件
+                        //プラグインディレクトリでグローバルに影響するファイルを検出
                         Layer.open({
                             content: Template("conflicttpl", ret.data),
                             shade: 0.8,
@@ -265,7 +265,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                     }
                 });
 
-                // 检测是否登录
+                // ログインしているか確認
                 $(document).on("mousedown", "#faupload-addon", function (e) {
                     var userinfo = Controller.api.userinfo.get();
                     var uid = userinfo ? userinfo.id : 0;
@@ -283,7 +283,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 });
             });
 
-            // 查看插件首页
+            // プラグインのトップページを表示
             $(document).on("click", ".btn-addonindex", function () {
                 if ($(this).attr("href") == 'javascript:;') {
                     Layer.msg(__('Not installed tips'), {icon: 7});
@@ -293,7 +293,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 }
             });
 
-            // 切换
+            // 切り替え
             $(document).on("click", ".btn-switch", function () {
                 $(".btn-switch").removeClass("active");
                 $(this).addClass("active");
@@ -305,7 +305,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 return false;
             });
 
-            // 切换分类
+            // カテゴリを切り替え
             $(document).on("click", ".nav-category li a", function () {
                 $(".nav-category li").removeClass("active");
                 $(this).parent().addClass("active");
@@ -334,7 +334,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 $(window).resize();
             });
 
-            // 会员信息
+            // 会員情報
             $(document).on("click", ".btn-userinfo", function (e, name, version) {
                 var that = this;
                 var area = [$(window).width() > 800 ? '500px' : '95%', $(window).height() > 600 ? '400px' : '95%'];
@@ -433,7 +433,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 }
             });
 
-            //刷新授权
+            //認証を更新
             $(document).on("click", ".btn-authorization", function () {
                 var userinfo = Controller.api.userinfo.get();
                 if (!userinfo) {
@@ -501,7 +501,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 }, function (data, ret) {
                     var area = Fast.config.openArea != undefined ? Fast.config.openArea : [$(window).width() > 650 ? '650px' : '95%', $(window).height() > 710 ? '710px' : '95%'];
                     if (ret && ret.code === -2) {
-                        //如果登录已经超时,重新提醒登录
+                        //ログインがタイムアウトした場合,再度ログインを促す
                         if (uid && uid != ret.data.uid) {
                             Controller.api.userinfo.set(null);
                             $(".operate[data-name='" + name + "'] .btn-install:first").trigger("click");
@@ -538,7 +538,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                             }
                         });
                     } else if (ret && ret.code === -3) {
-                        //插件目录发现影响全局的文件
+                        //プラグインディレクトリでグローバルに影響するファイルを検出
                         Layer.open({
                             content: Template("conflicttpl", ret.data),
                             shade: 0.8,
@@ -570,7 +570,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                     Controller.api.refresh(table, name);
                 }, function (data, ret) {
                     if (ret && ret.code === -3) {
-                        //插件目录发现影响全局的文件
+                        //プラグインディレクトリでグローバルに影響するファイルを検出
                         Layer.open({
                             content: Template("conflicttpl", ret.data),
                             shade: 0.8,
@@ -606,7 +606,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                     Controller.api.refresh(table, name);
                 }, function (data, ret) {
                     if (ret && ret.code === -3) {
-                        //插件目录发现影响全局的文件
+                        //プラグインディレクトリでグローバルに影響するファイルを検出
                         Layer.open({
                             content: Template("conflicttpl", ret.data),
                             shade: 0.8,
@@ -645,7 +645,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 });
             };
 
-            // 点击安装
+            // クリックしてインストール
             $(document).on("click", ".btn-install", function () {
                 var that = this;
                 var name = $(this).closest(".operate").data("name");
@@ -661,7 +661,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 install(name, version, false);
             });
 
-            // 点击卸载
+            // クリックしてアンインストール
             $(document).on("click", ".btn-uninstall", function () {
                 var name = $(this).closest(".operate").data('name');
                 if (Config['addons'][name].state == 1) {
@@ -675,20 +675,20 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 });
             });
 
-            // 点击配置
+            // クリックして設定
             $(document).on("click", ".btn-config", function () {
                 var name = $(this).closest(".operate").data("name");
                 Fast.api.open("addon/config?name=" + name, __('Setting'));
             });
 
-            // 点击启用/禁用
+            // クリックして有効化/無効化
             $(document).on("click", ".btn-enable,.btn-disable", function () {
                 var name = $(this).data("name");
                 var action = $(this).data("action");
                 operate(name, action, false);
             });
 
-            // 点击升级
+            // クリックしてアップグレード
             $(document).on("click", ".btn-upgrade", function () {
                 var name = $(this).closest(".operate").data('name');
                 if (Config['addons'][name].state == 1) {
@@ -827,10 +827,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template', 'cookie']
                 return sid;
             },
             refresh: function (table, name) {
-                //刷新左侧边栏
+                //左サイドバーを更新
                 Fast.api.refreshmenu();
 
-                //刷新行数据
+                //行データを更新
                 if ($(".operate[data-name='" + name + "']").length > 0) {
                     var tr = $(".operate[data-name='" + name + "']").closest("tr[data-index]");
                     var index = tr.data("index");

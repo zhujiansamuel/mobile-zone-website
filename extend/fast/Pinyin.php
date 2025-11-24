@@ -3,17 +3,17 @@
 namespace fast;
 
 /**
- * 中文转拼音类
+ * 中国語をピンインに変換するクラス
  */
 class Pinyin
 {
 
     /**
-     * 获取文字的拼音
-     * @param string  $chinese   中文汉字
-     * @param boolean $onlyfirst 是否只返回拼音首字母
-     * @param string  $delimiter 分隔符
-     * @param bool    $ucfirst   是否首字母大写
+     * 文字のピンインを取得
+     * @param string  $chinese   中国語漢字
+     * @param boolean $onlyfirst ピンインの頭文字のみ返すかどうか
+     * @param string  $delimiter 区切り文字
+     * @param bool    $ucfirst   頭文字を大文字にするかどうか
      * @return string
      */
     public static function get($chinese, $onlyfirst = false, $delimiter = '', $ucfirst = false)

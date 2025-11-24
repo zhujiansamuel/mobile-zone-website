@@ -9,29 +9,29 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-// [ 后台入口文件 ]
-// 使用此文件可以达到隐藏admin模块的效果
-// 为了你的安全，强烈不建议将此文件名修改成admin.php
-// 定义应用目录
+// [ バックエンドエントリーファイル ]
+// このファイルを使用することで非表示にできますadminモジュールの効果
+// あなたの安全のために，このファイル名を変更することは強く推奨しませんadmin.php
+// アプリケーションディレクトリを定義
 define('APP_PATH', __DIR__ . '/application/');
 
-// 判断是否安装
+// インストール済みかどうかを判断
 if (!is_file(APP_PATH . 'admin/command/Install/install.lock')) {
    // header("location:./install.php");
     exit;
 }
 
-// 加载框架引导文件
+// フレームワークのブートストラップファイルを読み込む
 require __DIR__ . '/thinkphp/base.php';
 
-// 绑定到admin模块
+// にバインドadminモジュール
 \think\Route::bind('admin');
 
-// 关闭路由
+// ルーティングを無効化
 \think\App::route(false);
 
-// 设置根url
+// ルートを設定url
 \think\Url::root('');
 
-// 执行应用
+// アプリケーションを実行
 \think\App::run()->send();

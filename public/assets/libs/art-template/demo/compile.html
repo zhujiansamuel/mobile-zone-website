@@ -7,18 +7,18 @@
 </head>
 
 <body>
-<h1>在javascript中存放模板</h1>
+<h1>でjavascript中にテンプレートを保存</h1>
 <div id="content"></div>
 <script>
 var source = '<ul>'
 +    '{{each list as value i}}'
-+        '<li>索引 {{i + 1}} ：{{value}}</li>'
++        '<li>インデックス {{i + 1}} ：{{value}}</li>'
 +    '{{/each}}'
 + '</ul>';
 
 var render = template.compile(source);
 var html = render({
-    list: ['摄影', '电影', '民谣', '旅行', '吉他']
+    list: ['写真撮影', '映画', 'フォークソング', '旅行', 'ギター']
 });
 
 document.getElementById('content').innerHTML = html;

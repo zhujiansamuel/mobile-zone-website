@@ -35,7 +35,7 @@ REQUIRED_EXTENSIONS=("json" "curl" "pdo" "bcmath" "mbstring")
 MISSING_EXTENSIONS=()
 
 for ext in "${REQUIRED_EXTENSIONS[@]}"; do
-    if php -m | grep -q "^$ext$"; then
+    if php -m | grep -qi "^$ext$"; then
         echo "✓ $ext 扩展已安装"
     else
         echo "✗ $ext 扩展未安装"

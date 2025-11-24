@@ -1,79 +1,79 @@
 /**
- * baiduTemplate简单好用的Javascript模板引擎 1.0.6 版本
+ * baiduTemplateシンプルで使いやすいJavascriptテンプレートエンジン 1.0.6 バージョン
  * http://baidufe.github.com/BaiduTemplate
- * 开源协议：BSD License
- * 浏览器环境占用命名空间 baidu.template ，nodejs环境直接安装 npm install baidutemplate
- * @param str{String} dom结点ID，或者模板string
- * @param data{Object} 需要渲染的json对象，可以为空。当data为{}时，仍然返回html。
- * @return 如果无data，直接返回编译后的函数；如果有data，返回html。
+ * オープンソースライセンス：BSD License
+ * ブラウザ環境で占有する名前空間 baidu.template ，nodejs環境では直接インストール npm install baidutemplate
+ * @param str{String} domノードID，またはテンプレートstring
+ * @param data{Object} レンダリング対象のjsonオブジェクト，可以ための空。タグLIB_LOADがdataための{}のときは，それでも返却するhtml。
+ * @return もしデータがなければdata，直接返す编译后的函数；存在する場合data，返すhtml。
  * @author wangxiao 
  * @email 1988wangxiao@gmail.com
 */
 
 ;(function(window){
 
-    //取得浏览器环境的baidu命名空间，非浏览器环境符合commonjs规范exports出去
-    //修正在nodejs环境下，采用baidu.template变量名
+    //ブラウザ環境の名前空間を取得しbaidu名前空間，非ブラウザ環境ではcommonjs仕様に準拠してexportsエクスポートする
+    //～を修正しnodejs環境下で，を用いるbaidu.template変数名
     var baidu = typeof module === 'undefined' ? (window.baidu = window.baidu || {}) : module.exports;
 
-    //模板函数（放置于baidu.template命名空间下）
+    //テンプレート関数（配置されるbaidu.template名前空間内）
     baidu.template = function(str, data){
 
-        //检查是否有该id的元素存在，如果有元素则获取元素的innerHTML/value，否则认为字符串为模板
+        //対象のid要素が存在するか確認し，要素がある場合はそのinnerHTML/value，なければ文字列をテンプレートとみなす
         var fn = (function(){
 
-            //判断如果没有document，则为非浏览器环境
+            //document がなければdocument，ブラウザ以外の環境と判断する
             if(!window.document){
                 return bt._compile(str);
             };
 
-            //HTML5规定ID可以由任何不包含空格字符的字符串组成
+            //HTML5規定ではID空白文字を含まない任意の文字列で構成できる
             var element = document.getElementById(str);
             if (element) {
                     
-                //取到对应id的dom，缓存其编译后的HTML模板函数
+                //対応するidのdom，缓存其编译后のHTMLテンプレート関数
                 if (bt.cache[str]) {
                     return bt.cache[str];
                 };
 
-                //textarea或input则取value，其它情况取innerHTML
+                //textareaまたはinputの場合は value を取得しvalue，それ以外はinnerHTML
                 var html = /^(textarea|input)$/i.test(element.nodeName) ? element.value : element.innerHTML;
                 return bt._compile(html);
 
             }else{
 
-                //是模板字符串，则生成一个函数
-                //如果直接传入字符串作为模板，则可能变化过多，因此不考虑缓存
+                //テンプレート文字列であれば，関数を生成する
+                //文字列を直接テンプレートとして渡した場合，変更が多くなる可能性があるため，キャッシュは行わない
                 return bt._compile(str);
             };
 
         })();
 
-        //有数据则返回HTML字符串，没有数据则返回函数 支持data={}的情况
+        //データがあればそれを返すHTML文字列，没データがあればそれを返す函数 サポートdata={}の場合に対応
         var result = bt._isObject(data) ? fn( data ) : fn;
         fn = null;
 
         return result;
     };
 
-    //取得命名空间 baidu.template
+    //名前空間を取得 baidu.template
     var bt = baidu.template;
 
-    //标记当前版本
+    //現在のバージョンを示す
     bt.versions = bt.versions || [];
     bt.versions.push('1.0.6');
 
-    //缓存  将对应id模板生成的函数缓存下来。
+    //キャッシュ  対応するid模板生成的函数キャッシュ下来。
     bt.cache = {};
     
-    //自定义分隔符，可以含有正则中的字符，可以是HTML注释开头 <! !>
+    //区切り記号をカスタマイズ，正規表現の文字を含めることができる，～でもよいHTMLコメントの開始部分 <! !>
     bt.LEFT_DELIMITER = bt.LEFT_DELIMITER||'<%';
     bt.RIGHT_DELIMITER = bt.RIGHT_DELIMITER||'%>';
 
-    //自定义默认是否转义，默认为默认自动转义
+    //デフォルトでエスケープするかを設定，デフォルトでは自動エスケープ
     bt.ESCAPE = true;
 
-    //HTML转义
+    //HTMLエスケープ
     bt._encodeHTML = function (source) {
         return String(source)
             .replace(/&/g,'&amp;')
@@ -84,12 +84,12 @@
             .replace(/'/g,'&#39;');
     };
 
-    //转义影响正则的字符
+    //正規表現に影響する文字をエスケープする
     bt._encodeReg = function (source) {
         return String(source).replace(/([.*+?^=!:${}()|[\]/\\])/g,'\\$1');
     };
 
-    //转义UI UI变量使用在HTML页面标签onclick等事件函数参数中
+    //エスケープUI UI変数をHTMLページタグのonclickなどのイベント関数の引数で使用する場合にエスケープ
     bt._encodeEventHTML = function (source) {
         return String(source)
             .replace(/&/g,'&amp;')
@@ -103,51 +103,51 @@
             .replace(/\\r/g,'\r');
     };
 
-    //将字符串拼接生成函数，即编译过程(compile)
+    //文字列を連結して関数を生成する，すなわちコンパイル処理(compile)
     bt._compile = function(str){
         var funBody = "var _template_fun_array=[];\nvar fn=(function(__data__){\nvar _template_varName='';\nfor(name in __data__){\n_template_varName+=('var '+name+'=__data__[\"'+name+'\"];');\n};\neval(_template_varName);\n_template_fun_array.push('"+bt._analysisStr(str)+"');\n_template_varName=null;\n})(_template_object);\nfn = null;\nreturn _template_fun_array.join('');\n";
         return new Function("_template_object",funBody);
     };
 
-    //判断是否是Object类型
+    //が Object 型かどうかを判定Objectタイプ
     bt._isObject = function (source) {
         return 'function' === typeof source || !!(source && 'object' === typeof source);
     };
 
-    //解析模板字符串
+    //テンプレート文字列を解析
     bt._analysisStr = function(str){
 
-        //取得分隔符
+        //区切り記号を取得
         var _left_ = bt.LEFT_DELIMITER;
         var _right_ = bt.RIGHT_DELIMITER;
 
-        //对分隔符进行转义，支持正则中的元字符，可以是HTML注释 <!  !>
+        //区切り記号をエスケープし，正規表現のメタ文字をサポート，～でもよいHTMLコメント <!  !>
         var _left = bt._encodeReg(_left_);
         var _right = bt._encodeReg(_right_);
 
         str = String(str)
             
-            //去掉分隔符中js注释
+            //区切り記号内のjsコメント
             .replace(new RegExp("("+_left+"[^"+_right+"]*)//.*\n","g"), "$1")
 
-            //去掉注释内容  <%* 这里可以任意的注释 *%>
-            //默认支持HTML注释，将HTML注释匹配掉的原因是用户有可能用 <! !>来做分割符
+            //コメント内容を削除  <%* ここには任意のコメントを記述できます *%>
+            //デフォルトでHTMLコメント，をHTMLコメント匹配掉的原因是用户有可能用 <! !>を区切り記号として使用する可能性があるため
             .replace(new RegExp("<!--.*?-->", "g"),"")
             .replace(new RegExp(_left+"\\*.*?\\*"+_right, "g"),"")
 
-            //把所有换行去掉  \r回车符 \t制表符 \n换行符
+            //すべての改行を削除  \r復帰文字 \tタブ文字 \n改行文字
             .replace(new RegExp("[\\r\\t\\n]","g"), "")
 
-            //用来处理非分隔符内部的内容中含有 斜杠 \ 单引号 ‘ ，处理办法为HTML转义
+            //区切り文字以外の内部の内容に含まれる スラッシュ \ シングルクォート ‘ ，処理方法はHTMLエスケープ
             .replace(new RegExp(_left+"(?:(?!"+_right+")[\\s\\S])*"+_right+"|((?:(?!"+_left+")[\\s\\S])+)","g"),function (item, $1) {
                 var str = '';
                 if($1){
 
-                    //将 斜杠 单引 HTML转义
+                    //を スラッシュ シングルクォート HTMLエスケープ
                     str = $1.replace(/\\/g,"&#92;").replace(/'/g,'&#39;');
                     while(/<[^<]*?&#39;[^<]*?>/g.test(str)){
 
-                        //将标签内的单引号转义为\r  结合最后一步，替换为\'
+                        //タグ内のシングルクォートを次のようにエスケープ\r  最後のステップと組み合わせて，に置き換える\'
                         str = str.replace(/(<[^<]*?)&#39;([^<]*?>)/g,'$1\r$2')
                     };
                 }else{
@@ -158,56 +158,56 @@
 
 
         str = str 
-            //定义变量，如果没有分号，需要容错  <%var val='test'%>
+            //変数を定義，セミコロンがない場合，エラーに寛容に対応する必要がある  <%var val='test'%>
             .replace(new RegExp("("+_left+"[\\s]*?var[\\s]*?.*?[\\s]*?[^;])[\\s]*?"+_right,"g"),"$1;"+_right_)
 
-            //对变量后面的分号做容错(包括转义模式 如<%:h=value%>)  <%=value;%> 排除掉函数的情况 <%fun1();%> 排除定义变量情况  <%var val='test';%>
+            //変数の後ろのセミコロンを許容する(エスケープモードを含む 例<%:h=value%>)  <%=value;%> 関数の場合を除外 <%fun1();%> 変数定義の場合を除外  <%var val='test';%>
             .replace(new RegExp("("+_left+":?[hvu]?[\\s]*?=[\\s]*?[^;|"+_right+"]*?);[\\s]*?"+_right,"g"),"$1"+_right_)
 
-            //按照 <% 分割为一个个数组，再用 \t 和在一起，相当于将 <% 替换为 \t
-            //将模板按照<%分为一段一段的，再在每段的结尾加入 \t,即用 \t 将每个模板片段前面分隔开
+            //に従って <% 配列に分割する，さらに \t 結合する，つまり、次のものを <% に置き換える \t
+            //テンプレートを次の文字で<%一つ一つのセクションに分け，さらに各セクションの末尾に \t,つまり \t 各テンプレート断片の前で区切る
             .split(_left_).join("\t");
 
-        //支持用户配置默认是否自动转义
+        //デフォルトで自動エスケープするかどうかの設定をサポート
         if(bt.ESCAPE){
             str = str
 
-                //找到 \t=任意一个字符%> 替换为 ‘，任意字符,'
-                //即替换简单变量  \t=data%> 替换为 ',data,'
-                //默认HTML转义  也支持HTML转义写法<%:h=value%>  
+                //見つけて \t=任意の1文字%> に置き換える ‘，任意の文字,'
+                //つまり単純な変数を置き換える  \t=data%> に置き換える ',data,'
+                //デフォルトHTMLエスケープ  またサポートHTMLエスケープ写法<%:h=value%>  
                 .replace(new RegExp("\\t=(.*?)"+_right,"g"),"',typeof($1) === 'undefined'?'':baidu.template._encodeHTML($1),'");
         }else{
             str = str
                 
-                //默认不转义HTML转义
+                //默认不エスケープHTMLエスケープ
                 .replace(new RegExp("\\t=(.*?)"+_right,"g"),"',typeof($1) === 'undefined'?'':$1,'");
         };
 
         str = str
 
-            //支持HTML转义写法<%:h=value%>  
+            //サポートHTMLエスケープ記法<%:h=value%>  
             .replace(new RegExp("\\t:h=(.*?)"+_right,"g"),"',typeof($1) === 'undefined'?'':baidu.template._encodeHTML($1),'")
 
-            //支持不转义写法 <%:=value%>和<%-value%>
+            //エスケープしない記法をサポート <%:=value%>と<%-value%>
             .replace(new RegExp("\\t(?::=|-)(.*?)"+_right,"g"),"',typeof($1)==='undefined'?'':$1,'")
 
-            //支持url转义 <%:u=value%>
+            //サポートurlエスケープ <%:u=value%>
             .replace(new RegExp("\\t:u=(.*?)"+_right,"g"),"',typeof($1)==='undefined'?'':encodeURIComponent($1),'")
 
-            //支持UI 变量使用在HTML页面标签onclick等事件函数参数中  <%:v=value%>
+            //サポートUI 変数をHTMLページタグのonclickなどのイベント関数の引数で使用する場合にエスケープ  <%:v=value%>
             .replace(new RegExp("\\t:v=(.*?)"+_right,"g"),"',typeof($1)==='undefined'?'':baidu.template._encodeEventHTML($1),'")
 
-            //将字符串按照 \t 分成为数组，在用'); 将其合并，即替换掉结尾的 \t 为 ');
-            //在if，for等语句前面加上 '); ，形成 ');if  ');for  的形式
+            //文字列を次の文字で \t 分成ための数组，さらに'); それらを結合し，つまり末尾の \t ための ');
+            //でif，forなどの文の前に次の文字を追加し '); ，を形成する ');if  ');for  という形式にする
             .split("\t").join("');")
 
-            //将 %> 替换为_template_fun_array.push('
-            //即去掉结尾符，生成函数中的push方法
-            //如：if(list.length=5){%><h2>',list[4],'</h2>');}
-            //会被替换为 if(list.length=5){_template_fun_array.push('<h2>',list[4],'</h2>');}
+            //を %> に置き換える_template_fun_array.push('
+            //つまり末尾の区切り記号を削除し，関数内のpushメソッド
+            //例：if(list.length=5){%><h2>',list[4],'</h2>');}
+            //に置き換えられる if(list.length=5){_template_fun_array.push('<h2>',list[4],'</h2>');}
             .split(_right_).join("_template_fun_array.push('")
 
-            //将 \r 替换为 \
+            //を \r に置き換える \
             .split("\r").join("\\'");
 
         return str;

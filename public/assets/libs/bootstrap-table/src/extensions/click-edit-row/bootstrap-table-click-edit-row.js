@@ -100,7 +100,7 @@
 
     function updateToServerSide(item, data){
         var itemid = $(item).find('a').attr('href').match(/\d+/g)[0];
-        var datas = {'treeId': itemid, 'oldTreeSerialNo': data[0], 'adminDivision': data[2], 'adminUnit': data[3], 'treeAddr': data[1]}; //傳送至伺服器端的Data產生處，需手動修改對應表格
+        var datas = {'treeId': itemid, 'oldTreeSerialNo': data[0], 'adminDivision': data[2], 'adminUnit': data[3], 'treeAddr': data[1]}; //サーバー側へ送信するData生成箇所，対応するテーブルを手動で修正する必要があります
         store( 'data/update', datas)
     }
 

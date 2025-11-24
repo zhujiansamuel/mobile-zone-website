@@ -2,7 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'user/rule/index',
@@ -16,7 +16,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
@@ -46,11 +46,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 }
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
 
             table.on('post-body.bs.table', function (e, settings, json, xhr) {
-                //显示隐藏子节点
+                //子ノードの表示／非表示
                 $(">tbody>tr[data-index] > td", this).on('click', "a.btn-node-sub", function () {
                     var status = $(this).data("shown") ? true : false;
                     $("a[data-pid='" + $(this).data("id") + "']").each(function () {
@@ -65,7 +65,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 });
             });
 
-            //隐藏子节点
+            //子ノードを非表示
             $(document).on("collapse", ".btn-node-sub", function () {
                 if ($("i", this).length > 0) {
                     $("a[data-pid='" + $(this).data("id") + "']").trigger("collapse");
@@ -75,7 +75,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $(this).closest("tr").toggle(false);
             });
 
-            //展开隐藏一级
+            //第1階層の展開／折りたたみ
             $(document.body).on("click", ".btn-toggle", function (e) {
                 $("a[data-id][data-pid][data-pid!=0].disabled").closest("tr").hide();
                 var that = this;
@@ -85,7 +85,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 $(".btn-node-sub[data-pid=0]").data("shown", show);
             });
 
-            //展开隐藏全部
+            //すべて展開／折りたたみ
             $(document.body).on("click", ".btn-toggle-all", function (e) {
                 var that = this;
                 var show = $("i", that).hasClass("fa-plus");

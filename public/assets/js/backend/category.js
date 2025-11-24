@@ -2,7 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'category/index',
@@ -41,13 +41,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     ]
                 ]
             };
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable(tableOptions);
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
 
-            //绑定TAB事件
+            //バインドTABイベント
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 // var options = table.bootstrapTable(tableOptions);
                 var typeStr = $(this).attr("href").replace('#', '');
@@ -64,7 +64,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             });
 
-            //必须默认触发shown.bs.tab事件
+            //shown.bs.tab イベントを必ずデフォルトで発火させるshown.bs.tabイベント
             // $('ul.nav-tabs li.active a[data-toggle="tab"]').trigger("shown.bs.tab");
 
         },

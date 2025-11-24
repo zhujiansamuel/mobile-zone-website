@@ -26,7 +26,7 @@ class  Data
         if(class_exists($Obj)){
             return new Base( new $Obj(), $data, $extend);
         }
-        throw new Exception('暂无此模型类');
+        throw new Exception('該当するモデルクラスがありません');
     }
 
 }

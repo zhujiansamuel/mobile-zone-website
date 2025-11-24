@@ -138,7 +138,7 @@
 				</div>
 			</div>
 			<!--  -->
-			<!--<div style="width: 100%;text-align: center;font-size: 14px;color: #FF0000;font-weight: bold;">ご記入の際には、黒インクまたは黒ボールペンを使用し全ての項目をご記入下さい。-->
+			<!--<div style="width: 100%;text-align: center;font-size: 14px;color: #FF0000;font-weight: bold;">ご記入の際には、黒インクまたは黒ボールペンを使用し全ての項目をご記入ください。-->
 			<!--</div>-->
 			<!--  -->
 			
@@ -156,7 +156,7 @@
 						性別</td>
 					<td
 						style="border-right: 1px solid #000000;border-bottom: 1px solid #000000;border: 1px solid #000000;width: 14%;">
-							{if $user.gender eq 1}男{/if}{if $user.gender eq 2}女{/if}		<!-- 男  ・  女 -->
+							{if $user.gender eq 1}男性{/if}{if $user.gender eq 2}女性{/if}		<!-- 男性  ・  女性 -->
 						<!-- ・ -->
 						<!-- 男性 -->
 						
@@ -245,7 +245,7 @@
 				<span style="background: #bfceff;display: inline-block;width: 300px;line-height: 24px;padding-left: 10px;">・振込ご希望の場合</span>
 			</div>
 			<div style="font-size: 12px;color: #ff0000;margin-bottom: 5;">
-				<p>※振込ご希望の場合は必ずロ座情報をご記入お願いいたします。</p>
+				<p>※振込ご希望の場合は必ず口座情報をご記入お願いいたします。</p>
                 <!-- <p>※新規の方、前回と口座の異なる方は、キャッシュカード表面のコピー、または銀行通帳のコピーの提示をお願いいたします。</p> -->
 			</div>
 			<table id="uinfo"  cellpadding="0" cellspacing="0"
@@ -279,9 +279,9 @@
 						口座種別</td>
 					<td
 						style="border: 1px solid #000000;border-right: 1px solid #000000;width:100px;">
-						 <!-- 普通 ・ 当座 -->
-						 {if $order.bank_account_type eq 1}普通 &nbsp;{/if}
-						 {if $order.bank_account_type eq 2}当座&nbsp;{/if}
+						 <!-- 標準 ・ 当座預金 -->
+						 {if $order.bank_account_type eq 1}標準 &nbsp;{/if}
+						 {if $order.bank_account_type eq 2}当座預金&nbsp;{/if}
 
 						</td>
 					<td  bgcolor="#bfceff"
@@ -303,31 +303,31 @@
 						style="border: 1px solid #000000;border-right: 1px solid #000000;" colspan="5">
 					<div>
 						<div style="font-size: 12px;color: #ff0000;text-align: left;">
-						    <p>初回のみ下記書類がどちらを1つ添付必要となります。</p>
-						    <!-- <p>ご注意の上、下記いずれか1点にチェックを入れてお願いいたします。</p> -->
+						    <p>初回のみ下記いずれかの書類を11つ添付していただく必要があります。</p>
+						    <!-- <p>ご注意の上、下記いずれか11点にチェックを入れてお願いいたします。</p> -->
 						</div>
 						<div style="font-size: 12px;color: #000000;text-align: left;">
 							<p>
 								□ 住民票の写し(原本) 
 								□ 印鑑登録証明書(原本)  </p>
 								
-								<!-- □住民票の写し(原本)　　□印鑑登録証明書(原本)　　□戸籍謄本(原本) ※現住所の入ったもの 
+								<!-- □住民票の写し(原本)　　□印鑑登録証明書(原本)　　□戸籍謄本(原本) ※現住所の記載があるもの 
 															</p>
 															<p>
-								□運転免許証のコピー (表裏) ※ご利用、 2回目の以降のお客様に限ります -->
+								□運転免許証のコピー (表裏) ※ご利用、 22回目以降のお客様に限ります -->
 							</p>
 						</div>
-						<div style="font-size: 12px;color: #ff0000;text-align: left;">※2回目以降のご利用の際は身分証のコピーのみ添付で振込対応できます。(振込の場合は振込手数料当社負担※2回目以降限り)</div>
+						<div style="font-size: 12px;color: #ff0000;text-align: left;">※22回目以降のご利用の際は身分証のコピーのみの添付で振込対応が可能です。(振込の場合は振込手数料は当社負担となります※22回目以降に限ります)</div>
 						<div style="font-size: 12px;color: #000000;text-align: left;">
 							<p>
 								□身分証明書のコピー(表裏) 　□マイナンバーカードのコピー(表面) □旅券(パスポート) のコピー(写真・住所記載)
 							</p>
 							<p>
-								□健康保険書証のコピー(表裏) □ 在留カードのコピー(表裏)
+								□健康保険証のコピー(表裏) □ 在留カードのコピー(表裏)
 
 							</p>
-							<!--  □戸籍謄本(原本)  ※現住所の入ったもの□運転免許証のコピー(表裏) </p>
-							□キャッシュカード表面のコピー 　　　　　□銀行通帳のコピー (口座番号とお名前がわかるもの) -->
+							<!--  □戸籍謄本(原本)  ※現住所の記載があるもの□運転免許証のコピー(表裏) </p>
+							□キャッシュカード表面のコピー 　　　　　□銀行通帳のコピー (口座番号とお名前が確認できるもの) -->
 						</div>
 					</div>	
 					</td>
@@ -346,16 +346,16 @@
 						style="border: 1px solid #000000;border-right: 1px solid #000000;">
 					<div>
 						<div style="font-size: 12px;color: #ff0000;text-align: left;">
-							<p>※下記書類のコピーを一つ添付必要となります。 </p>
-							<p>※50万円毎手数料一律 2,000円お客様負担となり、送金の際査定金額より2,000円分を引いて送金となります。</p> 
-							<p>※身分証記載の住所に現金書留送金とな ります。</p>
+							<p>※下記書類のコピーを1つ添付していただく必要があります。 </p>
+							<p>※5050万円毎の手数料は一律 2,000円はお客様負担となり、送金の際、査定金額より2,000円分を差し引いての送金となります。</p> 
+							<p>※身分証記載の住所宛に現金書留での送金と なります。</p>
 						</div>
 						<div style="font-size: 12px;color: #000000;text-align: left;">
 							<p>
-								□運転免許証の写し、 裏印字ない場合表のみ □日本国パスポート (写真面+住所記 載面)
+								□運転免許証の写し、 裏面に記載がない場合は表面のみ □日本国パスポート (写真面+住所記 載面)
 							</p>
 							<p>
-								□マイナンバーカードのコピー(表面) □官公庁発行身分証の写し(住所あるもの)
+								□マイナンバーカードのコピー(表面) □官公庁発行の身分証の写し(住所の記載があるもの)
 							</p>
 						</div>
 					</div>	
@@ -378,7 +378,7 @@
 						査定金額
 					</td>
 					<td bgcolor="#ffc2c2" style="background: #ffc2c2;border: 1px solid #000000;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">
-						数量
+						数
 					</td>
 					<td bgcolor="#ffc2c2" style="background: #ffc2c2;border: 1px solid #000000;border-right: 1px solid #000000;border-bottom: 1px solid #000000;">
 						小計
@@ -564,7 +564,7 @@
 						var doc = new jsPDF('p', 'pt', 'a4');
 						console.log(imgData)
 						var doc = new jsPDF();
-						// 第一列 左右边距  第二列上下边距  第三列是图片左右拉伸  第四列 图片上下拉伸 
+						// 第1列 左右マージン  第2列の上下マージン  第3列は画像の左右伸縮  第4列 画像の上下伸縮 
 						doc.addImage(imgData, 'png', 0, 0, 210, 0);
 						doc.save('買取申込書.pdf');
 					}
@@ -580,7 +580,7 @@
  						var doc = new jsPDF('p', 'pt', 'a4');
  						console.log(imgData)
  						var doc = new jsPDF();
- 					//	 第一列 左右边距  第二列上下边距  第三列是图片左右拉伸  第四列 图片上下拉伸 
+ 					//	 第1列 左右マージン  第2列の上下マージン  第3列は画像の左右伸縮  第4列 画像の上下伸縮 
  						doc.addImage(imgData, 'png', 0, 0, 210, 0);
  						doc.save('買取申込書.pdf');
  					}

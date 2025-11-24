@@ -1,5 +1,5 @@
 /**
- * 将BootstrapTable的行使用自定义的模板来渲染
+ * をBootstrapTableの行をカスタムテンプレートでレンダリング
  * 
  * @author: karson
  * @version: v0.0.1
@@ -11,13 +11,13 @@
     'use strict';
 
     $.extend($.fn.bootstrapTable.defaults, {
-        //是否启用模板渲染
+        //テンプレートレンダリングを有効にするかどうか
         templateView: false,
-        //数据格式化的模板ID或格式函数
+        //データフォーマット用テンプレートIDIDまたはフォーマット関数
         templateFormatter: "itemtpl",
-        //添加的父类的class
+        //に追加する親要素のclass
         templateParentClass: "row row-flex",
-        //向table添加的class
+        //に対してtableに追加するclass
         templateTableClass: "table-template",
 
     });
@@ -50,14 +50,14 @@
         if (!that.options.templateView) {
             return;
         } else {
-            //由于Bootstrap是基于Table的，添加一个父类容器
+            //〜のためBootstrapはテーブルをベースとしているためTableの，親コンテナを1つ追加
             $("> *:not(.no-records-found)", that.$body).wrapAll($("<div />").addClass(that.options.templateParentClass));
         }
     };
 
     BootstrapTable.prototype.initRow = function (item, i, data, parentDom) {
         var that = this;
-        //如果未启用则使用原生的initRow方法
+        //有効でない場合はネイティブのinitRowメソッド
         if (!that.options.templateView) {
             return _initRow.apply(that, Array.prototype.slice.apply(arguments));
         }

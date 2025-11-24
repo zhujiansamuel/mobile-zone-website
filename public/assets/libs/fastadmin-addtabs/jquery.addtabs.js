@@ -9,24 +9,24 @@
     $.fn.addtabs = function (options) {
         var obj = $(this);
         options = $.extend({
-            content: '', //直接指定所有页面TABS内容
-            close: true, //是否可以关闭
-            monitor: 'body', //监视的区域
+            content: '', //すべてのページを直接指定TABS内容
+            close: true, //閉じることができるかどうか
+            monitor: 'body', //監視する領域
             nav: '.nav-addtabs',
             tab: '.tab-addtabs',
-            iframeUse: true, //使用iframe还是ajax
-            simple: false, //是否启用简洁模式，简洁模式下将不启用nav和tab
-            iframeHeight: $(window).height() - 50, //固定TAB中IFRAME高度,根据需要自己修改
-            iframeForceRefresh: false, //点击后强制加载对应的iframe
-            iframeForceRefreshTable: false, //点击后强制刷新对应的iframe中的table
+            iframeUse: true, //使用iframeかどうかajax
+            simple: false, //シンプルモードを有効にするかどうか，シンプルモードでは有効にしないnavとtab
+            iframeHeight: $(window).height() - 50, //固定TAB中IFRAME高さ,必要に応じて自分で変更
+            iframeForceRefresh: false, //クリック後に対応するを強制的に読み込むiframe
+            iframeForceRefreshTable: false, //クリック後に対応するを強制的にリフレッシュiframeの中table
             callback: function () {
-                //关闭后回调函数
+                //閉じた後のコールバック関数
             }
         }, options || {});
         var navobj = $(options.nav);
         var tabobj = $(options.tab);
         if (history.pushState) {
-            //浏览器前进后退事件
+            //ブラウザの進む・戻るイベント
             $(window).on("popstate", function (e) {
                 var state = e.originalEvent.state;
                 if (state) {
@@ -112,21 +112,21 @@
             navobj.find("[role='presentation']").removeClass('active');
             tabobj.find("[role='tabpanel']").removeClass('active');
 
-            //如果TAB不存在，创建一个新的TAB
+            //もしTAB存在しない，新しいを作成TAB
             if (tabitem.length === 0) {
-                //创建新TAB的title
+                //新規を作成TABのtitle
                 tabitem = $('<li role="presentation" id="' + tabid + '"><a href="#' + conid + '" node-id="' + opts.id + '" aria-controls="' + id + '" role="tab" data-toggle="tab">' + opts.title + '</a></li>');
-                //是否允许关闭
+                //閉じることを許可するかどうか
                 if (options.close && $("li", navobj).length > 0) {
                     tabitem.append(' <i class="close-tab fa fa-remove"></i>');
                 }
                 if (conitem.length === 0) {
-                    //创建新TAB的内容
+                    //新規を作成TABの内容
                     conitem = $('<div role="tabpanel" class="tab-pane" id="' + conid + '"></div>');
-                    //是否指定TAB内容
+                    //を指定するかどうかTAB内容
                     if (opts.content) {
                         conitem.append(opts.content);
-                    } else if (options.iframeUse && !opts.ajax) {//没有内容，使用IFRAME打开链接
+                    } else if (options.iframeUse && !opts.ajax) {//コンテンツがない場合，使用IFRAMEリンクを開く
                         var height = options.iframeHeight;
                         conitem.append('<iframe src="' + url + '" width="100%" height="' + height + '" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling-x="no" scrolling-y="auto" allowtransparency="yes"></iframe></div>');
                     } else {
@@ -137,7 +137,7 @@
                     tabobj.append(conitem);
                 }
                 if (!options.simple) {
-                    //加入TABS
+                    //追加TABS
                     if ($('.tabdrop li', navobj).length > 0) {
                         $('.tabdrop ul', navobj).append(tabitem);
                     } else {
@@ -145,14 +145,14 @@
                     }
                 }
             } else {
-                //强制刷新iframe
+                //強制的にリフレッシュiframe
                 if (options.iframeForceRefresh) {
                     $("#" + conid + " iframe").attr('src', function (i, val) {
                         return val;
                     });
                 } else if (options.iframeForceRefreshTable) {
                     try {
-                        //检测iframe中是否存在刷新按钮
+                        //チェックiframe中にリフレッシュボタンが存在するかどうか
                         if ($("#" + conid + " iframe").contents().find(".btn-refresh:not([data-force-refresh=false])").length > 0) {
                             $("#" + conid + " iframe")[0].contentWindow.$(".btn-refresh:not([data-force-refresh=false])").trigger("click");
                         }
@@ -162,7 +162,7 @@
                 }
             }
             sessionStorage.setItem("addtabs", $(this).prop('outerHTML'));
-            //激活TAB
+            //有効化TAB
             tabitem.addClass('active');
             conitem.addClass("active");
             _drop();
@@ -173,7 +173,7 @@
             var conid = 'con_' + id;
             var tabitem = $('#' + tabid, navobj);
             var conitem = $('#' + conid, tabobj);
-            //如果关闭的是当前激活的TAB，激活他的前一个TAB
+            //もし閉じるのが現在アクティブな場合TAB，その一つ前のをアクティブにするTAB
             if (obj.find("li.active").not('.tabdrop').attr('id') === tabid) {
                 var prev = tabitem.prev().not(".tabdrop");
                 var next = tabitem.next().not(".tabdrop");
@@ -185,7 +185,7 @@
                     $(">li:not(.tabdrop):last > a", navobj).trigger('click');
                 }
             }
-            //关闭TAB
+            //無効TAB
             tabitem.remove();
             conitem.remove();
             _drop();
@@ -196,7 +196,7 @@
             navobj.refreshAddtabs();
         };
     };
-    //刷新Addtabs
+    //更新Addtabs
     $.fn.refreshAddtabs = function () {
         var navobj = $(this);
         var dropdown = $(".tabdrop", navobj);
@@ -207,7 +207,7 @@
             dropdown.prependTo(navobj);
         }
 
-        //检测是否有下拉样式
+        //ドロップダウンスタイルがあるかどうかを検出
         if (navobj.parent().is('.tabs-below')) {
             dropdown.addClass('dropup');
         }
@@ -216,7 +216,7 @@
         var maxwidth = navobj.width() - 65;
 
         var liwidth = 0;
-        //检查超过一行的标签页
+        //複数行にわたるタブをチェック
         var litabs = navobj.append(dropdown.find('li')).find('>li').not('.tabdrop');
         var totalwidth = 0;
         litabs.each(function () {

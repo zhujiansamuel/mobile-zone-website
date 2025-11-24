@@ -160,10 +160,10 @@
                         <a href="javascript:;" data-id="{$api.id}" class="list-group-item">{$api.title}
                             <span class="tag">
                                 {if $api.needRight}
-                                    <span class="label label-danger pull-right">鉴</span>
+                                    <span class="label label-danger pull-right">例</span>
                                 {/if}
                                 {if $api.needLogin}
-                                    <span class="label label-success pull-right noneedlogin">登</span>
+                                    <span class="label label-success pull-right noneedlogin">ログ</span>
                                 {/if}
                             </span>
                         </a>
@@ -208,11 +208,11 @@
                                                 <tbody>
                                                 <tr>
                                                     <td>{$lang.NeedLogin}</td>
-                                                    <td>{$api.needLogin?'是':'否'}</td>
+                                                    <td>{$api.needLogin?'はい':'いいえ'}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>{$lang.NeedRight}</td>
-                                                    <td>{$api.needRight?'是':'否'}</td>
+                                                    <td>{$api.needRight?'はい':'いいえ'}</td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -236,14 +236,14 @@
                                                     <tr>
                                                         <td>{$header.name}</td>
                                                         <td>{$header.type}</td>
-                                                        <td>{$header.required?'是':'否'}</td>
+                                                        <td>{$header.required?'はい':'いいえ'}</td>
                                                         <td>{$header.description}</td>
                                                     </tr>
                                                     {/foreach}
                                                 </tbody>
                                             </table>
                                             {else /}
-                                            无
+                                            拡張なし
                                             {/if}
                                         </div>
                                     </div>
@@ -265,21 +265,21 @@
                                                     <tr>
                                                         <td>{$param.name}</td>
                                                         <td>{$param.type}</td>
-                                                        <td>{:$param.required?'是':'否'}</td>
+                                                        <td>{:$param.required?'はい':'いいえ'}</td>
                                                         <td>{$param.description}</td>
                                                     </tr>
                                                     {/foreach}
                                                 </tbody>
                                             </table>
                                             {else /}
-                                            无
+                                            拡張なし
                                             {/if}
                                         </div>
                                     </div>
                                     <div class="panel panel-default">
                                         <div class="panel-heading"><strong>{$lang.Body}</strong></div>
                                         <div class="panel-body">
-                                            {$api.body|default='无'}
+                                            {$api.body|default='拡張なし'}
                                         </div>
                                     </div>
                                 </div><!-- #info -->
@@ -319,7 +319,7 @@
                                                         {/foreach}
                                                         {else /}
                                                         <div class="form-group">
-                                                            无
+                                                            拡張なし
                                                         </div>
                                                         {/if}
                                                         <div class="form-group form-group-submit">
@@ -363,7 +363,7 @@
                                                         </tbody>
                                                     </table>
                                                     {else /}
-                                                    无
+                                                    拡張なし
                                                     {/if}
                                                 </div>
                                             </div>
@@ -374,7 +374,7 @@
                                 <div class="tab-pane" id="sample{$api.id}">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <pre id="sample_response{$api.id}">{$api.return|default='无'}</pre>
+                                            <pre id="sample_response{$api.id}">{$api.return|default='拡張なし'}</pre>
                                         </div>
                                     </div>
                                 </div><!-- #sample -->
@@ -636,16 +636,16 @@
         </script>
         <script type="text/html" id="appendtpl">
             <div class="form-group">
-                <label class="control-label">自定义</label>
+                <label class="control-label">カスタム</label>
                 <div class="row">
                     <div class="col-xs-4">
                         <input type="text" class="form-control input-sm input-custom-name" placeholder="名称">
                     </div>
                     <div class="col-xs-6">
-                        <input type="text" class="form-control input-sm input-custom-value" placeholder="值">
+                        <input type="text" class="form-control input-sm input-custom-value" placeholder="値">
                     </div>
                     <div class="col-xs-2 text-center">
-                        <a href="javascript:" class="btn btn-sm btn-danger btn-remove">删除</a>
+                        <a href="javascript:" class="btn btn-sm btn-danger btn-remove">削除</a>
                     </div>
                 </div>
             </div>

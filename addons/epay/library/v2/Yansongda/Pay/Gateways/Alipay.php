@@ -18,13 +18,13 @@ use Yansongda\Supports\Config;
 use Yansongda\Supports\Str;
 
 /**
- * @method Response   app(array $config)      APP 支付
- * @method Collection pos(array $config)      刷卡支付
- * @method Collection scan(array $config)     扫码支付
- * @method Collection transfer(array $config) 帐户转账
- * @method Response   wap(array $config)      手机网站支付
- * @method Response   web(array $config)      电脑支付
- * @method Collection mini(array $config)     小程序支付
+ * @method Response   app(array $config)      APP 支払い
+ * @method Collection pos(array $config)      カード決済
+ * @method Collection scan(array $config)     スキャン決済
+ * @method Collection transfer(array $config) アカウント振込
+ * @method Response   wap(array $config)      モバイルサイト決済
+ * @method Response   web(array $config)      PC決済
+ * @method Collection mini(array $config)     ミニプログラム決済
  */
 class Alipay implements GatewayApplicationInterface
 {

@@ -85,7 +85,7 @@ if (!function_exists('verify_alipay_sign')) {
             throw new InvalidConfigException(Exception::ALIPAY_CONFIG_ERROR, 'Missing Alipay Config -- [alipay_public_cert_path]');
         }
 
-        // 优化publickey判断
+        // 最適化publickey判定
         if (!Str::endsWith($public, ['.cer', '.crt', '.pem']) && stripos($public, '-----BEGIN PUBLIC KEY-----') === false) {
             $public = "-----BEGIN PUBLIC KEY-----\n".
                 wordwrap($public, 64, "\n", true).

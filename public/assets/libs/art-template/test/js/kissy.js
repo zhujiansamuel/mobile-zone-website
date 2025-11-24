@@ -51,10 +51,10 @@ build time: Feb 8 17:28
                 if (target === src) {
                     return;
                 }
-                // 来源是数组和对象，并且要求深度 mix
+                // ソースは配列とオブジェクトであり，かつ深いレベルでの mix
                 if (deep && src && (S.isArray(src) || S.isPlainObject(src))) {
-                    // 目标值为对象或数组，直接 mix
-                    // 否则 新建一个和源值类型一样的空数组/对象，递归 mix
+                    // ターゲット値がオブジェクトまたは配列である場合，そのまま mix
+                    // それ以外の場合 ソース値と同じ型の空の配列を新規作成し/オブジェクト，再帰 mix
                     var clone = target && (S.isArray(target) || S.isPlainObject(target)) ?
                         target :
                         (S.isArray(src) ? [] : {});
@@ -484,10 +484,10 @@ build time: Feb 8 17:28
 
 
         /**
-         * 两个目标是否内容相同
+         * 2 つのターゲットの内容が同じかどうか
          *
-         * @param a 比较目标1
-         * @param b 比较目标2
+         * @param a 比較対象1
+         * @param b 比較対象2
          * @param [mismatchKeys] internal use
          * @param [mismatchValues] internal use
          */
@@ -521,7 +521,7 @@ build time: Feb 8 17:28
 
         /**
          * Creates a deep copy of a plain object or array. Others are returned untouched.
-         * 稍微改改就和规范一样了 :)
+         * 少し手を加えれば仕様どおりになる :)
          * @param input
          * @param {Function} filter filter function
          * @refer http://www.w3.org/TR/html5/common-dom-interfaces.html#safe-passing-of-structured-data
@@ -534,7 +534,7 @@ build time: Feb 8 17:28
             var memory = {},
                 ret = cloneInternal(input, filter, memory);
             S.each(memory, function (v) {
-                // 清理在源对象上做的标记
+                // ソースオブジェクトに付けたマークをクリア
                 v = v.input;
                 if (v[CLONE_MARKER]) {
                     try {
@@ -1144,10 +1144,10 @@ build time: Feb 8 17:28
         // then return the destination object in that pair of objects .
         // and abort these steps.
         if (input[CLONE_MARKER]) {
-            // 对应的克隆后对象
+            // 対応するクローン後のオブジェクト
             return memory[input[CLONE_MARKER]].destination;
         } else if (typeof input === "object") {
-            // 引用类型要先记录
+            // 参照型は先に記録しておく
             var constructor = input.constructor;
             if (S.inArray(constructor, [Boolean, String, Number, Date, RegExp])) {
                 destination = new constructor(input.valueOf());
@@ -1160,9 +1160,9 @@ build time: Feb 8 17:28
             }
             // Add a mapping from input (the source object)
             // to output (the destination object) to memory.
-            // 做标记
+            // マークを付ける
             input[CLONE_MARKER] = (stamp = S.guid());
-            // 存储源对象以及克隆后的对象
+            // ソースオブジェクトおよびクローン後のオブジェクトを保存
             memory[stamp] = {destination:destination, input:input};
         }
         // If input is an Array object or an Object object,
@@ -1192,7 +1192,7 @@ build time: Feb 8 17:28
     }
 
     function compareObjects(a, b, mismatchKeys, mismatchValues) {
-        // 两个比较过了，无需再比较，防止循环比较
+        // 2 つは比較済み，再比較不要，循環比較を防止
         if (a[COMPARE_MARKER] === b && b[COMPARE_MARKER] === a) {
             return TRUE;
         }
@@ -1333,13 +1333,13 @@ build time: Feb 8 17:28
     if ("require" in this) {
         return;
     }
-    // 脚本(loadQueue)/模块(mod) 公用状态
+    // スクリプト(loadQueue)/モジュール(mod) 共通状態
     S.mix(data, {
         "INIT":0,
         "LOADING" : 1,
         "LOADED" : 2,
         "ERROR" : 3,
-        // 模块特有
+        // モジュール固有
         "ATTACHED" : 4
     });
 })(KISSY, KISSY.__loaderData);/**
@@ -1388,10 +1388,10 @@ build time: Feb 8 17:28
         },
 
         /**
-         * 根据当前模块以及依赖模块的相对路径，得到依赖模块的绝对路径
-         * @param moduleName 当前模块
-         * @param depName 依赖模块
-         * @return {string|Array} 依赖模块的绝对路径
+         * 現在のモジュールおよび依存モジュールの相対パスに基づく，依存モジュールの絶対パスを取得
+         * @param moduleName 現在のモジュール
+         * @param depName 依存モジュール
+         * @return {string|Array} 依存モジュールの絶対パス
          * @description similar to path.resolve in nodejs
          */
         normalDepModuleName:function normalDepModuleName(moduleName, depName) {
@@ -1418,27 +1418,27 @@ build time: Feb 8 17:28
                 return depName;
             }
         },
-        //去除后缀名，要考虑时间戳?
+        //拡張子を除去，タイムスタンプを考慮する?
         removePostfix:function (path) {
             return path.replace(/(-min)?\.js[^/]*$/i, "");
         },
         /**
-         * 路径正则化，不能是相对地址
-         * 相对地址则转换成相对页面的绝对地址
+         * パス正規化，相対アドレスにしてはならない
+         * 相対アドレスの場合はページに対する絶対パスへ変換
          * 用途:
-         * package path 相对地址则相对于当前页面获取绝对地址
+         * package path 相対アドレスの場合は現在のページを基準に絶対パスを取得
          */
         normalBasePath:function (path) {
             path = S.trim(path);
 
-            // path 为空时，不能变成 "/"
+            // path 空の場合，に変換してはならない "/"
             if (path && path.charAt(path.length - 1) != '/') {
                 path += "/";
             }
 
             /**
-             * 一定要正则化，防止出现 ../ 等相对路径
-             * 考虑本地路径
+             * 必ず正規化すること，出現を防止 ../ などの相対パス
+             * ローカルパスを考慮
              */
             if (!path.match(/^(http(s)?)|(file):/i)
                 && !startsWith(path, "/")) {
@@ -1448,7 +1448,7 @@ build time: Feb 8 17:28
         },
 
         /**
-         * 相对路径文件名转换为绝对路径
+         * 相対パスのファイル名を絶対パスへ変換
          * @param path
          */
         absoluteFilePath:function(path) {
@@ -1457,7 +1457,7 @@ build time: Feb 8 17:28
         },
 
         //http://wiki.commonjs.org/wiki/Packages/Mappings/A
-        //如果模块名以 / 结尾，自动加 index
+        //もしモジュール名が / で終わる場合，自動的に追加 index
         indexMapping:function (names) {
             for (var i = 0; i < names.length; i++) {
                 if (names[i].match(/\/$/)) {
@@ -1565,13 +1565,13 @@ build time: Feb 8 17:28
 
         /**
          * monitor css onload across browsers
-         * 暂时不考虑如何判断失败，如 404 等
+         * 暂时不考虑例何判断失败，例 404 など
          * @refer
-         *  - firefox 不可行（结论4错误）：
+         *  - firefox 不可（結論4エラー）：
          *    - http://yearofmoo.com/2011/03/cross-browser-stylesheet-preloading/
-         *  - 全浏览器兼容
+         *  - 全ブラウザー対応
          *    - http://lifesinger.org/lab/2011/load-js-css/css-preload.html
-         *  - 其他
+         *  - その他
          *    - http://www.zachleat.com/web/load-css-dynamically/
          */
         styleOnload:window.attachEvent ?
@@ -1587,7 +1587,7 @@ build time: Feb 8 17:28
                 node.attachEvent('onload', t);
             } :
             // refer : http://lifesinger.org/lab/2011/load-js-css/css-preload.html
-            // 暂时不考虑如何判断失败，如 404 等
+            // 暂时不考虑例何判断失败，例 404 など
             function(node, callback) {
                 var href = node.href,arr;
                 arr = monitors[href] = monitors[href] || [];
@@ -1693,7 +1693,7 @@ build time: Feb 8 17:28
 
                 if (S.isFunction(error)) {
 
-                    //标准浏览器
+                    //標準ブラウザー
                     if (doc.addEventListener) {
                         node.addEventListener("error", function() {
                             clearTimer();
@@ -1763,7 +1763,7 @@ build time: Feb 8 17:28
                 S.each(name, function(v, k) {
                     v.name = k;
                     if (mods[k]) {
-                        // 保留之前添加的配置
+                        // 以前に追加された設定を保持
                         mix(v, mods[k], false);
                     }
                 });
@@ -1784,7 +1784,7 @@ build time: Feb 8 17:28
                     if (self.__isAttached(host)) {
                         def.call(self, self);
                     } else {
-                        //该 host 模块纯虚！
+                        //この host モジュールは純粋な仮想モジュール！
                         hostMod.fns = hostMod.fns || [];
                         hostMod.fns.push(def);
                     }
@@ -1792,18 +1792,18 @@ build time: Feb 8 17:28
                 }
 
                 self.__registerModule(name, def, config);
-                //显示指定 add 不 attach
+                //明示指定 add しない attach
                 if (config && config['attach'] === false) {
                     return self;
                 }
-                // 和 1.1.7 以前版本保持兼容，不得已而为之
+                // と 1.1.7 旧バージョンとの互換性を維持，やむを得ずそうしている
                 var mod = mods[name];
                 var requires = utils.normalDepModuleName(name, mod.requires);
                 if (self.__isAttached(requires)) {
                     //S.log(mod.name + " is attached when add !");
                     self.__attachMod(mod);
                 }
-                //调试用，为什么不在 add 时 attach
+                //デバッグ用，なぜ〜しないのか add のときは attach
                 else if (this.Config.debug && !mod) {
                     var i,modNames;
                     i = (modNames = S.makeArray(requires)).length - 1;
@@ -1824,7 +1824,7 @@ build time: Feb 8 17:28
                 if (IE) {
                     /*
                      Kris Zyp
-                     2010年10月21日, 上午11时34分
+                     2010年10月21日, 午前11のときは34分
                      We actually had some discussions off-list, as it turns out the required
                      technique is a little different than described in this thread. Briefly,
                      to identify anonymous modules from scripts:
@@ -1850,7 +1850,7 @@ build time: Feb 8 17:28
                     self.__startLoadModuleName = null;
                     self.__startLoadTime = 0;
                 } else {
-                    // 其他浏览器 onload 时，关联模块名与模块定义
+                    // その他のブラウザ onload のときは，モジュール名とモジュール定義を関連付ける
                     self.__currentModule = {
                         def:def,
                         config:config
@@ -1891,16 +1891,16 @@ build time: Feb 8 17:28
 
             function build(fullpath, path) {
                 if (!mod[fullpath] && mod[path]) {
-                    //如果是 ./ 或 ../ 则相对当前模块路径
+                    //もし〜なら ./ または ../ 現在のモジュールパスからの相対パスとなる
                     mod[path] = utils.normalDepModuleName(mod.name, mod[path]);
                     mod[fullpath] = base + mod[path];
                 }
-                // debug 模式下，加载非 min 版
+                // debug モード時，非 min 版
                 if (mod[fullpath] && Config.debug) {
                     mod[fullpath] = mod[fullpath].replace(/-min/ig, "");
                 }
 
-                //刷新客户端缓存，加时间戳 tag
+                //クライアントキャッシュを更新，タイムスタンプを付加 tag
                 if (mod[fullpath]
                     && !(mod[fullpath].match(/\?t=/))
                     && mod.tag) {
@@ -1924,9 +1924,9 @@ build time: Feb 8 17:28
     }
     S.mix(loader, {
 
-        // 按需从 global 迁移模块定义到当前 loader 实例，并根据 global 设置 fullpath
+        // 必要に応じて〜から global モジュール定義を現在の〜へ移行する loader インスタンス，そして〜に基づいて global 設定を行う fullpath
         __mixMod: function(name, global) {
-            // 从 __mixMods 调用过来时，可能本实例没有该模块的数据结构
+            // 〜から __mixMods 呼び出された場合，このインスタンスにそのモジュールのデータ構造がない可能性がある
             var self = this,
                 mods = self.Env.mods,
                 gMods = global.Env.mods,
@@ -1937,16 +1937,16 @@ build time: Feb 8 17:28
 
                 S.mix(mod, S.clone(gMods[name]));
 
-                // status 属于实例，当有值时，不能被覆盖。
-                // 1. 只有没有初始值时，才从 global 上继承
-                // 2. 初始值为 0 时，也从 global 上继承
-                // 其他都保存自己的状态
+                // status インスタンスに属する，値がある場合，上書きできない。
+                // 1. 初期値がない場合に限り，そのときに〜から global 継承する
+                // 2. 初期値が 0 のときは，〜からも global 継承する
+                // それ以外はすべて自分の状態を保持する
                 if (status) {
                     mod.status = status;
                 }
             }
 
-            // 来自 global 的 mod, path 也应该基于 global
+            // 〜からの global の mod, path 〜に基づくべき global
             self.__buildPath(mod, global.Config.base);
 
             mods[name] = mod;
@@ -1961,8 +1961,8 @@ build time: Feb 8 17:28
         return;
     }
     S.mix(loader, {
-        //ie 特有，找到当前正在交互的脚本，根据脚本名确定模块名
-        // 如果找不到，返回发送前那个脚本
+        //ie 特有，現在対話中のスクリプトを見つける，スクリプト名に基づきモジュール名を決定する
+        // 見つからない場合，送信前のスクリプトを返す
         __findModuleNameByInteractive:function () {
             var self = this,
                 scripts = document.getElementsByTagName("script"),
@@ -1983,24 +1983,24 @@ build time: Feb 8 17:28
                 S.log("can not find interactive script,time diff : " + (+new Date() - self.__startLoadTime), "error");
                 S.log("old_ie get modname from cache : " + self.__startLoadModuleName);
                 return self.__startLoadModuleName;
-                //S.error("找不到 interactive 状态的 script");
+                //S.error("見つからない interactive 状態の script");
             }
 
-            // src 必定是绝对路径
+            // src 必ず絶対パスである
             // or re.hasAttribute ? re.src :  re.getAttribute('src', 4);
             // http://msdn.microsoft.com/en-us/library/ms536429(VS.85).aspx
             var src = utils.absoluteFilePath(re.src);
             // S.log("interactive src :" + src);
-            // 注意：模块名不包含后缀名以及参数，所以去除
-            // 系统模块去除系统路径
-            // 需要 base norm , 防止 base 被指定为相对路径
+            // 注意：モジュール名には拡張子およびパラメータは含まれない，そのため除去する
+            // システムモジュールはシステムパスを取り除く
+            // 〜が必要 base norm , 防ぐため base 相対パスとして指定されるのを
             self.Config.base = utils.normalBasePath(self.Config.base);
             if (src.lastIndexOf(self.Config.base, 0)
                 === 0) {
                 return utils.removePostfix(src.substring(self.Config.base.length));
             }
             var packages = self.Config.packages;
-            //外部模块去除包路径，得到模块名
+            //外部モジュールはパッケージパスを取り除く，モジュール名を取得する
             for (var p in packages) {
                 if (packages.hasOwnProperty(p)) {
                     var p_path = packages[p].path;
@@ -2036,21 +2036,21 @@ build time: Feb 8 17:28
             var self = this,
                 url = mod['fullpath'],
                 isCss = utils.isCss(url),
-                // 这个是全局的，防止多实例对同一模块的重复下载
+                // これはグローバルなもの，複数インスタンスによる同一モジュールの重複ダウンロードを防ぐ
                 loadQueque = S.Env._loadQueue,
                 status = loadQueque[url],
                 node = status;
 
             mod.status = mod.status || 0;
 
-            // 可能已经由其它模块触发加载
+            // すでに他のモジュールによって読み込みがトリガーされている可能性がある
             if (mod.status < LOADING && status) {
-                // 该模块是否已经载入到 global ?
+                // そのモジュールがすでに〜へロードされているかどうか global ?
                 mod.status = status === LOADED ? LOADED : LOADING;
             }
 
-            // 1.20 兼容 1.1x 处理：加载 cssfullpath 配置的 css 文件
-            // 仅发出请求，不做任何其它处理
+            // 1.20 互換 1.1x 処理：ロード cssfullpath 設定されている css ファイル
+            // リクエストのみ送信する，それ以外の処理は一切行わない
             if (S.isString(mod["cssfullpath"])) {
                 S.getScript(mod["cssfullpath"]);
                 mod["cssfullpath"] = mod.csspath = LOADED;
@@ -2067,15 +2067,15 @@ build time: Feb 8 17:28
                         if (isCss) {
 
                         } else {
-                            //载入 css 不需要这步了
-                            //标准浏览器下：外部脚本执行后立即触发该脚本的 load 事件,ie9 还是不行
+                            //ロード css このステップは不要になりました
+                            //標準ブラウザーでは：外部スクリプトの実行後すぐにそのスクリプトの load イベント,ie9 それでも動作しない
                             if (self.__currentModule) {
                                 S.log("standard browser get modname after load : " + mod.name);
                                 self.__registerModule(mod.name, self.__currentModule.def,
                                     self.__currentModule.config);
                                 self.__currentModule = null;
                             }
-                            // 模块载入后，如果需要也要混入对应 global 上模块定义
+                            // モジュール読み込み後，必要であれば対応する global 上のモジュール定義を混在させる
                             mixGlobal();
                             if (mod.fns && mod.fns.length > 0) {
 
@@ -2097,18 +2097,18 @@ build time: Feb 8 17:28
 
                 loadQueque[url] = node;
             }
-            // 已经在加载中，需要添加回调到 script onload 中
-            // 注意：没有考虑 error 情形
+            // すでに読み込み中，コールバックを追加する必要があるのは script onload 中
+            // 注意：考慮していない error 状況
             else if (mod.status === LOADING) {
                 utils.scriptOnload(node, function() {
-                    // 模块载入后，如果需要也要混入对应 global 上模块定义
+                    // モジュール読み込み後，必要であれば対応する global 上のモジュール定義を混在させる
                     mixGlobal();
                     _scriptOnComplete();
                 });
             }
-            // 是内嵌代码，或者已经 loaded
+            // インラインコードである，またはすでに loaded
             else {
-                // 也要混入对应 global 上模块定义
+                // 対応するものも混在させる必要がある global 上のモジュール定義を混在させる
                 mixGlobal();
                 callback();
             }
@@ -2119,9 +2119,9 @@ build time: Feb 8 17:28
             }
 
             function mixGlobal() {
-                // 对于动态下载下来的模块，loaded 后，global 上有可能更新 mods 信息
-                // 需要同步到 instance 上去
-                // 注意：要求 mod 对应的文件里，仅修改该 mod 信息
+                // 動的にダウンロードされたモジュールについては，loaded 後，global 上の情報が更新される可能性がある mods 情報
+                // へ同期する必要がある instance まで
+                // 注意：要件 mod 対応するファイル内で，その mod 情報
                 if (cfg.global) {
                     self.__mixMod(mod.name, cfg.global);
                 }
@@ -2132,9 +2132,9 @@ build time: Feb 8 17:28
 
                 if (mod.status !== ERROR) {
 
-                    // 注意：当多个模块依赖同一个下载中的模块A下，模块A仅需 attach 一次
-                    // 因此要加上下面的 !== 判断，否则会出现重复 attach,
-                    // 比如编辑器里动态加载时，被依赖的模块会重复
+                    // 注意：当多个モジュール依赖同一个下载中的モジュールA下，モジュールA一度だけでよい attach 一回
+                    // そのため、下記の !== 判定，そうしないと重複して attach,
+                    // 例えばエディター内で動的ロードする場合，依存されているモジュールが重複する
                     if (mod.status !== ATTACHED) {
                         mod.status = LOADED;
                     }
@@ -2159,19 +2159,19 @@ build time: Feb 8 17:28
 
     mix(loader, {
 
-        // 当前页面所在的目录
+        // 現在のページが存在するディレクトリ
         // http://xx.com/y/z.htm#!/f/g
         // ->
         // http://xx.com/y/
         __pagePath:location.href.replace(location.hash, "").replace(/[^/]*$/i, ""),
 
-        //firefox,ie9,chrome 如果add没有模块名，模块定义先暂存这里
+        //firefox,ie9,chrome もしaddモジュール名がない場合，モジュール定義はいったんここに退避される
         __currentModule:null,
 
-        //ie6,7,8开始载入脚本的时间
+        //ie6,7,8スクリプトの読み込みを開始した時刻
         __startLoadTime:0,
 
-        //ie6,7,8开始载入脚本对应的模块名
+        //ie6,7,8読み込みを開始したスクリプトに対応するモジュール名
         __startLoadModuleName:null,
 
         __isAttached: function(modNames) {
@@ -2197,21 +2197,21 @@ build time: Feb 8 17:28
  * adopt requirejs :
  *
  * 1. packages(cfg) , cfg :{
- *    name : 包名，用于指定业务模块前缀
- *    path: 前缀包名对应的路径
- *    charset: 该包下所有文件的编码
+ *    name : パッケージ名，業務モジュールのプレフィックスを指定するために使用
+ *    path: プレフィックスパッケージ名に対応するパス
+ *    charset: このパッケージ配下のすべてのファイルのエンコード
  *
  * 2. add(moduleName,function(S,depModule){return function(){}},{requires:["depModuleName"]});
- *    moduleName add 时可以不写
- *    depModuleName 可以写相对地址 (./ , ../)，相对于 moduleName
+ *    moduleName add 時は省略可能
+ *    depModuleName 相対パスを指定可能 (./ , ../)，に対して moduleName
  *
  * 3. S.use(["dom"],function(S,DOM){
  *    });
- *    依赖注入，发生于 add 和 use 时期
+ *    DI（依存性注入），で発生し add と use 期間
  *
- * 4. add,use 不支持 css loader ,getScript 仍然保留支持
+ * 4. add,use サポートされていません css loader ,getScript 引き続きサポートされる
  *
- * 5. 部分更新模块文件代码 x/y?t=2011 ，加载过程中注意去除事件戳，仅在载入文件时使用
+ * 5. モジュールファイルコードを一部更新する x/y?t=2011 ，読み込み中はタイムスタンプを除去することに注意，ファイルの読み込み時のみに使用
  *
  * demo : http://lite-ext.googlecode.com/svn/trunk/lite-ext/playground/module_package/index.html
  *
@@ -2219,14 +2219,14 @@ build time: Feb 8 17:28
  *
  * compatibility
  *
- * 1. 保持兼容性，不得已而为之
- *      支持 { host : }
- *      如果 requires 都已经 attached，支持 add 后立即 attach
- *      支持 { attach : false } 显示控制 add 时是否 attach
- *      支持 { global : Editor } 指明模块来源
+ * 1. 互換性を維持する，やむを得ずそうしている
+ *      サポート { host : }
+ *      もし requires すべてすでに attached，サポート add 後すぐに attach
+ *      サポート { attach : false } 表示制御 add 時に attach
+ *      サポート { global : Editor } モジュールの出所を指定
  *
  *
- * 2011-05-04 初步拆分文件，tmd 乱了
+ * 2011-05-04 ファイルを仮分割，tmd ぐちゃぐちゃになった
  */
 
 /**
@@ -2238,29 +2238,29 @@ build time: Feb 8 17:28
         return;
     }
     /**
-     * 包声明
+     * パッケージ宣言
      * biz -> .
-     * 表示遇到 biz/x
-     * 在当前网页路径找 biz/x.js
+     * に遭遇した場合 biz/x
+     * 現在のページパスから探す biz/x.js
      */
     S.configs.packages = function (cfgs) {
         var ps;
         ps = S.Config.packages = S.Config.packages || {};
         S.each(cfgs, function (cfg) {
             ps[cfg.name] = cfg;
-            //注意正则化
+            //正規化に注意
             cfg.path = cfg.path && utils.normalBasePath(cfg.path);
             cfg.tag = cfg.tag && encodeURIComponent(cfg.tag);
         });
     };
     S.mix(loader, {
         __getPackagePath:function (mod) {
-            //缓存包路径，未申明的包的模块都到核心模块中找
+            //パッケージパスをキャッシュ，未宣言パッケージのモジュールはすべてコアモジュール内を探す
             if (mod.packagepath) {
                 return mod.packagepath;
             }
             var self = this,
-                //一个模块合并到了另一个模块文件中去
+                //あるモジュールが別のモジュールファイルにマージされた
                 modName = S.__getCombinedMod(mod.name),
                 packages = self.Config.packages || {},
                 pName = "",
@@ -2279,7 +2279,7 @@ build time: Feb 8 17:28
             if (p_def) {
                 mod.tag = p_def.tag;
             } else {
-                // kissy 自身组件的事件戳后缀
+                // kissy KISSY 自身のコンポーネント用イベントスタンプ接尾辞
                 mod.tag = encodeURIComponent(S.Config.tag || S.buildTime);
             }
             return mod.packagepath = (p_def && p_def.path) || self.Config.base;
@@ -2297,15 +2297,15 @@ build time: Feb 8 17:28
         mix = S.mix;
 
     mix(loader, {
-        //注册模块，将模块和定义 factory 关联起来
+        //モジュールを登録，モジュールと定義 factory を関連付ける
         __registerModule:function(name, def, config) {
             config = config || {};
             var self = this,
                 mods = self.Env.mods,
                 mod = mods[name] || {};
 
-            // 注意：通过 S.add(name[, fn[, config]]) 注册的代码，无论是页面中的代码，
-            // 还是 js 文件里的代码，add 执行时，都意味着该模块已经 LOADED
+            // 注意：経由で S.add(name[, fn[, config]]) 登録されたコード，ページ内のコードであろうと，
+            // かどうか js ファイル内のコード，add 実行時，はいずれもそのモジュールがすでに LOADED
             mix(mod, { name: name, status: LOADED });
 
             if (mod.fns && mod.fns.length) {
@@ -2313,7 +2313,7 @@ build time: Feb 8 17:28
                 //S.error(name + " is defined more than once");
             }
 
-            //支持 host，一个模块多个 add factory
+            //サポート host，1 つのモジュールで複数 add factory
             mod.fns = mod.fns || [];
             mod.fns.push(def);
             mix((mods[name] = mod), config);
@@ -2348,16 +2348,16 @@ build time: Feb 8 17:28
             var self = this,
                 fired;
 
-            // 已经全部 attached, 直接执行回调即可
+            // すでにすべて attached, コールバックを直接実行すればよい
             if (self.__isAttached(modNames)) {
                 var mods = self.__getModules(modNames);
                 callback && callback.apply(self, mods);
                 return;
             }
 
-            // 有尚未 attached 的模块
+            // まだ attached のモジュール
             S.each(modNames, function (modName) {
-                // 从 name 开始调用，防止不存在模块
+                // 〜から name から呼び出しを開始，存在しないモジュールを防ぐ
                 self.__attachModByName(modName, function () {
                     if (!fired &&
                         self.__isAttached(modNames)) {
@@ -2398,17 +2398,17 @@ build time: Feb 8 17:28
             return mod && mod.value;
         },
 
-        // 加载指定模块名模块，如果不存在定义默认定义为内部模块
+        // 指定したモジュール名のモジュールを読み込む，定義が存在しない場合はデフォルトで内部モジュールとして定義する
         __attachModByName:function (modName, callback, cfg) {
             var self = this,
                 mods = self.Env.mods;
 
             var mod = mods[modName];
-            //没有模块定义
+            //モジュール定義なし
             if (!mod) {
-                // 默认 js/css 名字
-                // 不指定 .js 默认为 js
-                // 指定为 css 载入 .css
+                // デフォルト js/css 名前
+                // 指定しない .js デフォルトは js
+                // として指定 css ロード .css
                 var componentJsName = self.Config['componentJsName'] ||
                     function (m) {
                         var suffix = "js", match;
@@ -2423,7 +2423,7 @@ build time: Feb 8 17:28
                     path:path,
                     charset:'utf-8'
                 };
-                //添加模块定义
+                //モジュール定義を追加
                 mods[modName] = mod;
             }
 
@@ -2433,7 +2433,7 @@ build time: Feb 8 17:28
                 return;
             }
 
-            // 先从 global 里取
+            // まず global から取得
             if (cfg.global) {
                 self.__mixMod(modName, cfg.global);
             }
@@ -2451,7 +2451,7 @@ build time: Feb 8 17:28
                 i,
                 attached = 0,
                 mods = self.Env.mods,
-                //复制一份当前的依赖项出来，防止 add 后修改！
+                //現在の依存項目をコピーして取り出す，防ぐため add 後に変更されることを防ぐ！
                 requires = (mod['requires'] || []).concat();
 
             mod['requires'] = requires;
@@ -2510,25 +2510,25 @@ build time: Feb 8 17:28
 
             self.__load(mod, function () {
 
-                // add 可能改了 config，这里重新取下
+                // add 変更された可能性がある config，ここでもう一度取得する
                 mod['requires'] = mod['requires'] || [];
 
                 var newRequires = mod['requires'],
                     needToLoad = [];
 
-                //本模块下载成功后串行下载 require
+                //このモジュールのダウンロード成功後に逐次的にダウンロードする require
                 for (i = 0; i < newRequires.length; i++) {
                     r = newRequires[i] = utils.normalDepModuleName(mod.name, newRequires[i]);
                     var rMod = mods[r],
                         inA = S.inArray(r, requires);
-                    //已经处理过了或将要处理
+                    //すでに処理済み、または処理予定
                     if (rMod &&
                         rMod.status === ATTACHED
-                        //已经正在处理了
+                        //すでに処理中
                         || inA) {
                         //no need
                     } else {
-                        //新增的依赖项
+                        //新規の依存項目
                         needToLoad.push(r);
                     }
                 }
@@ -2909,8 +2909,8 @@ build time: Feb 8 17:28
 
 })(KISSY, undefined);
 /**
- * 声明 kissy 核心中所包含的模块，动态加载时将直接从 core.js 中加载核心模块
- * @description: 为了和 1.1.7 及以前版本保持兼容，务实与创新，兼容与革新 ！
+ * 宣言 kissy コアに含まれるモジュール，動的ロード時には直接 core.js からコアモジュールを読み込む
+ * @description: 〜との互換性を保つため 1.1.7 それ以前のバージョンとの互換性を維持，実務重視とイノベーション，互換性と革新 ！
  * @author yiminghe@gmail.com
  */
 (function (S) {
@@ -3042,10 +3042,10 @@ KISSY.add('ua/base', function() {
 
         // Detect the accurate version
         // 注意：
-        //  o.shell = ie, 表示外壳是 ie
-        //  但 o.ie = 7, 并不代表外壳是 ie7, 还有可能是 ie8 的兼容模式
-        //  对于 ie8 的兼容模式，还要通过 documentMode 去判断。但此处不能让 o.ie = 8, 否则
-        //  很多脚本判断会失误。因为 ie8 的兼容模式表现行为和 ie7 相同，而不是和 ie8 相同
+        //  o.shell = ie, シェルが～であることを示す ie
+        //  しかし o.ie = 7, シェルが～であることを意味しない ie7, である可能性もある ie8 の互換モード
+        //  ～に対しては ie8 の互換モード，さらに～を通して documentMode 判断する必要がある。しかしここでは～にしてはならない o.ie = 8, それ以外の場合
+        //  多くのスクリプトの判定が誤ってしまう。なぜなら ie8 の互換モードの挙動は～と ie7 同じである，～と同じではなく ie8 同じである
         for (v = IE_DETECT_RANGE[0],end = IE_DETECT_RANGE[1]; v <= end; v++) {
             div.innerHTML = IE_DETECT_TPL.replace(VERSION_PLACEHOLDER, v);
             if (s.length > 0) {
@@ -3099,7 +3099,7 @@ KISSY.add('ua/base', function() {
                     }
                     // Opera Mobile
                     // ex: Opera/9.80 (Windows NT 6.1; Opera Mobi/49; U; en) Presto/2.4.18 Version/10.00
-                    // issue: 由于 Opera Mobile 有 Version/ 字段，可能会与 Opera 混淆，同时对于 Opera Mobile 的版本号也比较混乱
+                    // issue: 〜のため Opera Mobile を持っている Version/ フィールド，～と混同される可能性がある Opera 混同，同時に～の Opera Mobile のバージョン番号もかなり混乱している
                     else if ((m = ua.match(/Opera Mobi[^;]*/)) && m) {
                         o[MOBILE] = m[0];
                     }
@@ -3108,7 +3108,7 @@ KISSY.add('ua/base', function() {
                 // NOT WebKit or Presto
             } else {
                 // MSIE
-                // 由于最开始已经使用了 IE 条件注释判断，因此落到这里的唯一可能性只有 IE10+
+                // 最初に既に～を使用しているため IE 条件付きコメントによる判定，したがってここに来る唯一の可能性は～のみである IE10+
                 if ((m = ua.match(/MSIE\s([^;]*)/)) && m[1]) {
                     o[core = 'trident'] = 0.1; // Trident detected, look for revision
                     o[shell = 'ie'] = numberify(m[1]);
@@ -3147,19 +3147,19 @@ KISSY.add('ua/base', function() {
  * NOTES:
  *
  * 2011.11.08
- *  - ie < 10 使用条件注释判断内核，更精确 by gonghaocn@gmail.com
+ *  - ie < 10 条件付きコメントでエンジンを判定している，より正確 by gonghaocn@gmail.com
  *
  * 2010.03
- *  - jQuery, YUI 等类库都推荐用特性探测替代浏览器嗅探。特性探测的好处是能自动适应未来设备和未知设备，比如
- *    if(document.addEventListener) 假设 IE9 支持标准事件，则代码不用修改，就自适应了“未来浏览器”。
- *    对于未知浏览器也是如此。但是，这并不意味着浏览器嗅探就得彻底抛弃。当代码很明确就是针对已知特定浏览器的，
- *    同时并非是某个特性探测可以解决时，用浏览器嗅探反而能带来代码的简洁，同时也也不会有什么后患。总之，一切
- *    皆权衡。
- *  - UA.ie && UA.ie < 8 并不意味着浏览器就不是 IE8, 有可能是 IE8 的兼容模式。进一步的判断需要使用 documentMode.
+ *  - jQuery, YUI などのライブラリはいずれも、機能検出によるブラウザー判別を推奨している。機能検出の利点は、将来のデバイスや未知のデバイスに自動的に適応できることだ，例えば
+ *    if(document.addEventListener) 仮に IE9 標準イベントをサポートしている，であればコードを変更する必要はない，そのまま自動的に適応できる“将来のブラウザー”。
+ *    未知のブラウザーに対しても同様である。しかし，これはブラウザー嗅ぎ分けを完全に捨てるべきだという意味ではない。コードが明らかに既知の特定ブラウザー向けである場合，
+ *    しかも特定の機能検出では解決できないときには，ブラウザー嗅ぎ分けを使った方が、かえってコードを簡潔にできる，同時に後々問題を引き起こすこともほとんどない。要するに，すべては
+ *    トレードオフである。
+ *  - UA.ie && UA.ie < 8 ブラウザーが～ではないことを意味するわけではない IE8, ～である可能性がある IE8 の互換モード。さらに判断するには～を使用する必要がある documentMode.
  *
  * TODO:
  *  - test mobile
- *  - 3Q 大战后，360 去掉了 UA 信息中的 360 信息，需采用 res 方法去判断
+ *  - 3Q 大戦後，360 削除した UA 情報中的 360 情報，採用する必要がある res メソッドで判定する
  *
  */
 
@@ -3174,11 +3174,11 @@ KISSY.add('ua/extra', function(S, UA) {
         numberify = UA._numberify;
 
     /**
-     * 说明：
-     * @子涯总结的各国产浏览器的判断依据: http://spreadsheets0.google.com/ccc?key=tluod2VGe60_ceDrAaMrfMw&hl=zh_CN#gid=0
-     * 根据 CNZZ 2009 年度浏览器占用率报告，优化了判断顺序：http://www.tanmi360.com/post/230.htm
-     * 如果检测出浏览器，但是具体版本号未知用 0.1 作为标识
-     * 世界之窗 & 360 浏览器，在 3.x 以下的版本都无法通过 UA 或者特性检测进行判断，所以目前只要检测到 UA 关键字就认为起版本号为 3
+     * 説明：
+     * @子涯による各国産ブラウザの判定基準のまとめ: http://spreadsheets0.google.com/ccc?key=tluod2VGe60_ceDrAaMrfMw&hl=zh_CN#gid=0
+     * に基づいて CNZZ 2009 年間ブラウザ占有率レポート，判定の順序を最適化した：http://www.tanmi360.com/post/230.htm
+     * ブラウザが検出された場合，だが具体的なバージョン番号が不明な場合は 0.1 を識別として用いる
+     * The World & 360 ブラウザ，で 3.x 以下のバージョンはすべて UA または機能検出による判定ができない，そのため現在は UA の UA キーワードが検出されればバージョン番号を 3
      */
 
     // 360Browser
@@ -3279,17 +3279,17 @@ KISSY.add('dom/base', function(S, UA, undefined) {
 
 
         /**
-         * 是不是 element node
+         * ～かどうか element node
          */
         _isElementNode: function(elem) {
             return nodeTypeIs(elem, DOM.ELEMENT_NODE);
         },
 
         /**
-         * elem 为 window 时，直接返回
-         * elem 为 document 时，返回关联的 window
-         * elem 为 undefined 时，返回当前 window
-         * 其它值，返回 false
+         * elem ための window のときは，直接返す
+         * elem ための document のときは，関連する window
+         * elem ための undefined のときは，現在の window
+         * その他の値，返す false
          */
         _getWin: function(elem) {
             return (elem && ('scrollTo' in elem) && elem['document']) ?
@@ -3304,11 +3304,11 @@ KISSY.add('dom/base', function(S, UA, undefined) {
 
         // Ref: http://lifesinger.github.com/lab/2010/nodelist.html
         _isNodeList:function(o) {
-            // 注1：ie 下，有 window.item, typeof node.item 在 ie 不同版本下，返回值不同
-            // 注2：select 等元素也有 item, 要用 !node.nodeType 排除掉
-            // 注3：通过 namedItem 来判断不可靠
-            // 注4：getElementsByTagName 和 querySelectorAll 返回的集合不同
-            // 注5: 考虑 iframe.contentWindow
+            // 注1：ie 下，を持っている window.item, typeof node.item で ie 異なるバージョンでは，戻り値が異なる
+            // 注2：select などの要素にも item, を使って !node.nodeType 除外する
+            // 注3：経由で namedItem を使って判定するのは信頼できない
+            // 注4：getElementsByTagName と querySelectorAll 返されるコレクションが異なる
+            // 注5: 考慮する iframe.contentWindow
             return o && !o.nodeType && o.item && !o.setTimeout;
         },
 
@@ -3327,7 +3327,7 @@ KISSY.add('dom/base', function(S, UA, undefined) {
 
 /**
  * 2011-08
- *  - 添加键盘枚举值，方便依赖程序清晰
+ *  - キーボードの列挙値を追加，依存するプログラムを分かりやすくする
  */
 
 /**
@@ -3376,9 +3376,9 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
                                 undefined;
                     }
                 },
-                // 在标准浏览器下，用 getAttribute 获取 style 值
-                // IE7- 下，需要用 cssText 来获取
-                // 统一使用 cssText
+                // 標準ブラウザでは，を使って getAttribute 取得 style 値
+                // IE7- 下，を使う必要がある cssText を使って取得する
+                // 統一して使用 cssText
                 style:{
                     get:function(el) {
                         return el.style.cssText;
@@ -3409,9 +3409,9 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
             //   - so norm to undefined
             boolHook = {
                 get: function(elem, name) {
-                    // 转发到 prop 方法
+                    // に転送 prop メソッド
                     return DOM.prop(elem, name) ?
-                        // 根据 w3c attribute , true 时返回属性名字符串
+                        // に基づいて w3c attribute , true の場合は属性名の文字列を返す
                         name.toLowerCase() :
                         undefined;
                 },
@@ -3421,7 +3421,7 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
                         // Remove boolean attributes when set to false
                         DOM.removeAttr(elem, name);
                     } else {
-                        // 直接设置 true,因为这是 bool 类属性
+                        // 直接 true,これは bool タイプの属性であるため
                         propName = propFix[ name ] || name;
                         if (propName in elem) {
                             // Only set the IDL specifically if it already exists on the element
@@ -3439,14 +3439,14 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
             valHooks = {
                 option: {
                     get: function(elem) {
-                        // 当没有设定 value 时，标准浏览器 option.value === option.text
-                        // ie7- 下，没有设定 value 时，option.value === '', 需要用 el.attributes.value 来判断是否有设定 value
+                        // 未設定の場合 value のときは，標準ブラウザー option.value === option.text
+                        // ie7- 下，未設定の場合 value のときは，option.value === '', を使う必要がある el.attributes.value を使って value が設定されているかどうかを判定する value
                         var val = elem.attributes.value;
                         return !val || val.specified ? elem.value : elem.text;
                     }
                 },
                 select: {
-                    // 对于 select, 特别是 multiple type, 存在很严重的兼容性问题
+                    // ～に対しては select, 特に multiple type, 重大な互換性問題がある
                     get: function(elem) {
                         var index = elem.selectedIndex,
                             options = elem.options,
@@ -3521,13 +3521,13 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
             };
 
 
-            // ie6,7 不区分 attribute 与 property
+            // ie6,7 を区別しない attribute と property
             attrFix = propFix;
             // http://fluidproject.org/blog/2008/01/09/getting-setting-and-removing-tabindex-values-with-javascript/
             attrHooks.tabIndex = attrHooks.tabindex;
             // fix ie bugs
-            // 不光是 href, src, 还有 rowspan 等非 mapping 属性，也需要用第 2 个参数来获取原始值
-            // 注意 colSpan rowSpan 已经由 propFix 转为大写
+            // ～だけでなく href, src, のほか rowspan などの非 mapping 属性，第 2 引数を使う必要がある 2 番目のパラメータで元の値を取得する
+            // 注意 colSpan rowSpan すでに propFix 大文字に変換されている
             S.each([ "href", "src", "width", "height","colSpan","rowSpan" ], function(name) {
                 attrHooks[ name ] = {
                     get: function(elem) {
@@ -3536,7 +3536,7 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
                     }
                 };
             });
-            // button 元素的 value 属性和其内容冲突
+            // button 要素の value プロパティとその内容が競合する
             // <button value='xx'>zzz</button>
             valHooks.button = attrHooks.value = attrNodeHook;
         }
@@ -3572,7 +3572,7 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
         S.mix(DOM, {
 
             /**
-             * 自定义属性不推荐使用，使用 .data
+             * カスタム属性の使用は推奨されません，使用 .data
              * @param selector
              * @param name
              * @param value
@@ -3605,7 +3605,7 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
             },
 
             /**
-             * 是否其中一个元素包含指定 property
+             * いずれかの要素が指定した property
              * @param selector
              * @param name
              */
@@ -3621,7 +3621,7 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
             },
 
             /**
-             * 不推荐使用，使用 .data .removeData
+             * 使用は推奨されません，使用 .data .removeData
              * @param selector
              * @param name
              */
@@ -3774,7 +3774,7 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
             },
 
             /**
-             * 是否其中一个元素包含指定属性
+             * いずれかの要素が指定した属性を含むかどうか
              */
             hasAttr: oldIE ?
                 function(selector, name) {
@@ -3797,7 +3797,7 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
                     var elems = DOM.query(selector);
                     for (var i = 0; i < elems.length; i++) {
                         var el = elems[i];
-                        //使用原生实现
+                        //ネイティブ実装を使用
                         if (el.hasAttribute(name)) {
                             return true;
                         }
@@ -3905,20 +3905,20 @@ KISSY.add('dom/attr', function(S, DOM, UA, undefined) {
 /**
  * NOTES:
  * 承玉：2011-06-03
- *  - 借鉴 jquery 1.6,理清 attribute 与 property
+ *  - 参考にし jquery 1.6,整理し attribute と property
  *
  * 承玉：2011-01-28
- *  - 处理 tabindex，顺便重构
+ *  - 処理 tabindex，ついでにリファクタリング
  *
  * 2010.03
- *  - 在 jquery/support.js 中，special attrs 里还有 maxlength, cellspacing,
- *    rowspan, colspan, useap, frameboder, 但测试发现，在 Grade-A 级浏览器中
- *    并无兼容性问题。
- *  - 当 colspan/rowspan 属性值设置有误时，ie7- 会自动纠正，和 href 一样，需要传递
- *    第 2 个参数来解决。jQuery 未考虑，存在兼容性 bug.
- *  - jQuery 考虑了未显式设定 tabindex 时引发的兼容问题，kissy 里忽略（太不常用了）
+ *  - で jquery/support.js 中，special attrs の中にまだ maxlength, cellspacing,
+ *    rowspan, colspan, useap, frameboder, しかしテストの結果，で Grade-A クラスのブラウザでは
+ *    互換性の問題はない。
+ *  - タグLIB_LOADが colspan/rowspan 属性値の設定が誤っている場合，ie7- 自動的に修正される，と href と同様に，渡す必要がある
+ *    第 2 番目のパラメータで解決する。jQuery 考慮していない，互換性の bug.
+ *  - jQuery 明示的に tabindex を設定していない場合を考慮した tabindex 際に発生する互換性の問題，kissy では無視（ほとんど使われないため）
  *  - jquery/attributes.js: Safari mis-reports the default selected
- *    property of an option 在 Safari 4 中已修复。
+ *    property of an option で Safari 4 で修正済み。
  *
  */
 
@@ -4008,7 +4008,7 @@ KISSY.add('dom/class', function(S, DOM, undefined) {
                             needle;
                         for (; j < cl; j++) {
                             needle = SPACE + classNames[j] + SPACE;
-                            // 一个 cls 有可能多次出现：'link link2 link link3 link'
+                            // 1 つの cls は複数回出現する可能性がある：'link link2 link link3 link'
                             while (className.indexOf(needle) >= 0) {
                                 className = className.replace(needle, SPACE);
                             }
@@ -4090,8 +4090,8 @@ KISSY.add('dom/class', function(S, DOM, undefined) {
 
 /**
  * NOTES:
- *   - hasClass/addClass/removeClass 的逻辑和 jQuery 保持一致
- *   - toggleClass 不支持 value 为 undefined 的情形（jQuery 支持）
+ *   - hasClass/addClass/removeClass のロジックは jQuery と同じに保つ
+ *   - toggleClass 不サポート value ための undefined の場合（jQuery サポート）
  */
 
 /**
@@ -4167,11 +4167,11 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
                 if (!rhtml.test(html)) {
                     ret = context.createTextNode(html);
                 }
-                // 简单 tag, 比如 DOM.create('<p>')
+                // シンプルなタグ tag, 例えば DOM.create('<p>')
                 else if ((m = RE_SIMPLE_TAG.exec(html))) {
                     ret = context.createElement(m[1]);
                 }
-                // 复杂情况，比如 DOM.create('<img src="sprite.png" />')
+                // 複雑なケース，例えば DOM.create('<img src="sprite.png" />')
                 else {
                     // Fix "XHTML"-style tags in all browsers
                     html = html.replace(rxhtmlTag, "<$1><" + "/$2>");
@@ -4181,7 +4181,7 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
                     }
 
                     holder = (creators[tag] || creators[DIV])(html, context);
-                    // ie 把前缀空白吃掉了
+                    // ie 先頭の空白が食われてしまう
                     if (lostLeadingWhitespace && (whitespaceMatch = html.match(rleadingWhitespace))) {
                         holder.insertBefore(context.createTextNode(whitespaceMatch[0]), holder.firstChild);
                     }
@@ -4205,7 +4205,7 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
             _creators: {
                 div: function(html, ownerDoc) {
                     var frag = ownerDoc && ownerDoc != doc ? ownerDoc.createElement(DIV) : DEFAULT_DIV;
-                    // html 为 <style></style> 时不行，必须有其他元素？
+                    // html ための <style></style> の場合は不可，他の要素が必要？
                     frag['innerHTML'] = "m<div>" + html + "<" + "/div>";
                     return frag.lastChild;
                 }
@@ -4272,14 +4272,14 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
 
             /**
              * Remove the set of matched elements from the DOM.
-             * 不要使用 innerHTML='' 来清除元素，可能会造成内存泄露，要使用 DOM.remove()
-             * @param selector 选择器或元素集合
-             * @param {Boolean} keepData 删除元素时是否保留其上的数据，用于离线操作，提高性能
+             * 使用しないでください innerHTML='' 要素をクリアするには，メモリリークを引き起こす可能性があります，を使用する必要がある DOM.remove()
+             * @param selector セレクタまたは要素のコレクション
+             * @param {Boolean} keepData 要素削除時にそのデータを保持するかどうか，オフライン操作用，パフォーマンスを向上させる
              */
             remove: function(selector, keepData) {
                 DOM.query(selector).each(function(el) {
                     if (!keepData && isElementNode(el)) {
-                        // 清楚数据
+                        // データをクリア
                         var elChildren = getElementsByTagName(el, "*");
                         cleanData(elChildren);
                         cleanData(el);
@@ -4293,11 +4293,11 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
 
             /**
              * clone node across browsers for the first node in selector
-             * @param selector 选择器或单个元素
-             * @param {Boolean} withDataAndEvent 复制节点是否包括和源节点同样的数据和事件
-             * @param {Boolean} deepWithDataAndEvent 复制节点的子孙节点是否包括和源节点子孙节点同样的数据和事件
+             * @param selector セレクタまたは単一要素
+             * @param {Boolean} withDataAndEvent 複製するノードに、元のノードと同じデータとイベントを含めるかどうか
+             * @param {Boolean} deepWithDataAndEvent 複製するノードの子孫ノードに、元のノードの子孫ノードと同じデータとイベントを含めるかどうか
              * @refer https://developer.mozilla.org/En/DOM/Node.cloneNode
-             * @returns 复制后的节点
+             * @returns 複製後のノード
              */
             clone:function(selector, deep, withDataAndEvent, deepWithDataAndEvent) {
                 var elem = DOM.get(selector);
@@ -4327,7 +4327,7 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
                         processAll(fixAttributes, elem, clone);
                     }
                 }
-                // runtime 获得事件模块
+                // runtime イベントモジュールを取得
                 if (withDataAndEvent) {
                     cloneWidthDataAndEvent(elem, clone);
                     if (deep && deepWithDataAndEvent) {
@@ -4371,7 +4371,7 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
         }
 
 
-        // 克隆除了事件的 data
+        // イベント以外をクローン data
         function cloneWidthDataAndEvent(src, dest) {
             var Event = S.require('event');
 
@@ -4381,14 +4381,14 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
 
             var srcData = DOM.data(src);
 
-            // 浅克隆，data 也放在克隆节点上
+            // 浅いクローン，data クローンしたノードにも配置する
             for (var d in srcData) {
                 DOM.data(dest, d, srcData[d]);
             }
 
-            // 事件要特殊点
+            // イベントは特別扱いする
             if (Event) {
-                // _removeData 不需要？刚克隆出来本来就没
+                // _removeData 不要？クローンしたばかりの時点では元々存在しない
                 Event._removeData(dest);
                 Event._clone(src, dest);
             }
@@ -4446,11 +4446,11 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
 
             // Event data gets referenced instead of copied if the expando
             // gets copied too
-            // 自定义 data 根据参数特殊处理，expando 只是个用于引用的属性
+            // カスタム data 引数に応じて特別に処理する，expando 参照用として使うだけのプロパティ
             dest.removeAttribute(DOM.__EXPANDO);
         }
 
-        // 添加成员到元素中
+        // 要素にメンバーを追加する
         function attachProps(elem, props) {
             if (S.isPlainObject(props)) {
                 if (isElementNode(elem)) {
@@ -4464,7 +4464,7 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
             return elem;
         }
 
-        // 将 nodeList 转换为 fragment
+        // を nodeList に変換する fragment
         function nl2frag(nodes, ownerDoc) {
             var ret = null, i, len;
 
@@ -4485,9 +4485,9 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
         }
 
         // only for gecko and ie
-        // 2010-10-22: 发现 chrome 也与 gecko 的处理一致了
+        // 2010-10-22: 判明 chrome ～とも gecko の処理と一致した
         //if (ie || UA['gecko'] || UA['webkit']) {
-        // 定义 creators, 处理浏览器兼容
+        // 定義する creators, ブラウザ互換性を処理する
         var creators = DOM._creators,
             create = DOM.create,
             TABLE_OPEN = '<table>',
@@ -4506,7 +4506,7 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
                 caption:'table',
                 colgroup:'table',
                 col: 'colgroup',
-                legend: 'fieldset' // ie 支持，但 gecko 不支持
+                legend: 'fieldset' // ie サポート，しかし gecko 不サポート
             };
 
         for (var p in creatorsMap) {
@@ -4550,18 +4550,18 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
  * empty , html refactor
  *
  * 2011-08-22
- * clone 实现，参考 jq
+ * clone 実装，参考 jq
  *
  * 2011-08
- *  remove 需要对子孙节点以及自身清除事件以及自定义 data
- *  create 修改，支持 <style></style> ie 下直接创建
- *  TODO: jquery clone ,clean 实现
+ *  remove 子孫ノードおよび自身からイベントおよびカスタム data
+ *  create 編集，サポート <style></style> ie 下で直接作成
+ *  TODO: jquery clone ,clean 実装
  *
  * TODO:
- *  - 研究 jQuery 的 buildFragment 和 clean
- *  - 增加 cache, 完善 test cases
- *  - 支持更多 props
- *  - remove 时，是否需要移除事件，以避免内存泄漏？需要详细的测试。
+ *  - 研究 jQuery の buildFragment と clean
+ *  - 追加 cache, 改善 test cases
+ *  - より多くをサポート props
+ *  - remove のときは，イベントを削除する必要があるかどうか，メモリリークを避けるため？詳細なテストが必要。
  */
 
 /**
@@ -4571,9 +4571,9 @@ KISSY.add('dom/create', function(S, DOM, UA, undefined) {
 KISSY.add('dom/data', function (S, DOM, undefined) {
 
     var win = window,
-        EXPANDO = '_ks_data_' + S.now(), // 让每一份 kissy 的 expando 都不同
-        dataCache = { }, // 存储 node 节点的 data
-        winDataCache = { };    // 避免污染全局
+        EXPANDO = '_ks_data_' + S.now(), // 各 kissy の kissy の expando がすべて異なるようにする
+        dataCache = { }, // 保存 node ノードの data
+        winDataCache = { };    // グローバル汚染を回避する
 
 
     // The following elements throw uncatchable exceptions if you
@@ -4601,11 +4601,11 @@ KISSY.add('dom/data', function (S, DOM, undefined) {
 
     var objectOps = {
         hasData:function (ob, name) {
-            // 只判断当前窗口，iframe 窗口内数据直接放入全局变量
+            // 現在のウィンドウのみ判定，iframe ウィンドウ内のデータは直接グローバル変数に入れる
             if (ob == win) {
                 return objectOps.hasData(winDataCache, name);
             }
-            // 直接建立在对象内
+            // オブジェクト内に直接作成する
             var thisCache = ob[EXPANDO];
             return commonOps.hasData(thisCache, name);
         },
@@ -4665,24 +4665,24 @@ KISSY.add('dom/data', function (S, DOM, undefined) {
             }
             var key = elem[EXPANDO], cache;
             if (!key) {
-                // 根本不用附加属性
+                // 追加プロパティを付与する必要はまったくない
                 if (name !== undefined &&
                     value === undefined) {
                     return undefined;
                 }
-                // 节点上关联键值也可以
+                // ノードにキーと値を関連付けてもよい
                 key = elem[EXPANDO] = S.guid();
             }
             cache = dataCache[key];
             if (value !== undefined) {
-                // 需要新建
+                // 新規作成が必要
                 cache = dataCache[key] = dataCache[key] || {};
                 cache[name] = value;
             } else {
                 if (name !== undefined) {
                     return cache && cache[name];
                 } else {
-                    // 需要新建
+                    // 新規作成が必要
                     cache = dataCache[key] = dataCache[key] || {};
                     return cache;
                 }
@@ -4727,9 +4727,9 @@ KISSY.add('dom/data', function (S, DOM, undefined) {
 
             /**
              * whether any node has data
-             * @param {HTMLElement[]|String} selector 选择器或节点数组
-             * @param {String} name 数据键名
-             * @returns {boolean} 节点是否有关联数据键名的值
+             * @param {HTMLElement[]|String} selector セレクタまたはノード配列
+             * @param {String} name データキー名
+             * @returns {boolean} ノードに関連付けられたデータキー名の値があるかどうか
              */
             hasData:function (selector, name) {
                 var ret = false, elems = DOM.query(selector);
@@ -4749,12 +4749,12 @@ KISSY.add('dom/data', function (S, DOM, undefined) {
 
             /**
              * Store arbitrary data associated with the matched elements.
-             * @param {HTMLElement[]|String} selector 选择器或节点数组
-             * @param {String} [name] 数据键名
-             * @param {String} [data] 数据键值
-             * @returns 当不设置 data，设置 name 那么返回： 节点是否有关联数据键名的值
-             *          当不设置 data， name 那么返回： 节点的存储空间对象
-             *          当设置 data， name 那么进行设置操作，返回 undefined
+             * @param {HTMLElement[]|String} selector セレクタまたはノード配列
+             * @param {String} [name] データキー名
+             * @param {String} [data] データキー値
+             * @returns 当不設定を行う data，設定を行う name その場合戻り値は： ノードに関連付けられたデータキー名の値があるかどうか
+             *          data を設定しない場合 data， name その場合戻り値は： ノードのストレージ用オブジェクト
+             *          data を設定する場合 data， name 設定処理を行う，返す undefined
              */
             data:function (selector, name, data) {
                 // suports hash
@@ -4789,8 +4789,8 @@ KISSY.add('dom/data', function (S, DOM, undefined) {
 
             /**
              * Remove a previously-stored piece of data.
-             * @param {HTMLElement[]|String} selector 选择器或节点数组
-             * @param {String} [name] 数据键名，不设置时删除关联节点的所有键值对
+             * @param {HTMLElement[]|String} selector セレクタまたはノード配列
+             * @param {String} [name] データキー名，未設定の場合は関連ノードのすべてのキー／値ペアを削除します
              */
             removeData:function (selector, name) {
                 DOM.query(selector).each(function (elem) {
@@ -4804,7 +4804,7 @@ KISSY.add('dom/data', function (S, DOM, undefined) {
         });
 
     function checkIsNode(elem) {
-        // note : 普通对象不要定义 nodeType 这种特殊属性!
+        // note : 通常のオブジェクトには定義しないでください nodeType この種の特殊プロパティ!
         return elem && elem.nodeType;
     }
 
@@ -4815,7 +4815,7 @@ KISSY.add('dom/data', function (S, DOM, undefined) {
 });
 /**
  * 承玉：2011-05-31
- *  - 分层 ，节点和普通对象分开处理
+ *  - レイヤー ，ノードと通常オブジェクトを分けて処理
  **/
 
 /**
@@ -4886,7 +4886,7 @@ KISSY.add('dom/insertion', function(S, UA, DOM) {
                 }
             } else {
                 if (_isElementNode(el) &&
-                    // ie checkbox getElementsByTagName 后造成 checked 丢失
+                    // ie checkbox getElementsByTagName 後に引き起こす checked 消失
                     !rformEls.test(nodeName)) {
                     var tmp = [],
                         s,
@@ -4942,17 +4942,17 @@ KISSY.add('dom/insertion', function(S, UA, DOM) {
             !refNodesLength) {
             return;
         }
-        // fragment 插入速度快点
+        // fragment 挿入速度を少し速くする
         var newNode = DOM._nl2frag(newNodes),
             clonedNode;
-        //fragment 一旦插入里面就空了，先复制下
+        //fragment 一度挿入すると中身が空になる，先にコピーしておく
         if (refNodesLength > 1) {
             clonedNode = DOM.clone(newNode, true);
         }
         for (var i = 0; i < refNodesLength; i++) {
             var refNode = refNodes[i];
             if (newNodesLength) {
-                //refNodes 超过一个，clone
+                //refNodes 1 つを超える，clone
                 var node = i > 0 ? DOM.clone(clonedNode, true) : newNode;
                 fn(node, refNode);
             }
@@ -5021,7 +5021,7 @@ KISSY.add('dom/insertion', function(S, UA, DOM) {
 
 /**
  * 2011-05-25
- *  - 承玉：参考 jquery 处理多对多的情形 :http://api.jquery.com/append/
+ *  - 承玉：参考 jquery 多対多のケースを処理 :http://api.jquery.com/append/
  *      DOM.append(".multi1",".multi2");
  *
  */
@@ -5060,7 +5060,7 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
         SCROLL_TOP = SCROLL + 'Top',
         GET_BOUNDING_CLIENT_RECT = 'getBoundingClientRect';
 
-//    ownerDocument 的判断不保证 elem 没有游离在 document 之外（比如 fragment）
+//    ownerDocument の判定では保証できない elem 浮遊していないことを document 外側（例えば fragment）
 //    function inDocument(elem) {
 //        if (!elem) {
 //            return 0;
@@ -5133,7 +5133,7 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
                 top = top === undefined ? true : !!top;
             }
 
-            // document 归一化到 window
+            // document を…に正規化する window
             if (nodeTypeIs(container, DOM.DOCUMENT_NODE)) {
                 container = getWin(container);
             }
@@ -5161,7 +5161,7 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
                     left:DOM.scrollLeft(win),
                     top:DOM.scrollTop(win)
                 };
-                // elem 相对 container 可视视窗的距离
+                // elem 相対 container 可視ビューポートまでの距離
                 diffTop = {
                     left: elemOffset[LEFT] - winScroll[LEFT],
                     top: elemOffset[TOP] - winScroll[TOP]
@@ -5180,8 +5180,8 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
                     left:DOM.scrollLeft(container),
                     top:DOM.scrollTop(container)
                 };
-                // elem 相对 container 可视视窗的距离
-                // 注意边框 , offset 是边框到根节点
+                // elem 相対 container 可視ビューポートまでの距離
+                // ボーダーに注意 , offset はボーダーからルートノードまで
                 diffTop = {
                     left: elemOffset[LEFT] - containerOffset[LEFT] -
                         (PARSEINT(DOM.css(container, 'borderLeftWidth')) || 0),
@@ -5199,13 +5199,13 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
             }
 
             if (diffTop.top < 0 || diffBottom.top > 0) {
-                // 强制向上
+                // 強制的に上へ
                 if (top === true) {
                     DOM.scrollTop(container, containerScroll.top + diffTop.top);
                 } else if (top === false) {
                     DOM.scrollTop(container, containerScroll.top + diffBottom.top);
                 } else {
-                    // 自动调整
+                    // 自動調整
                     if (diffTop.top < 0) {
                         DOM.scrollTop(container, containerScroll.top + diffTop.top);
                     } else {
@@ -5216,13 +5216,13 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
 
             if (hscroll) {
                 if (diffTop.left < 0 || diffBottom.left > 0) {
-                    // 强制向上
+                    // 強制的に上へ
                     if (top === true) {
                         DOM.scrollLeft(container, containerScroll.left + diffTop.left);
                     } else if (top === false) {
                         DOM.scrollLeft(container, containerScroll.left + diffBottom.left);
                     } else {
-                        // 自动调整
+                        // 自動調整
                         if (diffTop.left < 0) {
                             DOM.scrollLeft(container, containerScroll.left + diffTop.left);
                         } else {
@@ -5258,12 +5258,12 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
             if (w) {
                 if (v !== undefined) {
                     v = parseFloat(v);
-                    // 注意多 windw 情况，不能简单取 win
+                    // マルチ windw 状況，単純に取得してはいけない win
                     var left = name == "Left" ? v : DOM.scrollLeft(w),
                         top = name == "Top" ? v : DOM.scrollTop(w);
                     w['scrollTo'](left, top);
                 } else {
-                    //标准
+                    //標準
                     //chrome == body.scrollTop
                     //firefox/ie9 == documentElement.scrollTop
                     ret = w[ 'page' + (i ? 'Y' : 'X') + 'Offset'];
@@ -5298,7 +5298,7 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
                 //firefox chrome documentElement.scrollHeight< body.scrollHeight
                 //ie standard mode : documentElement.scrollHeight> body.scrollHeight
                 d[DOC_ELEMENT][SCROLL + name],
-                //quirks : documentElement.scrollHeight 最大等于可视窗口多一点？
+                //quirks : documentElement.scrollHeight 最大でも可視ウィンドウより少し大きい程度？
                 d[BODY][SCROLL + name],
                 DOM[VIEWPORT + name](d));
         };
@@ -5311,16 +5311,16 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
                 body = doc[BODY],
                 documentElement = doc[DOC_ELEMENT],
                 documentElementProp = documentElement[prop];
-            // 标准模式取 documentElement
-            // backcompat 取 body
+            // 標準モードではを取得 documentElement
+            // backcompat 取得 body
             return doc[compatMode] === CSS1Compat
                 && documentElementProp ||
                 body && body[ prop ] || documentElementProp;
 //            return (prop in w) ?
-//                // 标准 = documentElement.clientHeight
+//                // 標準 = documentElement.clientHeight
 //                w[prop] :
-//                // ie 标准 documentElement.clientHeight , 在 documentElement.clientHeight 上滚动？
-//                // ie quirks body.clientHeight: 在 body 上？
+//                // ie 標準 documentElement.clientHeight , で documentElement.clientHeight 上でスクロール？
+//                // ie quirks body.clientHeight: で body 前？
 //                (isStrict ? d[DOC_ELEMENT][CLIENT + name] : d[BODY][CLIENT + name]);
         }
     });
@@ -5330,25 +5330,25 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
             body = doc.body,
             w = getWin(elem[OWNER_DOCUMENT]);
 
-        // 根据 GBS 最新数据，A-Grade Browsers 都已支持 getBoundingClientRect 方法，不用再考虑传统的实现方式
+        // に基づいて GBS 最新データ，A-Grade Browsers すべて対応している getBoundingClientRect メソッド，従来の実装方式を考慮する必要はない
         if (elem[GET_BOUNDING_CLIENT_RECT]) {
             box = elem[GET_BOUNDING_CLIENT_RECT]();
 
-            // 注：jQuery 还考虑减去 docElem.clientLeft/clientTop
-            // 但测试发现，这样反而会导致当 html 和 body 有边距/边框样式时，获取的值不正确
-            // 此外，ie6 会忽略 html 的 margin 值，幸运地是没有谁会去设置 html 的 margin
+            // 注：jQuery さらに…を差し引くことも考慮している docElem.clientLeft/clientTop
+            // しかしテストの結果，このようにすると逆に、…の場合に html と body マージンがある/ボーダースタイルがある場合に，取得した値が正しくない
+            // そのほか，ie6 無視する html の margin 値，幸いなことに、設定する人はいない html の margin
 
             x = box[LEFT];
             y = box[TOP];
 
-            // ie 下应该减去窗口的边框吧，毕竟默认 absolute 都是相对窗口定位的
-            // 窗口边框标准是设 documentElement ,quirks 时设置 body
-            // 最好禁止在 body 和 html 上边框 ，但 ie < 9 html 默认有 2px ，减去
-            // 但是非 ie 不可能设置窗口边框，body html 也不是窗口 ,ie 可以通过 html,body 设置
-            // 标准 ie 下 docElem.clientTop 就是 border-top
-            // ie7 html 即窗口边框改变不了。永远为 2
+            // ie ではウィンドウのボーダーを差し引くべきだろう，結局デフォルトでは absolute はいずれもウィンドウ相対で位置決めされている
+            // ウィンドウボーダーの基準はを設定し documentElement ,quirks 時には設定 body
+            // できれば…にボーダーを設定しないほうがよい body と html 上のボーダー ，しかし ie < 9 html デフォルトで…がある 2px ，差し引く
+            // しかし非では ie 不可能設定を行う窗口边框，body html ウィンドウでもない ,ie を通じて行える html,body 設定を行う
+            // 標準 ie 下 docElem.clientTop つまり border-top
+            // ie7 html つまりウィンドウのボーダーは変更できない。常に 2
 
-            // 但标准 firefox/chrome/ie9 下 docElem.clientTop 是窗口边框，即使设了 border-top 也为 0
+            // しかし標準モードでは firefox/chrome/ie9 下 docElem.clientTop ウィンドウボーダーである，たとえ～を設定しても border-top でも 0
             var clientTop = isIE && doc['documentMode'] != 9
                 && (isStrict ? docElem.clientTop : body.clientTop)
                 || 0,
@@ -5360,7 +5360,7 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
             x -= clientLeft;
             y -= clientTop;
 
-            // iphone/ipad/itouch 下的 Safari 获取 getBoundingClientRect 时，已经加入 scrollTop
+            // iphone/ipad/itouch 下の Safari 取得 getBoundingClientRect のときは，すでに加算済み scrollTop
             if (UA.mobile == 'apple') {
                 x -= DOM[SCROLL_LEFT](w);
                 y -= DOM[SCROLL_TOP](w);
@@ -5379,7 +5379,7 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
         return pos;
     }
 
-    // 获取 elem 相对 elem.ownerDocument 的坐标
+    // 取得 elem 相対 elem.ownerDocument の座標
     function getOffset(el, relativeWin) {
         var position = {left:0,top:0};
 
@@ -5405,7 +5405,7 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
         return position;
     }
 
-    // 设置 elem 相对 elem.ownerDocument 的坐标
+    // 設定を行う elem 相対 elem.ownerDocument の座標
     function setOffset(elem, offset) {
         // set position first, in-case top/left are set even on static elem
         if (DOM.css(elem, POSITION) === 'static') {
@@ -5428,15 +5428,15 @@ KISSY.add('dom/offset', function(S, DOM, UA, undefined) {
 /**
  * 2011-05-24
  *  - 承玉：
- *  - 调整 docWidth , docHeight ,
- *      viewportHeight , viewportWidth ,scrollLeft,scrollTop 参数，
- *      便于放置到 Node 中去，可以完全摆脱 DOM，完全使用 Node
+ *  - 調整 docWidth , docHeight ,
+ *      viewportHeight , viewportWidth ,scrollLeft,scrollTop パラメーター，
+ *      ～に配置しやすくする Node の中に入れる，完全に～から切り離し DOM，完全に～を使用 Node
  *
  *
  *
  * TODO:
- *  - 考虑是否实现 jQuery 的 position, offsetParent 等功能
- *  - 更详细的测试用例（比如：测试 position 为 fixed 的情况）
+ *  - 実装するかどうか検討 jQuery の position, offsetParent などの機能
+ *  - 更详细的テスト用例（例えば：テスト position ための fixed の場合に対応）
  */
 
 /**
@@ -5474,7 +5474,7 @@ KISSY.add('dom/style', function(S, DOM, UA, undefined) {
         CAMELCASE_FN = function(all, letter) {
             return letter.toUpperCase();
         },
-        // 考虑 ie9 ...
+        // 考慮する ie9 ...
         rupper = /([A-Z]|^ms)/g,
         EMPTY = '',
         DEFAULT_UNIT = 'px',
@@ -5546,7 +5546,7 @@ KISSY.add('dom/style', function(S, DOM, UA, undefined) {
                         defaultDisplayDetectIframeDoc.close();
                     } catch(e) {
                         // ie6 need a breath , such as alert(8) or setTimeout;
-                        // 同时需要同步，所以无解，勉强返回
+                        // 同時に同期する必要があり，そのため解決不能で，やむを得ず返す
                         return "block";
                     }
                 }
@@ -5584,7 +5584,7 @@ KISSY.add('dom/style', function(S, DOM, UA, undefined) {
                 val = computedStyle.getPropertyValue(name) || computedStyle[name];
             }
 
-            // 还没有加入到 document，就取行内
+            // まだ～に追加されていない document，のでインライン値を取得する
             if (val == "" && !DOM.__contains(d.documentElement, elem)) {
                 name = cssProps[name] || name;
                 val = elem[STYLE][name];
@@ -5659,7 +5659,7 @@ KISSY.add('dom/style', function(S, DOM, UA, undefined) {
 
                 elem[STYLE][DISPLAY] = DOM.data(elem, OLD_DISPLAY) || EMPTY;
 
-                // 可能元素还处于隐藏状态，比如 css 里设置了 display: none
+                // 要素がまだ非表示状態になっている可能性がある，例えば css で～を設定している display: none
                 if (DOM.css(elem, DISPLAY) === NONE) {
                     var tagName = elem.tagName.toLowerCase(),
                         old = getDefaultDisplay(tagName);
@@ -5717,14 +5717,14 @@ KISSY.add('dom/style', function(S, DOM, UA, undefined) {
                 elem = DOM.get('#' + id, doc);
             }
 
-            // 仅添加一次，不重复添加
+            // 一度だけ追加し，重複追加しない
             if (elem) {
                 return;
             }
 
             elem = DOM.create('<style>', { id: id }, doc);
 
-            // 先添加到 DOM 树中，再给 cssText 赋值，否则 css hack 会失效
+            // 先に～へ追加し DOM ツリー内に，その後～に cssText 値を代入する，それ以外の場合 css hack が無効になる
             DOM.get('head', doc).appendChild(elem);
 
             if (elem.styleSheet) { // IE
@@ -5808,7 +5808,7 @@ KISSY.add('dom/style', function(S, DOM, UA, undefined) {
     var cssShow = { position: "absolute", visibility: "hidden", display: "block" };
 
     /**
-     * css height,width 永远都是计算值
+     * css height,width 常に計算値になる
      */
     S.each(["height", "width"], function(name) {
         CUSTOM_STYLES[ name ] = {
@@ -5844,24 +5844,24 @@ KISSY.add('dom/style', function(S, DOM, UA, undefined) {
                 if (computed) {
                     var val = DOM._getComputedStyle(elem, name),offset;
 
-                    // 1. 当没有设置 style.left 时，getComputedStyle 在不同浏览器下，返回值不同
-                    //    比如：firefox 返回 0, webkit/ie 返回 auto
-                    // 2. style.left 设置为百分比时，返回值为百分比
-                    // 对于第一种情况，如果是 relative 元素，值为 0. 如果是 absolute 元素，值为 offsetLeft - marginLeft
-                    // 对于第二种情况，大部分类库都未做处理，属于“明之而不 fix”的保留 bug
+                    // 1. 設定していない場合 style.left のときは，getComputedStyle ブラウザによっては，戻り値が異なる
+                    //    例えば：firefox 返す 0, webkit/ie 返す auto
+                    // 2. style.left パーセンテージで設定した場合，返り値はパーセンテージになる
+                    // 最初のケースでは，もし〜なら relative 要素，値は 0. もし〜なら absolute 要素，値は offsetLeft - marginLeft
+                    // 2番目のケースでは，ほとんどのライブラリでは未対応で，いわゆる“分かっていてもあえて修正しない fix”という既知の bug
                     if (val === AUTO) {
                         val = 0;
                         if (S.inArray(DOM.css(elem, 'position'), ['absolute','fixed'])) {
                             offset = elem[name === 'left' ? 'offsetLeft' : 'offsetTop'];
 
-                            // old-ie 下，elem.offsetLeft 包含 offsetParent 的 border 宽度，需要减掉
+                            // old-ie 下，elem.offsetLeft を含む offsetParent の border 幅，差し引く必要がある
                             if (isIE && document['documentMode'] != 9 || UA['opera']) {
-                                // 类似 offset ie 下的边框处理
-                                // 如果 offsetParent 为 html ，需要减去默认 2 px == documentElement.clientTop
-                                // 否则减去 borderTop 其实也是 clientTop
+                                // ～に類似した offset ie におけるボーダー処理
+                                // もし offsetParent ための html ，デフォルトを差し引く必要がある 2 px == documentElement.clientTop
+                                // そうでなければ差し引く borderTop 実際には〜も同様 clientTop
                                 // http://msdn.microsoft.com/en-us/library/aa752288%28v=vs.85%29.aspx
-                                // ie<9 注意有时候 elem.offsetParent 为 null ...
-                                // 比如 DOM.append(DOM.create("<div class='position:absolute'></div>"),document.body)
+                                // ie<9 注意：場合によっては elem.offsetParent ための null ...
+                                // 例えば DOM.append(DOM.create("<div class='position:absolute'></div>"),document.body)
                                 offset -= elem.offsetParent && elem.offsetParent['client' + (name == 'left' ? 'Left' : 'Top')]
                                     || 0;
                             }
@@ -5916,7 +5916,7 @@ KISSY.add('dom/style', function(S, DOM, UA, undefined) {
                 val = hook.set(elem, val);
             }
             if (val !== undefined) {
-                // ie 无效值报错
+                // ie 無効な値はエラーになる
                 try {
                     elem[STYLE][name] = val;
                 } catch(e) {
@@ -5941,7 +5941,7 @@ KISSY.add('dom/style', function(S, DOM, UA, undefined) {
 
 
     /**
-     * 得到元素的大小信息
+     * 要素のサイズ情報を取得する
      * @param elem
      * @param name
      * @param {String} extra    "padding" : (css width) + padding
@@ -6006,21 +6006,21 @@ KISSY.add('dom/style', function(S, DOM, UA, undefined) {
 /**
  *
  * 2011-08-19
- *  - 调整结构，减少耦合
+ *  - 構造を調整する，結合度を下げる
  *  - fix css("height") == auto
  *
  * NOTES:
- *  - Opera 下，color 默认返回 #XXYYZZ, 非 rgb(). 目前 jQuery 等类库均忽略此差异，KISSY 也忽略。
- *  - Safari 低版本，transparent 会返回为 rgba(0, 0, 0, 0), 考虑低版本才有此 bug, 亦忽略。
+ *  - Opera 下，color デフォルトで返される #XXYYZZ, 非 rgb(). 現在 jQuery などのライブラリはいずれもこの差異を無視している，KISSY も無視する。
+ *  - Safari 旧バージョン，transparent として返される rgba(0, 0, 0, 0), 考虑旧バージョン才有此 bug, も無視する。
  *
  *
- *  - getComputedStyle 在 webkit 下，会舍弃小数部分，ie 下会四舍五入，gecko 下直接输出 float 值。
+ *  - getComputedStyle で webkit 下，小数部分が切り捨てられる，ie では四捨五入される，gecko ではそのまま出力される float 値。
  *
- *  - color: blue 继承值，getComputedStyle, 在 ie 下返回 blue, opera 返回 #0000ff, 其它浏览器
- *    返回 rgb(0, 0, 255)
+ *  - color: blue 継承値，getComputedStyle, で ie 下返す blue, opera 返す #0000ff, その他のブラウザ
+ *    返す rgb(0, 0, 255)
  *
- *  - 总之：要使得返回值完全一致是不大可能的，jQuery/ExtJS/KISSY 未“追求完美”。YUI3 做了部分完美处理，但
- *    依旧存在浏览器差异。
+ *  - 要するに：戻り値を完全に一致させるのはほとんど不可能である，jQuery/ExtJS/KISSY は“「完璧さの追求」をしていない”。YUI3 一部の完璧な処理を行っている，しかし
+ *    依然としてブラウザ差異が存在する。
  */
 
 /**
@@ -6072,7 +6072,7 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
                     push.apply(ret, queryByContexts(selector, contexts[i]));
                 }
 
-                //必要时去重排序
+                //必要に応じて重複排除とソートを行う
                 if (ret.length > 1 &&
                     // multiple contexts
                     (contexts.length > 1 ||
@@ -6102,34 +6102,34 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
             isSelectorString = typeof selector === 'string';
         if (isSelectorString && selector.match(REG_QUERY) ||
             !isSelectorString) {
-            // 简单选择器自己处理
+            // 単純セレクタは自前で処理
             ret = queryBySimple(selector, context);
         }
-        // 如果选择器有 , 分开递归一部分一部分来
+        // セレクタに , がある場合は分割して部分ごとに再帰処理する
         else if (isSelectorString && selector.indexOf(COMMA) > -1) {
             ret = queryBySelectors(selector, context);
         }
         else {
-            // 复杂了，交给 sizzle
+            // 複雑になったら，に任せる sizzle
             ret = queryBySizzle(selector, context);
         }
         return ret;
     }
 
-    // 交给 sizzle 模块处理
+    // に任せる sizzle モジュールに処理を任せる
     function queryBySizzle(selector, context) {
         var ret = [],
             sizzle = require("sizzle");
         if (sizzle) {
             sizzle(selector, context, ret);
         } else {
-            // 原生不支持
+            // ネイティブではサポートされていない
             error(selector);
         }
         return ret;
     }
 
-    // 处理 selector 的每个部分
+    // 処理 selector の各部分
     function queryBySelectors(selector, context) {
         var ret = [],
             i,
@@ -6137,39 +6137,39 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
         for (i = 0; i < selectors.length; i++) {
             push.apply(ret, queryByContexts(selectors[i], context));
         }
-        // 多部分选择器可能得到重复结果
+        // 複数部分からなるセレクタでは重複した結果が返る可能性がある
         return ret;
     }
 
     function quickFindBySelectorStr(selector, context) {
         var ret,t,match,id,tag,cls;
-        // selector 为 #id 是最常见的情况，特殊优化处理
+        // selector ための #id が最も一般的なケース，特別に最適化して処理
         if (REG_ID.test(selector)) {
             t = getElementById(selector.slice(1), context);
             if (t) {
-                // #id 无效时，返回空数组
+                // #id が無効な場合，空配列を返す
                 ret = [t];
             } else {
                 ret = [];
             }
         }
-        // selector 为支持列表中的其它 6 种
+        // selector サポートリスト内の他の 6 種類の場合
         else {
             match = REG_QUERY.exec(selector);
             if (match) {
-                // 获取匹配出的信息
+                // マッチした情報を取得する
                 id = match[1];
                 tag = match[2];
                 cls = match[3];
-                // 空白前只能有 id ，取出来作为 context
+                // 空白の前にはのみ置ける id ，を取り出して context とする context
                 context = (id ? getElementById(id, context) : context);
                 if (context) {
                     // #id .cls | #id tag.cls | .cls | tag.cls | #id.cls
                     if (cls) {
-                        if (!id || selector.indexOf(SPACE) != -1) { // 排除 #id.cls
+                        if (!id || selector.indexOf(SPACE) != -1) { // 除外 #id.cls
                             ret = [].concat(getElementsByClassName(cls, tag, context));
                         }
-                        // 处理 #id.cls
+                        // 処理 #id.cls
                         else {
                             t = getElementById(id, context);
                             if (t && hasClass(t, cls)) {
@@ -6178,7 +6178,7 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
                         }
                     }
                     // #id tag | tag
-                    else if (tag) { // 排除空白字符串
+                    else if (tag) { // 空白文字列を除外する
                         ret = getElementsByTagName(tag, context);
                     }
                 }
@@ -6188,22 +6188,22 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
         return ret;
     }
 
-    // 最简单情况了，单个选择器部分，单个上下文
+    // 最も単純なケース，単一のセレクタ部分，単一のコンテキスト
     function queryBySimple(selector, context) {
         var ret,
             isSelectorString = typeof selector === 'string';
         if (isSelectorString) {
             ret = quickFindBySelectorStr(selector, context) || [];
         }
-        // 传入的 selector 是 NodeList 或已是 Array
+        // 渡された selector はい NodeList 或已はい Array
         else if (selector && (isArray(selector) || isNodeList(selector))) {
-            // 只能包含在 context 里面
+            // のみを含める context の中
             ret = filter(selector, function(s) {
                 return testByContext(s, context);
             });
         }
-        // 传入的 selector 是 HTMLNode 查看约束
-        // 否则 window/document，原样返回
+        // 渡された selector はい HTMLNode 制約を確認
+        // それ以外の場合 window/document，そのまま返す
         else if (selector && testByContext(selector, context)) {
             ret = [selector];
         }
@@ -6214,14 +6214,14 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
         if (!element) {
             return false;
         }
-        // 防止 element 节点还没添加到 document ，但是也可以获取到 query(element) => [element]
-        // document 的上下文一律放行
+        // 防ぐため element ノードがまだ追加されていない document ，しかし取得は可能 query(element) => [element]
+        // document のコンテキストはすべて許可
 
-        // context == doc 意味着没有提供第二个参数，到这里只是想单纯包装原生节点，则不检测
+        // context == doc 第 2 引数が指定されていないことを意味する，ここでは単にネイティブノードをラップしたいだけ，なので検査しない
         if (context == doc) {
             return true;
         }
-        // 节点受上下文约束
+        // ノードはコンテキストに制約される
         return DOM.__contains(context, element);
     }
 
@@ -6241,7 +6241,7 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
             return 0;
         });
 
-        // 排序去重
+        // ソートして重複排除
         unique = function (elements) {
             if (sortOrder) {
                 hasDuplicate = baseHasDuplicate;
@@ -6261,7 +6261,7 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
             return elements;
         };
 
-        // 貌似除了 ie 都有了...
+        // どうやら～以外は ie すべて対応している...
         if (doc.documentElement.compareDocumentPosition) {
             sortOrder = t = function(a, b) {
                 if (a == b) {
@@ -6291,13 +6291,13 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
     })();
 
 
-    // 调整 context 为合理值
+    // 調整 context を妥当な値にする
     function tuneContext(context) {
-        // context 为 undefined 是最常见的情况，优先考虑
+        // context ための undefined が最も一般的なケース，を優先的に考慮
         if (context === undefined) {
             return [doc];
         }
-        // 其他直接使用 query
+        // その他はそのまま使用 query
         return query(context, undefined);
     }
 
@@ -6315,13 +6315,13 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
         else if (el && el.parentNode) {
             // ie opera confuse name with id
             // https://github.com/kissyteam/kissy/issues/67
-            // 不能直接 el.id ，否则 input shadow form attribute
+            // 直接～できない el.id ，それ以外の場合 input shadow form attribute
             if (DOM.__attr(el, "id") !== id) {
-                // 直接在 context 下的所有节点找
+                // をコンテキストとして直接 context 配下のすべてのノードを探す
                 el = DOM.filter(ANY, "#" + id, context)[0] || null;
             }
-            // ie 特殊情况下以及指明在 context 下找了，不需要再判断
-            // 如果指定了 context node , 还要判断 id 是否处于 context 内
+            // ie 特殊な場合および明示的に context 下で検索すると指定されている，のでこれ以上判定不要
+            // を指定した場合は context node , さらに判定する必要がある id に属しているかどうか context 内部
             else if (!testByContext(el, context)) {
                 el = null;
             }
@@ -6366,7 +6366,7 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
     // query .cls
     var getElementsByClassName = doc.getElementsByClassName ? function(cls, tag, context) {
         // query("#id1 xx","#id2")
-        // #id2 内没有 #id1 , context 为 null , 这里防御下
+        // #id2 内部に～がない #id1 , context ための null , ここで防御しておく
         if (!context) {
             return [];
         }
@@ -6389,7 +6389,7 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
         }
         return ret;
     } : ( doc.querySelectorAll ? function(cls, tag, context) {
-        // ie8 return staticNodeList 对象,[].concat 会形成 [ staticNodeList ] ，手动转化为普通数组
+        // ie8 return staticNodeList オブジェクト,[].concat を形成する [ staticNodeList ] ，手動で通常の配列に変換
         return context && makeArray(context.querySelectorAll((tag ? tag : '') + '.' + cls)) || [];
     } : function(cls, tag, context) {
         if (!context) {
@@ -6441,7 +6441,7 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
                 cls,
                 ret = [];
 
-            // 默认仅支持最简单的 tag.cls 或 #id 形式
+            // デフォルトでは最も単純な tag.cls または #id の形式のみ対応
             if (typeof filter === 'string' &&
                 (filter = trim(filter)) &&
                 (match = REG_QUERY.exec(filter))) {
@@ -6452,12 +6452,12 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
                     filter = function(elem) {
                         var tagRe = true,clsRe = true;
 
-                        // 指定 tag 才进行判断
+                        // 指定 tag の場合のみ判定を行う
                         if (tag) {
                             tagRe = nodeName(elem, tag);
                         }
 
-                        // 指定 cls 才进行判断
+                        // 指定 cls の場合のみ判定を行う
                         if (cls) {
                             clsRe = hasClass(elem, cls);
                         }
@@ -6474,11 +6474,11 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
             if (S.isFunction(filter)) {
                 ret = S.filter(elems, filter);
             }
-            // 其它复杂 filter, 采用外部选择器
+            // その他の複雑な filter, は外部セレクタを採用
             else if (filter && sizzle) {
                 ret = sizzle.matches(filter, elems);
             }
-            // filter 为空或不支持的 selector
+            // filter 空または未対応の selector
             else {
                 error(filter);
             }
@@ -6503,56 +6503,56 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
  * NOTES:
  *
  * 2011.08.02
- *  - 利用 sizzle 重构选择器
- *  - 1.1.6 修正，原来 context 只支持 #id 以及 document
- *    1.2 context 支持任意，和 selector 格式一致
- *  - 简单选择器也和 jquery 保持一致 DOM.query("xx","yy") 支持
- *    - context 不提供则为当前 document ，否则通过 query 递归取得
- *    - 保证选择出来的节点（除了 document window）都是位于 context 范围内
+ *  - 利用 sizzle セレクタを再構成
+ *  - 1.1.6 修正，もともと context のみサポート #id および document
+ *    1.2 context 任意をサポート，と selector とフォーマットを一致させる
+ *  - シンプルセレクタも jquery と同じに保つ DOM.query("xx","yy") サポート
+ *    - context 指定しない場合は現在の document ，そうでなければ query 再帰的に取得
+ *    - 選択されたノードが（document と window を除き）すべて（を除いて document window）すべて位置している context 範囲内
  *
  *
  * 2010.01
- *  - 对 reg exec 的结果(id, tag, className)做 cache, 发现对性能影响很小，去掉。
- *  - getElementById 使用频率最高，使用直达通道优化。
- *  - getElementsByClassName 性能优于 querySelectorAll, 但 IE 系列不支持。
- *  - instanceof 对性能有影响。
- *  - 内部方法的参数，比如 cls, context 等的异常情况，已经在 query 方法中有保证，无需冗余“防卫”。
- *  - query 方法中的条件判断考虑了“频率优先”原则。最有可能出现的情况放在前面。
- *  - Array 的 push 方法可以用 j++ 来替代，性能有提升。
- *  - 返回值策略和 Sizzle 一致，正常时，返回数组；其它所有情况，返回空数组。
+ *  - 〜に対して reg exec の結果(id, tag, className)行い cache, 发现〜に対して性能影响很小，削除した。
+ *  - getElementById 最も頻繁に使用される，ダイレクトアクセスで最適化する。
+ *  - getElementsByClassName パフォーマンスは〜より優れている querySelectorAll, しかし IE 系はサポートしていない。
+ *  - instanceof パフォーマンスに影響がある。
+ *  - 内部メソッドの引数，例えば cls, context などの例外的な状況，すでに〜で query メソッド内で保証されている，余分な“防御処理”。
+ *  - query メソッド内の条件分岐では〜を考慮し“「頻度優先」”という原則。最も起こりやすいケースを前に配置している。
+ *  - Array の push メソッドは〜で j++ 置き換えることができ，パフォーマンスが向上する。
+ *  - 戻り値の方針は〜と Sizzle 同一で，通常時は，配列を返す；その他のすべてのケースでは，空配列を返す。
  *
- *  - 从压缩角度考虑，还可以将 getElmentsByTagName 和 getElementsByClassName 定义为常量，
- *    不过感觉这样做太“压缩控”，还是保留不替换的好。
+ *  - 圧縮の観点から考えると，さらに〜を getElmentsByTagName と getElementsByClassName 定数として定義することもできる，
+ *    ただし、そのようにするとあまりに「“圧縮マニア」な感じがするので”，置き換えずにそのまま残しておくほうがよい。
  *
- *  - 调整 getElementsByClassName 的降级写法，性能最差的放最后。
+ *  - 調整 getElementsByClassName のフォールバック実装，もっとも性能の悪いものを最後に回した。
  *
  * 2010.02
- *  - 添加对分组选择器的支持（主要参考 Sizzle 的代码，代去除了对非 Grade A 级浏览器的支持）
+ *  - グループセレクタへの対応を追加（主に〜を参考にし Sizzle のコード，その際、非 Grade A グレード A ブラウザへのサポートを削除した）
  *
  * 2010.03
- *  - 基于原生 dom 的两个 api: S.query 返回数组; S.get 返回第一个。
- *    基于 Node 的 api: S.one, 在 Node 中实现。
- *    基于 NodeList 的 api: S.all, 在 NodeList 中实现。
- *    通过 api 的分层，同时满足初级用户和高级用户的需求。
+ *  - ネイティブ dom の 2 つの api: S.query 配列を返す; S.get 最初のを返す。
+ *    に基づく Node の api: S.one, で Node 内で実装する。
+ *    に基づく NodeList の api: S.all, で NodeList 内で実装する。
+ *    経由で api の階層化，により、初心者ユーザーと上級ユーザー双方のニーズを満たす。
  *
  * 2010.05
- *  - 去掉给 S.query 返回值默认添加的 each 方法，保持纯净。
- *  - 对于不支持的 selector, 采用外部耦合进来的 Selector.
+ *  - 〜に対して付与していた S.query 戻り値へのデフォルトの追加を each メソッド，純粋さを保つ。
+ *  - サポートされていない selector, 外部から結合された Selector.
  *
  * 2010.06
- *  - 增加 filter 和 test 方法
+ *  - 追加 filter と test メソッド
  *
  * 2010.07
- *  - 取消对 , 分组的支持，group 直接用 Sizzle
+ *  - 〜への , グループ化のサポートを，group 直接 Sizzle
  *
  * 2010.08
- *  - 给 S.query 的结果 attach each 方法
+ *  - 〜に S.query の結果 attach each メソッド
  *
  * 2011.05
- *  - 承玉：恢复对简单分组支持
+ *  - 承玉：シンプルなグループ化のサポートを復元
  *
  * Ref: http://ejohn.org/blog/selectors-that-people-actually-use/
- * 考虑 2/8 原则，仅支持以下选择器：
+ * 考慮する 2/8 という原則，以下のセレクタのみサポート：
  * #id
  * tag
  * .cls
@@ -6560,13 +6560,13 @@ KISSY.add('dom/selector', function(S, DOM, undefined) {
  * #id .cls
  * tag.cls
  * #id tag.cls
- * 注 1：REG_QUERY 还会匹配 #id.cls
- * 注 2：tag 可以为 * 字符
- * 注 3: 支持 , 号分组
+ * 注 1：REG_QUERY もマッチする #id.cls
+ * 注 2：tag 〜は…になり得る * 文字
+ * 注 3: サポート , カンマ区切りのグループ
  *
  *
  * Bugs:
- *  - S.query('#test-data *') 等带 * 号的选择器，在 IE6 下返回的值不对。jQuery 等类库也有此 bug, 诡异。
+ *  - S.query('#test-data *') などの * アスタリスク付きセレクタ，で IE6 では返される値が正しくない。jQuery などのライブラリにもこの bug, 奇妙だ。
  *
  * References:
  *  - http://ejohn.org/blog/selectors-that-people-actually-use/
@@ -6619,8 +6619,8 @@ KISSY.add('dom/style-ie', function(S, DOM, UA, Style) {
                 CUSTOM_STYLES[OPACITY] = {
 
                     get: function(elem, computed) {
-                        // 没有设置过 opacity 时会报错，这时返回 1 即可
-                        // 如果该节点没有添加到 dom ，取不到 filters 结构
+                        // 一度も設定されていない opacity 場合エラーになる，この場合は…を返せばよい 1 構いません
+                        // このノードがまだ〜に追加されていない場合 dom ，取得できない filters 構造
                         // val = elem[FILTERS]['DXImageTransform.Microsoft.Alpha'][OPACITY];
                         return ropacity.test((
                             computed && elem[CURRENT_STYLE] ?
@@ -6656,7 +6656,7 @@ KISSY.add('dom/style-ie', function(S, DOM, UA, Style) {
                         }
 
                         // otherwise, set new filter values
-                        // 如果 >=1 就不设，就不能覆盖外部样式表定义的样式，一定要设
+                        // もし >=1 設定しないと，外部スタイルシートで定義されたスタイルを上書きできない，必ず設定する必要がある
                         style.filter = ralpha.test(filter) ?
                             filter.replace(ralpha, opacity) :
                             filter + (filter ? ", " : "") + opacity;
@@ -6670,7 +6670,7 @@ KISSY.add('dom/style-ie', function(S, DOM, UA, Style) {
 
         /**
          * border fix
-         * ie 不设置数值，则 computed style 不返回数值，只返回 thick? medium ...
+         * ie 数値を設定しないと，すると computed style 数値を返さない，〜だけを返す thick? medium ...
          * (default is "medium")
          */
         var IE8 = UA['ie'] == 8,
@@ -6685,12 +6685,12 @@ KISSY.add('dom/style-ie', function(S, DOM, UA, Style) {
                 styleName = "border" + b + "Style";
             CUSTOM_STYLES[name] = {
                 get: function(elem, computed) {
-                    // 只有需要计算样式的时候才转换，否则取原值
+                    // スタイルを計算する必要がある場合のみ変換する，そうでなければ元の値を取得する
                     var currentStyle = computed ? elem[CURRENT_STYLE] : 0,
                         current = currentStyle && String(currentStyle[name]) || undefined;
                     // look up keywords if a border exists
                     if (current && current.indexOf("px") < 0) {
-                        // 边框没有隐藏
+                        // ボーダーが非表示になっていない
                         if (BORDER_MAP[current] && currentStyle[styleName] !== "none") {
                             current = BORDER_MAP[current];
                         } else {
@@ -6711,10 +6711,10 @@ KISSY.add('dom/style-ie', function(S, DOM, UA, Style) {
 
                 var ret = elem[CURRENT_STYLE] && elem[CURRENT_STYLE][name];
 
-                // 当 width/height 设置为百分比时，通过 pixelLeft 方式转换的 width/height 值
-                // 一开始就处理了! CUSTOM_STYLE["height"],CUSTOM_STYLE["width"] ,cssHook 解决@2011-08-19
-                // 在 ie 下不对，需要直接用 offset 方式
-                // borderWidth 等值也有问题，但考虑到 borderWidth 设为百分比的概率很小，这里就不考虑了
+                // タグLIB_LOADが width/height パーセンテージで設定した場合，経由で pixelLeft 方式で変換された width/height 値
+                // 最初から処理済み! CUSTOM_STYLE["height"],CUSTOM_STYLE["width"] ,cssHook 解決@2011-08-19
+                // で ie では正しくなく，直接〜を使う必要がある offset 方式
+                // borderWidth などの値にも問題がある，しかし〜を考慮すると borderWidth パーセンテージに設定される可能性は低い，ここでは考慮しない
 
                 // From the awesome hack by Dean Edwards
                 // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
@@ -6751,10 +6751,10 @@ KISSY.add('dom/style-ie', function(S, DOM, UA, Style) {
 /**
  * NOTES:
  * 承玉： 2011.05.19 opacity in ie
- *  - 如果节点是动态创建，设置opacity，没有加到 dom 前，取不到 opacity 值
- *  - 兼容：border-width 值，ie 下有可能返回 medium/thin/thick 等值，其它浏览器返回 px 值。
+ *  - ノードが動的に作成されている場合，設定を行うopacity，〜に追加されていない dom 前，取得できない opacity 値
+ *  - 互換：border-width 値，ie では〜が返される可能性がある medium/thin/thick 等値，他のブラウザでは〜を返す px 値。
  *
- *  - opacity 的实现，参考自 jquery
+ *  - opacity の実装，〜を参考にしている jquery
  *
  */
 
@@ -6832,18 +6832,18 @@ KISSY.add('dom/traversal', function(S, DOM, undefined) {
                 var precondition;
                 if (b.nodeType == DOM.TEXT_NODE) {
                     b = b.parentNode;
-                    // a 和 b父亲相等也就是返回 true
+                    // a と b親が等しい、つまり true を返す true
                     precondition = true;
                 } else if (b.nodeType == DOM.DOCUMENT_NODE) {
                     // b === document
-                    // 没有任何元素能包含 document
+                    // どの要素も含めることはできません document
                     return false;
                 } else {
-                    // a 和 b 相等返回 false
+                    // a と b 等しい場合は返す false
                     precondition = a !== b;
                 }
                 // !a.contains => a===document
-                // 注意原生 contains 判断时 a===b 也返回 true
+                // ネイティブに注意 contains 判定時に a===b も返す true
                 return precondition && (a.contains ? a.contains(b) : true);
             } : (
             document.documentElement.compareDocumentPosition ?
@@ -6881,10 +6881,10 @@ KISSY.add('dom/traversal', function(S, DOM, undefined) {
         }
     });
 
-    // 获取元素 elem 在 direction 方向上满足 filter 的第一个元素
-    // filter 可为 number, selector, fn array ，为数组时返回多个
-    // direction 可为 parentNode, nextSibling, previousSibling
-    // context : 到某个阶段不再查找直接返回
+    // 要素を取得 elem で direction 方向で条件を満たす filter 最初の要素
+    // filter 指定可能 number, selector, fn array ，配列の場合は複数を返す
+    // direction 指定可能 parentNode, nextSibling, previousSibling
+    // context : ある段階で検索を打ち切り直接返す
     function nth(elem, filter, direction, extraFilter, context, includeSef) {
         if (!(elem = DOM.get(elem))) {
             return null;
@@ -6901,7 +6901,7 @@ KISSY.add('dom/traversal', function(S, DOM, undefined) {
         context = (context && DOM.get(context)) || null;
 
         if (filter === undefined) {
-            // 默认取 1
+            // デフォルトは 1
             filter = 1;
         }
         var ret = [],
@@ -6917,7 +6917,7 @@ KISSY.add('dom/traversal', function(S, DOM, undefined) {
             };
         }
 
-        // 概念统一，都是 context 上下文，只过滤子孙节点，自己不管
+        // 概念を統一，すべて context コンテキスト，子孫ノードのみをフィルタリング，自身は対象外
         while (elem && elem != context) {
             if (isElementNode(elem)
                 && testFilter(elem, filter)
@@ -6949,7 +6949,7 @@ KISSY.add('dom/traversal', function(S, DOM, undefined) {
         return false;
     }
 
-    // 获取元素 elem 的 siblings, 不包括自身
+    // 要素を取得 elem の siblings, 自分自身を含まない
     function getSiblings(selector, filter, parent) {
         var ret = [],
             elem = DOM.get(selector),
@@ -6982,13 +6982,13 @@ KISSY.add('dom/traversal', function(S, DOM, undefined) {
 
 /**
  * 2011-08
- * - 添加 closest , first ,last 完全摆脱原生属性
+ * - 追加 closest , first ,last ネイティブプロパティから完全に脱却
  *
  * NOTES:
  * - jquery does not return null ,it only returns empty array , but kissy does.
  *
- *  - api 的设计上，没有跟随 jQuery. 一是为了和其他 api 一致，保持 first-all 原则。二是
- *    遵循 8/2 原则，用尽可能少的代码满足用户最常用的功能。
+ *  - api の設計上，追従していない jQuery. 一つ目の理由は他の api 同一で，維持する first-all という原則。二つ目は
+ *    に準拠し 8/2 という原則，できるだけ少ないコードでユーザーが最もよく使う機能を満たす。
  *
  */
 
@@ -7387,7 +7387,7 @@ KISSY.add('event/object', function(S, undefined) {
  *   - http://www.w3.org/TR/2003/WD-DOM-Level-3-Events-20030331/ecma-script-binding.html
  *
  * TODO:
- *   - pageX, clientX, scrollLeft, clientLeft 的详细测试
+ *   - pageX, clientX, scrollLeft, clientLeft の詳細なテスト
  */
 
 /**
@@ -7398,8 +7398,8 @@ KISSY.add("event/utils", function(S, DOM) {
 
     /**
      * whether two event listens are the same
-     * @param h1 已有的 handler 描述
-     * @param h2 用户提供的 handler 描述
+     * @param h1 既存の handler 説明
+     * @param h2 ユーザー提供の handler 説明
      */
     function isIdenticalHandler(h1, h2, el) {
         var scope1 = h1.scope || el,
@@ -7411,8 +7411,8 @@ KISSY.add("event/utils", function(S, DOM) {
             || scope1 !== scope2) {
             ret = 0;
         } else if ((d1 = h1.data) !== (d2 = h2.data)) {
-            // undelgate 不能 remove 普通 on 的 handler
-            // remove 不能 remove delegate 的 handler
+            // undelgate できない remove 標準 on の handler
+            // remove できない remove delegate の handler
             if (!d1 && d2
                 || d1 && !d2
                 ) {
@@ -7512,13 +7512,13 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
         makeArray = S.makeArray,
         each = S.each,
         trim = S.trim,
-        // 记录手工 fire(domElement,type) 时的 type
-        // 再在浏览器通知的系统 eventHandler 中检查
-        // 如果相同，那么证明已经 fire 过了，不要再次触发了
+        // 手動で記録 fire(domElement,type) 時の type
+        // その後ブラウザ通知のシステム eventHandler 内でチェック
+        // 同じであれば，つまりすでに fire 済みであることを示す，再度トリガーしない
         Event_Triggered = "",
         TRIGGERED_NONE = "trigger-none-" + S.now(),
         EVENT_SPECIAL = {},
-        // 事件存储位置 key
+        // イベント保存場所 key
         // { handler: eventHandler, events:  {type:[{scope:scope,fn:fn}]}  } }
         EVENT_GUID = 'ksEventTargetId' + S.now();
 
@@ -7537,7 +7537,7 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
                 events = eventDesc.events;
             each(events, function(handlers, type) {
                 each(handlers, function(handler) {
-                    // scope undefined 时不能写死在 handlers 中，否则不能保证 clone 时的 this
+                    // scope undefined 時に handlers にハードコードしてはならない handlers 中，そうでないと保証できない clone 時の this
                     Event.on(dest, type, handler.fn, handler.scope, handler.data);
                 });
             });
@@ -7566,18 +7566,18 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
         __add:function(isNativeTarget, target, type, fn, scope, data) {
             var eventDesc;
 
-            // 不是有效的 target 或 参数不对
+            // 有効ではありません target または パラメータが正しくない
             if (!target ||
                 !S.isFunction(fn) ||
                 (isNativeTarget && !isValidTarget(target))) {
                 return;
             }
-            // 获取事件描述
+            // イベント記述を取得
             eventDesc = Event._data(target);
             if (!eventDesc) {
                 Event._data(target, eventDesc = {});
             }
-            //事件 listeners , similar to eventListeners in DOM3 Events
+            //イベント listeners , similar to eventListeners in DOM3 Events
             var events = eventDesc.events = eventDesc.events || {},
                 handlers = events[type] = events[type] || [],
                 handleObj = {
@@ -7586,11 +7586,11 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
                     data:data
                 },
                 eventHandler = eventDesc.handler;
-            // 该元素没有 handler ，并且该元素是 dom 节点时才需要注册 dom 事件
+            // この要素には handler ，かつこの要素が dom ノードの時のみ登録が必要 dom イベント
             if (!eventHandler) {
                 eventHandler = eventDesc.handler = function(event, data) {
-                    // 是经过 fire 手动调用而浏览器同步触发导致的，就不要再次触发了，
-                    // 已经在 fire 中 bubble 过一次了
+                    // を経由した fire 手動呼び出しによってブラウザが同期的にトリガーした結果である，ので再度トリガーしない，
+                    // すでに〜で fire 中 bubble 一度バブル済み
                     if (event && event.type == Event_Triggered) {
                         return;
                     }
@@ -7631,7 +7631,7 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
                 target = null;
             }
 
-            // 增加 listener
+            // 追加 listener
             handlers.push(handleObj);
         },
 
@@ -7644,8 +7644,8 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
          */
         add: function(targets, type, fn, scope /* optional */, data/*internal usage*/) {
             type = trim(type);
-            // data : 附加在回调后面的数据，delegate 检查使用
-            // remove 时 data 相等(指向同一对象或者定义了 equals 比较函数)
+            // data : コールバックの後ろに付加されるデータ，delegate 検査用
+            // remove のときは data 等しい(同一オブジェクトを指すか、あるいは equals 比較関数)
             if (batchForType(Event, 'add', targets, type, fn, scope, data)) {
                 return targets;
             }
@@ -7690,7 +7690,7 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
 
             if ((handlers = events[type])) {
                 len = handlers.length;
-                // 移除 fn
+                // 削除 fn
                 if (fn && len) {
                     var currentHandler = {
                         data:data,
@@ -7700,7 +7700,7 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
 
                     for (i = 0,j = 0,t = []; i < len; ++i) {
                         handler = handlers[i];
-                        // 注意顺序，用户提供的 handler 在第二个参数
+                        // 順序に注意，ユーザー提供の handler 第 2 引数にある
                         if (!isIdenticalHandler(handler, currentHandler, target)) {
                             t[j++] = handler;
                         } else if (special.remove) {
@@ -7712,7 +7712,7 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
                     len = t.length;
                 }
 
-                // remove(el, type) or fn 已移除光
+                // remove(el, type) or fn すでに削除済み
                 if (fn === undefined || len === 0) {
                     // dom node need to detach handler from dom node
                     if (isNativeTarget &&
@@ -7809,19 +7809,19 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
 
         for (; i < len; ++i) {
             listener = listeners[i];
-            // 传入附件参数data，目前用于委托
-            // scope undefined 时不能写死在 listener 中，否则不能保证 clone 时的 this
+            // 付加パラメータを渡すdata，現在は委譲に使用
+            // scope undefined 時に handlers にハードコードしてはならない listener 中，そうでないと保証できない clone 時の this
             ret = listener.fn.call(listener.scope || target,
                 event, listener.data);
 
-            // 和 jQuery 逻辑保持一致
+            // と jQuery ロジックを一致させる
             if (ret !== undefined) {
-                // 有一个 false，最终结果就是 false
-                // 否则等于最后一个返回值
+                // 1 つでも false，最終結果は false
+                // そうでなければ最後の戻り値と等しい
                 if (gRet !== false) {
                     gRet = ret;
                 }
-                // return false 等价 preventDefault + stopProgation
+                // return false 同等 preventDefault + stopProgation
                 if (ret === false) {
                     event.halt();
                 }
@@ -7832,13 +7832,13 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
             }
         }
 
-        // fire 时判断如果 preventDefault，则返回 false 否则返回 true
-        // 这里返回值意义不同
+        // fire 時に、もし … なら preventDefault，ならば … を返す false 否ならば … を返す true
+        // ここでは戻り値の意味が異なる
         return gRet;
     }
 
     function getEvents(target) {
-        // 获取事件描述
+        // イベント記述を取得
         var eventDesc = Event._data(target);
         return eventDesc && eventDesc.events;
     }
@@ -7848,7 +7848,7 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
      */
     function addDomEvent(target, type, eventHandler, handlers, handleObj) {
         var special = EVENT_SPECIAL[type] || {};
-        // 第一次注册该事件，dom 节点才需要注册 dom 事件
+        // 第一次注册该イベント，dom ノードのみ登録が必要 dom イベント
         if (!handlers.length &&
             (!special.setup || special.setup.call(target) === false)) {
             simpleAdd(target, type, eventHandler)
@@ -7885,7 +7885,7 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
         // event.target=target;
         // protect type
         event.type = eventType;
-        // 只运行自己的绑定函数，不冒泡也不触发默认行为
+        // 自分のバインド関数だけ実行する，バブリングもせずデフォルト動作も発火しない
         if (onlyHandlers) {
             event.halt();
         }
@@ -7920,11 +7920,11 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
                             target[ ontype ] = null;
                         }
 
-                        // 记录当前 trigger 触发
+                        // 現在のSQLを記録 trigger トリガー
                         Event_Triggered = eventType;
 
-                        // 只触发默认事件，而不要执行绑定的用户回调
-                        // 同步触发
+                        // デフォルトイベントだけを発火させる，バインドされたユーザーコールバックは実行しない
+                        // 同期的にトリガー
                         target[ eventType ]();
                     }
                 } catch (ieError) {
@@ -7951,15 +7951,15 @@ KISSY.add('event/base', function(S, DOM, EventObject, Utils, undefined) {
 
 /**
  * 2011-11-24
- *  - 自定义事件和 dom 事件操作彻底分离
+ *  - カスタムイベントと dom イベント操作を完全に分離
  *  - TODO: group event from DOM3 Event
  *
  * 2011-06-07
  *  - refer : http://www.w3.org/TR/2001/WD-DOM-Level-3-Events-20010823/events.html
- *  - 重构
- *  - eventHandler 一个元素一个而不是一个元素一个事件一个，节省内存
- *  - 减少闭包使用，prevent ie 内存泄露？
- *  - 增加 fire ，模拟冒泡处理 dom 事件
+ *  - リファクタリング
+ *  - eventHandler 1 要素 1 個で、要素ごとイベントごと 1 個ではない，メモリ節約
+ *  - クロージャの使用を減らす，prevent ie メモリリーク？
+ *  - 追加 fire ，バブリングをシミュレートして処理 dom イベント
  */
 
 /**
@@ -8015,7 +8015,7 @@ KISSY.add('event/target', function(S, Event, EventObject, Utils, undefined) {
     }
 
     /**
-     * 提供事件发布和订阅机制
+     * イベントの発行／購読メカニズムを提供
      * @name Target
      * @memberOf Event
      */
@@ -8025,10 +8025,10 @@ KISSY.add('event/target', function(S, Event, EventObject, Utils, undefined) {
      */
     {
         /**
-         * 触发事件
-         * @param {String} type 事件名
-         * @param {Object} eventData 事件附加信息对象
-         * @returns 如果一个 listener 返回false，则返回 false ，否则返回最后一个 listener 的值.
+         * イベントをトリガー
+         * @param {String} type イベント名
+         * @param {Object} eventData イベント付加情報オブジェクト
+         * @returns もし 1 つでも listener 返すfalse，则返す false ，否则返す最后一个 listener の値.
          */
         fire: function(type, eventData) {
             var self = this,
@@ -8050,7 +8050,7 @@ KISSY.add('event/target', function(S, Event, EventObject, Utils, undefined) {
             if (!customEvent.isPropagationStopped &&
                 isBubblable(self, type)) {
                 r2 = self.bubble(type, customEvent);
-                // false 优先返回
+                // false false を優先して返す
                 if (ret !== false) {
                     ret = r2;
                 }
@@ -8109,29 +8109,29 @@ KISSY.add('event/target', function(S, Event, EventObject, Utils, undefined) {
         },
 
         /**
-         * 监听事件
-         * @param {String} type 事件名
-         * @param {Function} fn 事件处理器
-         * @param {Object} scope 事件处理器内的 this 值，默认当前实例
-         * @returns 当前实例
+         * イベントを監視
+         * @param {String} type イベント名
+         * @param {Function} fn イベントハンドラ
+         * @param {Object} scope イベントハンドラ内の this 値，デフォルトは現在のインスタンス
+         * @returns 現在のインスタンス
          */
         on: attach("add")
     };
 
     /**
-     * 取消监听事件
-     * @param {String} type 事件名
-     * @param {Function} fn 事件处理器
-     * @param {Object} scope 事件处理器内的 this 值，默认当前实例
-     * @returns 当前实例
+     * イベントのリスニングを解除
+     * @param {String} type イベント名
+     * @param {Function} fn イベントハンドラ
+     * @param {Object} scope イベントハンドラ内の this 値，デフォルトは現在のインスタンス
+     * @returns 現在のインスタンス
      */
     Target.detach = attach("remove");
 
     return Target;
 }, {
     /*
-     实际上只需要 dom/data ，但是不要跨模块引用另一模块的子模块，
-     否则会导致build打包文件 dom 和 dom-data 重复载入
+     実際に必要なのは～だけ dom/data ，ただしモジュールをまたいで別モジュールのサブモジュールを参照しないこと，
+     そうでないと～を招くbuildパッケージファイル dom と dom-data 重複読み込み
      */
     requires:["./base",'./object','./utils']
 });
@@ -8146,7 +8146,7 @@ KISSY.add('event/target', function(S, Event, EventObject, Utils, undefined) {
  */
 KISSY.add('event/focusin', function(S, UA, Event) {
 
-    // 让非 IE 浏览器支持 focusin/focusout
+    // 非 IE にも対応させる IE ブラウザでサポートする focusin/focusout
     if (!UA['ie']) {
         S.each([
             { name: 'focusin', fix: 'focus' },
@@ -8154,8 +8154,8 @@ KISSY.add('event/focusin', function(S, UA, Event) {
         ], function(o) {
             var attaches = 0;
             Event.special[o.name] = {
-                // 统一在 document 上 capture focus/blur 事件，然后模拟冒泡 fire 出来
-                // 达到和 focusin 一样的效果 focusin -> focus
+                // を統一して document 前 capture focus/blur イベント，その後バブリングをシミュレートして fire させる
+                // と同じ効果を達成 focusin と同じ効果 focusin -> focus
                 // refer: http://yiminghe.iteye.com/blog/813255
                 setup: function() {
                     if (attaches++ === 0) {
@@ -8184,10 +8184,10 @@ KISSY.add('event/focusin', function(S, UA, Event) {
 
 /**
  * 承玉:2011-06-07
- * - refactor to jquery , 更加合理的模拟冒泡顺序，子元素先出触发，父元素后触发
+ * - refactor to jquery , より合理的なバブリング順序，子要素から先にトリガー，親要素は後からトリガー
  *
  * NOTES:
- *  - webkit 和 opera 已支持 DOMFocusIn/DOMFocusOut 事件，但上面的写法已经能达到预期效果，暂时不考虑原生支持。
+ *  - webkit と opera すでにサポート済み DOMFocusIn/DOMFocusOut イベント，しかし上記の書き方ですでに期待どおりの効果が得られる，当面はネイティブサポートを検討しない。
  */
 
 /**
@@ -8201,11 +8201,11 @@ KISSY.add('event/hashchange', function(S, Event, DOM, UA) {
         ie = docMode || UA['ie'],
         HASH_CHANGE = 'hashchange';
 
-    // ie8 支持 hashchange
-    // 但IE8以上切换浏览器模式到IE7（兼容模式），会导致 'onhashchange' in window === true，但是不触发事件
+    // ie8 サポート hashchange
+    // しかしIE8以上でブラウザモードを切り替えてIE7（互換モード），により 'onhashchange' in window === true，しかし是不触发事件
 
-    // 1. 不支持 hashchange 事件，支持 hash 导航(opera??)：定时器监控
-    // 2. 不支持 hashchange 事件，不支持 hash 导航(ie67) : iframe + 定时器
+    // 1. 不サポート hashchange イベント，サポート hash ナビゲーション(opera??)：タイマー監視
+    // 2. サポートされていません hashchange イベント，サポートされていません hash ナビゲーション(ie67) : iframe + タイマー
     if ((!( 'on' + HASH_CHANGE in window)) || ie && ie < 8) {
 
 
@@ -8219,26 +8219,26 @@ KISSY.add('event/hashchange', function(S, Event, DOM, UA) {
                 " - {hash}</title>{head}</head><body>{hash}</body></html>",
 
             getHash = function() {
-                // 不能 location.hash
+                // できない location.hash
                 // http://xx.com/#yy?z=1
                 // ie6 => location.hash = #yy
-                // 其他浏览器 => location.hash = #yy?z=1
+                // その他のブラウザ => location.hash = #yy?z=1
                 var url = location.href;
                 return '#' + url.replace(/^[^#]*#?(.*)$/, '$1');
             },
 
             timer,
 
-            // 用于定时器检测，上次定时器记录的 hash 值
+            // タイマー検出用，前回タイマーで記録した hash 値
             lastHash,
 
             poll = function () {
                 var hash = getHash();
                 if (hash !== lastHash) {
                     // S.log("poll success :" + hash + " :" + lastHash);
-                    // 通知完调用者 hashchange 事件前设置 lastHash
+                    // 通知し終えてから呼び出し側に hashchange イベント前に設定 lastHash
                     lastHash = hash;
-                    // ie<8 同步 : hashChange -> onIframeLoad
+                    // ie<8 同期 : hashChange -> onIframeLoad
                     hashChange(hash);
                 }
                 timer = setTimeout(poll, POLL_INTERVAL);
@@ -8249,20 +8249,20 @@ KISSY.add('event/hashchange', function(S, Event, DOM, UA) {
 
                 var html = S.substitute(IFRAME_TEMPLATE, {
                     hash: hash,
-                    // 一定要加哦
+                    // 必ず付けてね
                     head:DOM._isCustomDomain() ? "<script>document.domain = '" +
                         doc.domain
                         + "';</script>" : ""
                 }),
                     iframeDoc = getIframeDoc(iframe);
                 try {
-                    // 写入历史 hash
+                    // 履歴に書き込む hash
                     iframeDoc.open();
-                    // 取时要用 innerText !!
-                    // 否则取 innerHtml 会因为 escapeHtml 导置 body.innerHTMl != hash
+                    // 取得時には必ず innerText !!
+                    // さもないと取得に innerHtml のため escapeHtml を招き body.innerHTMl != hash
                     iframeDoc.write(html);
                     iframeDoc.close();
-                    // 立刻同步调用 onIframeLoad !!!!
+                    // 即座に同期呼び出し onIframeLoad !!!!
                 } catch (e) {
                     // S.log('doc write error : ', 'error');
                     // S.log(e, 'error');
@@ -8286,13 +8286,13 @@ KISSY.add('event/hashchange', function(S, Event, DOM, UA) {
             },
             iframe;
 
-        // ie6, 7, 覆盖一些function
+        // ie6, 7, 一部を上書きfunction
         if (ie < 8) {
 
             /**
-             * 前进后退 : start -> notifyHashChange
-             * 直接输入 : poll -> hashChange -> start
-             * iframe 内容和 url 同步
+             * 進む・戻る : start -> notifyHashChange
+             * 直接入力 : poll -> hashChange -> start
+             * iframe 内容と url 同期
              */
             setup = function() {
                 if (!iframe) {
@@ -8310,7 +8310,7 @@ KISSY.add('event/hashchange', function(S, Event, DOM, UA) {
                     // page load
                     DOM.prepend(iframe, doc.documentElement);
 
-                    // init，第一次触发，以后都是 onIframeLoad
+                    // init，初回トリガー，以降はすべて onIframeLoad
                     Event.add(iframe, "load", function() {
                         Event.remove(iframe, "load");
                         // Update the iframe with the initial location hash, if any. This
@@ -8336,29 +8336,29 @@ KISSY.add('event/hashchange', function(S, Event, DOM, UA) {
                     };
 
                     /**
-                     * 前进后退 ： onIframeLoad -> 触发
-                     * 直接输入 : timer -> hashChange -> onIframeLoad -> 触发
-                     * 触发统一在 start(load)
-                     * iframe 内容和 url 同步
+                     * 進む・戻る ： onIframeLoad -> トリガー
+                     * 直接入力 : timer -> hashChange -> onIframeLoad -> トリガー
+                     * トリガーは統一して start(load)
+                     * iframe 内容と url 同期
                      */
                     function onIframeLoad() {
                         // S.log('iframe start load..');
                        
-                        // 2011.11.02 note: 不能用 innerHtml 会自动转义！！
+                        // 2011.11.02 note: 使用できない innerHtml 自動でエスケープされる！！
                         // #/x?z=1&y=2 => #/x?z=1&amp;y=2
                         var c = S.trim(getIframeDoc(iframe).body.innerText),
                             ch = getHash();
 
-                        // 后退时不等
-                        // 定时器调用 hashChange() 修改 iframe 同步调用过来的(手动改变 location)则相等
+                        // 戻るときは待たない
+                        // タイマー呼び出し hashChange() 編集 iframe 同期呼び出しされてきた(手動で変更 location)であれば等しい
                         if (c != ch) {
                             S.log("set loc hash :" + c);
                             location.hash = c;
-                            // 使lasthash为 iframe 历史， 不然重新写iframe，
-                            // 会导致最新状态（丢失前进状态）
+                            // を使ってlasthashための iframe 履歴， さもないと書き直してiframe，
+                            // 最新状態になる（（進む状態が失われる））
 
-                            // 后退则立即触发 hashchange，
-                            // 并更新定时器记录的上个 hash 值
+                            // 戻るとすぐにトリガー hashchange，
+                            // タイマーに記録された前回の hash 値
                             lastHash = c;
                         }
                         notifyHashChange();
@@ -8380,10 +8380,10 @@ KISSY.add('event/hashchange', function(S, Event, DOM, UA) {
                 if (this !== win) {
                     return;
                 }
-                // 第一次启动 hashchange 时取一下，不能类库载入后立即取
-                // 防止类库嵌入后，手动修改过 hash，
+                // 初回起動で hashchange のタイミングで取得する，ライブラリ読み込み直後には取得しない
+                // ライブラリを埋め込んだ後に，手動で変更された hash，
                 lastHash = getHash();
-                // 不用注册 dom 事件
+                // 登録は不要 dom イベント
                 setup();
             },
             tearDown: function() {
@@ -8399,11 +8399,11 @@ KISSY.add('event/hashchange', function(S, Event, DOM, UA) {
 });
 
 /**
- * 已知 bug :
- * - ie67 有时后退后取得的 location.hash 不和地址栏一致，导致必须后退两次才能触发 hashchange
+ * 既知 bug :
+ * - ie67 戻る操作後に取得した location.hash アドレスバーと一致しない，その結果、2 回戻らないと発火しない hashchange
  *
  * v1 : 2010-12-29
- * v1.1: 支持非IE，但不支持onhashchange事件的浏览器(例如低版本的firefox、safari)
+ * v1.1: 非IE，だがサポートしないonhashchangeイベントをサポートしないブラウザ(たとえば古いバージョンのfirefox、safari)
  * refer : http://yiminghe.javaeye.com/blog/377867
  *         https://github.com/cowboy/jquery-hashchange
  */
@@ -8449,7 +8449,7 @@ KISSY.add('event/valuechange', function (S, Event, DOM) {
         DOM.data(target, POLL_KEY, setTimeout(function () {
             var v = target.value, h = DOM.data(target, HISTORY_KEY);
             if (v !== h) {
-                // 只触发自己绑定的 handler
+                // 自身でバインドした handler
                 Event.fire(target, VALUE_CHANGE, {
                     prevVal:h,
                     newVal:v
@@ -8567,14 +8567,14 @@ KISSY.add("event/delegate", function(S, DOM, Event, Utils) {
         }
     });
 
-    // 比较函数，两个 delegate 描述对象比较
-    // 注意顺序： 已有data 和 用户提供的 data 比较
+    // 比較関数，2 つの delegate 記述オブジェクトを比較
+    // 順序に注意： 既存のdata と ユーザー提供の data を比較
     function equals(d, el) {
-        // 用户不提供 fn selector 那么肯定成功
+        // ユーザーが指定しない場合は fn selector 必ず成功する
         if (d.fn === undefined && d.selector === undefined) {
             return true;
         }
-        // 用户不提供 fn 则只比较 selector
+        // ユーザーが指定しない場合は fn の場合は selector のみ比較 selector
         else if (d.fn === undefined) {
             return this.selector == d.selector;
         } else {
@@ -8584,25 +8584,25 @@ KISSY.add("event/delegate", function(S, DOM, Event, Utils) {
         }
     }
 
-    // 根据 selector ，从事件源得到对应节点
+    // に基づいて selector ，イベントソースから対応するノードを取得
     function delegateHandler(event, data) {
         var delegateTarget = this,
             target = event.target,
             invokeds = DOM.closest(target, [data.selector], delegateTarget);
 
-        // 找到了符合 selector 的元素，可能并不是事件源
+        // 一致する selector 要素が見つかった，イベントソースとは限らない
         return invokes.call(delegateTarget, invokeds, event, data);
     }
 
-    // mouseenter/leave 特殊处理
+    // mouseenter/leave 特別な処理
     function mouseHandler(event, data) {
         var delegateTarget = this,
             ret,
             target = event.target,
             relatedTarget = event.relatedTarget;
-        // 恢复为用户想要的 mouseenter/leave 类型
+        // ユーザーが期待する mouseenter/leave タイプ
         event.type = data.preType;
-        // mouseenter/leave 不会冒泡，只选择最近一个
+        // mouseenter/leave バブリングしない，最も近い 1 つだけ選択する
         target = DOM.closest(target, data.selector, delegateTarget);
         if (target) {
             if (target !== relatedTarget &&
@@ -8621,13 +8621,13 @@ KISSY.add("event/delegate", function(S, DOM, Event, Utils) {
     function invokes(invokeds, event, data) {
         var self = this;
         if (invokeds) {
-            // 保护 currentTarget
-            // 否则 fire 影响 delegated listener 之后正常的 listener 事件
+            // 保護 currentTarget
+            // それ以外の場合 fire 影響を与える delegated listener その後の通常の listener イベント
             var currentTarget = event.currentTarget;
             for (var i = 0; i < invokeds.length; i++) {
                 event.currentTarget = invokeds[i];
                 var ret = data.fn.call(data.scope || self, event);
-                // delegate 的 handler 操作事件和根元素本身操作事件效果一致
+                // delegate の handler の操作はルート要素自身のイベント操作と同じ効果
                 if (ret === false) {
                     event.halt();
                 }
@@ -8645,19 +8645,19 @@ KISSY.add("event/delegate", function(S, DOM, Event, Utils) {
 });
 
 /**
- * focusin/out 的特殊之处 , delegate 只能在容器上注册 focusin/out ，
- * 1.其实非 ie 都是注册 focus capture=true，然后注册到 focusin 对应 handlers
- *   1.1 当 Event.fire("focus")，没有 focus 对应的 handlers 数组，然后调用元素 focus 方法，
- *   focusin.js 调用 Event.fire("focusin") 进而执行 focusin 对应的 handlers 数组
- *   1.2 当调用 Event.fire("focusin")，直接执行 focusin 对应的 handlers 数组，但不会真正聚焦
+ * focusin/out の特殊性 , delegate コンテナ上にのみ登録可能 focusin/out ，
+ * 1.実際には非 ie はいずれも登録する focus capture=true，その後、登録する focusin に対応する handlers
+ *   1.1 タグLIB_LOADが Event.fire("focus")，存在しない focus に対応する handlers 配列，その後、要素の focus メソッド，
+ *   focusin.js 呼び出し Event.fire("focusin") さらに実行される focusin に対応する handlers 配列
+ *   1.2 を呼び出した場合 Event.fire("focusin")，直接実行される focusin に対応する handlers 配列，が、実際にはフォーカスしない
  *
- * 2.ie 直接注册 focusin , focusin handlers 也有对应用户回调
- *   2.1 当 Event.fire("focus") , 同 1.1
- *   2.2 当 Event.fire("focusin"),直接执行 focusin 对应的 handlers 数组，但不会真正聚焦
+ * 2.ie 直接登録する focusin , focusin handlers にも対応するユーザーコールバックがある
+ *   2.1 タグLIB_LOADが Event.fire("focus") , と同様 1.1
+ *   2.2 タグLIB_LOADが Event.fire("focusin"),直接実行される focusin に対応する handlers 配列，が、実際にはフォーカスしない
  *
- * mouseenter/leave delegate 特殊处理， mouseenter 没有冒泡的概念，只能替换为 mouseover/out
+ * mouseenter/leave delegate 特別な処理， mouseenter バブリングという概念がない，～に置き換えるしかない mouseover/out
  *
- * form submit 事件 ie<9 不会冒泡
+ * form submit イベント ie<9 バブリングしない
  *
  **/
 
@@ -8674,13 +8674,13 @@ KISSY.add('event/mouseenter', function(S, Event, DOM, UA) {
         ], function(o) {
 
 
-            // 元素内触发的 mouseover/out 不能算 mouseenter/leave
+            // 要素内で発生した mouseover/out とは見なさない mouseenter/leave
             function withinElement(event) {
 
                 var self = this,
                     parent = event.relatedTarget;
 
-                // 设置用户实际注册的事件名，触发该事件所对应的 listener 数组
+                // ユーザーが実際に登録したイベント名を設定，そのイベントに対応する listener 配列
                 event.type = o.name;
 
                 // Firefox sometimes assigns relatedTarget a XUL element
@@ -8693,7 +8693,7 @@ KISSY.add('event/mouseenter', function(S, Event, DOM, UA) {
                         return;
                     }
 
-                    // 在自身外边就触发
+                    // 自身の外側で発生するとすぐトリガーされる
                     if (parent !== self &&
                         // self==document , parent==null
                         (!parent || !DOM.contains(self, parent))
@@ -8712,13 +8712,13 @@ KISSY.add('event/mouseenter', function(S, Event, DOM, UA) {
 
             Event.special[o.name] = {
 
-                // 第一次 mouseenter 时注册下
-                // 以后都直接放到 listener 数组里， 由 mouseover 读取触发
+                // 最初の mouseenter 時に登録しておく
+                // 以後はすべて直接 listener 配列内に， によって mouseover 読み取ってトリガーする
                 setup: function() {
                     Event.add(this, o.fix, withinElement);
                 },
 
-                //当 listener 数组为空时，也清掉 mouseover 注册，不再读取
+                //タグLIB_LOADが listener 配列が空のとき，もクリアし mouseover 新規登録，読み取らない
                 tearDown:function() {
                     Event.remove(this, o.fix, withinElement);
                 }
@@ -8733,13 +8733,13 @@ KISSY.add('event/mouseenter', function(S, Event, DOM, UA) {
 
 /**
  * 承玉：2011-06-07
- * - 根据新结构，调整 mouseenter 兼容处理
- * - fire('mouseenter') 可以的，直接执行 mouseenter 的 handlers 用户回调数组
+ * - 新しい構造に基づき，調整 mouseenter 互換処理
+ * - fire('mouseenter') 可以の，直接実行される mouseenter の handlers ユーザーコールバック配列
  *
  *
  * TODO:
- *  - ie6 下，原生的 mouseenter/leave 貌似也有 bug, 比如 <div><div /><div /><div /></div>
- *    jQuery 也异常，需要进一步研究
+ *  - ie6 下，ネイティブの mouseenter/leave どうやら～もある bug, 例えば <div><div /><div /><div /></div>
+ *    jQuery も異常で，さらなる調査が必要
  */
 
 /**
@@ -8957,7 +8957,7 @@ KISSY.add("event/mousewheel", function(S, Event, UA, Utils, EventObject) {
             deltaX = -1 * e['wheelDeltaX'] / 120;
         }
 
-        // 默认 deltaY ( ie )
+        // デフォルト deltaY ( ie )
         if (!deltaX && !deltaY) {
             deltaY = delta;
         }
@@ -9070,7 +9070,7 @@ KISSY.add("node/base", function(S, DOM, undefined) {
         else if (S.isString(html)) {
             // create from html
             domNode = DOM.create(html, props, ownerDocument);
-            // ('<p>1</p><p>2</p>') 转换为 NodeList
+            // ('<p>1</p><p>2</p>') に変換する NodeList
             if (domNode.nodeType === DOM.DOCUMENT_FRAGMENT_NODE) { // fragment
                 AP.push.apply(this, makeArray(domNode.childNodes));
                 return undefined;
@@ -9095,7 +9095,7 @@ KISSY.add("node/base", function(S, DOM, undefined) {
     S.augment(NodeList, {
 
         /**
-         * 默认长度为 0
+         * デフォルト長は 0
          */
         length: 0,
 
@@ -9194,14 +9194,14 @@ KISSY.add("node/base", function(S, DOM, undefined) {
 
     S.mix(NodeList, {
         /**
-         * 查找位于上下文中并且符合选择器定义的节点列表或根据 html 生成新节点
-         * @param {String|HTMLElement[]|NodeList} selector html 字符串或<a href='http://docs.kissyui.com/docs/html/api/core/dom/selector.html'>选择器</a>或节点列表
-         * @param {String|Array<HTMLElement>|NodeList|HTMLElement|Document} [context] 上下文定义
-         * @returns {NodeList} 节点列表对象
+         * コンテキスト内にありセレクター定義に合致するノードリストを検索、または html 新しいノードを生成
+         * @param {String|HTMLElement[]|NodeList} selector html 文字列または<a href='http://docs.kissyui.com/docs/html/api/core/dom/selector.html'>セレクター</a>またはノードリスト
+         * @param {String|Array<HTMLElement>|NodeList|HTMLElement|Document} [context] コンテキスト定義
+         * @returns {NodeList} ノードリストオブジェクト
          */
         all:function(selector, context) {
             // are we dealing with html string ?
-            // TextNode 仍需要自己 new Node
+            // TextNode TextNode は依然として自分で new Node
 
             if (S.isString(selector)
                 && (selector = S.trim(selector))
@@ -9238,16 +9238,16 @@ KISSY.add("node/base", function(S, DOM, undefined) {
 /**
  * Notes:
  * 2011-05-25
- *  - 承玉：参考 jquery，只有一个 NodeList 对象，Node 就是 NodeList 的别名
+ *  - 承玉：参考 jquery，一つだけ NodeList オブジェクト，Node つまり NodeList のエイリアス
  *
  *  2010.04
- *   - each 方法传给 fn 的 this, 在 jQuery 里指向原生对象，这样可以避免性能问题。
- *     但从用户角度讲，this 的第一直觉是 $(this), kissy 和 yui3 保持一致，牺牲
- *     性能，以易用为首。
- *   - 有了 each 方法，似乎不再需要 import 所有 dom 方法，意义不大。
- *   - dom 是低级 api, node 是中级 api, 这是分层的一个原因。还有一个原因是，如果
- *     直接在 node 里实现 dom 方法，则不大好将 dom 的方法耦合到 nodelist 里。可
- *     以说，技术成本会制约 api 设计。
+ *   - each メソッドで fn の this, で jQuery ではネイティブオブジェクトを指し，こうすることでパフォーマンス問題を回避できる。
+ *     しかしユーザーの立場から言えば，this の第一印象は $(this), kissy と yui3 と同じに保つ，犠牲にして
+ *     パフォーマンス，使いやすさを最優先にする。
+ *   - each メソッドがあれば each メソッド，もはや必要ないように思われる import すべて dom メソッド，あまり意味がない。
+ *   - dom は低レベル api, node は中レベル api, これはレイヤー分割の一つの理由。もう一つの理由は，もし
+ *     をコンテキストとして直接 node 内で実装 dom メソッド，ではあまりうまく dom 的メソッド耦合到 nodelist 内に。可
+ *     と言える，技術コストが制約し api 設計。
  */
 
 /**
@@ -9258,7 +9258,7 @@ KISSY.add('node/attach', function(S, DOM, Event, NodeList, undefined) {
 
     var NLP = NodeList.prototype,
         makeArray = S.makeArray,
-        // DOM 添加到 NP 上的方法
+        // DOM に追加する NP 上のメソッド
         // if DOM methods return undefined , Node methods need to transform result to itself
         DOM_INCLUDES_NORM = [
             "equals",
@@ -9326,7 +9326,7 @@ KISSY.add('node/attach', function(S, DOM, Event, NodeList, undefined) {
             "html":0,
             "data":1
         },
-        // Event 添加到 NP 上的方法
+        // Event に追加する NP 上のメソッド
         EVENT_INCLUDES = ["on","detach","fire","delegate","undelegate"];
 
 
@@ -9355,7 +9355,7 @@ KISSY.add('node/attach', function(S, DOM, Event, NodeList, undefined) {
 
         // get
         if (args[index] === undefined
-            // 并且第一个参数不是对象，否则可能是批量设置写
+            // かつ最初の引数がオブジェクトでない，そうでないとバッチ設定になる可能性がある
             && !S.isObject(args[0])) {
             args.unshift(self);
             return DOM[fn].apply(DOM, args);
@@ -9402,11 +9402,11 @@ KISSY.add('node/attach', function(S, DOM, Event, NodeList, undefined) {
 /**
  * 2011-05-24
  *  - 承玉：
- *  - 将 DOM 中的方法包装成 NodeList 方法
- *  - Node 方法调用参数中的 KISSY NodeList 要转换成第一个 HTML Node
- *  - 要注意链式调用，如果 DOM 方法返回 undefined （无返回值），则 NodeList 对应方法返回 this
- *  - 实际上可以完全使用 NodeList 来代替 DOM，不和节点关联的方法如：viewportHeight 等，在 window，document 上调用
- *  - 存在 window/document 虚节点，通过 S.one(window)/new Node(window) ,S.one(document)/new NodeList(document) 获得
+ *  - を DOM 中的メソッド包装成 NodeList メソッド
+ *  - Node メソッド呼び出し時の引数内の KISSY NodeList は最初の HTML Node
+ *  - チェーン呼び出しに注意する必要がある，もし DOM メソッドが返す undefined （戻り値なし），すると NodeList 对应メソッドが返す this
+ *  - 実際には完全に使用してもよい NodeList の代わりとして DOM，ノードに関連しないメソッド（例：：viewportHeight など，で window，document 上で呼び出す
+ *  - 存在する window/document 疑似ノード，経由で S.one(window)/new Node(window) ,S.one(document)/new NodeList(document) 取得する
  */
 
 /**
@@ -9416,8 +9416,8 @@ KISSY.add('node/attach', function(S, DOM, Event, NodeList, undefined) {
 KISSY.add("node/override", function(S, DOM, Event, NodeList) {
 
     /**
-     * append(node ,parent) : 参数顺序反过来了
-     * appendTo(parent,node) : 才是正常
+     * append(node ,parent) : 引数の順序が逆になっている
+     * appendTo(parent,node) : のが正しい
      *
      */
     S.each(['append', 'prepend','before','after'], function(insertType) {
@@ -9425,7 +9425,7 @@ KISSY.add("node/override", function(S, DOM, Event, NodeList) {
         NodeList.prototype[insertType] = function(html) {
 
             var newNode = html,self = this;
-            // 创建
+            // 作成
             if (S.isString(newNode)) {
                 newNode = DOM.create(newNode);
             }
@@ -9444,10 +9444,10 @@ KISSY.add("node/override", function(S, DOM, Event, NodeList) {
 /**
  * 2011-05-24
  * - 承玉：
- * - 重写 NodeList 的某些方法
- * - 添加 one ,all ，从当前 NodeList 往下开始选择节点
- * - 处理 append ,prepend 和 DOM 的参数实际上是反过来的
- * - append/prepend 参数是节点时，如果当前 NodeList 数量 > 1 需要经过 clone，因为同一节点不可能被添加到多个节点中去（NodeList）
+ * - 上書き NodeList の一部のメソッド
+ * - 追加 one ,all ，現在の NodeList から下方向にノードを選択する
+ * - 処理 append ,prepend と DOM の引数は実際には逆になっている
+ * - append/prepend 引数がノードのとき，もし現在の NodeList 数 > 1 経由で行う必要がある clone，同一ノードを複数のノードに追加することはできないため（NodeList）
  */
 
 /**
@@ -9460,8 +9460,8 @@ KISSY.add('anim/easing', function() {
     // Preview: http://www.robertpenner.com/easing/easing_demo.html
 
     /**
-     * 和 YUI 的 Easing 相比，S.Easing 进行了归一化处理，参数调整为：
-     * @param {Number} t Time value used to compute current value  保留 0 =< t <= 1
+     * と YUI の Easing と比べて，S.Easing 正規化処理を行い，パラメータを次のように調整：：
+     * @param {Number} t Time value used to compute current value  保持 0 =< t <= 1
      * @param {Number} b Starting value  b = 0
      * @param {Number} c Delta between start and end values  c = 1
      * @param {Number} d Total length of animation d = 1
@@ -9643,7 +9643,7 @@ KISSY.add('anim/easing', function() {
         //  1. http://www.w3.org/TR/css3-transitions/#transition-timing-function_tag
         //  2. http://www.robertpenner.com/easing/easing_demo.html
         //  3. assets/cubic-bezier-timing-function.html
-        // 注：是模拟值，非精确推导值
+        // 注：はシミュレーション値である，厳密な導出値ではない
         easeInStrong: 'cubic-bezier(0.9, 0.0, 0.9, 0.5)',
         easeOutStrong: 'cubic-bezier(0.1, 0.5, 0.1, 1.0)',
         easeBothStrong: 'cubic-bezier(0.9, 0.0, 0.1, 1.0)'
@@ -9654,11 +9654,11 @@ KISSY.add('anim/easing', function() {
 
 /**
  * TODO:
- *  - test-easing.html 详细的测试 + 曲线可视化
+ *  - test-easing.html 詳細なテスト + カーブの可視化
  *
  * NOTES:
- *  - 综合比较 jQuery UI/scripty2/YUI 的 easing 命名，还是觉得 YUI 的对用户
- *    最友好。因此这次完全照搬 YUI 的 Easing, 只是代码上做了点压缩优化。
+ *  - 総合的に比較して jQuery UI/scripty2/YUI の easing 命名，やはり YUI の对用户
+ *    最も扱いやすい。したがって今回は完全に踏襲し YUI の Easing, コード上で少し圧縮と最適化を行っただけ。
  *
  */
 
@@ -9776,14 +9776,14 @@ KISSY.add("anim/fx", function(S, DOM, undefined) {
         },
 
         /**
-         * 数值插值函数
-         * @param {Number} from 源值
-         * @param {Number} to 目的值
-         * @param {Number} pos 当前位置，从 easing 得到 0~1
-         * @return {Number} 当前值
+         * 数値補間関数
+         * @param {Number} from 元の値
+         * @param {Number} to 目標値
+         * @param {Number} pos 現在位置，〜から easing 取得する 0~1
+         * @return {Number} 現在値
          */
         interpolate:function (from, to, pos) {
-            // 默认只对数字进行 easing
+            // デフォルトでは数値に対してのみ easing
             if (S.isNumber(from) &&
                 S.isNumber(to)) {
                 return (from + (to - from) * pos).toFixed(3);
@@ -9801,7 +9801,7 @@ KISSY.add("anim/fx", function(S, DOM, undefined) {
                 val = self.interpolate(from, to, self.pos);
 
             if (val === undefined) {
-                // 插值出错，直接设置为最终值
+                // 補間エラー，直接最終値に設定
                 if (!self.finished) {
                     self.finished = 1;
                     DOM.css(elem, prop, to);
@@ -9861,13 +9861,13 @@ KISSY.add("anim/fx", function(S, DOM, undefined) {
 });
 /**
  * TODO
- * 支持 transform ,ie 使用 matrix
+ * サポート transform ,ie 使用 matrix
  *  - http://shawphy.com/2011/01/transformation-matrix-in-front-end.html
  *  - http://www.cnblogs.com/winter-cn/archive/2010/12/29/1919266.html
- *  - 标准：http://www.zenelements.com/blog/css3-transform/
+ *  - 標準：http://www.zenelements.com/blog/css3-transform/
  *  - ie: http://www.useragentman.com/IETransformsTranslator/
  *  - wiki: http://en.wikipedia.org/wiki/Transformation_matrix
- *  - jq 插件: http://plugins.jquery.com/project/2d-transform
+ *  - jq プラグイン: http://plugins.jquery.com/project/2d-transform
  **/
 
 /**
@@ -9876,11 +9876,11 @@ KISSY.add("anim/fx", function(S, DOM, undefined) {
  */
 KISSY.add("anim/queue", function(S, DOM) {
 
-    var /*队列集合容器*/
+    var /*キュー集合コンテナ*/
         queueCollectionKey = S.guid("ks-queue-" + S.now() + "-"),
-        /*默认队列*/
+        /*デフォルトキュー*/
         queueKey = S.guid("ks-queue-" + S.now() + "-"),
-        // 当前队列是否有动画正在执行
+        // 現在のキューに実行中のアニメーションがあるかどうか
         processing = "...";
 
     function getQueue(elem, name, readOnly) {
@@ -9987,7 +9987,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
                 "borderBottomWidth",
                 "borderLeftWidth",
                 'borderRightWidth',
-                // 'borderSpacing', 组合属性？
+                // 'borderSpacing', 複合プロパティ？
                 'borderTopWidth'
             ],
             "borderBottom":["borderBottomWidth"],
@@ -10022,7 +10022,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
 
     /**
      * get a anim instance associate
-     * @param elem 元素或者 window （ window 时只能动画 scrollTop/scrollLeft ）
+     * @param elem 要素または window （ window の場合はスクロールのみアニメーション可能 scrollTop/scrollLeft ）
      * @param props
      * @param duration
      * @param easing
@@ -10052,7 +10052,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
         }
 
         /**
-         * 驼峰属性名
+         * キャメルケースのプロパティ名
          */
         for (var prop in props) {
             var camelProp = camelCase(S.trim(prop));
@@ -10083,7 +10083,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
         self.elem = self['domEl'] = elem;
         self.props = props;
 
-        // 实例属性
+        // インスタンスプロパティ
         self._backupProps = {};
         self._fxs = {};
 
@@ -10119,7 +10119,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
             fxs = self._fxs,
             props = self.props;
 
-        // 进入该函数即代表执行（q[0] 已经是 ...）
+        // この関数に入った時点で実行中を意味する（q[0] すでに〜である ...）
         saveRunning(self);
 
         if (self.fire("start") === false) {
@@ -10132,7 +10132,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
             hidden = DOM.css(elem, "display") == "none";
             for (prop in props) {
                 val = props[prop];
-                // 直接结束
+                // 直接終了
                 if (val == "hide" && hidden || val == 'show' && !hidden) {
                     // need to invoke complete
                     self.stop(1);
@@ -10141,7 +10141,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
             }
         }
 
-        // 分离 easing
+        // 分離 easing
         S.each(props, function(val, prop) {
             if (!props.hasOwnProperty(prop)) {
                 return;
@@ -10160,7 +10160,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
         });
 
 
-        // 扩展分属性
+        // サブプロパティを拡張
         S.each(SHORT_HANDS, function(shortHands, p) {
             var sh,
                 origin,
@@ -10168,23 +10168,23 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
             if (val = props[p]) {
                 origin = {};
                 S.each(shortHands, function(sh) {
-                    // 得到原始分属性之前值
+                    // 元のサブプロパティの以前の値を取得
                     origin[sh] = DOM.css(elem, sh);
                     specialEasing[sh] = specialEasing[p];
                 });
                 DOM.css(elem, p, val);
                 for (sh in origin) {
-                    // 得到期待的分属性最后值
+                    // 期待されるサブプロパティの最終値を取得
                     props[sh] = DOM.css(elem, sh);
-                    // 还原
+                    // 復元
                     DOM.css(elem, sh, origin[sh]);
                 }
-                // 删除复合属性
+                // 複合プロパティを削除
                 delete props[p];
             }
         });
 
-        // 取得单位，并对单个属性构建 Fx 对象
+        // 単位を取得，単一プロパティに対して Fx オブジェクトを構築 Fx オブジェクト
         for (prop in props) {
             if (!props.hasOwnProperty(prop)) {
                 continue;
@@ -10212,7 +10212,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
                 if (val == "hide") {
                     to = 0;
                     from = fx.cur();
-                    // 执行完后隐藏
+                    // 実行完了後に非表示にする
                     _backupProps.display = 'none';
                 } else {
                     from = 0;
@@ -10236,14 +10236,14 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
                 to = parseFloat(parts[2]);
                 unit = parts[3];
 
-                // 有单位但单位不是 px
+                // 単位はあるが単位が px
                 if (unit && unit !== "px") {
                     DOM.css(elem, prop, val);
                     from = (to / fx.cur()) * from;
                     DOM.css(elem, prop, from + unit);
                 }
 
-                // 相对
+                // 相対
                 if (parts[1]) {
                     to = ( (parts[ 1 ] === "-=" ? -1 : 1) * to ) + from;
                 }
@@ -10286,7 +10286,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
     S.augment(Anim, Event.Target, {
 
         /**
-         * @type {boolean} 是否在运行
+         * @type {boolean} 実行中かどうか
          */
         isRunning:function() {
             return isRunning(this);
@@ -10295,7 +10295,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
         _runInternal:runInternal,
 
         /**
-         * 开始动画
+         * アニメーションを開始
          */
         run: function() {
             var self = this,
@@ -10304,7 +10304,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
             if (queueName === false) {
                 runInternal.call(self);
             } else {
-                // 当前动画对象加入队列
+                // 現在のアニメーションオブジェクトをキューに追加
                 Q.queue(self);
             }
 
@@ -10326,7 +10326,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
 
             if ((self.fire("step") === false) ||
                 end) {
-                // complete 事件只在动画到达最后一帧时才触发
+                // complete イベントはアニメーションが最後のフレームに到達したときのみ発火
                 self.stop(end);
             }
         },
@@ -10340,7 +10340,7 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
 
             // already stopped
             if (!self.isRunning()) {
-                // 从自己的队列中移除
+                // 自身のキューから削除
                 if (queueName !== false) {
                     Q.remove(self);
                 }
@@ -10470,23 +10470,23 @@ KISSY.add('anim/base', function(S, DOM, Event, Easing, UA, AM, Fx, Q) {
 
 /**
  * 2011-11
- * - 重构，抛弃 emile，优化性能，只对需要的属性进行动画
- * - 添加 stop/stopQueue/isRunning，支持队列管理
+ * - リファクタリング，破棄 emile，パフォーマンスを最適化，必要なプロパティだけをアニメーション
+ * - 追加 stop/stopQueue/isRunning，キュー管理をサポート
  *
  * 2011-04
- * - 借鉴 yui3 ，中央定时器，否则 ie6 内存泄露？
- * - 支持配置 scrollTop/scrollLeft
+ * - 参考にし yui3 ，中央タイマー，それ以外の場合 ie6 メモリリーク？
+ * - 設定をサポート scrollTop/scrollLeft
  *
  *
  * TODO:
- *  - 效率需要提升，当使用 nativeSupport 时仍做了过多动作
- *  - opera nativeSupport 存在 bug ，浏览器自身 bug ?
- *  - 实现 jQuery Effects 的 queue / specialEasing / += / 等特性
+ *  - 効率を向上させる必要がある，を使用する場合 nativeSupport でも依然として処理が多すぎる
+ *  - opera nativeSupport 存在する bug ，ブラウザ自体 bug ?
+ *  - 実装 jQuery Effects の queue / specialEasing / += / などの機能
  *
  * NOTES:
- *  - 与 emile 相比，增加了 borderStyle, 使得 border: 5px solid #ccc 能从无到有，正确显示
- *  - api 借鉴了 YUI, jQuery 以及 http://www.w3.org/TR/css3-transitions/
- *  - 代码实现了借鉴了 Emile.js: http://github.com/madrobby/emile *
+ *  - と emile と比べて，追加した borderStyle, 〜することで border: 5px solid #ccc ゼロから有りの状態まで，正しく表示する
+ *  - api 参考にしている YUI, jQuery および http://www.w3.org/TR/css3-transitions/
+ *  - コード実装は〜を参考にしている Emile.js: http://github.com/madrobby/emile *
  */
 
 /**
@@ -10567,7 +10567,7 @@ KISSY.add("anim/color", function(S, DOM, Anim, Fx) {
         'borderTopColor'
     );
 
-    //得到颜色的数值表示，红绿蓝数字数组
+    //色の数値表現を取得，RGB の数値配列
     function numericColor(val) {
         val = (val + "");
         var match;
@@ -10602,7 +10602,7 @@ KISSY.add("anim/color", function(S, DOM, Anim, Fx) {
             return KEYWORDS[val];
         }
 
-        //transparent 或者 颜色字符串返回
+        //transparent または カラー文字列を返す
         S.log("only allow rgb or hex color string : " + val, "warn");
         return [255,255,255];
     }
@@ -10637,7 +10637,7 @@ KISSY.add("anim/color", function(S, DOM, Anim, Fx) {
                     floor(interpolate(from[0], to[0], pos)),
                     floor(interpolate(from[1], to[1], pos)),
                     floor(interpolate(from[2], to[2], pos)),
-                    // 透明度默认 1
+                    // 透過度はデフォルトで 1
                     floor(interpolate(from[3] || 1, to[3] || 1, pos))
                 ].join(', ') + ')';
             } else {
@@ -10659,7 +10659,7 @@ KISSY.add("anim/color", function(S, DOM, Anim, Fx) {
 
 /**
  * TODO
- * 支持 hsla
+ * サポート hsla
  *  - https://github.com/jquery/jquery-color/blob/master/jquery.color.js
  **/
 
@@ -10741,7 +10741,7 @@ KISSY.add('node/anim', function(S, DOM, Anim, Node, undefined) {
         function(v, k) {
             Node.prototype[k] = function(speed, callback, easing) {
                 var self = this;
-                // 没有参数时，调用 DOM 中的对应方法
+                // 引数がない場合，呼び出し DOM 中の対応メソッド
                 if (DOM[k] && !speed) {
                     DOM[k](self);
                 } else {
@@ -10758,10 +10758,10 @@ KISSY.add('node/anim', function(S, DOM, Anim, Node, undefined) {
 });
 /**
  * 2011-11-10
- *  - 重写，逻辑放到 Anim 模块，这边只进行转发
+ *  - 上書き，ロジックを〜へ移す Anim モジュール，こちらでは転送だけ行う
  *
  * 2011-05-17
- *  - 承玉：添加 stop ，随时停止动画
+ *  - 承玉：追加 stop ，いつでもアニメーションを停止
  *
  *  TODO
  *  - anim needs queue mechanism ?
@@ -10942,7 +10942,7 @@ KISSY.add("node", function(S, Event, Node) {
 
 KISSY.add("json/json2", function(S, UA) {
     var win = window,JSON = win.JSON;
-    // ie 8.0.7600.16315@win7 json 有问题
+    // ie 8.0.7600.16315@win7 json 問題がある
     if (!JSON || UA['ie'] < 9) {
         JSON = win.JSON = {};
     }
@@ -11273,7 +11273,7 @@ KISSY.add('json', function (S, JSON) {
     return {
 
         parse: function(text) {
-            // 当输入为 undefined / null / '' 时，返回 null
+            // 入力が〜のとき undefined / null / '' のときは，返す null
             if (S.isNullOrUndefined(text) || text === '') {
                 return null;
             }
@@ -11296,45 +11296,45 @@ KISSY.add("ajax/form-serializer", function(S, DOM) {
         rinput = /^(?:color|date|datetime|email|hidden|month|number|password|range|search|tel|text|time|url|week)$/i;
     return {
         /**
-         * 序列化表单元素
+         * フォーム要素をシリアライズ
          * @param {String|HTMLElement[]|HTMLElement|Node} forms
          */
         serialize:function(forms) {
             var elements = [],data = {};
             DOM.query(forms).each(function(el) {
-                // form 取其表单元素集合
-                // 其他直接取自身
+                // form フォームの場合はそのフォーム要素集合を取得
+                // その他はそのもの自体を取得
                 var subs = el.elements ? S.makeArray(el.elements) : [el];
                 elements.push.apply(elements, subs);
             });
-            // 对表单元素进行过滤，具备有效值的才保留
+            // フォーム要素をフィルタリング，有効な値を持つものだけ残す
             elements = S.filter(elements, function(el) {
-                // 有名字
+                // name を持つ
                 return el.name &&
-                    // 不被禁用
+                    // 無効化されていない
                     !el.disabled &&
                     (
-                        // radio,checkbox 被选择了
+                        // radio,checkbox 選択されている
                         el.checked ||
-                            // select 或者 textarea
+                            // select または textarea
                             rselectTextarea.test(el.nodeName) ||
-                            // input 类型
+                            // input タイプ
                             rinput.test(el.type)
                         );
 
-                // 这样子才取值
+                // この場合のみ値を取得
             });
             S.each(elements, function(el) {
                 var val = DOM.val(el),vs;
-                // 字符串换行平台归一化
+                // 文字列の改行コードをプラットフォーム間で正規化
                 val = S.map(S.makeArray(val), function(v) {
                     return v.replace(rCRLF, "\r\n");
                 });
-                // 全部搞成数组，防止同名
+                // すべて配列にする，同名を避けるため
                 vs = data[el.name] = data[el.name] || [];
                 vs.push.apply(vs, val);
             });
-            // 名值键值对序列化,数组元素名字前不加 []
+            // 名前と値のペアをシリアライズ,配列要素の名前の前に付けない []
             return S.param(data, undefined, undefined, false);
         }
     };
@@ -11356,7 +11356,7 @@ KISSY.add("ajax/xhrobject", function(S, Event) {
 
     function handleResponseData(xhr) {
 
-        // text xml 是否原生转化支持
+        // text xml ネイティブ変換をサポートしているかどうか
         var text = xhr.responseText,
             xml = xhr.responseXML,
             c = xhr.config,
@@ -11367,19 +11367,19 @@ KISSY.add("ajax/xhrobject", function(S, Event) {
             contents = c.contents,
             dataType = c.dataType;
 
-        // 例如 script 直接是js引擎执行，没有返回值，不需要自己处理初始返回值
-        // jsonp 时还需要把 script 转换成 json，后面还得自己来
+        // 例えば script 直接〜であるjsエンジンで実行，戻り値はない，初期戻り値を自分で処理する必要はない
+        // jsonp 時にはさらに〜を script に変換 json，その後は自分で処理する必要がある
         if (text || xml) {
 
             var contentType = xhr.mimeType || xhr.getResponseHeader("Content-Type");
 
-            // 去除无用的通用格式
+            // 不要な汎用フォーマットを削除
             while (dataType[0] == "*") {
                 dataType.shift();
             }
 
             if (!dataType.length) {
-                // 获取源数据格式，放在第一个
+                // 元データのフォーマットを取得，最初に配置する
                 for (type in contents) {
                     if (contents[type].test(contentType)) {
                         if (dataType[0] != type) {
@@ -11389,18 +11389,18 @@ KISSY.add("ajax/xhrobject", function(S, Event) {
                     }
                 }
             }
-            // 服务器端没有告知（并且客户端没有mimetype）默认 text 类型
+            // サーバー側から通知がない（かつクライアント側に〜がないmimetype）デフォルト text タイプ
             dataType[0] = dataType[0] || "text";
 
-            //获得合适的初始数据
+            //適切な初期データを取得
             if (dataType[0] == "text" && text !== undefined) {
                 responseData = text;
             }
-            // 有 xml 值才直接取，否则可能还要从 xml 转
+            // を持っている xml 値がある場合のみ直接取得，そうでない場合は〜から変換する必要がある可能性がある xml 変換
             else if (dataType[0] == "xml" && xml !== undefined) {
                 responseData = xml;
             } else {
-                // 看能否从 text xml 转换到合适数据
+                // 〜から取得できるかどうか確認 text xml 適切なデータに変換
                 S.each(["text","xml"], function(prevType) {
                     var type = dataType[0],
                         converter = xConverts[prevType] && xConverts[prevType][type] ||
@@ -11415,7 +11415,7 @@ KISSY.add("ajax/xhrobject", function(S, Event) {
         }
         var prevType = dataType[0];
 
-        // 按照转化链把初始数据转换成我们想要的数据类型
+        // 変換チェーンに従って初期データを目的のデータ型に変換する
         for (var i = 1; i < dataType.length; i++) {
             type = dataType[i];
 
@@ -11435,7 +11435,7 @@ KISSY.add("ajax/xhrobject", function(S, Event) {
 
     function XhrObject(c) {
         S.mix(this, {
-            // 结构化数据，如 json
+            // 構造化データ，例 json
             responseData:null,
             config:c || {},
             timeoutTimer:null,
@@ -11501,12 +11501,12 @@ KISSY.add("ajax/xhrobject", function(S, Event) {
             callback:function(status, statusText) {
                 //debugger
                 var xhr = this;
-                // 只能执行一次，防止重复执行
-                // 例如完成后，调用 abort
+                // 一度だけ実行可能，重複実行を防止
+                // 例えば完了後，呼び出し abort
 
-                // 到这要么成功，调用success
-                // 要么失败，调用 error
-                // 最终都会调用 complete
+                // ここまで来たら成功か，呼び出しsuccess
+                // もしくは失敗，呼び出し error
+                // 最終的にはすべて呼び出される complete
                 if (xhr.state == 2) {
                     return;
                 }
@@ -11601,10 +11601,10 @@ KISSY.add("ajax/base", function(S, JSON, Event, XhrObject) {
                 /*
                  url:"",
                  context:null,
-                 // 单位秒!!
+                 // 単位は秒!!
                  timeout: 0,
                  data: null,
-                 // 可取json | jsonp | script | xml | html | text | null | undefined
+                 // 取り得るのはjson | jsonp | script | xml | html | text | null | undefined
                  dataType: null,
                  username: null,
                  password: null,
@@ -11662,7 +11662,7 @@ KISSY.add("ajax/base", function(S, JSON, Event, XhrObject) {
             }
 
             if (c.processData && c.data && !S.isString(c.data)) {
-                // 必须 encodeURIComponent 编码 utf-8
+                // 必須 encodeURIComponent エンコード utf-8
                 c.data = S.param(c.data, undefined, undefined, c.serializeArray);
             }
 
@@ -11678,7 +11678,7 @@ KISSY.add("ajax/base", function(S, JSON, Event, XhrObject) {
                 }
             }
 
-            // 数据类型处理链，一步步将前面的数据类型转化成最后一个
+            // データタイプ処理チェーン，前のデータタイプを一歩ずつ最後の型に変換する
             c.dataType = S.trim(c.dataType || "*").split(rspace);
 
             c.context = c.context || c;
@@ -11786,14 +11786,14 @@ KISSY.add("ajax/base", function(S, JSON, Event, XhrObject) {
     });
 
 /**
- * 借鉴 jquery，优化减少闭包使用
+ * 参考にし jquery，最適化してクロージャの使用を減らす
  *
  * TODO:
- *  ifModified mode 是否需要？
- *  优点：
- *      不依赖浏览器处理，ajax 请求浏览不会自动加 If-Modified-Since If-None-Match ??
- *  缺点：
- *      内存占用
+ *  ifModified mode 必要かどうか？
+ *  利点：
+ *      ブラウザー処理に依存しない，ajax リクエスト閲覧時に自動で付与されない If-Modified-Since If-None-Match ??
+ *  欠点：
+ *      メモリ消費
  **/
 
 /**
@@ -11834,7 +11834,7 @@ KISSY.add("ajax/xhrbase", function(S, io) {
         if (crossDomain && _XDomainRequest) {
             return new _XDomainRequest();
         }
-        // ie7 XMLHttpRequest 不能访问本地文件
+        // ie7 XMLHttpRequest ローカルファイルにアクセスできない
         return !io.isLocal && createStandardXHR(crossDomain, refWin) || createActiveXHR(crossDomain, refWin);
     } : createStandardXHR;
 
@@ -11874,7 +11874,7 @@ KISSY.add("ajax/xhrbase", function(S, io) {
                 xhrObj.requestHeaders[ "X-Requested-With" ] = "XMLHttpRequest";
             }
             try {
-                // 跨域时，不能设，否则请求变成
+                // クロスドメイン時，設定できない，そうでないとリクエストが〜に変わる
                 // OPTIONS /xhr/r.php HTTP/1.1
                 if (!c.crossDomain) {
                     for (i in xhrObj.requestHeaders) {
@@ -11891,7 +11891,7 @@ KISSY.add("ajax/xhrbase", function(S, io) {
             if (!c.async || xhr.readyState == 4) {
                 self._callback();
             } else {
-                // _XDomainRequest 单独的回调机制
+                // _XDomainRequest 独立したコールバック機構
                 if (isInstanceOfXDomainRequest(xhr)) {
                     xhr.onload = function() {
                         xhr.readyState = 4;
@@ -11910,7 +11910,7 @@ KISSY.add("ajax/xhrbase", function(S, io) {
                 }
             }
         },
-        // 由 xhrObj.abort 调用，自己不可以调用 xhrObj.abort
+        // によって xhrObj.abort 呼び出し，自己不可以呼び出し xhrObj.abort
         abort:function() {
             this._callback(0, 1);
         },
@@ -11927,24 +11927,24 @@ KISSY.add("ajax/xhrbase", function(S, io) {
                 //abort or complete
                 if (abort || xhr.readyState == 4) {
 
-                    // ie6 ActiveObject 设置不恰当属性导致出错
+                    // ie6 ActiveObject 不適切なプロパティ設定でエラーになる
                     if (isInstanceOfXDomainRequest(xhr)) {
                         xhr.onerror = S.noop;
                         xhr.onload = S.noop;
                     } else {
-                        // ie6 ActiveObject 只能设置，不能读取这个属性，否则出错！
+                        // ie6 ActiveObject 設定のみ可能，このプロパティを読み取れない，そうでないとエラーになる！
                         xhr.onreadystatechange = S.noop;
                     }
 
                     if (abort) {
-                        // 完成以后 abort 不要调用
+                        // 完了した後は abort 呼び出さないこと
                         if (xhr.readyState !== 4) {
                             xhr.abort();
                         }
                     } else {
                         var status = xhr.status;
 
-                        // _XDomainRequest 不能获取响应头
+                        // _XDomainRequest レスポンスヘッダーを取得できない
                         if (!isInstanceOfXDomainRequest(xhr)) {
                             xhrObj.responseHeadersString = xhr.getAllResponseHeaders();
                         }
@@ -12127,9 +12127,9 @@ KISSY.add("ajax/xdr", function(S, io, DOM) {
                 xhrObj = self.xhrObj,
                 c = xhrObj.config;
             var xdr = c['xdr'] || {};
-            // 不提供则使用 cdn 默认的 flash
+            // 指定しなければ cdn デフォルトの flash
             _swf(xdr.src || (S.Config.base + "ajax/io.swf"), 1, 1);
-            // 简便起见，用轮训
+            // 簡便のため，ポーリングを使用
             if (!flash) {
                 // S.log("detect xdr flash");
                 setTimeout(function() {
@@ -12140,7 +12140,7 @@ KISSY.add("ajax/xdr", function(S, io, DOM) {
             self._uid = S.guid();
             maps[self._uid] = self;
 
-            // ie67 send 出错？
+            // ie67 send エラー？
             flash.send(c.url, {
                 id:self._uid,
                 uid:self._uid,
@@ -12252,13 +12252,13 @@ KISSY.add("ajax/xhr", function(S, io, XhrBase, SubDomain, XdrTransport) {
 
                 var parts = c.url.match(rurl);
 
-                // 跨子域
+                // サブドメイン間通信
                 if (getMainDomain(location.hostname) == getMainDomain(parts[2])) {
                     return new SubDomain(xhrObj);
                 }
 
                 /**
-                 * ie>7 强制使用 flash xdr
+                 * ie>7 強制的に使用 flash xdr
                  */
                 if (!("withCredentials" in detectXhr) &&
                     (String(xdrCfg.use) === "flash" || !_XDomainRequest)) {
@@ -12292,7 +12292,7 @@ KISSY.add("ajax/xhr", function(S, io, XhrBase, SubDomain, XdrTransport) {
 });
 
 /**
- * 借鉴 jquery，优化使用原型替代闭包
+ * 参考にし jquery，プロトタイプでクロージャを置き換えるよう最適化
  **/
 
 /**
@@ -12319,9 +12319,9 @@ KISSY.add("ajax/script", function(S, io) {
         },
         converters:{
             text:{
-                // 如果以 xhr+eval 需要下面的，
-                // 否则直接 script node 不需要，引擎自己执行了，
-                // 不需要手动 eval
+                // もし〜であれば xhr+eval 以下が必要，
+                // そうでなければ直接 script node 不要，エンジンが自動実行する，
+                // 手動で行う必要はない eval
                 script:function(text) {
                     S.globalEval(text);
                     return text;
@@ -12331,7 +12331,7 @@ KISSY.add("ajax/script", function(S, io) {
     });
 
     function ScriptTransport(xhrObj) {
-        // 优先使用 xhr+eval 来执行脚本, ie 下可以探测到（更多）失败状态
+        // 優先的に使用 xhr+eval でスクリプトを実行, ie 下では検出可能（その他）失敗状態
         if (!xhrObj.config.crossDomain &&
             !xhrObj.config['forceScript']) {
             return new (io.getTransport("*"))(xhrObj);
@@ -12364,7 +12364,7 @@ KISSY.add("ajax/script", function(S, io) {
                 script.onload =
                     script.onreadystatechange = function(e) {
                         e = e || window.event;
-                        // firefox onerror 没有 type ?!
+                        // firefox onerror 存在しない type ?!
                         self._callback((e.type || "error").toLowerCase());
                     };
 
@@ -12376,7 +12376,7 @@ KISSY.add("ajax/script", function(S, io) {
                 xhrObj = this.xhrObj,
                 head = this.head;
 
-            // 防止重复调用,成功后 abort
+            // 重複呼び出しを防止,成功後 abort
             if (!script) {
                 return;
             }
@@ -12391,8 +12391,8 @@ KISSY.add("ajax/script", function(S, io) {
 
                 // Remove the script
                 if (head && script.parentNode) {
-                    // ie 报错载入无效 js
-                    // 怎么 abort ??
+                    // ie 読み込み無効のエラーを報告 js
+                    // どうやって abort ??
                     // script.src = "#";
                     head.removeChild(script);
                 }
@@ -12404,7 +12404,7 @@ KISSY.add("ajax/script", function(S, io) {
                 if (!abort && event != "error") {
                     xhrObj.callback(OK_CODE, "success");
                 }
-                // 非 ie<9 可以判断出来
+                // 非 ie<9 判別できる
                 else if (event == "error") {
                     xhrObj.callback(ERROR_CODE, "scripterror");
                 }
@@ -12433,7 +12433,7 @@ KISSY.add("ajax/jsonp", function(S, io) {
     io.setupConfig({
         jsonp:"callback",
         jsonpCallback:function() {
-            //不使用 now() ，极端情况下可能重复
+            //使用しない now() ，極端な場合は重複する可能性がある
             return S.guid("jsonp");
         }
     });
@@ -12452,8 +12452,8 @@ KISSY.add("ajax/jsonp", function(S, io) {
 
             // build temporary JSONP function
             window[jsonpCallback] = function(r) {
-                // 使用数组，区别：故意调用了 jsonpCallback(undefined) 与 根本没有调用
-                // jsonp 返回了数组
+                // 配列を使用する，違い：意図的に呼び出した jsonpCallback(undefined) と まったく呼び出していない
+                // jsonp 配列を返した
                 if (arguments.length > 1) {
                     r = S.makeArray(arguments);
                 }
@@ -12489,7 +12489,7 @@ KISSY.add("ajax/jsonp", function(S, io) {
             };
 
             c.dataType.length = 2;
-            // 利用 script transport 发送 script 请求
+            // 利用 script transport 送信 script リクエスト
             c.dataType[0] = 'script';
             c.dataType[1] = 'json';
         }
@@ -12509,21 +12509,21 @@ KISSY.add("ajax/form", function(S, io, DOM, FormSerializer) {
         if (c.form) {
             var form = DOM.get(c.form),
                 enctype = form['encoding'] || form.enctype;
-            // 上传有其他方法
+            // アップロードには他の方法がある
             if (enctype.toLowerCase() != "multipart/form-data") {
                 // when get need encode
                 var formParam = FormSerializer.serialize(form);
 
                 if (formParam) {
                     if (c.hasContent) {
-                        // post 加到 data 中
+                        // post に追加する data 中
                         c.data = c.data || "";
                         if (c.data) {
                             c.data += "&";
                         }
                         c.data += formParam;
                     } else {
-                        // get 直接加到 url
+                        // get 直接追加する url
                         c.url += ( /\?/.test(c.url) ? "&" : "?" ) + formParam;
                     }
                 }
@@ -12555,10 +12555,10 @@ KISSY.add("ajax/iframe-upload", function(S, DOM, Event, io) {
 
     var OK_CODE = 200,ERROR_CODE = 500,BREATH_INTERVAL = 30;
 
-    // iframe 内的内容就是 body.innerText
+    // iframe 内の内容はそのまま body.innerText
     io.setupConfig({
         converters:{
-            // iframe 到其他类型的转化和 text 一样
+            // iframe への他タイプへの変換は text と同様に
             iframe:io.getConfig().converters.text,
             text:{
                 iframe:function(text) {
@@ -12583,7 +12583,7 @@ KISSY.add("ajax/iframe-upload", function(S, DOM, Event, io) {
         for (var d in data) {
             var isArray = S.isArray(data[d]),
                 vs = S.makeArray(data[d]);
-            // 数组和原生一样对待，创建多个同名输入域
+            // 配列はネイティブと同様に扱う，同名の入力フィールドを複数作成する
             for (var i = 0; i < vs.length; i++) {
                 var e = doc.createElement("input");
                 e.type = 'hidden';
@@ -12646,7 +12646,7 @@ KISSY.add("ajax/iframe-upload", function(S, DOM, Event, io) {
                 xhr = this.xhr,
                 eventType = event.type,
                 iframe = xhr.iframe;
-            // 防止重复调用 , 成功后 abort
+            // 重複呼び出しを防止 , 成功後 abort
             if (!iframe) {
                 return;
             }
@@ -12695,13 +12695,13 @@ KISSY.add("ajax", function(S, serializer, io) {
     S.mix(io, {
 
         /**
-         * form 序列化
-         * @param formElement {HTMLFormElement} 将要序列化的 form 元素
+         * form シリアライズ
+         * @param formElement {HTMLFormElement} シリアライズする予定の form 要素
          */
         serialize:serializer.serialize,
 
         get: function(url, data, callback, dataType, _t) {
-            // data 参数可省略
+            // data パラメータは省略可能
             if (S.isFunction(data)) {
                 dataType = callback;
                 callback = data;
@@ -12734,8 +12734,8 @@ KISSY.add("ajax", function(S, serializer, io) {
             return io.get(url, data, callback, "jsonp");
         },
 
-        // 和 S.getScript 保持一致
-        // 更好的 getScript 可以用
+        // と S.getScript と同じに保つ
+        // より良い getScript を使用できる
         /*
          io({
          dataType:'script'
@@ -12847,7 +12847,7 @@ KISSY.add('base/attribute', function(S, undef) {
          attrName: {
          getter: function,
          setter: function,
-         // 注意：只能是普通对象以及系统内置类型，而不能是 new Xx()，否则用 valueFn 替代
+         // 注意：通常のオブジェクトおよびシステム組み込み型のみ可，であってはならず new Xx()，そうでなければ valueFn で置き換える
          value: v, // default value
          valueFn: function
          }
@@ -12975,7 +12975,7 @@ KISSY.add('base/attribute', function(S, undef) {
     }
 
     /**
-     * 提供属性管理机制
+     * プロパティ管理メカニズムを提供
      * @name Attribute
      * @class
      */
@@ -13010,7 +13010,7 @@ KISSY.add('base/attribute', function(S, undef) {
          * @param {String} name attrName
          * @param {Object} attrConfig The config supports the following properties:
          * {
-         *     value: 'the default value', // 最好不要使用自定义类生成的对象，这时使用 valueFn
+         *     value: 'the default value', // カスタムクラスで生成したオブジェクトは極力使用しない，この場合は valueFn
          *     valueFn: function //
          *     setter: function
          *     getter: function
@@ -13119,8 +13119,8 @@ KISSY.add('base/attribute', function(S, undef) {
                 setValue,
                 // if host does not have meta info corresponding to (name,value)
                 // then register on demand in order to collect all data meta info
-                // 一定要注册属性元数据，否则其他模块通过 _attrs 不能枚举到所有有效属性
-                // 因为属性在声明注册前可以直接设置值
+                // 必ずプロパティメタデータを登録すること，さもないと他のモジュールが _attrs を通して _attrs すべての有効なプロパティを列挙できない
+                // プロパティは宣言・登録前でも直接値を設定できるため
                 attrConfig = ensureNonEmpty(getAttrs(self), name, true),
                 validator = attrConfig['validator'],
                 setter = attrConfig['setter'];
@@ -13252,7 +13252,7 @@ KISSY.add('base/attribute', function(S, undef) {
 
 /**
  *  2011-10-18
- *    get/set sub attribute value ,set("x.y",val) x 最好为 {} ，不要是 new Clz() 出来的
+ *    get/set sub attribute value ,set("x.y",val) x であることが望ましく {} ，であってはならず new Clz() から生成されたもの
  *    add validator
  */
 
@@ -13284,10 +13284,10 @@ KISSY.add('base/base', function (S, Attribute, Event) {
     function addAttrs(host, attrs) {
         if (attrs) {
             for (var attr in attrs) {
-                // 子类上的 ATTRS 配置优先
+                // サブクラス上の ATTRS 設定が優先される
                 if (attrs.hasOwnProperty(attr)) {
-                    // 父类后加，父类不覆盖子类的相同设置
-                    // 属性对象会 merge   a: {y:{getter:fn}}, b:{y:{value:3}}, b extends a => b {y:{value:3}}
+                    // スーパークラスは後から追加される，スーパークラスはサブクラスの同一設定を上書きしない
+                    // プロパティオブジェクトは merge   a: {y:{getter:fn}}, b:{y:{value:3}}, b extends a => b {y:{value:3}}
                     host.addAttr(attr, attrs[attr], false);
                 }
             }
@@ -13298,7 +13298,7 @@ KISSY.add('base/base', function (S, Attribute, Event) {
         if (config) {
             for (var attr in config) {
                 if (config.hasOwnProperty(attr)) {
-                    //用户设置会调用 setter/validator 的，但不会触发属性变化事件
+                    //ユーザー設定では setter/validator の，ただしプロパティ変更イベントは発火しない
                     host.__set(attr, config[attr]);
                 }
 
@@ -13338,8 +13338,8 @@ KISSY.add('cookie/base', function(S) {
     return {
 
         /**
-         * 获取 cookie 值
-         * @return {string} 如果 name 不存在，返回 undefined
+         * 取得 cookie 値
+         * @return {string} もし name 存在しない，返す undefined
          */
         get: function(name) {
             var ret, m;
@@ -13356,7 +13356,7 @@ KISSY.add('cookie/base', function(S) {
         set: function(name, val, expires, domain, path, secure) {
             var text = String(encode(val)), date = expires;
 
-            // 从当前时间开始，多少天后过期
+            // 現在時刻から開始して，何日後に期限切れになるか
             if (typeof date === 'number') {
                 date = new Date();
                 date.setTime(date.getTime() + expires * MILLISECONDS_OF_DAY);
@@ -13386,7 +13386,7 @@ KISSY.add('cookie/base', function(S) {
         },
 
         remove: function(name, domain, path, secure) {
-            // 置空，并立刻过期
+            // 空にする，かつ即時に期限切れにする
             this.set(name, '', -1, domain, path, secure);
         }
     };
@@ -13397,11 +13397,11 @@ KISSY.add('cookie/base', function(S) {
  * NOTES:
  *
  *  2010.04
- *   - get 方法要考虑 ie 下，
- *     值为空的 cookie 为 'test3; test3=3; test3tt=2; test1=t1test3; test3', 没有等于号。
- *     除了正则获取，还可以 split 字符串的方式来获取。
- *   - api 设计上，原本想借鉴 jQuery 的简明风格：S.cookie(name, ...), 但考虑到可扩展性，目前
- *     独立成静态工具类的方式更优。
+ *   - get メソッドでは考慮する必要がある ie 下，
+ *     值ための空的 cookie ための 'test3; test3=3; test3tt=2; test1=t1test3; test3', イコール記号がない。
+ *     正規表現で取得する以外に，～することもできる split 文字列によって取得する方法。
+ *   - api 設計上，参考にしようとした jQuery のシンプルなスタイル：S.cookie(name, ...), しかし拡張性を考慮して，現在
+ *     静的ユーティリティクラスとして分離する方式のほうが望ましい。
  */
 
 KISSY.add("cookie", function(S,C) {

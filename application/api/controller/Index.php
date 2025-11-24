@@ -5,7 +5,7 @@ namespace app\api\controller;
 use app\common\controller\Api;
 
 /**
- * 首页接口
+ * トップページAPI
  */
 class Index extends Api
 {
@@ -13,11 +13,11 @@ class Index extends Api
     protected $noNeedRight = ['*'];
 
     /**
-     * 首页
+     * 最初のページ
      *
      */
     public function index()
     {
-        $this->success('请求成功');
+        $this->success('リクエスト成功');
     }
 }

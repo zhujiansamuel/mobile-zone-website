@@ -7,31 +7,31 @@
 
     $.fn.bootstrapTable.locales['zh-TW'] = {
         formatLoadingMessage: function () {
-            return '正在努力地載入資料，請稍候……';
+            return 'データを読み込んでいます，しばらくお待ちください……';
         },
         formatRecordsPerPage: function (pageNumber) {
-            return '每頁顯示 ' + pageNumber + ' 項記錄';
+            return 'ページあたり ' + pageNumber + ' 件を表示';
         },
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
-            return '顯示第 ' + pageFrom + ' 到第 ' + pageTo + ' 項記錄，總共 ' + totalRows + ' 項記錄';
+            return '表示中 ' + pageFrom + '  から  ' + pageTo + ' 件を表示，合計 ' + totalRows + ' 件を表示';
         },
         formatDetailPagination: function (pageFrom, pageTo, totalRows) {
-            return '總共 ' + totalRows + ' 項記錄';
+            return '合計 ' + totalRows + ' 件を表示';
         },
         formatSearch: function () {
-            return '搜尋';
+            return '検索';
         },
         formatNoMatches: function () {
-            return '沒有找到符合的結果';
+            return '一致する結果が見つかりません';
         },
         formatPaginationSwitch: function () {
-            return '隱藏/顯示分頁';
+            return '非表示/ページを表示';
         },
         formatRefresh: function () {
-            return '重新整理';
+            return '再読み込み';
         },
         formatToggle: function () {
-            return '切換';
+            return '切り替え';
         },
         formatColumns: function () {
             return '列';

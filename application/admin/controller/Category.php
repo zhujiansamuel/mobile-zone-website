@@ -7,10 +7,10 @@ use app\common\model\Category as CategoryModel;
 use fast\Tree;
 
 /**
- * 分类管理
+ * カテゴリ管理
  *
  * @icon   fa fa-list
- * @remark 用于管理网站的所有分类,分类可进行无限级分类,分类类型请在常规管理->系统配置->字典配置中添加
+ * @remark サイト内のすべてのカテゴリを管理するために使用します,カテゴリは無制限に階層化できます,カテゴリタイプは「通常管理」で設定してください->システム設定->の「辞書設定」で追加
  */
 class Category extends Backend
 {
@@ -42,17 +42,17 @@ class Category extends Backend
     }
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
             $search = $this->request->request("search");
             $type = $this->request->request("type");
 
-            //构造父类select列表选项数据
+            //親クラスを構築selectリストオプションデータ
             $list = [];
 
             foreach ($this->categorylist as $k => $v) {
@@ -82,7 +82,7 @@ class Category extends Backend
     }
 
     /**
-     * 添加
+     * 追加
      */
     public function add()
     {
@@ -93,7 +93,7 @@ class Category extends Backend
     }
 
     /**
-     * 编辑
+     * 編集
      */
     public function edit($ids = null)
     {
@@ -121,7 +121,7 @@ class Category extends Backend
                 }
 
                 try {
-                    //是否采用模型验证
+                    //モデル検証を採用するかどうか
                     if ($this->modelValidate) {
                         $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
                         $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
@@ -147,7 +147,7 @@ class Category extends Backend
 
 
     /**
-     * Selectpage搜索
+     * Selectpage検索
      *
      * @internal
      */

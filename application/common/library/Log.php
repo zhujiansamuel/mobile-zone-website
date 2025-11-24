@@ -6,7 +6,7 @@ use Psr\Log\AbstractLogger;
 use think\Hook;
 
 /**
- * 日志记录类
+ * ログ記録クラス
  */
 class Log extends AbstractLogger
 {

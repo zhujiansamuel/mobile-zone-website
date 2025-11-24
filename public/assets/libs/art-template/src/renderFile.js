@@ -1,9 +1,9 @@
 /**
- * 渲染模板(根据模板名)
+ * テンプレートをレンダリング(テンプレート名に基づく)
  * @name    template.render
- * @param   {String}    模板名
- * @param   {Object}    数据
- * @return  {String}    渲染好的字符串
+ * @param   {String}    テンプレート名
+ * @param   {Object}    データ
+ * @return  {String}    レンダリング済み文字列
  */
 var renderFile = template.renderFile = function (filename, data) {
     var fn = template.get(filename) || showDebugInfo({

@@ -1,9 +1,9 @@
 /**
- * 编译模板
- * 2012-6-6 @TooBug: define 方法名改为 compile，与 Node Express 保持一致
+ * テンプレートをコンパイル
+ * 2012-6-6 @TooBug: define メソッド名を〜に変更 compile，と Node Express と同じに保つ
  * @name    template.compile
- * @param   {String}    模板字符串
- * @param   {Object}    编译选项
+ * @param   {String}    テンプレート文字列
+ * @param   {Object}    コンパイルオプション
  *
  *      - openTag       {String}
  *      - closeTag      {String}
@@ -14,11 +14,11 @@
  *      - cache         {Boolean}
  *      - parser        {Function}
  *
- * @return  {Function}  渲染方法
+ * @return  {Function}  レンダリングメソッド
  */
 var compile = template.compile = function (source, options) {
     
-    // 合并默认配置
+    // デフォルト設定のマージ
     options = options || {};
     for (var name in defaults) {
         if (options[name] === undefined) {
@@ -44,7 +44,7 @@ var compile = template.compile = function (source, options) {
     }
     
     
-    // 对编译结果进行一次包装
+    // コンパイル結果を一度ラップする
 
     function render (data) {
         
@@ -54,7 +54,7 @@ var compile = template.compile = function (source, options) {
             
         } catch (e) {
             
-            // 运行时出错后自动开启调试模式重新编译
+            // 実行時エラー発生後に自動でデバッグモードを有効にして再コンパイル
             if (!options.debug) {
                 options.debug = true;
                 return compile(source, options)(data);
@@ -85,18 +85,18 @@ var compile = template.compile = function (source, options) {
 
 
 
-// 数组迭代
+// 配列の反復処理
 var forEach = utils.$each;
 
 
-// 静态分析模板变量
+// テンプレート変数の静的解析
 var KEYWORDS =
-    // 关键字
+    // キーワード
     'break,case,catch,continue,debugger,default,delete,do,else,false'
     + ',finally,for,function,if,in,instanceof,new,null,return,switch,this'
     + ',throw,true,try,typeof,var,void,while,with'
 
-    // 保留字
+    // 予約語
     + ',abstract,boolean,byte,char,class,const,double,enum,export,extends'
     + ',final,float,goto,implements,import,int,interface,long,native'
     + ',package,private,protected,public,short,static,super,synchronized'
@@ -115,7 +115,7 @@ var BOUNDARY_RE = /^,+|,+$/g;
 var SPLIT2_RE = /^$|,+/;
 
 
-// 获取变量
+// 変数を取得
 function getVariable (code) {
     return code
     .replace(REMOVE_RE, '')
@@ -127,12 +127,12 @@ function getVariable (code) {
 };
 
 
-// 字符串转义
+// 文字列エスケープ
 function stringify (code) {
     return "'" + code
-    // 单引号与反斜杠转义
+    // シングルクォートとバックスラッシュのエスケープ
     .replace(/('|\\)/g, '\\$1')
-    // 换行符转义(windows + linux)
+    // 改行コードのエスケープ(windows + linux)
     .replace(/\r/g, '\\r')
     .replace(/\n/g, '\\n') + "'";
 }
@@ -182,7 +182,7 @@ function compiler (source, options) {
 
     var footerCode = "return new String(" + replaces[3] + ");"
     
-    // html与逻辑语法分离
+    // htmlロジック構文との分離
     forEach(source.split(openTag), function (code) {
         code = code.split(closeTag);
         
@@ -209,7 +209,7 @@ function compiler (source, options) {
     
     var code = headerCode + mainCode + footerCode;
     
-    // 调试语句
+    // デバッグ文
     if (debug) {
         code = "try{" + code + "}catch(e){"
         +       "throw {"
@@ -241,13 +241,13 @@ function compiler (source, options) {
 
 
     
-    // 处理 HTML 语句
+    // 処理 HTML ステートメント
     function html (code) {
         
-        // 记录行号
+        // 行番号の記録
         line += code.split(/\n/).length - 1;
 
-        // 压缩多余空白与注释
+        // 不要な空白とコメントの圧縮
         if (compress) {
             code = code
             .replace(/\s+/g, ' ')
@@ -262,19 +262,19 @@ function compiler (source, options) {
     }
     
     
-    // 处理逻辑语句
+    // ロジック文の処理
     function logic (code) {
 
         var thisLine = line;
        
         if (parser) {
         
-             // 语法转换插件钩子
+             // 構文変換プラグインフック
             code = parser(code, options);
             
         } else if (debug) {
         
-            // 记录行号
+            // 行番号の記録
             code = code.replace(/\n/g, function () {
                 line ++;
                 return "$line=" + line +  ";";
@@ -283,26 +283,26 @@ function compiler (source, options) {
         }
         
         
-        // 输出语句. 编码: <%=value%> 不编码:<%=#value%>
-        // <%=#value%> 等同 v2.0.3 之前的 <%==value%>
+        // 出力文. エンコード: <%=value%> 不エンコード:<%=#value%>
+        // <%=#value%> 同等 v2.0.3 以前の <%==value%>
         if (code.indexOf('=') === 0) {
 
             var escapeSyntax = escape && !/^=[=#]/.test(code);
 
             code = code.replace(/^=[=#]?|[\s;]*$/g, '');
 
-            // 对内容编码
+            // 内容をエスケープ
             if (escapeSyntax) {
 
                 var name = code.replace(/\s*\([^\)]+\)/, '');
 
-                // 排除 utils.* | include | print
+                // 除外 utils.* | include | print
                 
                 if (!utils[name] && !/^(include|print)$/.test(name)) {
                     code = "$escape(" + code + ")";
                 }
 
-            // 不编码
+            // エスケープなし
             } else {
                 code = "$string(" + code + ")";
             }
@@ -316,18 +316,18 @@ function compiler (source, options) {
             code = "$line=" + thisLine + ";" + code;
         }
         
-        // 提取模板中的变量名
+        // テンプレート内の変数名を抽出
         forEach(getVariable(code), function (name) {
             
-            // name 值可能为空，在安卓低版本浏览器下
+            // name 値が空になる可能性があります，Android 旧バージョンのブラウザにおいて
             if (!name || uniq[name]) {
                 return;
             }
 
             var value;
 
-            // 声明模板变量
-            // 赋值优先级:
+            // テンプレート変数の宣言
+            // 代入の優先順位:
             // [include, print] > utils > helpers > data
             if (name === 'print') {
 

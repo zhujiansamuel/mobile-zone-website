@@ -15,68 +15,68 @@ use think\Route;
 use think\Validate;
 
 /**
- * API控制器基类
+ * APIコントローラー基底クラス
  */
 class Api
 {
 
     /**
-     * @var Request Request 实例
+     * @var Request Request インスタンス
      */
     protected $request;
 
     /**
-     * @var bool 验证失败是否抛出异常
+     * @var bool 検証失敗時に例外をスローするかどうか
      */
     protected $failException = false;
 
     /**
-     * @var bool 是否批量验证
+     * @var bool 一括検証を行うかどうか
      */
     protected $batchValidate = false;
 
     /**
-     * @var array 前置操作方法列表
+     * @var array 前処理メソッド一覧
      */
     protected $beforeActionList = [];
 
     /**
-     * 无需登录的方法,同时也就不需要鉴权了
+     * ログイン不要のメソッド,同時に権限認証も不要となる
      * @var array
      */
     protected $noNeedLogin = [];
 
     /**
-     * 无需鉴权的方法,但需要登录
+     * 認証不要のメソッド,ただしログインは必要
      * @var array
      */
     protected $noNeedRight = [];
 
     /**
-     * 权限Auth
+     * 権限Auth
      * @var Auth
      */
     protected $auth = null;
 
     /**
-     * 默认响应输出类型,支持json/xml
+     * デフォルトのレスポンス出力形式,サポートjson/xml
      * @var string
      */
     protected $responseType = 'json';
 
     /**
-     * 构造方法
+     * コンストラクタ
      * @access public
-     * @param Request $request Request 对象
+     * @param Request $request Request オブジェクト
      */
     public function __construct(Request $request = null)
     {
         $this->request = is_null($request) ? Request::instance() : $request;
 
-        // 控制器初始化
+        // コントローラー初期化
         $this->_initialize();
 
-        // 前置操作方法
+        // 前処理メソッド
         if ($this->beforeActionList) {
             foreach ($this->beforeActionList as $method => $options) {
                 is_numeric($method) ?
@@ -87,18 +87,18 @@ class Api
     }
 
     /**
-     * 初始化操作
+     * 初期化処理
      * @access protected
      */
     protected function _initialize()
     {
-        //跨域请求检测
+        //クロスドメインリクエストの検査
         check_cors_request();
 
-        // 检测IP是否允许
+        // チェックIP許可するかどうか
         check_ip_allowed();
 
-        //移除HTML标签
+        //削除HTMLラベル
         $this->request->filter('trim,strip_tags,htmlspecialchars');
 
         $this->auth = Auth::instance();
@@ -111,25 +111,25 @@ class Api
         $token = $this->request->server('HTTP_TOKEN', $this->request->request('token', \think\Cookie::get('token')));
 
         $path = str_replace('.', '/', $controllername) . '/' . $actionname;
-        // 设置当前请求的URI
+        // 現在のリクエストのURI
         $this->auth->setRequestUri($path);
-        // 检测是否需要验证登录
+        // ログイン検証が必要かをチェック
         if (!$this->auth->match($this->noNeedLogin)) {
-            //初始化
+            //初期化
             $this->auth->init($token);
-            //检测是否登录
+            //ログインしているか確認
             if (!$this->auth->isLogin()) {
                 $this->error(__('Please login first'), null, 401);
             }
-            // 判断是否需要验证权限
+            // 権限検証が必要かを判定
             if (!$this->auth->match($this->noNeedRight)) {
-                // 判断控制器和方法判断是否有对应权限
+                // コントローラーとメソッドに対応権限があるか判定
                 if (!$this->auth->check($path)) {
                     $this->error(__('You have no permission'), null, 403);
                 }
             }
         } else {
-            // 如果有传递token才验证是否登录状态
+            // が渡された場合のみtokenログイン状態を検証する
             if ($token) {
                 $this->auth->init($token);
             }
@@ -137,17 +137,17 @@ class Api
 
         $upload = \app\common\model\Config::upload();
 
-        // 上传信息配置后
+        // アップロード情報設定後
         Hook::listen("upload_config_init", $upload);
 
         Config::set('upload', array_merge(Config::get('upload'), $upload));
 
-        // 加载当前控制器语言包
+        // 現在のコントローラーの言語パックを読み込み
         $this->loadlang($controllername);
     }
 
     /**
-     * 加载语言文件
+     * 言語ファイルを読み込む
      * @param string $name
      */
     protected function loadlang($name)
@@ -160,12 +160,12 @@ class Api
     }
 
     /**
-     * 操作成功返回的数据
-     * @param string $msg    提示信息
-     * @param mixed  $data   要返回的数据
-     * @param int    $code   错误码，默认为1
-     * @param string $type   输出类型
-     * @param array  $header 发送的 Header 信息
+     * 操作成功時に返すデータ
+     * @param string $msg    メッセージ
+     * @param mixed  $data   返却するデータ
+     * @param int    $code   エラーコード，デフォルトは1
+     * @param string $type   出力タイプ
+     * @param array  $header 送信する Header 情報
      */
     protected function success($msg = '', $data = null, $code = 1, $type = null, array $header = [])
     {
@@ -173,12 +173,12 @@ class Api
     }
 
     /**
-     * 操作失败返回的数据
-     * @param string $msg    提示信息
-     * @param mixed  $data   要返回的数据
-     * @param int    $code   错误码，默认为0
-     * @param string $type   输出类型
-     * @param array  $header 发送的 Header 信息
+     * 操作失敗時に返されるデータ
+     * @param string $msg    メッセージ
+     * @param mixed  $data   返却するデータ
+     * @param int    $code   エラーコード，デフォルトは0
+     * @param string $type   出力タイプ
+     * @param array  $header 送信する Header 情報
      */
     protected function error($msg = '', $data = null, $code = 0, $type = null, array $header = [])
     {
@@ -186,13 +186,13 @@ class Api
     }
 
     /**
-     * 返回封装后的 API 数据到客户端
+     * ラップ済み API データをクライアントへ
      * @access protected
-     * @param mixed  $msg    提示信息
-     * @param mixed  $data   要返回的数据
-     * @param int    $code   错误码，默认为0
-     * @param string $type   输出类型，支持json/xml/jsonp
-     * @param array  $header 发送的 Header 信息
+     * @param mixed  $msg    メッセージ
+     * @param mixed  $data   返却するデータ
+     * @param int    $code   エラーコード，デフォルトは0
+     * @param string $type   出力タイプ，サポートjson/xml/jsonp
+     * @param array  $header 送信する Header 情報
      * @return void
      * @throws HttpResponseException
      */
@@ -204,14 +204,14 @@ class Api
             'time' => Request::instance()->server('REQUEST_TIME'),
             'data' => $data,
         ];
-        // 如果未设置类型则使用默认类型判断
+        // タイプが未設定の場合はデフォルトタイプで判定します
         $type = $type ? : $this->responseType;
 
         if (isset($header['statuscode'])) {
             $code = $header['statuscode'];
             unset($header['statuscode']);
         } else {
-            //未设置状态码,根据code值判断
+            //ステータスコードが未設定,に基づいてcode値の判定
             $code = $code >= 1000 || $code < 200 ? 200 : $code;
         }
         $response = Response::create($result, $type, $code)->header($header);
@@ -219,10 +219,10 @@ class Api
     }
 
     /**
-     * 前置操作
+     * 前処理
      * @access protected
-     * @param string $method  前置操作方法名
-     * @param array  $options 调用参数 ['only'=>[...]] 或者 ['except'=>[...]]
+     * @param string $method  前処理メソッド名
+     * @param array  $options 呼び出しパラメーター ['only'=>[...]] または ['except'=>[...]]
      * @return void
      */
     protected function beforeAction($method, $options = [])
@@ -249,9 +249,9 @@ class Api
     }
 
     /**
-     * 设置验证失败后是否抛出异常
+     * 検証失敗時に例外をスローするかどうかを設定
      * @access protected
-     * @param bool $fail 是否抛出异常
+     * @param bool $fail 例外をスローするかどうか
      * @return $this
      */
     protected function validateFailException($fail = true)
@@ -264,9 +264,9 @@ class Api
     /*
     
      $validate = [
-        'category_id' => 'require,请选择服务分类',
-        'name' => 'require,请填写联系人姓名',
-        'mobile' => 'require,请填写手机号码',
+        'category_id' => 'require,サービス分類を選択してください',
+        'name' => 'require,連絡担当者名を入力してください',
+        'mobile' => 'require,携帯番号を入力してください',
     ];
 
     $result = $this->verify($data, $validate);
@@ -298,13 +298,13 @@ class Api
     }
 
     /**
-     * 验证数据
+     * データを検証
      * @access protected
-     * @param array        $data     数据
-     * @param string|array $validate 验证器名或者验证规则数组
-     * @param array        $message  提示信息
-     * @param bool         $batch    是否批量验证
-     * @param mixed        $callback 回调方法（闭包）
+     * @param array        $data     データ
+     * @param string|array $validate バリデータ名または検証ルール配列
+     * @param array        $message  メッセージ
+     * @param bool         $batch    一括検証を行うかどうか
+     * @param mixed        $callback コールバックメソッド（クロージャ）
      * @return array|string|true
      * @throws ValidateException
      */
@@ -314,7 +314,7 @@ class Api
             $v = Loader::validate();
             $v->rule($validate);
         } else {
-            // 支持场景
+            // シーンをサポート
             if (strpos($validate, '.')) {
                 list($validate, $scene) = explode('.', $validate);
             }
@@ -324,15 +324,15 @@ class Api
             !empty($scene) && $v->scene($scene);
         }
 
-        // 批量验证
+        // 一括検証
         if ($batch || $this->batchValidate) {
             $v->batch(true);
         }
-        // 设置错误信息
+        // エラーメッセージを設定
         if (is_array($message)) {
             $v->message($message);
         }
-        // 使用回调验证
+        // コールバックによる検証を使用
         if ($callback && is_callable($callback)) {
             call_user_func_array($callback, [$v, &$data]);
         }
@@ -349,18 +349,18 @@ class Api
     }
 
     /**
-     * 刷新Token
+     * 更新Token
      */
     protected function token()
     {
         $token = $this->request->param('__token__');
 
-        //验证Token
+        //検証Token
         if (!Validate::make()->check(['__token__' => $token], ['__token__' => 'require|token'])) {
             $this->error(__('Token verification error'), ['__token__' => $this->request->token()]);
         }
 
-        //刷新Token
+        //更新Token
         $this->request->token();
     }
 }

@@ -9,17 +9,17 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
     var Controller = {
         login: function () {
 
-            //本地验证未通过时提示
+            //ローカル検証に失敗した場合のメッセージ
             $("#login-form").data("validator-options", validatoroptions);
 
-            //为表单绑定事件
+            //フォームにイベントをバインド
             Form.api.bindevent($("#login-form"), function (data, ret) {
                 setTimeout(function () {
                     location.href = ret.url ? ret.url : "/";
                 }, 1000);
             });
 
-            //忘记密码
+            //パスワードをお忘れの方
             $(document).on("click", ".btn-forgot", function () {
                 var id = "resetpwdtpl";
                 var content = Template(id, {});
@@ -47,10 +47,10 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
             });
         },
         register: function () {
-            //本地验证未通过时提示
+            //ローカル検証に失敗した場合のメッセージ
             $("#register-form").data("validator-options", validatoroptions);
 
-            //为表单绑定事件
+            //フォームにイベントをバインド
             Form.api.bindevent($("#register-form"), function (data, ret) {
                 setTimeout(function () {
                     location.href = ret.url ? ret.url : "/";
@@ -60,10 +60,10 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
             });
         },
         changepwd: function () {
-            //本地验证未通过时提示
+            //ローカル検証に失敗した場合のメッセージ
             $("#changepwd-form").data("validator-options", validatoroptions);
 
-            //为表单绑定事件
+            //フォームにイベントをバインド
             Form.api.bindevent($("#changepwd-form"), function (data, ret) {
                 setTimeout(function () {
                     location.href = ret.url ? ret.url : "/";
@@ -71,7 +71,7 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
             });
         },
         profile: function () {
-            // 给上传按钮添加上传成功事件
+            // アップロードボタンにアップロード成功イベントを追加
             $("#faupload-avatar").data("upload-success", function (data) {
                 var url = Fast.api.cdnurl(data.url);
                 $(".profile-user-img").prop("src", url);
@@ -84,7 +84,7 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
                 var content = Template(id, {});
                 Layer.open({
                     type: 1,
-                    title: "修改",
+                    title: "編集",
                     area: [$(window).width() < 450 ? ($(window).width() - 10) + "px" : "450px", "355px"],
                     content: content,
                     success: function (layero) {
@@ -100,7 +100,7 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
         attachment: function () {
             require(['table'], function (Table) {
 
-                // 初始化表格参数配置
+                // テーブルパラメーター設定の初期化
                 Table.api.init({
                     extend: {
                         index_url: 'user/attachment',
@@ -130,7 +130,7 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
                     });
                 });
 
-                // 初始化表格
+                // テーブルの初期化
                 table.bootstrapTable({
                     url: $.fn.bootstrapTable.defaults.extend.index_url,
                     sortName: 'id',
@@ -175,12 +175,12 @@ define(['jquery', 'bootstrap', 'frontend', 'form', 'template'], function ($, und
                     ]
                 });
 
-                // 选中多个
+                // 複数選択
                 $(document).on("click", ".btn-choose-multi", function () {
                     Fast.api.close({url: urlArr.join(","), multiple: multiple});
                 });
 
-                // 为表格绑定事件
+                // テーブルにイベントをバインド
                 Table.api.bindevent(table);
                 require(['upload'], function (Upload) {
                     Upload.api.upload($("#toolbar .faupload"), function () {

@@ -2,7 +2,7 @@
 
 return [
     'Id'         => 'ID',
-    'Image'      => '图片',
-    'Weigh'      => '排序',
-    'Createtime' => '创建时间'
+    'Image'      => '画像',
+    'Weigh'      => 'ソート順',
+    'Createtime' => '作成時間'
 ];

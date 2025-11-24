@@ -64,7 +64,7 @@ trait ShouldThrottle
     }
 
     /**
-     * 限流 + 1.
+     * レート制限 + 1.
      *
      * @author yansongda <me@yansongda.cn>
      *
@@ -106,7 +106,7 @@ trait ShouldThrottle
     }
 
     /**
-     * 获取限流相关信息.
+     * レート制限関連情報を取得.
      *
      * @author yansongda <me@yansongda.cn>
      *
@@ -129,7 +129,7 @@ trait ShouldThrottle
     }
 
     /**
-     * 获取已使用次数.
+     * 使用済み回数を取得.
      *
      * @author yansongda <me@yansongda.cn>
      *

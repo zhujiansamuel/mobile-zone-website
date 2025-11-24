@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{include file="common/meta" /}
+	</head>
+	<body>
+		{include file="common/head" /}
+		<div class="inTop">
+			<div class="address mt20">
+				<div class="contain address1">
+					<a href="/">ホーム</a>
+					&gt;
+					<a href=""> マイページ</a>
+				</div>
+			</div>
+			<div class="inTop1">
+				マイページ
+			</div>
+		</div>
+		<div class="reItemz">
+		    {include file="common/user_nav" /}
+		</div>
+		<div class="record">
+		<form name="form" id="edituser-form" class="form-vertical" method="POST" action="">
+			<div class="vipMess_d">
+				<div class="vipMess12">
+					*個人情報をご入力の上、ご注文を行ってください。
+				</div>
+				<div class="vipMess">
+					会員番号 <br>
+					{$userInfo->id} <br>
+					メールアドレス <br>
+					{$userInfo->email}
+				</div>
+				<div class="vipMess">
+					個人法人区分 <span>*</span>
+				</div>
+				<div class="vipMess1">
+					<select name="persion_type" id="ptyx">
+						<option value="">選択してください</option>
+						<option value="1" {if $userInfo->persion_type == 1} selected {/if}>個人</option>
+						<option value="2" {if $userInfo->persion_type == 2} selected {/if}>法人</option>
+					</select>
+				</div>
+				<div class="vipMess">
+					氏名 <span>*</span>
+				</div>
+				<div class="vipMess2">
+					<input placeholder="例）中山太郎" type="text" name="name" value="{$userInfo->name}">
+				</div>
+				<div class="vipMess">
+					氏名（フリガナ）<code>（カナ）</code> <span>*</span>
+				</div>
+				<div class="vipMess2">
+					<input placeholder="例）ナカヤマタロウ" type="text" name="katakana" value="{$userInfo->katakana}">
+				</div>
+				<div class="vipMess">
+					お電話番号 <span>*</span>
+				</div>
+				<div class="vipMess3">
+					<input placeholder="" type="text" name="mobile" value="{$userInfo->mobile}">
+				</div>
+				<div class="vipMess">
+					郵便番号 <span>*</span>
+				</div>
+				<div class="vipMess3">
+					<input placeholder="" type="text" name="zip_code" id="zipcode" value="{$userInfo->zip_code}" >
+				</div>
+				<div class="vipMess">
+					ご住所 <span>*</span>
+				</div>
+				<div class="vipMess2">
+					<input type="text" name="address" value="{$userInfo->address}" class="text" placeholder="">
+				</div>
+				<div class="vipMess">
+					職業 <span>*</span>
+				</div>
+				<div class="vipMess1">
+					<select name="occupation">
+						<option value="">職業 *</option>
+					{volist name="$occupation" id="item"}
+						<option {if $userInfo->occupation == $item['id']} selected {/if} value="{$item['id']}">{$item['name']}</option>
+					{/volist}
+					</select>
+				</div>
+				<div class="vipMess">
+					性別 <span>*</span>
+				</div>
+				<div class="vipMess8">
+					<select name="gender" required="">
+						<option value="">指定なし</option>
+						<option value="1" {if $userInfo->gender == 1} selected {/if}>男性</option>
+						<option value="2" {if $userInfo->gender == 2} selected {/if}>女性</option>
+					</select>
+				</div>
+				<div class="vipMess">
+					生年月日 <span>*</span>
+				</div>
+				<div class="vipMess8">
+					<select name="year">
+					{for start="1" end="50"}
+						<option {if $year == date('Y', strtotime('-'.$i.' year'))} selected {/if} value="{:date('Y', strtotime('-'.$i.' year'))}">{:date('Y', strtotime('-'.$i.' year'))}</option>
+					{/for}
+					</select>
+					<span>/</span>
+					<select name="month">
+					{for start="1" end="13"}
+						<option {if $month == $i} selected {/if} value="{$i}">{$i}</option>
+					{/for}
+					</select>
+					<span>/</span>
+					<select name="day">
+					{for start="1" end="32"}
+						<option {if $days == $i} selected {/if} value="{$i}">{$i}</option>
+					{/for}
+						
+					</select>
+				</div>
+				<div class="vipMess">
+					個人書類種別 <span>*</span>
+				</div>
+				<div class="vipMess4">
+				{volist name="$szb" id="item"}
+					<label for="szb{$i}">
+						<input id="szb{$i}" {if $userInfo->szb == $item['id']} checked {/if} type="radio" value="{$item['id']}" name="szb" />
+						{$item['name']}
+					</label>
+				{/volist}
+					
+				</div>
+				<div class="vipMess">
+					個人書類アップロード <span>*</span>
+				</div>
+				<!--<div class="vipMess6">-->
+				
+				<!--	<img id="img_src_show1" {if $userInfo->szb_image}style="opacity:1;"{/if} src="{$userInfo->szb_image}" alt="" />-->
+
+				<!--</div>-->
+				<div class="orderLeft14">
+				{if !empty($userInfo->szb_image)}
+				{foreach $szb_image as $key=>$vo } 
+				    <span>
+				        <img id="img_src_show1" style="opacity:1;" src="{$vo}" alt="" />
+				        <img class="newclose" alt="" src="/img/close.png">
+				        <input type="hidden" name="szb_image[]" value="{$vo}"/>
+				    </span>
+				{/foreach}
+				{/if}
+				</div>
+				<div class="vipMess7">
+					書類を追加する
+					<input type="file" id="imgs_file"  />
+					<!--<input type="hidden" name="szb_image" value="{$userInfo->szb_image}">-->
+				</div>
+				<div class="vipMess10">
+					<input type="checkbox" value="1" required="" checked="">
+					<a class="qbButt1 qbButtc" href="javascript:void(0)">買取利用規約</a>
+					に同意する
+				</div>
+				<div class="vipMess10">
+					<input type="checkbox" value="2" required="" checked="">
+					<a href="javascript:void(0)">プライバシーポリシー</a>
+					に同意する
+				</div>
+				<div class="vipMess11">
+					<input type="submit" class="edituser" value="登　録">
+				</div>
+			</div>
+			</form>
+		</div>
+		
+		{include file="common/foot" /}
+		
+	</body>
+</html>

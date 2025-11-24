@@ -153,7 +153,7 @@ class Support
     {
         Events::dispatch(new Events\ApiRequesting('Wechat', '', self::$instance->getBaseUri().$endpoint, $data));
 
-        //xmlData需增加headers配置，否则微信方无法接收到参数
+        //xmlData追加が必要headers設定，さもないと WeChat 側でパラメータを受信できません
         $options = [
             'headers' => [
                 'Content-Type' => 'application/xml',

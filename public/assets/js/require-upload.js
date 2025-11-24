@@ -8,18 +8,18 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                 previewtpl: '<li class="col-xs-3"><a href="<%=fullurl%>" data-url="<%=url%>" target="_blank" class="thumbnail"><img src="<%=fullurl%>" onerror="this.src=\'' + Fast.api.fixurl("ajax/icon") + '?suffix=<%=suffix%>\';this.onerror=null;" class="img-responsive"></a><a href="javascript:;" class="btn btn-danger btn-xs btn-trash"><i class="fa fa-trash"></i></a></li>',
             },
             events: {
-                //初始化
+                //初期化
                 onInit: function () {
 
                 },
-                //上传成功的回调
+                //アップロード成功時のコールバック
                 onUploadSuccess: function (up, ret, file) {
                     var button = up.element;
                     var onUploadSuccess = up.options.onUploadSuccess;
                     var data = typeof ret.data !== 'undefined' ? ret.data : null;
-                    //上传成功后回调
+                    //アップロード成功後のコールバック
                     if (button) {
-                        //如果有文本框则填充
+                        //テキストボックスがあれば入力する
                         var input_id = $(button).data("input-id") ? $(button).data("input-id") : "";
                         if (input_id) {
                             var urlArr = [];
@@ -31,7 +31,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                             urlArr.push(url);
                             inputObj.val(urlArr.join(",")).trigger("change").trigger("validate");
                         }
-                        //如果有回调函数
+                        //コールバック関数がある場合
                         var onDomUploadSuccess = $(button).data("upload-success");
                         if (onDomUploadSuccess) {
                             if (typeof onDomUploadSuccess !== 'function' && typeof Upload.api.custom[onDomUploadSuccess] === 'function') {
@@ -51,7 +51,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                             return;
                     }
                 },
-                //上传错误的回调
+                //アップロードエラー時のコールバック
                 onUploadError: function (up, ret, file) {
                     var button = up.element;
                     var onUploadError = up.options.onUploadError;
@@ -78,7 +78,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                     }
                     Toastr.error(ret.msg.toString().replace(/(<([^>]+)>)/gi, "") + "(code:" + ret.code + ")");
                 },
-                //服务器响应数据后
+                //サーバーがデータを返した後
                 onUploadResponse: function (response, up, file) {
                     try {
                         var ret = typeof response === 'object' ? response : JSON.parse(response);
@@ -90,7 +90,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                     }
                     return ret;
                 },
-                //上传全部结束后
+                //すべてのアップロード完了後
                 onUploadComplete: function (up, files) {
                     var button = up.element;
                     var onUploadComplete = up.options.onUploadComplete;
@@ -117,7 +117,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                 }
             },
             api: {
-                //上传接口
+                //アップロードインターフェース
                 upload: function (element, onUploadSuccess, onUploadError, onUploadComplete) {
                     element = typeof element === 'undefined' ? Upload.config.classname : element;
                     $(element, Upload.config.container).each(function () {
@@ -134,31 +134,31 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                         var multipart = $(this).data("multipart");
                         var multiple = $(this).data("multiple");
 
-                        //填充ID
+                        //入力ID
                         var input_id = $(that).data("input-id") ? $(that).data("input-id") : "";
-                        //预览ID
+                        //プレビューID
                         var preview_id = $(that).data("preview-id") ? $(that).data("preview-id") : "";
 
-                        //上传URL
+                        //アップロードURL
                         url = url ? url : Config.upload.uploadurl;
                         url = Fast.api.fixurl(url);
                         var chunking = false, chunkSize = Config.upload.chunksize || 2097152, timeout = Config.upload.timeout || 600000;
 
-                        //最大可上传文件大小
+                        //アップロード可能な最大ファイルサイズ
                         maxsize = typeof maxsize !== "undefined" ? maxsize : Config.upload.maxsize;
-                        //文件类型
+                        //ファイルタイプ
                         mimetype = typeof mimetype !== "undefined" ? mimetype : Config.upload.mimetype;
-                        //请求的表单参数
+                        //リクエストフォームパラメーター
                         multipart = typeof multipart !== "undefined" ? multipart : Config.upload.multipart;
-                        //是否支持批量上传
+                        //一括アップロードをサポートするかどうか
                         multiple = typeof multiple !== "undefined" ? multiple : Config.upload.multiple;
-                        //后缀特殊处理
+                        //拡張子の特別処理
                         mimetype = mimetype.split(",").map(function (k) {
                             return k.indexOf("/") > -1 ? k : (!k || k === "*" || k.charAt(0) === "." ? k : "." + k);
                         }).join(",");
                         mimetype = mimetype === '*' ? null : mimetype;
 
-                        //最大文件限制转换成mb
+                        //最大ファイル制限を変換してmb
                         var maxFilesize = (function (maxsize) {
                             var matches = maxsize.toString().match(/^([0-9\.]+)(\w+)$/);
                             var size = matches ? parseFloat(matches[1]) : parseFloat(maxsize),
@@ -221,7 +221,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                             dictMaxFilesExceeded: __("You can only upload a maximum of %s files", "{{maxFiles}}"),
                             init: function () {
                                 Upload.events.onInit.call(this);
-                                //必须添加dz-message，否则点击icon无法唤起上传窗口
+                                //必ず追加することdz-message，そうでないとクリックしてもiconアップロードウィンドウを呼び出せません
                                 $(">i", this.element).addClass("dz-message");
                                 this.options.elementHtml = $(this.element).html();
                             },
@@ -309,7 +309,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                             onUploadComplete: onUploadComplete,
                         }, Upload.options, options));
 
-                        //拖动排序
+                        //ドラッグで並び替え
                         if (preview_id && multiple) {
                             require(['dragsort'], function () {
                                 $("#" + preview_id).dragsort({
@@ -321,7 +321,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                                 });
                             });
                         }
-                        //刷新隐藏textarea的值
+                        //非表示を更新textareaの値
                         var refresh = function (name) {
                             var data = {};
                             var textarea = $("textarea[name='" + name + "']");
@@ -379,11 +379,11 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                             $("#" + input_id).trigger("change");
                         }
                         if (preview_id) {
-                            //监听文本框改变事件
+                            //テキストボックス変更イベントを監視
                             $("#" + preview_id).on('change keyup', "input,textarea,select", function () {
                                 refresh($(this).closest("ul").data("name"));
                             });
-                            // 监听事件
+                            // イベントを監視
                             $(document.body).on("fa.preview.change", "#" + preview_id, function () {
                                 var urlArr = [];
                                 $("#" + preview_id + " [data-url]").each(function (i, j) {
@@ -394,7 +394,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                                 }
                                 refresh($("#" + preview_id).data("name"));
                             });
-                            // 移除按钮事件
+                            // 削除ボタンのイベント
                             $(document.body).on("click", "#" + preview_id + " .btn-trash", function () {
                                 $(this).closest("li").remove();
                                 $("#" + preview_id).trigger("fa.preview.change");
@@ -406,7 +406,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                                     $("#" + input_id, this).trigger("change");
                                 }, this), 0);
                             });
-                            //粘贴上传、拖拽上传
+                            //貼り付けアップロード、ドラッグ＆ドロップアップロード
                             $("body").on('paste drop', "#" + input_id, function (event) {
                                 var originEvent = event.originalEvent;
                                 var button = $(".plupload[data-input-id='" + $(this).attr("id") + "'],.faupload[data-input-id='" + $(this).attr("id") + "']");
@@ -439,7 +439,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                 faupload: function (element, onUploadSuccess, onUploadError, onUploadComplete) {
                     return Upload.api.upload(element, onUploadSuccess, onUploadError, onUploadComplete);
                 },
-                // AJAX异步上传
+                // AJAX非同期アップロード
                 send: function (file, onUploadSuccess, onUploadError, onUploadComplete) {
                     var index = Layer.msg(__('Uploading'), {offset: 't', time: 0});
                     var id = "dropzone-" + Dropzone.uuidv4();
@@ -454,7 +454,7 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                     }, 1);
                 },
                 custom: {
-                    //自定义上传完成回调
+                    //カスタムアップロード完了コールバック
                     afteruploadcallback: function (response) {
                         console.log(this, response);
                         alert("Custom Callback,Response URL:" + response.url);

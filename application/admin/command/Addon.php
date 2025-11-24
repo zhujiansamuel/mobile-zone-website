@@ -38,9 +38,9 @@ class Addon extends Command
         if (stripos($name, 'addons' . DS) !== false) {
             $name = explode(DS, $name)[1];
         }
-        //强制覆盖
+        //強制上書き
         $force = $input->getOption('force');
-        //版本
+        //バージョン
         $release = $input->getOption('release') ?: '';
         //uid
         $uid = $input->getOption('uid') ?: '';
@@ -56,17 +56,17 @@ class Addon extends Command
             throw new Exception('Please input correct action name');
         }
 
-        // 查询一次SQL,判断连接是否正常
+        // 一度クエリを実行SQL,接続が正常かどうかを判定
         Db::execute("SELECT 1");
 
         $addonDir = ADDON_PATH . $name . DS;
         switch ($action) {
             case 'create':
-                //非覆盖模式时如果存在则报错
+                //非上書きモード時に存在する場合はエラー
                 if (is_dir($addonDir) && !$force) {
                     throw new Exception("addon already exists!\nIf you need to create again, use the parameter --force=true ");
                 }
-                //如果存在先移除
+                //存在する場合は先に削除
                 if (is_dir($addonDir)) {
                     rmdirs($addonDir);
                 }
@@ -107,14 +107,14 @@ class Addon extends Command
             case 'disable':
             case 'enable':
                 try {
-                    //调用启用、禁用的方法
+                    //有効化・無効化メソッドを呼び出す、無効化のメソッド
                     Service::$action($name, 0);
                 } catch (AddonException $e) {
                     if ($e->getCode() != -3) {
                         throw new Exception($e->getMessage());
                     }
                     if (!$force) {
-                        //如果有冲突文件则提醒
+                        //競合ファイルがある場合は警告
                         $data = $e->getData();
                         foreach ($data['conflictlist'] as $k => $v) {
                             $output->warning($v);
@@ -125,7 +125,7 @@ class Addon extends Command
                             throw new Exception("Operation is aborted!");
                         }
                     }
-                    //调用启用、禁用的方法
+                    //有効化・無効化メソッドを呼び出す、無効化のメソッド
                     Service::$action($name, 1);
                 } catch (Exception $e) {
                     throw new Exception($e->getMessage());
@@ -133,7 +133,7 @@ class Addon extends Command
                 $output->info(ucfirst($action) . " Successed!");
                 break;
             case 'uninstall':
-                //非覆盖模式时如果存在则报错
+                //非上書きモード時に存在する場合はエラー
                 if (!$force) {
                     throw new Exception("If you need to uninstall addon, use the parameter --force=true ");
                 }
@@ -144,7 +144,7 @@ class Addon extends Command
                         throw new Exception($e->getMessage());
                     }
                     if (!$force) {
-                        //如果有冲突文件则提醒
+                        //競合ファイルがある場合は警告
                         $data = $e->getData();
                         foreach ($data['conflictlist'] as $k => $v) {
                             $output->warning($v);
@@ -285,7 +285,7 @@ class Addon extends Command
     }
 
     /**
-     * 获取创建菜单的数组
+     * メニュー作成用配列を取得
      * @param array $menu
      * @return array
      */
@@ -312,7 +312,7 @@ class Addon extends Command
     }
 
     /**
-     * 写入到文件
+     * ファイルへ書き込み
      * @param string $name
      * @param array  $data
      * @param string $pathname
@@ -335,7 +335,7 @@ class Addon extends Command
     }
 
     /**
-     * 获取基础模板
+     * ベーステンプレートを取得
      * @param string $name
      * @return string
      */

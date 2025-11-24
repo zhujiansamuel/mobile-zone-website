@@ -1,14 +1,14 @@
 <?php
 
 return [
-    'Email'                                     => '电子邮箱',
-    'Mobile'                                    => '手机号',
-    'Group'                                     => '所属组别',
-    'Loginfailure'                              => '登录失败次数',
-    'Login time'                                => '最后登录',
-    'The parent group exceeds permission limit' => '父组别超出权限范围',
-    'Please input correct username'             => '用户名只能由3-30位数字、字母、下划线组合',
-    'Username must be 3 to 30 characters'       => '用户名只能由3-30位数字、字母、下划线组合',
-    'Please input correct password'             => '密码长度必须在6-30位之间，不能包含空格',
-    'Password must be 6 to 30 characters'       => '密码长度必须在6-30位之间，不能包含空格',
+    'Email'                                     => 'メールアドレス',
+    'Mobile'                                    => '携帯番号',
+    'Group'                                     => '所属グループ',
+    'Loginfailure'                              => 'ログイン失敗回数',
+    'Login time'                                => '最終ログイン',
+    'The parent group exceeds permission limit' => '親グループが権限範囲を超えています',
+    'Please input correct username'             => 'ユーザー名は3-30桁の数字、英字、アンダースコアを組み合わせたもののみ使用できます',
+    'Username must be 3 to 30 characters'       => 'ユーザー名は3-30桁の数字、英字、アンダースコアを組み合わせたもののみ使用できます',
+    'Please input correct password'             => 'パスワードの長さは6-30文字の範囲でなければなりません，スペースを含めることはできません',
+    'Password must be 6 to 30 characters'       => 'パスワードの長さは6-30文字の範囲でなければなりません，スペースを含めることはできません',
 ];

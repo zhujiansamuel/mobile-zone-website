@@ -10,7 +10,7 @@ use think\Db;
 use addons\epay\library\Service;
 use app\common\model\User;
 /**
- * 支付
+ * 支払い
  */
 class Pay extends Api
 {
@@ -21,7 +21,7 @@ class Pay extends Api
 
 
     /**
-     * 支付
+     * 支払い
      *
      */
     public function index()
@@ -32,21 +32,21 @@ class Pay extends Api
             $no = $request['no'] ?? '';
             
             if(!$no){
-                throw new Exception('缺少订单编号');
+                throw new Exception('注文番号が不足しています');
             }
 
             if(!$this->auth->openid){
-                throw new Exception('支付失败,请授权');
+                throw new Exception('支払いに失敗しました,認可してください');
             }
 
             $response = [];
             if(strpos($no, 'R') !== false){
-                $OrderMsg = '充值';
+                $OrderMsg = 'チャージ';
                 $info = db('user_recharge')->where('no', $no)->find();
                 $type = 'recharge';
             }else{
                 $info = db('order')->where('no', $no)->find();
-                $OrderMsg = '订单';
+                $OrderMsg = '注文';
                 $type = 'order';
                 $info['money'] = $info['total_money'];
             }
@@ -78,14 +78,14 @@ class Pay extends Api
             $this->success('成功！', $response);
 
         }catch (Exception $e){
-            //捕获异常
+            //例外をキャッチ
             $this->error($e->getMessage());
         }
     }
 
 
     /**
-     * 支付成功，仅供开发测试
+     * 支払い成功，開発テスト専用
      */
     public function notify()
     {
@@ -94,7 +94,7 @@ class Pay extends Api
         $pay = Service::checkNotify('wechat');
         $xinpaopaoPayNotify = json_decode(cache('xinpaopaoPayNotify'), true) ?? [];
         if (!$pay) {
-            array_push($xinpaopaoPayNotify, '签名错误');
+            array_push($xinpaopaoPayNotify, '署名が誤っている');
             cache('xinpaopaoPayNotify', json_encode($xinpaopaoPayNotify, JSON_UNESCAPED_UNICODE), 3600);
             return;
         }
@@ -102,7 +102,7 @@ class Pay extends Api
         try {
             array_push($xinpaopaoPayNotify, json_encode($data, JSON_UNESCAPED_UNICODE));
             
-            // 设置缓存数据
+            // キャッシュデータを設定
             cache('xinpaopaoPayNotify', json_encode($xinpaopaoPayNotify, JSON_UNESCAPED_UNICODE), 3600);
 
             switch ($type) {
@@ -118,7 +118,7 @@ class Pay extends Api
         } catch (Exception $e) {
         }
 
-        //下面这句必须要执行,且在此之前不能有任何输出
+        //以下の一文は必ず実行してください,かつその前に何も出力してはいけません
         return $pay->success()->send();
     }
 
@@ -129,10 +129,10 @@ class Pay extends Api
         $transaction_id = $data['transaction_id'] ?? '';
         
         $order = db('order')->where('no', $no)->find();
-        //获取订单用户信息
+        //注文ユーザー情報を取得
         $orderUser = db('user')->where('id', $order['user_id'])->find();
 
-        // 启动事务
+        // トランザクションを開始
         Db::startTrans();
         try {
             db('order')->where('no', $no)->update([
@@ -144,19 +144,19 @@ class Pay extends Api
 
             if($orderUser && $orderUser['pid']){
                 $income = round((config('site.distributionLevel1') / 100) * $order['total_money'], 2);
-                User::income($income, $orderUser['pid'], '收益', CS::MONEY_LOG_TYPE_PROFIT, $order['id']);
-                //获取上级用户信息
+                User::income($income, $orderUser['pid'], '収益', CS::MONEY_LOG_TYPE_PROFIT, $order['id']);
+                //上位ユーザー情報を取得
                 $subUserPid = db('user')->where('id', $orderUser['pid'])->value('pid');
                 if($subUserPid){
                     $income2 = round((config('site.distributionLevel2') / 100) * $order['total_money'], 2);
-                    User::income($income2, $subUserPid, '收益', CS::MONEY_LOG_TYPE_PROFIT, $order['id']);
+                    User::income($income2, $subUserPid, '収益', CS::MONEY_LOG_TYPE_PROFIT, $order['id']);
                 }
             }
 
-            // 提交事务
+            // トランザクションをコミットする
             Db::commit();
         } catch (\Exception $e) {
-            // 回滚事务
+            // トランザクションをロールバック
             Db::rollback();
             $this->error($e->getMessage());
         }
@@ -169,7 +169,7 @@ class Pay extends Api
         $transaction_id = $data['transaction_id'] ?? '';
         $user_recharge = db('user_recharge')->where('no', $no)->find();
         
-        // 启动事务
+        // トランザクションを開始
         Db::startTrans();
         try {
             db('user_recharge')->where('no', $no)->update([
@@ -178,12 +178,12 @@ class Pay extends Api
                 'transaction_id' => $transaction_id
             ]);
 
-            User::money($user_recharge['money'] + $user_recharge['deliver'], $user_recharge['user_id'], '充值', CS::MONEY_LOG_TYPE_RECHARGE, $user_recharge['id']);
+            User::money($user_recharge['money'] + $user_recharge['deliver'], $user_recharge['user_id'], 'チャージ', CS::MONEY_LOG_TYPE_RECHARGE, $user_recharge['id']);
 
-            // 提交事务
+            // トランザクションをコミットする
             Db::commit();
         } catch (\Exception $e) {
-            // 回滚事务
+            // トランザクションをロールバック
             Db::rollback();
             //$this->error($e->getMessage());
         }
@@ -191,7 +191,7 @@ class Pay extends Api
     
     
     /**
-     * 支付返回，仅供开发测试
+     * 支払い戻り，開発テスト専用
      */
     public function returnx()
     {
@@ -199,13 +199,13 @@ class Pay extends Api
         $out_trade_no = $this->request->param('out_trade_no');
         // $pay = Service::checkReturn($paytype);
         // if (!$pay) {
-        //     $this->error('签名错误', '');
+        //     $this->error('署名が誤っている', '');
         // }
 
-        //你可以在这里通过out_trade_no去验证订单状态
-        //但是不可以在此编写订单逻辑！！！
+        //ここでout_trade_noを通じて注文ステータスを検証できます
+        //ただしここで注文ロジックを記述してはいけません！！！
 
-        $this->success("请返回网站查看支付结果", 'https://szhswy.cn/#/pages/tabbar/home/pay/paySuccess/paySuccess');
+        $this->success("サイトに戻って支払い結果を確認してください", 'https://szhswy.cn/#/pages/tabbar/home/pay/paySuccess/paySuccess');
     }
     
     
@@ -228,7 +228,7 @@ class Pay extends Api
     }
     
     /*
-     * 给微信发送确认订单金额和签名正确，SUCCESS信息 -xzz0521
+     * WeChat に注文金額と署名が正しいことを通知し、SUCCESS 情報を返す，SUCCESS情報 -xzz0521
      */
     private function return_success(){
         $return['return_code'] = 'SUCCESS';
@@ -242,7 +242,7 @@ class Pay extends Api
     
     
     /**
-     * 将xml转为array
+     * をxmlに変換array
      * @param string $xml
      * return array
      */
@@ -250,8 +250,8 @@ class Pay extends Api
         if(!$xml){
             return false;
         }
-        //将XML转为array
-        //禁止引用外部xml实体
+        //をXMLに変換array
+        //外部参照を禁止xmlエンティティ
         libxml_disable_entity_loader(true);
         $data = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
         return $data;

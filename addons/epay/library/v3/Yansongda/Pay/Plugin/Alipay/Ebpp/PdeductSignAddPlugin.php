@@ -16,7 +16,7 @@ class PdeductSignAddPlugin implements PluginInterface
 {
     public function assembly(Rocket $rocket, Closure $next): Rocket
     {
-        Logger::debug('[alipay][PdeductSignAddPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[alipay][PdeductSignAddPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $rocket->mergePayload([
             'method' => 'alipay.ebpp.pdeduct.sign.add',
@@ -30,7 +30,7 @@ class PdeductSignAddPlugin implements PluginInterface
             ),
         ]);
 
-        Logger::info('[alipay][PdeductSignAddPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[alipay][PdeductSignAddPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $next($rocket);
     }

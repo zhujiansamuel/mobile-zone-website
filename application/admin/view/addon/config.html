@@ -12,7 +12,7 @@
         {if count($groupList)>1}
         <div class="panel-heading mb-3">
             <ul class="nav nav-tabs nav-group">
-                <li class="active"><a href="#all" data-toggle="tab">全部</a></li>
+                <li class="active"><a href="#all" data-toggle="tab">すべて</a></li>
                 {foreach name="groupList" id="tab"}
                     <li><a href="#tab-{$key|htmlentities}" title="{$tab|htmlentities}" data-toggle="tab">{$tab|htmlentities}</a></li>
                 {/foreach}

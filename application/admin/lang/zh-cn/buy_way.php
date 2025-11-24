@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'Category_id' => '分类',
-    'Title'       => '标题',
-    'Image'       => '图片',
-    'Weigh'       => '权重',
+    'Category_id' => 'カテゴリ',
+    'Title'       => '見出し',
+    'Image'       => '画像',
+    'Weigh'       => '重み',
     'Content'     => '内容',
-    'Createtime'  => '创建时间'
+    'Createtime'  => '作成時間'
 ];

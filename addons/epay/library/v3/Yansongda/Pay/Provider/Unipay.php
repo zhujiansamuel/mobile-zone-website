@@ -24,7 +24,7 @@ use Yansongda\Supports\Collection;
 use Yansongda\Supports\Str;
 
 /**
- * @method ResponseInterface web(array $order) 电脑支付
+ * @method ResponseInterface web(array $order) PC決済
  */
 class Unipay extends AbstractProvider
 {

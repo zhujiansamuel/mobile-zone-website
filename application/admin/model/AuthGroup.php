@@ -7,9 +7,9 @@ use think\Model;
 class AuthGroup extends Model
 {
 
-    // 开启自动写入时间戳字段
+    // 自動タイムスタンプ書き込みを有効にする
     protected $autoWriteTimestamp = 'int';
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
 

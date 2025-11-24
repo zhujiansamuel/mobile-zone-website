@@ -9,16 +9,16 @@ use think\Loader;
 class AdminLog extends Model
 {
 
-    // 开启自动写入时间戳字段
+    // 自動タイムスタンプ書き込みを有効にする
     protected $autoWriteTimestamp = 'int';
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = '';
-    //自定义日志标题
+    //カスタムログタイトル
     protected static $title = '';
-    //自定义日志内容
+    //カスタムログ内容
     protected static $content = '';
-    //忽略的链接正则列表
+    //無視するリンクの正規表現リスト
     protected static $ignoreRegex = [
         '/^(.*)\/(selectpage|index)$/i',
     ];
@@ -40,9 +40,9 @@ class AdminLog extends Model
     }
 
     /**
-     * 记录日志
-     * @param string $title   日志标题
-     * @param string $content 日志内容
+     * ログを記録
+     * @param string $title   ログタイトル
+     * @param string $content ログ内容
      */
     public static function record($title = '', $content = '')
     {
@@ -50,7 +50,7 @@ class AdminLog extends Model
         $admin_id = $auth->isLogin() ? $auth->id : 0;
         $username = $auth->isLogin() ? $auth->username : __('Unknown');
 
-        // 设置过滤函数
+        // フィルター関数を設定
         request()->filter('trim,strip_tags,htmlspecialchars');
 
         $controllername = Loader::parseName(request()->controller());
@@ -89,7 +89,7 @@ class AdminLog extends Model
     }
 
     /**
-     * 获取已屏蔽关键信息的数据
+     * マスク済みの機密情報データを取得
      * @param $content
      * @return array
      */

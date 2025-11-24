@@ -27,11 +27,11 @@ class Base
     private $dbfields = null;
     
     protected $_error = '';
-    //数据集
+    //データセット
     protected $DataSet = [];
 
     /**
-     * @var array 实例
+     * @var array インスタンス
      */
     protected static $extendArr = [];
 
@@ -39,9 +39,9 @@ class Base
 
 
     /**
-     * 初始化
+     * 初期化
      * @access public
-     * @param  array $options 配置数组
+     * @param  array $options 設定配列
      */
     public static function init(array $options = [])
     {
@@ -130,7 +130,7 @@ class Base
 
 
     /*
-     * 获取列表
+     * 一覧を取得
      */
     public function lists($extend = [], $is_array = true)
     {
@@ -208,11 +208,11 @@ class Base
                 $list = $data;
             }else if($type == 'paginate'){
                 $list = $data->all();
-                //总页数
+                //総ページ数
                 $params['totalPage'] = $data->lastPage();
-                //当前页数
+                //現在のページ数
                 $params['currentPage'] = $data->currentPage();
-                //总条数
+                //総件数
                 $params['total'] = $data->total();
             }
 
@@ -350,7 +350,7 @@ class Base
     }
 
     /*
-     * 更新数据
+     * データを更新
      */
     public function updateData($data = [], $extend = [])
     {
@@ -386,7 +386,7 @@ class Base
     }
 
     /*
-     * 批量更新数据
+     * データを一括更新
      */
     public function updateAll($data = [], $extend = [])
     {
@@ -454,7 +454,7 @@ class Base
         return $this;
     }
 
-    //处理其他表数据
+    //他のテーブルデータを処理
     public function handleOtherDb($function = '', $front = true)
     {
         if($front){
@@ -496,9 +496,9 @@ class Base
     }
     
     /**
-     * 设置错误信息
+     * エラーメッセージを設定
      *
-     * @param $error 错误信息
+     * @param $error エラーメッセージ
      * @return Auth
      */
     public function setError($error)
@@ -508,7 +508,7 @@ class Base
     }
 
     /**
-     * 获取错误信息
+     * エラーメッセージを取得
      * @return string
      */
     public function getError()
@@ -535,7 +535,7 @@ class Base
     }
     
     /*
-     * 营销活动
+     * マーケティング活動
     */
     public function marketing($name='')
     {

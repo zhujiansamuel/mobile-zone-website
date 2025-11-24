@@ -38,7 +38,7 @@ class Builder
     {
         foreach ($this->classes as $class) {
             $classAnnotation = Extractor::getClassAnnotations($class);
-            // 如果忽略
+            // 省略する場合
             if (isset($classAnnotation['ApiInternal'])) {
                 continue;
             }
@@ -51,7 +51,7 @@ class Builder
 
 //        foreach ($allClassMethodAnnotation as $className => &$methods) {
 //            foreach ($methods as &$method) {
-//                //权重判断
+//                //ウェイト判定
 //                if ($method && !isset($method['ApiWeigh']) && isset($allClassAnnotation[$className]['ApiWeigh'])) {
 //                    $method['ApiWeigh'] = $allClassAnnotation[$className]['ApiWeigh'];
 //                }
@@ -172,7 +172,7 @@ class Builder
 
         $sectorArr = [];
         foreach ($allClassAnnotations as $index => &$allClassAnnotation) {
-            // 如果设置隐藏，则不显示在文档
+            // 非表示に設定した場合，ドキュメントには表示しません
             if (isset($allClassAnnotation['ApiInternal'])) {
                 continue;
             }
@@ -227,7 +227,7 @@ class Builder
             }
         }
 
-        //重建排序
+        //並び順を再構築
         foreach ($docsList as $index => &$methods) {
             $methodSectorArr = [];
             foreach ($methods as $name => $method) {
@@ -246,7 +246,7 @@ class Builder
     }
 
     /**
-     * 渲染
+     * をレンダリング
      * @param string $template
      * @param array  $vars
      * @return string

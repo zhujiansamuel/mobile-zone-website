@@ -12,7 +12,7 @@
 namespace app\common\library\token;
 
 /**
- * Token基础类
+ * Token基底クラス
  */
 abstract class Driver
 {
@@ -20,45 +20,45 @@ abstract class Driver
     protected $options = [];
 
     /**
-     * 存储Token
+     * 保存Token
      * @param   string $token   Token
-     * @param   int    $user_id 会员ID
-     * @param   int    $expire  过期时长,0表示无限,单位秒
+     * @param   int    $user_id 会員ID
+     * @param   int    $expire  有効期限,0無制限を表す,単位は秒
      * @return bool
      */
     abstract function set($token, $user_id, $expire = 0);
 
     /**
-     * 获取Token内的信息
+     * 取得Token内の情報
      * @param   string $token
      * @return  array
      */
     abstract function get($token);
 
     /**
-     * 判断Token是否可用
+     * 判定Token利用可能かどうか
      * @param   string $token   Token
-     * @param   int    $user_id 会员ID
+     * @param   int    $user_id 会員ID
      * @return  boolean
      */
     abstract function check($token, $user_id);
 
     /**
-     * 删除Token
+     * 削除Token
      * @param   string $token
      * @return  boolean
      */
     abstract function delete($token);
 
     /**
-     * 删除指定用户的所有Token
+     * 指定ユーザーのすべてのToken
      * @param   int $user_id
      * @return  boolean
      */
     abstract function clear($user_id);
 
     /**
-     * 返回句柄对象，可执行其它高级方法
+     * ハンドルオブジェクトを返す，その他の高度なメソッドを実行可能
      *
      * @access public
      * @return object
@@ -69,19 +69,19 @@ abstract class Driver
     }
 
     /**
-     * 获取加密后的Token
-     * @param string $token Token标识
+     * 暗号化後のToken
+     * @param string $token Token識別子
      * @return string
      */
     protected function getEncryptedToken($token)
     {
         $config = \think\Config::get('token');
-        $token = $token ?? ''; // 为兼容 php8
+        $token = $token ?? ''; // 互換性確保のため php8
         return hash_hmac($config['hashalgo'], $token, $config['key']);
     }
 
     /**
-     * 获取过期剩余时长
+     * 有効期限までの残り時間を取得
      * @param $expiretime
      * @return float|int|mixed
      */

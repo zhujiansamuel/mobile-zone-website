@@ -94,7 +94,7 @@
         }
         return cachedWidth;
     };
-    //获取原本表格体的滑块宽度
+    //元のテーブル本体のスクロールバーの幅を取得
     var getTableBodyScrollBarWidth = function getTableBodyScrollBarWidth(tableBody) {
         return tableBody[0].scrollHeight > tableBody[0].clientHeight ? 15 : 0;
     };
@@ -150,12 +150,12 @@
 
         _trigger.apply(this, Array.prototype.slice.apply(arguments));
         if (arguments[0] === 'pre-body') {
-            //如果上来就是cardView 设置表格高度为auto
+            //最初からcardView テーブルの高さを設定auto
             if (this.options.cardView) {
                 this.$tableBody.css("height", "auto");
             }
         }
-        //监听cardView 显示/隐藏fixed部分
+        //リッスンcardView 表示/非表示fixed部分
         if (arguments[0] === 'toggle') {
             if (arguments[1]) {
                 this.$tableBody.css("height", "auto");
@@ -322,7 +322,7 @@
         if (isRight) {
             visibleFields = visibleFields.reverse();
             fixedNumber = this.options.fixedRightNumber;
-            //右侧固定列距离
+            //右側固定列との距離
             this.$fixedColumnsRight.css('right', getTableBodyScrollBarWidth(this.$tableBody));
         }
 
@@ -379,23 +379,23 @@
                 toggleHover(e, false);
             });
             this.$fixedBody[0].addEventListener(mousewheel, function (e) {
-                //给鼠标滑轮绑定事件
+                //マウスホイールにイベントをバインド
                 updateScroll(e, that.$fixedBody[0]);
             });
-            //给固定表格的checkbox绑定事件
+            //固定テーブルのcheckboxイベントをバインド
             this.$fixedBody.find('input[name="' + this.options.selectItemName + '"]').off("click").on('click', function (e) {
                 e.stopImmediatePropagation();
                 var index = $(e.target).data("index");
                 $(that.$selectItem[index]).trigger("click");
             });
-            //绑定TD点击事件
+            //バインドTDクリックイベント
             this.$fixedBody.find('> table > tbody > tr[data-index] > td').off('click dblclick').on('click dblclick', function (e) {
                 var index = $(this).closest("tr[data-index]").data("index");
                 $(that.$selectItem[index]).closest("tr[data-index]").find(">td:eq(" + $(this).index() + ")").trigger("click");
             });
         }
-        //给原本表格绑定scroll事件
-        $('div.fixed-table-body').off('scroll'); //给所有的body解绑 scroll
+        //元のテーブルにバインドscrollイベント
+        $('div.fixed-table-body').off('scroll'); //すべてのbodyバインド解除 scroll
         this.$tableBody.off('scroll').on('scroll', function (e) {
             that.$tableHeader.scrollLeft(0);
             if (that.$tableBody.scrollLeft() > 0) {
@@ -420,16 +420,16 @@
                 toggleHover(e, false);
             });
             this.$fixedBodyRight[0].addEventListener(mousewheel, function (e) {
-                //给鼠标滑轮绑定事件
+                //マウスホイールにイベントをバインド
                 updateScroll(e, that.$fixedBodyRight[0]);
             });
-            //给固定表格的checkbox绑定事件
+            //固定テーブルのcheckboxイベントをバインド
             this.$fixedBodyRight.find('input[name="' + this.options.selectItemName + '"]').off("click").on('click', function (e) {
                 e.stopImmediatePropagation();
                 var index = $(e.target).data("index");
                 $(that.$selectItem[index]).trigger("click");
             });
-            //绑定TD点击事件
+            //バインドTDクリックイベント
             this.$fixedBodyRight.find('> table > tbody > tr[data-index] > td').off('click dblclick').on('click dblclick', function (e) {
                 var index = $(this).closest("tr[data-index]").data("index");
                 $(that.$selectItem[index]).closest("tr[data-index]").find(">td:eq(" + $(this).index() + ")").trigger("click");

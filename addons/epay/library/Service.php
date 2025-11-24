@@ -11,7 +11,7 @@ use Yansongda\Pay\Pay;
 use Yansongda\Supports\Str;
 
 /**
- * 订单服务类
+ * 注文サービスクラス
  *
  * @package addons\epay\library
  */
@@ -23,16 +23,16 @@ class Service
     public const SDK_VERSION_V3 = 'v3';
 
     /**
-     * 提交订单
-     * @param array|float $amount    订单金额
-     * @param string      $orderid   订单号
-     * @param string      $type      支付类型,可选alipay或wechat
-     * @param string      $title     订单标题
-     * @param string      $notifyurl 通知回调URL
-     * @param string      $returnurl 跳转返回URL
-     * @param string      $method    支付方法
+     * 注文を送信
+     * @param array|float $amount    注文金額
+     * @param string      $orderid   注文番号
+     * @param string      $type      支払いタイプ,選択可能alipayまたはwechat
+     * @param string      $title     注文タイトル
+     * @param string      $notifyurl 通知コールバックURL
+     * @param string      $returnurl リダイレクト戻りURL
+     * @param string      $method    支払方法
      * @param string      $openid    Openid
-     * @param array       $custom    自定义微信支付宝相关配置
+     * @param array       $custom    カスタムのWeChat・Alipay関連設定
      * @return Response|RedirectResponse|Collection
      * @throws Exception
      */
@@ -61,29 +61,29 @@ class Service
         $method = $params['method'] ?? 'web';
         $orderid = $params['orderid'] ?? date("YmdHis") . mt_rand(100000, 999999);
         $amount = $params['amount'] ?? 1;
-        $title = $params['title'] ?? "支付";
+        $title = $params['title'] ?? "支払い";
         $auth_code = $params['auth_code'] ?? '';
         $openid = $params['openid'] ?? '';
 
-        //自定义微信支付宝相关配置
+        //カスタムのWeChat・Alipay関連設定
         $custom = $params['custom'] ?? [];
 
-        //未定义则使用默认回调和跳转
+        //未定義の場合はデフォルトのコールバックとリダイレクトを使用
         $notifyurl = !empty($params['notifyurl']) ? $params['notifyurl'] : $request->root(true) . '/addons/epay/index/notifyx/paytype/' . $type;
         $returnurl = !empty($params['returnurl']) ? $params['returnurl'] : $request->root(true) . '/addons/epay/index/returnx/paytype/' . $type . '/out_trade_no/' . $orderid;
 
         $html = '';
         $config = Service::getConfig($type, array_merge($custom, ['notify_url' => $notifyurl, 'return_url' => $returnurl]));
 
-        //判断是否移动端或微信内浏览器
+        //モバイル端末またはWeChat内ブラウザかどうかを判断
         $isMobile = $request->isMobile();
         $isWechat = strpos($request->server('HTTP_USER_AGENT'), 'MicroMessenger') !== false;
 
         $result = null;
         if ($type == 'alipay') {
-            //如果是PC支付,判断当前环境,进行跳转
+            //もし〜ならPC支払い,現在の環境を判断,リダイレクトを行う
             if ($method == 'web') {
-                //如果是微信环境或后台配置PC使用扫码支付
+                //WeChat環境またはバックエンド設定の場合PCスキャン決済を使用
                 if ($isWechat || $addonConfig['alipay']['scanpay']) {
                     Session::set("alipayorderdata", $params);
                     $url = addon_url('epay/api/alipay', [], true, true);
@@ -93,40 +93,40 @@ class Service
                 }
             }
 
-            //创建支付对象
+            //決済オブジェクトを作成
             $pay = Pay::alipay($config);
             $params = [
-                'out_trade_no' => $orderid,//你的订单号
-                'total_amount' => $amount,//单位元
+                'out_trade_no' => $orderid,//あなたの注文番号
+                'total_amount' => $amount,//単位：元
                 'subject'      => $title,
             ];
 
             switch ($method) {
                 case 'web':
-                    //电脑支付
+                    //PC決済
                     $result = $pay->web($params);
                     break;
                 case 'wap':
-                    //手机网页支付
+                    //モバイルWeb決済
                     $result = $pay->wap($params);
                     break;
                 case 'app':
-                    //APP支付
+                    //APP支払い
                     $result = $pay->app($params);
                     break;
                 case 'scan':
-                    //扫码支付
+                    //スキャン決済
                     $result = $pay->scan($params);
                     break;
                 case 'pos':
-                    //刷卡支付必须要有auth_code
+                    //カード決済には必須auth_code
                     $params['auth_code'] = $auth_code;
                     $result = $pay->pos($params);
                     break;
                 case 'mini':
                 case 'miniapp':
-                    //小程序支付,直接返回字符串
-                    //小程序支付必须要有buyer_id或buyer_open_id
+                    //ミニプログラム決済,文字列を直接返す
+                    //ミニプログラム決済には必須buyer_idまたはbuyer_open_id
                     if (is_numeric($openid) && strlen($openid) === 16) {
                         $params['buyer_id'] = $openid;
                     } else {
@@ -137,9 +137,9 @@ class Service
                 default:
             }
         } else {
-            //如果是PC支付,判断当前环境,进行跳转
+            //もし〜ならPC支払い,現在の環境を判断,リダイレクトを行う
             if ($method == 'web') {
-                //如果是移动端，但不是微信环境
+                //モバイル端末の場合，ただしWeChat環境ではない
                 if ($isMobile && !$isWechat) {
                     $method = 'wap';
                 } else {
@@ -149,18 +149,18 @@ class Service
                 }
             }
 
-            //单位分
+            //単位：分
             $total_fee = function_exists('bcmul') ? bcmul($amount, 100) : $amount * 100;
             $total_fee = (int)$total_fee;
             $ip = $request->ip();
-            //微信服务商模式时需传递sub_openid参数
+            //WeChatサービスプロバイダーモード時に渡す必要ありsub_openidパラメーター
             $openidName = $addonConfig['wechat']['mode'] == 'service' ? 'sub_openid' : 'openid';
 
-            //创建支付对象
+            //決済オブジェクトを作成
             $pay = Pay::wechat($config);
 
             if (self::isVersionV3()) {
-                //V3支付
+                //V3支払い
                 $params = [
                     'out_trade_no' => $orderid,
                     'description'  => $title,
@@ -170,13 +170,13 @@ class Service
                 ];
                 switch ($method) {
                     case 'mp':
-                        //公众号支付
-                        //公众号支付必须有openid
+                        //公式アカウント決済
+                        //公式アカウント決済には必須openid
                         $params['payer'] = [$openidName => $openid];
                         $result = $pay->mp($params);
                         break;
                     case 'wap':
-                        //手机网页支付,跳转
+                        //モバイルWeb決済,リダイレクト
                         $params['scene_info'] = [
                             'payer_client_ip' => $ip,
                             'h5_info'         => [
@@ -186,30 +186,30 @@ class Service
                         $result = $pay->wap($params);
                         break;
                     case 'app':
-                        //APP支付,直接返回字符串
+                        //APP支払い,文字列を直接返す
                         $result = $pay->app($params);
                         break;
                     case 'scan':
-                        //扫码支付,直接返回字符串
+                        //スキャン決済,文字列を直接返す
                         $result = $pay->scan($params);
                         break;
                     case 'pos':
-                        //刷卡支付,直接返回字符串
-                        //刷卡支付必须要有auth_code
+                        //カード決済,文字列を直接返す
+                        //カード決済には必須auth_code
                         $params['auth_code'] = $auth_code;
                         $result = $pay->pos($params);
                         break;
                     case 'mini':
                     case 'miniapp':
-                        //小程序支付,直接返回字符串
-                        //小程序支付必须要有openid
+                        //ミニプログラム決済,文字列を直接返す
+                        //ミニプログラム決済には必須openid
                         $params['payer'] = [$openidName => $openid];
                         $result = $pay->mini($params);
                         break;
                     default:
                 }
             } else {
-                //V2支付
+                //V2支払い
                 $params = [
                     'out_trade_no' => $orderid,
                     'body'         => $title,
@@ -217,34 +217,34 @@ class Service
                 ];
                 switch ($method) {
                     case 'mp':
-                        //公众号支付
-                        //公众号支付必须有openid
+                        //公式アカウント決済
+                        //公式アカウント決済には必須openid
                         $params[$openidName] = $openid;
                         $result = $pay->mp($params);
                         break;
                     case 'wap':
-                        //手机网页支付,跳转
+                        //モバイルWeb決済,リダイレクト
                         $params['spbill_create_ip'] = $ip;
                         $result = $pay->wap($params);
                         break;
                     case 'app':
-                        //APP支付,直接返回字符串
+                        //APP支払い,文字列を直接返す
                         $result = $pay->app($params);
                         break;
                     case 'scan':
-                        //扫码支付,直接返回字符串
+                        //スキャン決済,文字列を直接返す
                         $result = $pay->scan($params);
                         break;
                     case 'pos':
-                        //刷卡支付,直接返回字符串
-                        //刷卡支付必须要有auth_code
+                        //カード決済,文字列を直接返す
+                        //カード決済には必須auth_code
                         $params['auth_code'] = $auth_code;
                         $result = $pay->pos($params);
                         break;
                     case 'mini':
                     case 'miniapp':
-                        //小程序支付,直接返回字符串
-                        //小程序支付必须要有openid
+                        //ミニプログラム決済,文字列を直接返す
+                        //ミニプログラム決済には必須openid
                         $params[$openidName] = $openid;
                         $result = $pay->miniapp($params);
                         break;
@@ -253,7 +253,7 @@ class Service
             }
         }
 
-        //使用重写的Response类、RedirectResponse、Collection类
+        //オーバーライドされたResponseクラス、RedirectResponse、Collectionクラス
         if ($result instanceof \Symfony\Component\HttpFoundation\RedirectResponse) {
             $result = new RedirectResponse($result->getTargetUrl());
         } elseif ($result instanceof \Symfony\Component\HttpFoundation\Response) {
@@ -268,9 +268,9 @@ class Service
     }
 
     /**
-     * 验证回调是否成功
-     * @param string $type   支付类型
-     * @param array  $custom 自定义配置信息
+     * コールバックが成功かどうかを検証
+     * @param string $type   支払いタイプ
+     * @param array  $custom カスタム設定情報
      * @return bool|\Yansongda\Pay\Gateways\Alipay|\Yansongda\Pay\Gateways\Wechat|\Yansongda\Pay\Provider\Wechat|\Yansongda\Pay\Provider\Alipay
      */
     public static function checkNotify($type, $custom = [])
@@ -295,7 +295,7 @@ class Service
                 return $pay;
             }
         } catch (Exception $e) {
-            \think\Log::record("回调请求参数解析错误", "error");
+            \think\Log::record("コールバックリクエストパラメータの解析エラー", "error");
             return false;
         }
 
@@ -303,24 +303,24 @@ class Service
     }
 
     /**
-     * 验证返回是否成功，请勿用于判断是否支付成功的逻辑验证
-     * 已弃用
+     * 戻り値が成功かどうかを検証，支払い成功かどうかのロジック検証には使用しないでください
+     * 非推奨
      *
-     * @param string $type   支付类型
-     * @param array  $custom 自定义配置信息
+     * @param string $type   支払いタイプ
+     * @param array  $custom カスタム設定情報
      * @return bool
-     * @deprecated  已弃用，请勿用于逻辑验证
+     * @deprecated  非推奨，ロジック検証には使用しないでください
      */
     public static function checkReturn($type, $custom = [])
     {
-        //由于PC及移动端无法获取请求的参数信息，取消return验证，均返回true
+        //〜のためPCおよびモバイル端末ではリクエストパラメータ情報を取得できない，取り消しreturn検証，すべて返すtrue
         return true;
     }
 
     /**
-     * 获取配置
-     * @param string $type   支付类型
-     * @param array  $custom 自定义配置，用于覆盖插件默认配置
+     * 設定を取得
+     * @param string $type   支払いタイプ
+     * @param array  $custom カスタム設定，プラグインのデフォルト設定を上書きするために使用
      * @return array
      */
     public static function getConfig($type = 'wechat', $custom = [])
@@ -328,7 +328,7 @@ class Service
         $addonConfig = get_addon_config('epay');
         $config = $addonConfig[$type] ?? $addonConfig['wechat'];
 
-        // SDK版本
+        // SDKバージョン
         $version = self::getSdkVersion();
 
         if (isset($config['cert_client']) && substr($config['cert_client'], 0, 8) == '/addons/') {
@@ -347,7 +347,7 @@ class Service
             $config['ali_public_key'] = ROOT_PATH . str_replace('/', DS, substr($config['ali_public_key'], 1));
         }
 
-        // V3支付
+        // V3支払い
         if (self::isVersionV3()) {
             if ($type == 'wechat') {
                 $config['mp_app_id'] = $config['app_id'] ?? '';
@@ -373,7 +373,7 @@ class Service
             $config['mode'] = $modeArr[$config['mode']] ?? 0;
         }
 
-        // 日志
+        // ログ
         if ($config['log']) {
             $config['log'] = [
                 'enable' => true,
@@ -386,11 +386,11 @@ class Service
             ];
         }
 
-        // GuzzleHttp配置，可选
+        // GuzzleHttp設定，選択可能
         $config['http'] = [
             'timeout'         => 10,
             'connect_timeout' => 10,
-            // 更多配置项请参考 [Guzzle](https://guzzle-cn.readthedocs.io/zh_CN/latest/request-options.html)
+            // 詳細な設定項目は次を参照してください [Guzzle](https://guzzle-cn.readthedocs.io/zh_CN/latest/request-options.html)
         ];
 
         $config['notify_url'] = empty($config['notify_url']) ? addon_url('epay/api/notifyx', [], false) . '/type/' . $type : $config['notify_url'];
@@ -398,10 +398,10 @@ class Service
         $config['return_url'] = empty($config['return_url']) ? addon_url('epay/api/returnx', [], false) . '/type/' . $type : $config['return_url'];
         $config['return_url'] = !preg_match("/^(http:\/\/|https:\/\/)/i", $config['return_url']) ? request()->root(true) . $config['return_url'] : $config['return_url'];
 
-        //合并自定义配置
+        //カスタム設定をマージ
         $config = array_merge($config, $custom);
 
-        //v3版本时返回的结构不同
+        //v3バージョンv3では返却される構造が異なる
         if (self::isVersionV3()) {
             $config = [$type => ['default' => $config], 'logger' => $config['log'], 'http' => $config['http'], '_force' => true];
 
@@ -410,9 +410,9 @@ class Service
     }
 
     /**
-     * 获取微信Openid
+     * WeChat を取得Openid
      *
-     * @param array $custom 自定义配置信息
+     * @param array $custom カスタム設定情報
      * @return mixed|string
      */
     public static function getOpenid($custom = [])
@@ -429,7 +429,7 @@ class Service
         if (!$openid) {
             $openid = Session::get("openid");
 
-            //如果未传openid，则去读取openid
+            //渡されていない場合openid，読み取りに行くopenid
             if (!$openid) {
                 $addonConfig = get_addon_config('epay');
                 $wechat = new Wechat($custom['app_id'] ?? $addonConfig['wechat']['app_id'], $custom['app_secret'] ?? $addonConfig['wechat']['app_secret']);
@@ -440,7 +440,7 @@ class Service
     }
 
     /**
-     * 获取SDK版本
+     * 取得SDKバージョン
      * @return mixed|string
      */
     public static function getSdkVersion()
@@ -450,7 +450,7 @@ class Service
     }
 
     /**
-     * 判断是否V2支付
+     * かどうかを判定V2支払い
      * @return bool
      */
     public static function isVersionV2()
@@ -459,7 +459,7 @@ class Service
     }
 
     /**
-     * 判断是否V3支付
+     * かどうかを判定V3支払い
      * @return bool
      */
     public static function isVersionV3()

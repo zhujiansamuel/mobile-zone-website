@@ -47,25 +47,25 @@ class Api extends Command
             throw new Exception('language file not found');
         }
         $lang = include_once $langFile;
-        // 目标目录
+        // ターゲットディレクトリ
         $output_dir = ROOT_PATH . 'public' . DS;
         $output_file = $output_dir . $input->getOption('output');
         if (is_file($output_file) && !$force) {
             throw new Exception("api index file already exists!\nIf you need to rebuild again, use the parameter --force=true ");
         }
-        // 模板文件
+        // テンプレートファイル
         $template_dir = $apiDir . 'template' . DS;
         $template_file = $template_dir . $template;
         if (!is_file($template_file)) {
             throw new Exception('template file not found');
         }
-        // 额外的类
+        // 追加のクラス
         $classes = $input->getOption('class');
-        // 标题
+        // 見出し
         $title = $input->getOption('title');
-        // 模块
+        // モジュール
         $module = $input->getOption('module');
-        // 插件
+        // プラグイン
         $addon = $input->getOption('addon');
 
         $moduleDir = $addonDir = '';
@@ -86,7 +86,7 @@ class Api extends Command
             throw new Exception("Requires PHP version 7.0 or newer");
         }
 
-        //控制器名
+        //コントローラー名
         $controller = $input->getOption('controller') ?: [];
         if (!$controller) {
             $controllerDir = $moduleDir . Config::get('url_controller_layer') . DS;
@@ -135,7 +135,7 @@ class Api extends Command
     }
 
     /**
-     * 从文件获取命名空间和类名
+     * ファイルからネームスペースとクラス名を取得
      *
      * @param string $filename
      * @return string

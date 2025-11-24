@@ -9,11 +9,11 @@ use think\Model;
 class User extends Model
 {
 
-    // 表名
+    // テーブル名
     protected $name = 'user';
-    // 自动写入时间戳字段
+    // タイムスタンプフィールドを自動書き込み
     protected $autoWriteTimestamp = 'int';
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
     // 追加属性
@@ -32,7 +32,7 @@ class User extends Model
     {
         self::beforeUpdate(function ($row) {
             $changed = $row->getChangedData();
-            //如果有修改密码
+            //パスワードを変更する場合
             if (isset($changed['password'])) {
                 if ($changed['password']) {
                     $salt = \fast\Random::alnum();
@@ -49,10 +49,10 @@ class User extends Model
             $changedata = $row->getChangedData();
             $origin = $row->getOriginData();
             if (isset($changedata['money']) && (function_exists('bccomp') ? bccomp($changedata['money'], $origin['money'], 2) !== 0 : (double)$changedata['money'] !== (double)$origin['money'])) {
-                MoneyLog::create(['user_id' => $row['id'], 'money' => $changedata['money'] - $origin['money'], 'before' => $origin['money'], 'after' => $changedata['money'], 'memo' => '管理员变更金额']);
+                MoneyLog::create(['user_id' => $row['id'], 'money' => $changedata['money'] - $origin['money'], 'before' => $origin['money'], 'after' => $changedata['money'], 'memo' => '管理者が金額を変更']);
             }
             if (isset($changedata['score']) && (int)$changedata['score'] !== (int)$origin['score']) {
-                ScoreLog::create(['user_id' => $row['id'], 'score' => $changedata['score'] - $origin['score'], 'before' => $origin['score'], 'after' => $changedata['score'], 'memo' => '管理员变更积分']);
+                ScoreLog::create(['user_id' => $row['id'], 'score' => $changedata['score'] - $origin['score'], 'before' => $origin['score'], 'after' => $changedata['score'], 'memo' => '管理者がポイントを変更']);
             }
         });
     }

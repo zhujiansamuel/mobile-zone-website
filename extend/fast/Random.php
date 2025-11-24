@@ -3,15 +3,15 @@
 namespace fast;
 
 /**
- * 随机生成类
+ * ランダム生成クラス
  */
 class Random
 {
 
     /**
-     * 生成数字和字母
+     * 数字と英字を生成
      *
-     * @param int $len 长度
+     * @param int $len 長さ
      * @return string
      */
     public static function alnum(int $len = 6): string
@@ -20,9 +20,9 @@ class Random
     }
 
     /**
-     * 仅生成字符
+     * 英字のみ生成
      *
-     * @param int $len 长度
+     * @param int $len 長さ
      * @return string
      */
     public static function alpha(int $len = 6): string
@@ -31,9 +31,9 @@ class Random
     }
 
     /**
-     * 生成指定长度的随机数字
+     * 指定した長さのランダムな数字を生成
      *
-     * @param int $len 长度
+     * @param int $len 長さ
      * @return string
      */
     public static function numeric(int $len = 4): string
@@ -42,9 +42,9 @@ class Random
     }
 
     /**
-     * 生成指定长度的无0随机数字
+     * 指定した長さの0ランダム数字
      *
-     * @param int $len 长度
+     * @param int $len 長さ
      * @return string
      */
     public static function nozero(int $len = 4): string
@@ -53,9 +53,9 @@ class Random
     }
 
     /**
-     * 能用的随机数生成
-     * @param string $type 类型 alpha/alnum/numeric/nozero/unique/md5/encrypt/sha1
-     * @param int    $len  长度
+     * 実用的な乱数生成
+     * @param string $type タイプ alpha/alnum/numeric/nozero/unique/md5/encrypt/sha1
+     * @param int    $len  長さ
      * @return string
      */
     public static function build(string $type = 'alnum', int $len = 8): string
@@ -90,7 +90,7 @@ class Random
     }
 
     /**
-     * 获取全球唯一标识
+     * グローバル一意識別子を取得
      * @return string
      */
     public static function uuid(): string

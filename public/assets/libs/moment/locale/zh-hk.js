@@ -15,15 +15,15 @@
     //! moment.js locale configuration
 
     var zhHk = moment.defineLocale('zh-hk', {
-        months: '一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月'.split(
+        months: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_十1月_十2月'.split(
             '_'
         ),
         monthsShort: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split(
             '_'
         ),
-        weekdays: '星期日_星期一_星期二_星期三_星期四_星期五_星期六'.split('_'),
-        weekdaysShort: '週日_週一_週二_週三_週四_週五_週六'.split('_'),
-        weekdaysMin: '日_一_二_三_四_五_六'.split('_'),
+        weekdays: '日曜日_月曜日_火曜日_水曜日_木曜日_金曜日_土曜日'.split('_'),
+        weekdaysShort: '日_月_火_水_木曜_金曜_土曜'.split('_'),
+        weekdaysMin: '日_月_火_水_木_金_土'.split('_'),
         longDateFormat: {
             LT: 'HH:mm',
             LTS: 'HH:mm:ss',
@@ -36,41 +36,41 @@
             lll: 'YYYY年M月D日 HH:mm',
             llll: 'YYYY年M月D日dddd HH:mm',
         },
-        meridiemParse: /凌晨|早上|上午|中午|下午|晚上/,
+        meridiemParse: /深夜|早朝|午前|正午|午後|夜/,
         meridiemHour: function (hour, meridiem) {
             if (hour === 12) {
                 hour = 0;
             }
-            if (meridiem === '凌晨' || meridiem === '早上' || meridiem === '上午') {
+            if (meridiem === '深夜' || meridiem === '早朝' || meridiem === '午前') {
                 return hour;
-            } else if (meridiem === '中午') {
+            } else if (meridiem === '正午') {
                 return hour >= 11 ? hour : hour + 12;
-            } else if (meridiem === '下午' || meridiem === '晚上') {
+            } else if (meridiem === '午後' || meridiem === '夜') {
                 return hour + 12;
             }
         },
         meridiem: function (hour, minute, isLower) {
             var hm = hour * 100 + minute;
             if (hm < 600) {
-                return '凌晨';
+                return '深夜';
             } else if (hm < 900) {
-                return '早上';
+                return '早朝';
             } else if (hm < 1200) {
-                return '上午';
+                return '午前';
             } else if (hm === 1200) {
-                return '中午';
+                return '正午';
             } else if (hm < 1800) {
-                return '下午';
+                return '午後';
             } else {
-                return '晚上';
+                return '夜';
             }
         },
         calendar: {
-            sameDay: '[今天]LT',
-            nextDay: '[明天]LT',
+            sameDay: '[今日]LT',
+            nextDay: '[明日]LT',
             nextWeek: '[下]ddddLT',
-            lastDay: '[昨天]LT',
-            lastWeek: '[上]ddddLT',
+            lastDay: '[昨日]LT',
+            lastWeek: '[前]ddddLT',
             sameElse: 'L',
         },
         dayOfMonthOrdinalParse: /\d{1,2}(日|月|週)/,
@@ -92,16 +92,16 @@
         relativeTime: {
             future: '%s後',
             past: '%s前',
-            s: '幾秒',
+            s: '数秒',
             ss: '%d 秒',
-            m: '1 分鐘',
-            mm: '%d 分鐘',
-            h: '1 小時',
-            hh: '%d 小時',
-            d: '1 天',
-            dd: '%d 天',
-            M: '1 個月',
-            MM: '%d 個月',
+            m: '1 分',
+            mm: '%d 分',
+            h: '1 時間',
+            hh: '%d 時間',
+            d: '1 日',
+            dd: '%d 日',
+            M: '1 か月',
+            MM: '%d か月',
             y: '1 年',
             yy: '%d 年',
         },

@@ -32,7 +32,7 @@ class CallbackPlugin implements PluginInterface
      */
     public function assembly(Rocket $rocket, Closure $next): Rocket
     {
-        Logger::debug('[wechat][CallbackPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[wechat][CallbackPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $this->formatRequestAndParams($rocket);
 
@@ -47,7 +47,7 @@ class CallbackPlugin implements PluginInterface
 
         $rocket->setDestination(new Collection($body));
 
-        Logger::info('[wechat][CallbackPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[wechat][CallbackPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $next($rocket);
     }

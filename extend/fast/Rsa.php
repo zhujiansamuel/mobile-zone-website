@@ -3,7 +3,7 @@
 namespace fast;
 
 /**
- * RSA签名类
+ * RSA署名クラス
  */
 class Rsa
 {
@@ -27,8 +27,8 @@ class Rsa
 
     /**
      * * the construtor,the param $path is the keys saving path
-     * @param string $publicKey  公钥
-     * @param string $privateKey 私钥
+     * @param string $publicKey  公開鍵
+     * @param string $privateKey 秘密鍵
      */
     public function __construct($publicKey = null, $privateKey = null)
     {
@@ -36,9 +36,9 @@ class Rsa
     }
 
     /**
-     * 设置公钥和私钥
-     * @param string $publicKey  公钥
-     * @param string $privateKey 私钥
+     * 公開鍵と秘密鍵を設定
+     * @param string $publicKey  公開鍵
+     * @param string $privateKey 秘密鍵
      */
     public function setKey($publicKey = null, $privateKey = null)
     {
@@ -145,8 +145,8 @@ class Rsa
     }
 
     /**
-     * 构造签名
-     * @param string $dataString 被签名数据
+     * 署名を生成
+     * @param string $dataString 署名対象データ
      * @return string
      */
     public function sign($dataString)
@@ -158,10 +158,10 @@ class Rsa
     }
 
     /**
-     * 验证签名
-     * @param string $dataString 被签名数据
-     * @param string $signString 已经签名的字符串
-     * @return number 1签名正确 0签名错误
+     * 署名を検証
+     * @param string $dataString 署名対象データ
+     * @param string $signString すでに署名された文字列
+     * @return number 1署名が正しい 0署名が誤っている
      */
     public function verify($dataString, $signString)
     {

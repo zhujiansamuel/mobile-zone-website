@@ -16,7 +16,7 @@ class AgreementTransferPlugin implements PluginInterface
 {
     public function assembly(Rocket $rocket, Closure $next): Rocket
     {
-        Logger::debug('[alipay][AgreementTransferPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[alipay][AgreementTransferPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $rocket->mergePayload([
             'method' => 'alipay.user.agreement.transfer',
@@ -26,7 +26,7 @@ class AgreementTransferPlugin implements PluginInterface
             ),
         ]);
 
-        Logger::info('[alipay][AgreementTransferPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[alipay][AgreementTransferPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $next($rocket);
     }

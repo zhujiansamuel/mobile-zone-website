@@ -9,7 +9,7 @@ use think\Session;
 use think\Validate;
 
 /**
- * 个人配置
+ * 個人設定
  *
  * @icon fa fa-user
  */
@@ -19,11 +19,11 @@ class Profile extends Backend
     protected $searchFields = 'id,title';
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['strip_tags', 'trim']);
         if ($this->request->isAjax()) {
             $this->model = model('AdminLog');
@@ -43,7 +43,7 @@ class Profile extends Backend
     }
 
     /**
-     * 更新个人信息
+     * 個人情報を更新
      */
     public function update()
     {
@@ -72,7 +72,7 @@ class Profile extends Backend
             if ($params) {
                 $admin = Admin::get($this->auth->id);
                 $admin->save($params);
-                //因为个人资料面板读取的Session显示，修改自己资料后同时更新Session
+                //プロフィールパネルで表示しているためSession表示，自分のプロフィールを変更した後同時に更新Session
                 Session::set("admin", $admin->toArray());
                 Session::set("admin.safecode", $this->auth->getEncryptSafecode($admin));
                 $this->success();

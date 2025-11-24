@@ -10,7 +10,7 @@ use think\Session;
 use think\Validate;
 
 /**
- * 后台首页
+ * 管理画面トップ
  * @internal
  */
 class Index extends Backend
@@ -23,12 +23,12 @@ class Index extends Backend
     public function _initialize()
     {
         parent::_initialize();
-        //移除HTML标签
+        //削除HTMLラベル
         $this->request->filter('trim,strip_tags,htmlspecialchars');
     }
 
     /**
-     * 后台首页
+     * 管理画面トップ
      */
     public function index()
     {
@@ -39,7 +39,7 @@ class Index extends Backend
                 config('fastadmin.' . $key, $cookieValue);
             }
         }
-        //左侧菜单
+        //左側メニュー
         list($menulist, $navlist, $fixedmenu, $referermenu) = $this->auth->getSidebar([
             'dashboard' => 'hot',
             'addon'     => ['new', 'red', 'badge'],
@@ -61,7 +61,7 @@ class Index extends Backend
     }
 
     /**
-     * 管理员登录
+     * 管理者ログイン
      */
     public function login()
     {
@@ -70,7 +70,7 @@ class Index extends Backend
         if ($this->auth->isLogin()) {
             $this->success(__("You've logged in, do not login again"), $url);
         }
-        //保持会话有效时长，单位:小时
+        //セッション有効期間を保持，単位:時間
         $keeyloginhours = 24;
         if ($this->request->isPost()) {
             $username = $this->request->post('username');
@@ -108,7 +108,7 @@ class Index extends Backend
             }
         }
 
-        // 根据客户端的cookie,判断是否可以自动登录
+        // クライアントのcookie,自動ログイン可能かどうかを判定
         if ($this->auth->autologin()) {
             Session::delete("referer");
             $this->redirect($url);
@@ -123,7 +123,7 @@ class Index extends Backend
     }
 
     /**
-     * 退出登录
+     * ログアウト
      */
     public function logout()
     {

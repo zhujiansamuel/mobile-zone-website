@@ -13,16 +13,16 @@ class Menu
 {
 
     /**
-     * 创建菜单
+     * メニューを作成
      * @param array $menu
-     * @param mixed $parent 父类的name或pid
+     * @param mixed $parent 親クラスのnameまたはpid
      */
     public static function create($menu = [], $parent = 0)
     {
         $old = [];
         self::menuUpdate($menu, $old, $parent);
 
-        //菜单刷新处理
+        //メニュー更新処理
         $info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
         preg_match('/addons\\\\([a-z0-9]+)\\\\/i', $info['class'], $matches);
         if ($matches && isset($matches[1])) {
@@ -31,8 +31,8 @@ class Menu
     }
 
     /**
-     * 删除菜单
-     * @param string $name 规则name
+     * メニューを削除
+     * @param string $name ルールname
      * @return boolean
      */
     public static function delete($name)
@@ -46,7 +46,7 @@ class Menu
     }
 
     /**
-     * 启用菜单
+     * メニューを有効化
      * @param string $name
      * @return boolean
      */
@@ -61,7 +61,7 @@ class Menu
     }
 
     /**
-     * 禁用菜单
+     * メニューを無効化
      * @param string $name
      * @return boolean
      */
@@ -76,9 +76,9 @@ class Menu
     }
 
     /**
-     * 升级菜单
-     * @param string $name 插件名称
-     * @param array  $menu 新菜单
+     * メニューをアップグレード
+     * @param string $name プラグイン名
+     * @param array  $menu 新規メニュー
      * @return bool
      */
     public static function upgrade($name, $menu)
@@ -98,12 +98,12 @@ class Menu
                 }
             }
             if ($ids) {
-                //旧版本的菜单需要做删除处理
+                //旧バージョンのメニューは削除処理が必要
                 $config = Service::config($name);
                 $menus = $config['menus'] ?? [];
                 $where = ['id' => ['in', $ids]];
                 if ($menus) {
-                    //必须是旧版本中的菜单,可排除用户自主创建的菜单
+                    //必ず旧バージョンのメニューである必要があります,ユーザーが独自に作成したメニューは除外可能
                     $where['name'] = ['in', $menus];
                 }
                 AuthRule::where($where)->delete();
@@ -120,18 +120,18 @@ class Menu
     }
 
     /**
-     * 刷新插件菜单配置缓存
+     * プラグインメニュー設定キャッシュを更新
      * @param string $name
      * @param array  $menu
      */
     public static function refresh($name, $menu = [])
     {
         if (!$menu) {
-            // $menu为空时表示首次安装，首次安装需刷新插件菜单标识缓存
+            // $menu空の場合は初回インストールを示す，初回インストール時はプラグインメニュー識別キャッシュを更新する必要があります
             $menuIds = Menu::getAuthRuleIdsByName($name);
             $menus = Db::name("auth_rule")->where('id', 'in', $menuIds)->column('name');
         } else {
-            // 刷新新的菜单缓存
+            // 新しいメニューキャッシュを更新
             $getMenus = function ($menu) use (&$getMenus) {
                 $result = [];
                 foreach ($menu as $index => $item) {
@@ -143,12 +143,12 @@ class Menu
             $menus = $getMenus($menu);
         }
 
-        //刷新新的插件核心菜单缓存
+        //新しいプラグインコアメニューキャッシュを更新
         Service::config($name, ['menus' => $menus]);
     }
 
     /**
-     * 导出指定名称的菜单规则
+     * 指定した名称のメニュールールをエクスポート
      * @param string $name
      * @return array
      */
@@ -168,7 +168,7 @@ class Menu
     }
 
     /**
-     * 菜单升级
+     * メニューアップグレード
      * @param array $newMenu
      * @param array $oldMenu
      * @param int   $parent
@@ -194,7 +194,7 @@ class Menu
                 $menu = AuthRule::create($data);
             } else {
                 $menu = $oldMenu[$data['name']];
-                //更新旧菜单
+                //旧メニューを更新
                 AuthRule::update($data, ['id' => $menu['id']]);
                 $oldMenu[$data['name']]['keep'] = true;
             }
@@ -205,7 +205,7 @@ class Menu
     }
 
     /**
-     * 根据名称获取规则IDS
+     * 名称に基づきルールを取得IDS
      * @param string $name
      * @return array
      */
@@ -214,9 +214,9 @@ class Menu
         $ids = [];
         $menu = AuthRule::getByName($name);
         if ($menu) {
-            // 必须将结果集转换为数组
+            // 結果セットを必ず配列に変換する必要がある
             $ruleList = collection(AuthRule::order('weigh', 'desc')->field('id,pid,name')->select())->toArray();
-            // 构造菜单数据
+            // メニューデータを構築
             $ids = Tree::instance()->init($ruleList)->getChildrenIds($menu['id'], true);
         }
         return $ids;

@@ -5,48 +5,48 @@ namespace fast;
 use ArrayAccess;
 
 /**
- * 表单元素生成
+ * フォーム要素生成
  * @class   Form
  * @package fast
  * @method static string token() 生成Token
- * @method static string label(string $name, string $value = null, array $options = []) label标签
- * @method static string input($type, $name, string $value = null, array $options = []) 按类型生成文本框
- * @method static string text(string $name, string $value = null, array $options = []) 普通文本框
- * @method static string password(string $name, array $options = []) 密码文本框
- * @method static string hidden(string $name, string $value = null, array $options = []) 隐藏文本框
- * @method static string email(string $name, string $value = null, array $options = []) Email文本框
- * @method static string url(string $name, string $value = null, array $options = []) URL文本框
- * @method static string file(string $name, array $options = []) 文件上传组件
- * @method static string textarea(string $name, string $value = null, array $options = []) 多行文本框
- * @method static string editor(string $name, string $value = null, array $options = []) 富文本编辑器
- * @method static string select(string $name, array $list = [], string $selected = null, array $options = []) 下拉列表组件
- * @method static string selects(string $name, array $list = [], string $selected = null, array $options = []) 下拉列表组件(多选)
- * @method static string selectpicker(string $name, array $list = [], string $selected = null, array $options = []) 下拉列表组件(友好)
- * @method static string selectpickers(string $name, array $list = [], string $selected = null, array $options = []) 下拉列表组件(友好)(多选)
- * @method static string selectpage(string $name, string $value, string $url, string $field = null, string $primaryKey = null, array $options = []) 动态下拉列表组件
- * @method static string selectpages(string $name, string $value, string $url, string $field = null, string $primaryKey = null, array $options = []) 动态下拉列表组件(多选)
- * @method static string citypicker(string $name, string $value, array $options = []) 城市选择组件
- * @method static string switcher(string $name, string $value, array $options = []) 切换组件
- * @method static string datepicker(string $name, string $value, array $options = []) 日期选择组件
- * @method static string timepicker(string $name, string $value, array $options = []) 时间选择组件
- * @method static string datetimepicker(string $name, string $value, array $options = []) 日期时间选择组件
- * @method static string daterange(string $name, string $value, array $options = []) 日期区间组件
- * @method static string timerange(string $name, string $value, array $options = []) 时间区间组件
- * @method static string datetimerange(string $name, string $value, array $options = []) 日期时间区间组件
- * @method static string fieldlist(string $name, string $value, string $title = null, string $template = null, array $options = []) 字段列表组件
- * @method static string cxselect(string $url, array $names = [], array $values = [], array $options = []) 联动组件
- * @method static string selectRange(string $name, string $begin, string $end, string $selected = null, array $options = []) 选择数字区间
- * @method static string selectYear(string $name, string $begin, string $end, string $selected = null, array $options = []) 选择年
- * @method static string selectMonth(string $name, string $selected = null, array $options = [], string $format = '%m') 选择月
- * @method static string checkbox(string $name, string $value = '1', string $checked = null, array $options = []) 单个复选框
- * @method static string checkboxs(string $name, array $list = [], string $checked = null, array $options = []) 一组复选框
- * @method static string radio(string $name, string $value = null, string $checked = null, array $options = [])) 单个单选框
- * @method static string radios(string $name, array $list = [], string $checked = null, array $options = [])) 一组单选框
- * @method static string image(string $name = null, string $value = null, array $inputAttr = [], array $uploadAttr = [], array $chooseAttr = [], array $previewAttr = []) 上传图片组件
- * @method static string images(string $name = null, string $value = null, array $inputAttr = [], array $uploadAttr = [], array $chooseAttr = [], array $previewAttr = []) 上传图片组件(多图)）
- * @method static string upload(string $name = null, string $value = null, array $inputAttr = [], array $uploadAttr = [], array $chooseAttr = [], array $previewAttr = []) 上传文件组件
- * @method static string uploads(string $name = null, string $value = null, array $inputAttr = [], array $uploadAttr = [], array $chooseAttr = [], array $previewAttr = []) 上传文件组件(多文件)）
- * @method static string button(string $value = null, array $options = []) 表单button
+ * @method static string label(string $name, string $value = null, array $options = []) labelラベル
+ * @method static string input($type, $name, string $value = null, array $options = []) タイプに応じてテキストボックスを生成
+ * @method static string text(string $name, string $value = null, array $options = []) 通常テキストボックス
+ * @method static string password(string $name, array $options = []) パスワードテキストボックス
+ * @method static string hidden(string $name, string $value = null, array $options = []) 非表示テキストボックス
+ * @method static string email(string $name, string $value = null, array $options = []) Emailテキストボックス
+ * @method static string url(string $name, string $value = null, array $options = []) URLテキストボックス
+ * @method static string file(string $name, array $options = []) ファイルアップロードコンポーネント
+ * @method static string textarea(string $name, string $value = null, array $options = []) 複数行テキストボックス
+ * @method static string editor(string $name, string $value = null, array $options = []) リッチテキストエディター
+ * @method static string select(string $name, array $list = [], string $selected = null, array $options = []) ドロップダウンリストコンポーネント
+ * @method static string selects(string $name, array $list = [], string $selected = null, array $options = []) ドロップダウンリストコンポーネント(複数選択)
+ * @method static string selectpicker(string $name, array $list = [], string $selected = null, array $options = []) ドロップダウンリストコンポーネント(フレンドリー)
+ * @method static string selectpickers(string $name, array $list = [], string $selected = null, array $options = []) ドロップダウンリストコンポーネント(フレンドリー)(複数選択)
+ * @method static string selectpage(string $name, string $value, string $url, string $field = null, string $primaryKey = null, array $options = []) 動的ドロップダウンリストコンポーネント
+ * @method static string selectpages(string $name, string $value, string $url, string $field = null, string $primaryKey = null, array $options = []) 動的ドロップダウンリストコンポーネント(複数選択)
+ * @method static string citypicker(string $name, string $value, array $options = []) 都市選択コンポーネント
+ * @method static string switcher(string $name, string $value, array $options = []) トグルコンポーネント
+ * @method static string datepicker(string $name, string $value, array $options = []) 日付選択コンポーネント
+ * @method static string timepicker(string $name, string $value, array $options = []) 時間選択コンポーネント
+ * @method static string datetimepicker(string $name, string $value, array $options = []) 日時選択コンポーネント
+ * @method static string daterange(string $name, string $value, array $options = []) 日付範囲コンポーネント
+ * @method static string timerange(string $name, string $value, array $options = []) 時間範囲コンポーネント
+ * @method static string datetimerange(string $name, string $value, array $options = []) 日時範囲コンポーネント
+ * @method static string fieldlist(string $name, string $value, string $title = null, string $template = null, array $options = []) フィールドリストコンポーネント
+ * @method static string cxselect(string $url, array $names = [], array $values = [], array $options = []) 連動コンポーネント
+ * @method static string selectRange(string $name, string $begin, string $end, string $selected = null, array $options = []) 数値範囲を選択
+ * @method static string selectYear(string $name, string $begin, string $end, string $selected = null, array $options = []) 年を選択
+ * @method static string selectMonth(string $name, string $selected = null, array $options = [], string $format = '%m') 月を選択
+ * @method static string checkbox(string $name, string $value = '1', string $checked = null, array $options = []) 単一チェックボックス
+ * @method static string checkboxs(string $name, array $list = [], string $checked = null, array $options = []) チェックボックスグループ
+ * @method static string radio(string $name, string $value = null, string $checked = null, array $options = [])) 単一ラジオボタン
+ * @method static string radios(string $name, array $list = [], string $checked = null, array $options = [])) ラジオボタングループ
+ * @method static string image(string $name = null, string $value = null, array $inputAttr = [], array $uploadAttr = [], array $chooseAttr = [], array $previewAttr = []) 画像アップロードコンポーネント
+ * @method static string images(string $name = null, string $value = null, array $inputAttr = [], array $uploadAttr = [], array $chooseAttr = [], array $previewAttr = []) 画像アップロードコンポーネント(複数画像)）
+ * @method static string upload(string $name = null, string $value = null, array $inputAttr = [], array $uploadAttr = [], array $chooseAttr = [], array $previewAttr = []) ファイルアップロードコンポーネント
+ * @method static string uploads(string $name = null, string $value = null, array $inputAttr = [], array $uploadAttr = [], array $chooseAttr = [], array $previewAttr = []) ファイルアップロードコンポーネント(複数ファイル)）
+ * @method static string button(string $value = null, array $options = []) フォームbutton
  */
 class Form
 {
@@ -64,7 +64,7 @@ class Form
 
 /**
  *
- * 表单元素生成
+ * フォーム要素生成
  * @from https://github.com/illuminate/html
  * @package fast
  */
@@ -79,28 +79,28 @@ class FormBuilder
     protected $csrfToken = array('name' => '__token__');
 
     /**
-     * 已创建的标签名称
+     * 作成済みのタグ名
      *
      * @var array
      */
     protected $labels = [];
 
     /**
-     * 跳过的填充value值的类型
+     * スキップする値のフィルタイプvalue値のタイプ
      *
      * @var array
      */
     protected $skipValueTypes = array('file', 'password', 'checkbox', 'radio');
 
     /**
-     * 转义HTML
+     * エスケープHTML
      * @var boolean
      */
     protected $escapeHtml = true;
     protected static $instance;
 
     /**
-     * 获取单例
+     * シングルトンを取得
      * @param array $options
      * @return static
      */
@@ -114,7 +114,7 @@ class FormBuilder
     }
 
     /**
-     * 设置是否转义
+     * エスケープの有無を設定
      * @param boolean $escape
      */
     public function setEscapeHtml($escape)
@@ -123,7 +123,7 @@ class FormBuilder
     }
 
     /**
-     * 获取转义编码后的值
+     * エスケープエンコード後の値を取得
      * @param string $value
      * @return string
      */
@@ -155,7 +155,7 @@ class FormBuilder
     }
 
     /**
-     * 生成Label标签
+     * 生成Labelラベル
      *
      * @param string $name
      * @param string $value
@@ -185,7 +185,7 @@ class FormBuilder
     }
 
     /**
-     * 生成文本框(按类型)
+     * テキストボックスを生成(タイプ別)
      *
      * @param string $type
      * @param string $name
@@ -213,7 +213,7 @@ class FormBuilder
     }
 
     /**
-     * 生成普通文本框
+     * 通常テキストボックスを生成
      *
      * @param string $name
      * @param string $value
@@ -226,7 +226,7 @@ class FormBuilder
     }
 
     /**
-     * 生成密码文本框
+     * パスワードテキストボックスを生成
      *
      * @param string $name
      * @param array  $options
@@ -238,7 +238,7 @@ class FormBuilder
     }
 
     /**
-     * 生成隐藏文本框
+     * 非表示テキストボックスを生成
      *
      * @param string $name
      * @param string $value
@@ -251,7 +251,7 @@ class FormBuilder
     }
 
     /**
-     * 生成Email文本框
+     * 生成Emailテキストボックス
      *
      * @param string $name
      * @param string $value
@@ -264,7 +264,7 @@ class FormBuilder
     }
 
     /**
-     * 生成URL文本框
+     * 生成URLテキストボックス
      *
      * @param string $name
      * @param string $value
@@ -277,7 +277,7 @@ class FormBuilder
     }
 
     /**
-     * 生成上传文件组件
+     * ファイルアップロードコンポーネントを生成
      *
      * @param string $name
      * @param array  $options
@@ -289,7 +289,7 @@ class FormBuilder
     }
 
     /**
-     * 生成多行文本框
+     * 複数行テキストボックスを生成
      *
      * @param string $name
      * @param string $value
@@ -315,7 +315,7 @@ class FormBuilder
     }
 
     /**
-     * 生成富文本编辑器
+     * リッチテキストエディターを生成
      *
      * @param string $name
      * @param string $value
@@ -329,7 +329,7 @@ class FormBuilder
     }
 
     /**
-     * 设置默认的文本框行列数
+     * デフォルトのテキストボックス行数・列数を設定
      *
      * @param array $options
      * @return array
@@ -347,7 +347,7 @@ class FormBuilder
     }
 
     /**
-     * 根据size设置行数和列数
+     * に基づいてsize行数と列数を設定
      *
      * @param array $options
      * @return array
@@ -359,7 +359,7 @@ class FormBuilder
     }
 
     /**
-     * 生成滑块
+     * スライダーを生成
      *
      * @param string $name
      * @param string $min
@@ -377,7 +377,7 @@ class FormBuilder
     }
 
     /**
-     * 生成下拉列表框
+     * ドロップダウンリストボックスを生成
      *
      * @param string $name
      * @param array  $list
@@ -408,7 +408,7 @@ class FormBuilder
     }
 
     /**
-     * 下拉列表(多选)
+     * ドロップダウンリスト(複数選択)
      *
      * @param string $name
      * @param array  $list
@@ -423,7 +423,7 @@ class FormBuilder
     }
 
     /**
-     * 下拉列表(友好)
+     * ドロップダウンリスト(フレンドリー)
      *
      * @param string $name
      * @param array  $list
@@ -438,7 +438,7 @@ class FormBuilder
     }
 
     /**
-     * 下拉列表(友好)(多选)
+     * ドロップダウンリスト(フレンドリー)(複数選択)
      *
      * @param string $name
      * @param array  $list
@@ -453,13 +453,13 @@ class FormBuilder
     }
 
     /**
-     * 生成动态下拉列表
+     * 動的ドロップダウンリストを生成
      *
      * @param string $name       名称
      * @param mixed  $value
-     * @param string $url        数据源地址
-     * @param string $field      显示的字段名称,默认为name
-     * @param string $primaryKey 主键,数据库中保存的值,默认为id
+     * @param string $url        データソースURL
+     * @param string $field      表示フィールド名,デフォルトはname
+     * @param string $primaryKey 主キー,データベースに保存される値,デフォルトはid
      * @param array  $options
      * @return string
      */
@@ -472,13 +472,13 @@ class FormBuilder
 
 
     /**
-     * 生成动态下拉列表(复选)
+     * 動的ドロップダウンリストを生成(複数選択)
      *
      * @param string $name       名称
      * @param mixed  $value
-     * @param string $url        数据源地址
-     * @param string $field      显示的字段名称,默认为name
-     * @param string $primaryKey 主键,数据库中保存的值,默认为id
+     * @param string $url        データソースURL
+     * @param string $field      表示フィールド名,デフォルトはname
+     * @param string $primaryKey 主キー,データベースに保存される値,デフォルトはid
      * @param array  $options
      * @return string
      */
@@ -489,7 +489,7 @@ class FormBuilder
     }
 
     /**
-     * 生成城市选择框
+     * 都市選択ボックスを生成
      *
      * @param string $name
      * @param mixed  $value
@@ -503,7 +503,7 @@ class FormBuilder
     }
 
     /**
-     * 生成switch组件
+     * 生成switchコンポーネント
      *
      * @param string $name
      * @param mixed  $value
@@ -533,7 +533,7 @@ EOD;
     }
 
     /**
-     * 日期选择器
+     * 日付ピッカー
      * @param string $name
      * @param mixed  $value
      * @param array  $options
@@ -550,7 +550,7 @@ EOD;
     }
 
     /**
-     * 时间选择器
+     * 時間ピッカー
      *
      * @param string $name
      * @param mixed  $value
@@ -568,7 +568,7 @@ EOD;
     }
 
     /**
-     * 日期时间选择器
+     * 日時ピッカー
      *
      * @param string $name
      * @param mixed  $value
@@ -588,7 +588,7 @@ EOD;
     }
 
     /**
-     * 日期区间
+     * 日付範囲
      *
      * @param string $name
      * @param string $value
@@ -607,7 +607,7 @@ EOD;
     }
 
     /**
-     * 时间区间
+     * 時間範囲
      *
      * @param string $name
      * @param string $value
@@ -629,7 +629,7 @@ EOD;
     }
 
     /**
-     * 日期时间区间
+     * 日時範囲
      *
      * @param string $name
      * @param string $value
@@ -649,7 +649,7 @@ EOD;
     }
 
     /**
-     * 生成字段列表组件
+     * フィールドリストコンポーネントを生成
      *
      * @param string $name
      * @param mixed  $value
@@ -683,12 +683,12 @@ EOD;
     }
 
     /**
-     * 生成联动下拉列表
+     * 連動プルダウンリストを生成
      *
-     * @param string $url     联动获取数据源的URL地址
-     * @param array  $names   联动字段名称
-     * @param array  $values  联动字段默认选中的值
-     * @param array  $options 扩展属性
+     * @param string $url     連動してデータソースを取得するURLアドレス
+     * @param array  $names   連動フィールド名
+     * @param array  $values  連動フィールドのデフォルト選択値
+     * @param array  $options 拡張属性
      * @return string
      */
     public function cxselect($url, $names = [], $values = [], $options = [])
@@ -717,7 +717,7 @@ EOD;
     }
 
     /**
-     * 创建一个下拉列表选择区间组件
+     * プルダウンリストによる範囲選択コンポーネントを作成
      *
      * @param string $name
      * @param string $begin
@@ -733,7 +733,7 @@ EOD;
     }
 
     /**
-     * 生成选择年组件
+     * 年選択コンポーネントを生成
      *
      * @param string $name
      * @param string $begin
@@ -748,7 +748,7 @@ EOD;
     }
 
     /**
-     * 生成选择月组件
+     * 月選択コンポーネントを生成
      *
      * @param string $name
      * @param string $selected
@@ -768,7 +768,7 @@ EOD;
     }
 
     /**
-     * 根据传递的值生成option
+     * 渡された値に基づいて生成option
      *
      * @param string $display
      * @param string $value
@@ -804,7 +804,7 @@ EOD;
     }
 
     /**
-     * 生成option选项
+     * 生成optionオプション
      *
      * @param string $display
      * @param string $value
@@ -821,7 +821,7 @@ EOD;
     }
 
     /**
-     * 检测value是否选中
+     * チェックvalue選択されているかどうか
      *
      * @param string $value
      * @param string $selected
@@ -837,7 +837,7 @@ EOD;
     }
 
     /**
-     * 生成复选按钮
+     * チェックボックスを生成
      *
      * @param string $name
      * @param mixed  $value
@@ -855,7 +855,7 @@ EOD;
     }
 
     /**
-     * 生成一组筛选框
+     * 一組のフィルターボックスを生成
      *
      * @param string $name
      * @param array  $list
@@ -876,7 +876,7 @@ EOD;
     }
 
     /**
-     * 生成单选按钮
+     * ラジオボタンを生成
      *
      * @param string $name
      * @param mixed  $value
@@ -898,7 +898,7 @@ EOD;
     }
 
     /**
-     * 生成一组单选框
+     * 一組のラジオボタンを生成
      *
      * @param string $name
      * @param array  $list
@@ -919,7 +919,7 @@ EOD;
     }
 
     /**
-     * 生成上传图片组件(单图)
+     * 画像アップロードコンポーネントを生成(単一画像)
      *
      * @param string $name
      * @param string $value
@@ -940,7 +940,7 @@ EOD;
     }
 
     /**
-     * 生成上传图片组件(多图)
+     * 画像アップロードコンポーネントを生成(複数画像)
      *
      * @param string $name
      * @param string $value
@@ -962,7 +962,7 @@ EOD;
     }
 
     /**
-     * 生成上传文件组件(单文件)
+     * ファイルアップロードコンポーネントを生成(単一ファイル)
      *
      * @param string $name
      * @param string $value
@@ -978,7 +978,7 @@ EOD;
     }
 
     /**
-     * 生成上传文件组件(多文件)
+     * ファイルアップロードコンポーネントを生成(複数ファイル)
      *
      * @param string $name
      * @param string $value
@@ -1040,7 +1040,7 @@ EOD;
     }
 
     /**
-     * 生成一个按钮
+     * ボタンを1つ生成
      *
      * @param string $value
      * @param array  $options
@@ -1056,7 +1056,7 @@ EOD;
     }
 
     /**
-     * 获取ID属性值
+     * 取得ID属性値
      *
      * @param string $name
      * @param array  $attributes
@@ -1074,7 +1074,7 @@ EOD;
     }
 
     /**
-     * 获取Value属性值
+     * 取得Value属性値
      *
      * @param string $name
      * @param string $value
@@ -1092,7 +1092,7 @@ EOD;
     }
 
     /**
-     * 数组转换成一个HTML属性字符串。
+     * 配列をHTML属性文字列に変換。
      *
      * @param array $attributes
      * @return string
@@ -1100,9 +1100,9 @@ EOD;
     public function attributes($attributes)
     {
         $html = [];
-        // 假设我们的keys 和 value 是相同的,
-        // 拿HTML“required”属性来说,假设是['required']数组,
-        // 会已 required="required" 拼接起来,而不是用数字keys去拼接
+        // 仮に我々のkeys と value が同じだとすると,
+        // 例として挙げるとHTML“required”属性として言うと,と仮定する['required']配列,
+        // はすでに required="required" 連結される,数値keysで連結するのではなく
         foreach ((array)$attributes as $key => $value) {
             $element = $this->attributeElement($key, $value);
             if (!is_null($element)) {
@@ -1113,7 +1113,7 @@ EOD;
     }
 
     /**
-     * 拼接成一个属性。
+     * 1つの属性に連結する。
      *
      * @param string $key
      * @param string $value

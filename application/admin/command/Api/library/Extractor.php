@@ -84,7 +84,7 @@ class Extractor
     }
 
     /**
-     * 获取类所有方法的属性配置
+     * クラス内のすべてのメソッドの属性設定を取得
      * @param $className
      * @return mixed
      * @throws \ReflectionException

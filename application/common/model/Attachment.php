@@ -7,12 +7,12 @@ use think\Model;
 class Attachment extends Model
 {
 
-    // 开启自动写入时间戳字段
+    // 自動タイムスタンプ書き込みを有効にする
     protected $autoWriteTimestamp = 'int';
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
-    // 定义字段类型
+    // フィールドタイプを定義
     protected $type = [
     ];
     protected $append = [
@@ -21,7 +21,7 @@ class Attachment extends Model
 
     protected static function init()
     {
-        // 如果已经上传该资源，则不再记录
+        // すでにこのリソースがアップロードされている場合，それ以上記録しない
         self::beforeInsert(function ($model) {
             if (self::where('url', '=', $model['url'])->where('storage', $model['storage'])->find()) {
                 return false;
@@ -50,7 +50,7 @@ class Attachment extends Model
     }
 
     /**
-     * 获取云储存的缩略图样式字符
+     * クラウドストレージのサムネイルスタイル文字列を取得
      */
     public function getThumbStyleAttr($value, $data)
     {
@@ -66,7 +66,7 @@ class Attachment extends Model
     }
 
     /**
-     * 获取Mimetype列表
+     * 取得Mimetypeリスト
      * @return array
      */
     public static function getMimetypeList()
@@ -83,7 +83,7 @@ class Attachment extends Model
     }
 
     /**
-     * 获取定义的附件类别列表
+     * 定義済みの添付ファイルカテゴリ一覧を取得
      * @return array
      */
     public static function getCategoryList()

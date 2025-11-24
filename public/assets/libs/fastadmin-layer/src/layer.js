@@ -1,6 +1,6 @@
 
 /*!
- * layer - 通用 Web 弹出层组件
+ * layer - 汎用 Web ポップアップレイヤーコンポーネント
  * MIT Licensed
  */
 
@@ -28,18 +28,18 @@ var isLayui = window.layui && layui.define, $, win, ready = {
   config: {}, end: {}, minIndex: 0, minLeft: [],
   btn: ['&#x786E;&#x5B9A;', '&#x53D6;&#x6D88;'],
 
-  //五种原始层模式
+  //5 種類の基本レイヤーモード
   type: ['dialog', 'page', 'iframe', 'loading', 'tips'],
 
-  //获取节点的style属性值
+  //ノードのstyle属性値
   getStyle: function(node, name){
     var style = node.currentStyle ? node.currentStyle : window.getComputedStyle(node, null);
     return style[style.getPropertyValue ? 'getPropertyValue' : 'getAttribute'](name);
   },
 
-  //载入 CSS 依赖
+  //ロード CSS 依存
   link: function(href, fn, cssname){
-    //未设置路径，则不主动加载css
+    //パスが未設定の場合，自動的には読み込まないcss
     if(!layer.path) return;
 
     var head = document.getElementsByTagName("head")[0]
@@ -62,21 +62,21 @@ var isLayui = window.layui && layui.define, $, win, ready = {
 
     if(typeof fn !== 'function') return;
 
-    //轮询 css 是否加载完毕
+    //ポーリング css 読み込み完了かどうか
     (function poll(status) {
       var delay = 100
-      ,getLinkElem = document.getElementById(id); //获取动态插入的 link 元素
+      ,getLinkElem = document.getElementById(id); //動的に挿入された link 要素
 
-      //如果轮询超过指定秒数，则视为请求文件失败或 css 文件不符合规范
+      //ポーリングが指定秒数を超えた場合，はリクエストファイルの失敗または css ファイルが仕様に合致しないと見なす
       if(++timeout > 10 * 1000 / delay){
         return window.console && console.error(app +'.css: Invalid');
       };
 
-      //css 加载就绪
+      //css 読み込み準備完了
       if(parseInt(ready.getStyle(getLinkElem, 'width')) === 1989){
-        //如果参数来自于初始轮询（即未加载就绪时的），则移除 link 标签状态
+        //もしパラメータが初期ポーリングから来た場合（すなわち未ロード状態のものなら），削除する link タグ状態
         if(status === STAUTS_NAME) getLinkElem.removeAttribute('lay-status');
-        //如果 link 标签的状态仍为「创建中」，则继续进入轮询，直到状态改变，则执行回调
+        //もし link タグの状態が依然として「作成中」，であればポーリングを継続し，状態が変化するまで，その後コールバックを実行
         getLinkElem.getAttribute('lay-status') === STAUTS_NAME ? setTimeout(poll, delay) : fn();
       } else {
         getLinkElem.setAttribute('lay-status', STAUTS_NAME);
@@ -91,13 +91,13 @@ var isLayui = window.layui && layui.define, $, win, ready = {
   }
 };
 
-//默认内置方法。
+//デフォルトの組み込みメソッド。
 var layer = {
   v: '3.5.2',
-  ie: function(){ //ie版本
+  ie: function(){ //ieバージョン
     var agent = navigator.userAgent.toLowerCase();
     return (!!window.ActiveXObject || "ActiveXObject" in window) ? (
-      (agent.match(/msie\s(\d+)/) || [])[1] || '11' //由于ie11并没有msie的标识
+      (agent.match(/msie\s(\d+)/) || [])[1] || '11' //〜のためie11存在しないmsieの識別子
     ) : false;
   }(),
   index: (window.layer && window.layer.v) ? 100000 : 0,
@@ -108,7 +108,7 @@ var layer = {
     layer.path = ready.config.path || layer.path;
     typeof options.extend === 'string' && (options.extend = [options.extend]);
 
-    //如果设置了路径，则加载样式
+    //パスを設定した場合，スタイルを読み込む
     if(ready.config.path) layer.ready();
 
     if(!options.extend) return this;
@@ -120,7 +120,7 @@ var layer = {
     return this;
   },
 
-  //主体CSS等待事件
+  //本体CSS待機イベント
   ready: function(callback){
     var cssname = 'layer', ver = ''
     ,path = (isLayui ? 'modules/layer/' : 'theme/') + 'default/layer.css?v='+ layer.v + ver;
@@ -128,7 +128,7 @@ var layer = {
     return this;
   },
 
-  //各种快捷引用
+  //各種ショートカット参照
   alert: function(content, options, yes){
     var type = typeof options === 'function';
     if(type) yes = options;
@@ -152,7 +152,7 @@ var layer = {
     }, type ? {} : options));
   },
 
-  msg: function(content, options, end){ //最常用提示层
+  msg: function(content, options, end){ //最もよく使われるメッセージレイヤー
     var type = typeof options === 'function', rskin = ready.config.skin;
     var skin = (rskin ? rskin + ' ' + rskin + '-msg' : '')||'layui-layer-msg';
     var anim = doms.anim.length - 1;
@@ -207,7 +207,7 @@ var Class = function(setings){
     that.creat();
   };
   that.index = ++layer.index;
-  // that.config.maxWidth = $(win).width() - 15*2; //初始最大宽度：当前屏幕宽，左右留 15px 边距
+  // that.config.maxWidth = $(win).width() - 15*2; //初期最大幅：現在の画面幅，左右に確保する 15px マージンを修正
   that.config = $.extend({}, that.config, ready.config, setings);
   document.body ? creat() : setTimeout(function(){
     creat();
@@ -216,14 +216,14 @@ var Class = function(setings){
 
 Class.pt = Class.prototype;
 
-//缓存常用字符
+//よく使う文字をキャッシュ
 var doms = ['layui-layer', '.layui-layer-title', '.layui-layer-main', '.layui-layer-dialog', 'layui-layer-iframe', 'layui-layer-content', 'layui-layer-btn', 'layui-layer-close'];
 doms.anim = ['layer-anim-00', 'layer-anim-01', 'layer-anim-02', 'layer-anim-03', 'layer-anim-04', 'layer-anim-05', 'layer-anim-06'];
 
 doms.SHADE = 'layui-layer-shade';
 doms.MOVE = 'layui-layer-move';
 
-//默认配置
+//デフォルト設定
 Class.pt.config = {
   type: 0,
   shade: 0.3,
@@ -233,21 +233,21 @@ Class.pt.config = {
   offset: 'auto',
   area: 'auto',
   closeBtn: 1,
-  time: 0, //0表示不自动关闭
+  time: 0, //0自動的に閉じないことを表す
   zIndex: 19891014,
   maxWidth: 360,
   anim: 0,
-  isOutAnim: true, //退出动画
-  minStack: true, //最小化堆叠
+  isOutAnim: true, //終了アニメーション
+  minStack: true, //最小化スタック
   focusBtn: 0,
   icon: -1,
   moveType: 1,
   resize: true,
-  scrollbar: true, //是否允许浏览器滚动条
+  scrollbar: true, //ブラウザのスクロールバーを許可するかどうか
   tips: 2
 };
 
-//容器
+//コンテナ
 Class.pt.vessel = function(conType, callback){
   var that = this, times = that.index, config = that.config;
   var zIndex = config.zIndex + times, titype = typeof config.title === 'object';
@@ -258,10 +258,10 @@ Class.pt.vessel = function(conType, callback){
 
   config.zIndex = zIndex;
   callback([
-    //遮罩
+    //マスク
     config.shade ? ('<div class="'+ doms.SHADE +'" id="'+ doms.SHADE + times +'" times="'+ times +'" style="'+ ('z-index:'+ (zIndex-1) +'; ') +'"></div>') : '',
 
-    //主体
+    //本体
     '<div class="'+ doms[0] + (' layui-layer-'+ready.type[config.type]) + (((config.type == 0 || config.type == 2) && !config.shade) ? ' layui-layer-border' : '') + ' ' + (config.skin||'') +'" id="'+ doms[0] + times +'" type="'+ ready.type[config.type] +'" times="'+ times +'" showtime="'+ config.time +'" conType="'+ (conType ? 'object' : 'string') +'" style="z-index: '+ zIndex +'; width:'+ config.area[0] + ';height:' + config.area[1] + ';position:'+ (config.fixed ? 'fixed;' : 'absolute;') +'">'
       + (conType && config.type != 2 ? '' : titleHTML)
       + '<div id="'+ (config.id||'') +'" class="layui-layer-content'+ ((config.type == 0 && config.icon !== -1) ? ' layui-layer-padding' :'') + (config.type == 3 ? ' layui-layer-loading'+config.icon : '') +'">'
@@ -287,7 +287,7 @@ Class.pt.vessel = function(conType, callback){
   return that;
 };
 
-//创建骨架
+//骨組みを作成
 Class.pt.creat = function(){
   var that = this
   ,config = that.config
@@ -302,7 +302,7 @@ Class.pt.creat = function(){
     config.area = config.area === 'auto' ? ['', ''] : [config.area, ''];
   }
 
-  //anim兼容旧版shift
+  //anim旧バージョンとの互換shift
   if(config.shift){
     config.anim = config.shift;
   }
@@ -336,7 +336,7 @@ Class.pt.creat = function(){
     break;
   }
 
-  //建立容器
+  //コンテナを作成
   that.vessel(conType, function(html, titleHTML, moveElem){
     body.append(html[0]);
     conType ? function(){
@@ -357,7 +357,7 @@ Class.pt.creat = function(){
     config.scrollbar || doms.html.css('overflow', 'hidden').attr('layer-full', times);
   }).auto(times);
 
-  //遮罩
+  //マスク
   that.shadeo.css({
     'background-color': config.shade[1] || '#000'
     ,'opacity': config.shade[0] || config.shade
@@ -365,10 +365,10 @@ Class.pt.creat = function(){
 
   config.type == 2 && layer.ie == 6 && that.layero.find('iframe').attr('src', content[0]);
 
-  //坐标自适应浏览器窗口尺寸
+  //座標をブラウザウィンドウサイズに自動適応
   config.type == 4 ? that.tips() : function(){
     that.offset()
-    //首次弹出时，若 css 尚未加载，则等待 css 加载完毕后，重新设定尺寸
+    //初回ポップアップ時，もし css まだ読み込まれていない，待機する css 読み込み完了後，サイズを再設定
     parseInt(ready.getStyle(document.getElementById(doms.MOVE), 'z-index')) ||  function(){
       that.layero.css('visibility', 'hidden');
       layer.ready(function(){
@@ -378,7 +378,7 @@ Class.pt.creat = function(){
     }();
   }();
 
-  //如果是固定定位
+  //固定配置の場合
   if(config.fixed){
     win.on('resize', function(){
       that.offset();
@@ -392,7 +392,7 @@ Class.pt.creat = function(){
   }, config.time);
   that.move().callback();
 
-  //为兼容jQuery3.0的css动画影响元素尺寸计算
+  //互換性確保のためjQuery3.0のcssアニメーションが要素サイズ計算に与える影響
   if(doms.anim[config.anim]){
     var animClass = 'layer-anim '+ doms.anim[config.anim];
     that.layero.addClass(animClass).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
@@ -400,18 +400,18 @@ Class.pt.creat = function(){
     });
   };
 
-  //记录关闭动画
+  //クローズアニメーションを記録
   if(config.isOutAnim){
     that.layero.data('isOutAnim', true);
   }
 };
 
-//自适应
+//自動調整
 Class.pt.auto = function(index){
   var that = this, config = that.config, layero = $('#'+ doms[0] + index);
 
   if(config.area[0] === '' && config.maxWidth > 0){
-    //为了修复IE7下一个让人难以理解的bug
+    //修正するためにIE7理解しがたいbug
     if(layer.ie && layer.ie < 8 && config.btn){
       layero.width(layero.innerWidth());
     }
@@ -448,7 +448,7 @@ Class.pt.auto = function(index){
   return that;
 };
 
-//计算坐标
+//座標を計算
 Class.pt.offset = function(){
   var that = this, config = that.config, layero = that.layero;
   var area = [layero.outerWidth(), layero.outerHeight()];
@@ -461,7 +461,7 @@ Class.pt.offset = function(){
     that.offsetLeft = config.offset[1]||that.offsetLeft;
   } else if(config.offset !== 'auto'){
 
-    if(config.offset === 't'){ //上
+    if(config.offset === 't'){ //前
       that.offsetTop = 0;
     } else if(config.offset === 'r'){ //右
       that.offsetLeft = win.width() - area[0];
@@ -469,16 +469,16 @@ Class.pt.offset = function(){
       that.offsetTop = win.height() - area[1];
     } else if(config.offset === 'l'){ //左
       that.offsetLeft = 0;
-    } else if(config.offset === 'lt'){ //左上角
+    } else if(config.offset === 'lt'){ //左上
       that.offsetTop = 0;
       that.offsetLeft = 0;
-    } else if(config.offset === 'lb'){ //左下角
+    } else if(config.offset === 'lb'){ //左下
       that.offsetTop = win.height() - area[1];
       that.offsetLeft = 0;
-    } else if(config.offset === 'rt'){ //右上角
+    } else if(config.offset === 'rt'){ //右上
       that.offsetTop = 0;
       that.offsetLeft = win.width() - area[0];
-    } else if(config.offset === 'rb'){ //右下角
+    } else if(config.offset === 'rb'){ //右下
       that.offsetTop = win.height() - area[1];
       that.offsetLeft = win.width() - area[0];
     } else {
@@ -530,8 +530,8 @@ Class.pt.tips = function(){
     };
   };
 
-  //辨别tips的方位
-  goal.where = [function(){ //上
+  //判別するtipsの位置
+  goal.where = [function(){ //前
     goal.autoLeft();
     goal.tipTop = goal.top - layArea[1] - 10;
     tipsG.removeClass('layui-layer-TipsB').addClass('layui-layer-TipsT').css('border-right-color', config.tips[1]);
@@ -550,7 +550,7 @@ Class.pt.tips = function(){
   }];
   goal.where[guide-1]();
 
-  /* 8*2为小三角形占据的空间 */
+  /* 8*2小さな三角形が占有するスペース */
   if(guide === 1){
     goal.top - (win.scrollTop() + layArea[1] + 8*2) < 0 && goal.where[2]();
   } else if(guide === 2){
@@ -571,7 +571,7 @@ Class.pt.tips = function(){
   });
 }
 
-//拖拽层
+//ドラッグ層
 Class.pt.move = function(){
   var that = this
   ,config = that.config
@@ -610,7 +610,7 @@ Class.pt.move = function(){
 
   _DOC.on('mousemove', function(e){
 
-    //拖拽移动
+    //ドラッグ移動
     if(dict.moveStart){
       var X = e.clientX - dict.offset[0]
       ,Y = e.clientY - dict.offset[1]
@@ -621,7 +621,7 @@ Class.pt.move = function(){
       dict.stX = fixed ? 0 : win.scrollLeft();
       dict.stY = fixed ? 0 : win.scrollTop();
 
-      //控制元素不被拖出窗口外
+      //要素がウィンドウ外へドラッグされないよう制御
       if(!config.moveOut){
         var setRig = win.width() - layero.outerWidth() + dict.stX
         ,setBot = win.height() - layero.outerHeight() + dict.stY;
@@ -680,7 +680,7 @@ Class.pt.callback = function(){
   }
   layer.ie == 6 && that.IE6(layero);
 
-  //按钮
+  //ボタン
   layero.find('.'+ doms[6]).children('a').on('click', function(){
     var index = $(this).index();
     if(index === 0){
@@ -697,7 +697,7 @@ Class.pt.callback = function(){
     }
   });
 
-  //按钮焦点
+  //ボタンフォーカス
   if (typeof config.focusBtn === 'number') {
       layero.find('.' + doms[6]).children('a').each(function () {
           var currentBtn = $(this);
@@ -714,16 +714,16 @@ Class.pt.callback = function(){
       }
   }
 
-  //取消
+  //取り消し
   function cancel() {
       var close = config.cancel && config.cancel(that.index, layero);
       close === false || layer.close(that.index);
   }
 
-  //右上角关闭回调
+  //右上隅の閉じるコールバック
   layero.find('.'+ doms[7]).on('click', cancel);
 
-  //点遮罩关闭
+  //マスクをクリックして閉じる
   if(config.shadeClose){
     that.shadeo.on('click', function(){
       layer.close(that.index);
@@ -736,7 +736,7 @@ Class.pt.callback = function(){
     min === false || layer.min(that.index, config);
   });
 
-  //全屏/还原
+  //全画面表示/復元
   layero.find('.layui-layer-max').on('click', function(){
     if($(this).hasClass('layui-layer-maxmin')){
       layer.restore(that.index);
@@ -752,7 +752,7 @@ Class.pt.callback = function(){
   config.end && (ready.end[that.index] = config.end);
 };
 
-//for ie6 恢复select
+//for ie6 復元select
 ready.reselect = function(){
   $.each($('select'), function(index , value){
     var sthis = $(this);
@@ -764,7 +764,7 @@ ready.reselect = function(){
 };
 
 Class.pt.IE6 = function(layero){
-  //隐藏select
+  //非表示select
   $('select').each(function(index , value){
     var sthis = $(this);
     if(!sthis.parents('.'+doms[0])[0]){
@@ -774,11 +774,11 @@ Class.pt.IE6 = function(layero){
   });
 };
 
-//需依赖原型的对外方法
+//プロトタイプに依存する外部メソッドが必要
 Class.pt.openLayer = function(){
   var that = this;
 
-  //置顶当前窗口
+  //現在のウィンドウを最前面にする
   layer.zIndex = that.config.zIndex;
   layer.setTop = function(layero){
     var setZindex = function(){
@@ -791,7 +791,7 @@ Class.pt.openLayer = function(){
   };
 };
 
-//记录宽高坐标，用于还原
+//幅・高さ・座標を記録，復元用
 ready.record = function(layero){
   var area = [
     layero.width(),
@@ -814,22 +814,22 @@ ready.rescollbar = function(index){
   }
 };
 
-/** 内置成员 */
+/** ビルトインメンバー */
 
 window.layer = layer;
 
-//获取子iframe的DOM
+//子を取得iframeのDOM
 layer.getChildFrame = function(selector, index){
   index = index || $('.'+doms[4]).attr('times');
   return $('#'+ doms[0] + index).find('iframe').contents().find(selector);
 };
 
-//得到当前iframe层的索引，子iframe时使用
+//現在のiframeレイヤーのインデックス，子iframe時に使用
 layer.getFrameIndex = function(name){
   return $('#'+ name).parents('.'+doms[4]).attr('times');
 };
 
-//iframe层自适应宽高
+//iframeレイヤーの幅・高さを自動調整
 layer.iframeAuto = function(index){
   if(!index) return;
   var heg = layer.getChildFrame('html', index).outerHeight();
@@ -840,12 +840,12 @@ layer.iframeAuto = function(index){
   layero.find('iframe').css({height: heg});
 };
 
-//重置iframe url
+//リセットiframe url
 layer.iframeSrc = function(index, url){
   $('#'+ doms[0] + index).find('iframe').attr('src', url);
 };
 
-//设定层的样式
+//レイヤーのスタイルを設定
 layer.style = function(index, options, limit){
   var layero = $('#'+ doms[0] + index)
   ,contElem = layero.find('.layui-layer-content')
@@ -900,7 +900,7 @@ layer.min = function(index, options){
     ,overflow: 'hidden'
   };
 
-  //记录宽高坐标，用于还原
+  //幅・高さ・座標を記録，復元用
   ready.record(layero);
 
   if(ready.minLeft[0]){
@@ -908,11 +908,11 @@ layer.min = function(index, options){
     ready.minLeft.shift();
   }
 
-  //是否堆叠在左下角
+  //左下にスタックするかどうか
   if(options.minStack){
     settings.left = left;
     settings.top = win.height() - titHeight;
-    layero.attr('minLeft') || ready.minIndex++; //初次执行，最小化操作索引自增
+    layero.attr('minLeft') || ready.minIndex++; //初回実行，最小化操作インデックスをインクリメント
     layero.attr('minLeft', left);
   }
 
@@ -923,18 +923,18 @@ layer.min = function(index, options){
   layero.attr('type') === 'page' && layero.find(doms[4]).hide();
   ready.rescollbar(index);
 
-  //隐藏遮罩
+  //マスクを非表示
   shadeo.hide();
 };
 
-//还原
+//復元
 layer.restore = function(index){
   var layero = $('#'+ doms[0] + index)
   ,shadeo = $('#'+ doms.SHADE + index)
   ,area = layero.attr('area').split(',')
   ,type = layero.attr('type');
 
-  //恢复原来尺寸
+  //元のサイズに復元
   layer.style(index, {
     width: parseFloat(area[0]),
     height: parseFloat(area[1]),
@@ -949,11 +949,11 @@ layer.restore = function(index){
   layero.attr('type') === 'page' && layero.find(doms[4]).show();
   ready.rescollbar(index);
 
-  //恢复遮罩
+  //マスクを復元
   shadeo.show();
 };
 
-//全屏
+//全画面表示
 layer.full = function(index){
   var layero = $('#'+ doms[0] + index), timer;
   ready.record(layero);
@@ -973,13 +973,13 @@ layer.full = function(index){
   }, 100);
 };
 
-//改变title
+//変更title
 layer.title = function(name, index){
   var title = $('#'+ doms[0] + (index||layer.index)).find(doms[1]);
   title.html(name);
 };
 
-//关闭layer总方法
+//無効layerレイヤーを閉じるための総合メソッド
 layer.close = function(index, callback){
   var layero = $('#'+ doms[0] + index), type = layero.attr('type'), closeAnim = 'layer-anim-close';
   if(!layero[0]) return;
@@ -992,7 +992,7 @@ layer.close = function(index, callback){
       }
       wrap.css('display', wrap.data('display')).removeClass(WRAP);
     } else {
-      //低版本IE 回收 iframe
+      //旧バージョンIE 回収 iframe
       if(type === ready.type[2]){
         try {
           var iframe = $('#'+doms[4]+index)[0];
@@ -1030,7 +1030,7 @@ layer.close = function(index, callback){
   }
 };
 
-//关闭所有层
+//すべてのレイヤーを閉じる
 layer.closeAll = function(type, callback){
   if(typeof type === 'function'){
     callback = type;
@@ -1048,7 +1048,7 @@ layer.closeAll = function(type, callback){
 
 /**
 
-  拓展模块，layui 开始合并在一起
+  拡張モジュール，layui まとめて結合し始める
 
  */
 
@@ -1056,7 +1056,7 @@ var cache = layer.cache||{}, skin = function(type){
   return (cache.skin ? (' ' + cache.skin + ' ' + cache.skin + '-'+type) : '');
 };
 
-//仿系统prompt
+//システム風prompt
 layer.prompt = function(options, yes){
   var style = '';
   options = options || {};
@@ -1100,7 +1100,7 @@ layer.prompt = function(options, yes){
   }, options));
 };
 
-//tab层
+//tabレイヤー
 layer.tab = function(options){
   options = options || {};
 
@@ -1149,14 +1149,14 @@ layer.tab = function(options){
   }, options));
 };
 
-//相册层
+//アルバムレイヤー
 layer.photos = function(options, loop, key){
   var dict = {};
   options = options || {};
   if(!options.photos) return;
   options.zoom = typeof options.zoom === 'undefined' ? true : !!options.zoom;
 
-  //若 photos 并非选择器或 jQuery 对象，则为普通 object
+  //もし photos セレクタまたは jQuery オブジェクト，でなければ通常の object
   var isObject = !(typeof options.photos === 'string' || options.photos instanceof $)
   ,photos = isObject ? options.photos : {}
   ,data = photos.data || []
@@ -1168,8 +1168,8 @@ layer.photos = function(options, loop, key){
   var success = options.success;
   delete options.success;
 
-  //如果 options.photos 不是一个对象
-  if(!isObject){ //页面直接获取
+  //もし options.photos オブジェクトではない
+  if(!isObject){ //ページから直接取得
     var parent = $(options.photos), pushData = function(){
       data = [];
       parent.find(options.img).each(function(index){
@@ -1201,14 +1201,14 @@ layer.photos = function(options, loop, key){
       }), true);
     });
 
-    //不直接弹出
+    //直接ポップアップしない
     if(!loop) return;
 
   } else if (data.length === 0){
     return layer.msg('&#x6CA1;&#x6709;&#x56FE;&#x7247;');
   }
 
-  //上一张
+  //前の画像
   dict.imgprev = function(key){
     dict.imgIndex--;
     if(dict.imgIndex < 1){
@@ -1217,7 +1217,7 @@ layer.photos = function(options, loop, key){
     dict.tabimg(key);
   };
 
-  //下一张
+  //次の画像
   dict.imgnext = function(key,errorMsg){
     dict.imgIndex++;
     if(dict.imgIndex > data.length){
@@ -1227,7 +1227,7 @@ layer.photos = function(options, loop, key){
     dict.tabimg(key)
   };
 
-  //方向键
+  //方向キー
   dict.keyup = function(event){
     if(!dict.end){
       var code = event.keyCode;
@@ -1242,7 +1242,7 @@ layer.photos = function(options, loop, key){
     }
   }
 
-  //切换
+  //切り替え
   dict.tabimg = function(key){
     if(data.length <= 1) return;
     photos.start = dict.imgIndex - 1;
@@ -1253,7 +1253,7 @@ layer.photos = function(options, loop, key){
     }, 200);
   }
 
-  //一些动作
+  //いくつかのアクション
   dict.event = function(){
     /*
     dict.bigimg.hover(function(){
@@ -1275,7 +1275,7 @@ layer.photos = function(options, loop, key){
 
     $(document).on('keyup', dict.keyup);
 
-    //鼠标滚轮缩放图片
+    //マウスホイールで画像をズーム
     if(options.zoom){
       dict.bigimg.on('wheel mousewheel', $(">img", dict.bigimg), function(event) {
         var offset = $(this).offset(),
@@ -1295,7 +1295,7 @@ layer.photos = function(options, loop, key){
     }
   };
 
-  //图片预加载
+  //画像のプリロード
   function loadImage(url, callback, error) {
     var img = new Image();
     img.src = url;
@@ -1320,10 +1320,10 @@ layer.photos = function(options, loop, key){
   loadImage(data[start].src, function(img){
     layer.close(dict.loadi);
 
-    //切换图片时不出现动画
+    //画像切り替え時にアニメーションを表示しない
     if(key) options.anim = -1;
 
-    //弹出图片层
+    //画像レイヤーをポップアップ
     dict.index = layer.open($.extend({
       type: 1,
       id: 'layui-layer-photos',
@@ -1331,10 +1331,10 @@ layer.photos = function(options, loop, key){
         var imgarea = [img.width, img.height];
         var winarea = [$(window).width() - 100, $(window).height() - 100];
 
-        //如果 实际图片的宽或者高比 屏幕大（那么进行缩放）
+        //もし 実際の画像の幅または高さが 画面より大きい場合（その場合は縮小を行う）
         if(!options.full && (imgarea[0]>winarea[0]||imgarea[1]>winarea[1])){
-          var wh = [imgarea[0]/winarea[0],imgarea[1]/winarea[1]];//取宽度缩放比例、高度缩放比例
-          if(wh[0] > wh[1]){//取缩放比例最大的进行缩放
+          var wh = [imgarea[0]/winarea[0],imgarea[1]/winarea[1]];//幅方向の縮小率を取得、高さ方向の縮小率
+          if(wh[0] > wh[1]){//縮小率の大きい方を使って縮小
             imgarea[0] = imgarea[0]/wh[0];
             imgarea[1] = imgarea[1]/wh[0];
           } else if(wh[0] < wh[1]){
@@ -1391,7 +1391,7 @@ layer.photos = function(options, loop, key){
   });
 };
 
-//主入口
+//メインエントリ
 ready.run = function(_$){
   $ = _$;
   win = $(window);
@@ -1402,22 +1402,22 @@ ready.run = function(_$){
   };
 };
 
-//加载方式
+//読み込み方法
 window.layui && layui.define ? (
   layer.ready()
-  ,layui.define('jquery', function(exports){ //layui 加载
+  ,layui.define('jquery', function(exports){ //layui ロード
     layer.path = layui.cache.dir;
     ready.run(layui.$);
 
-    //暴露模块
+    //モジュールを公開
     window.layer = layer;
     exports('layer', layer);
   })
 ) : (
-  (typeof define === 'function' && define.amd) ? define(['jquery'], function(){ //requirejs 加载
+  (typeof define === 'function' && define.amd) ? define(['jquery'], function(){ //requirejs ロード
     ready.run(window.jQuery);
     return layer;
-  }) : function(){ //普通 script 标签加载
+  }) : function(){ //標準 script タグによるロードは不要
     layer.ready();
     ready.run(window.jQuery);
   }()

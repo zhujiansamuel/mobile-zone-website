@@ -8,25 +8,25 @@ use think\Config;
 use think\Log;
 
 /**
- * Token操作类
+ * Token操作クラス
  */
 class Token
 {
     /**
-     * @var array Token的实例
+     * @var array Tokenのインスタンス
      */
     public static $instance = [];
 
     /**
-     * @var object 操作句柄
+     * @var object 操作ハンドラ
      */
     public static $handler;
 
     /**
-     * 连接Token驱动
+     * 接続Tokenドライバ
      * @access public
-     * @param array       $options 配置数组
-     * @param bool|string $name    Token连接标识 true 强制重新连接
+     * @param array       $options 設定配列
+     * @param bool|string $name    Token接続識別子 true 強制再接続
      * @return Driver
      */
     public static function connect(array $options = [], $name = false)
@@ -42,7 +42,7 @@ class Token
                 '\\app\\common\\library\\token\\driver\\' . ucwords($type) :
                 $type;
 
-            // 记录初始化信息
+            // 初期化情報を記録
             App::$debug && Log::record('[ TOKEN ] INIT ' . $type, 'info');
 
             if (true === $name) {
@@ -56,9 +56,9 @@ class Token
     }
 
     /**
-     * 自动初始化Token
+     * 自動初期化Token
      * @access public
-     * @param array $options 配置数组
+     * @param array $options 設定配列
      * @return Driver
      */
     public static function init(array $options = [])
@@ -66,7 +66,7 @@ class Token
         if (is_null(self::$handler)) {
             if (empty($options) && 'complex' == Config::get('token.type')) {
                 $default = Config::get('token.default');
-                // 获取默认Token配置，并连接
+                // デフォルトを取得Token設定，して接続
                 $options = Config::get('token.' . $default['type']) ?: $default;
             } elseif (empty($options)) {
                 $options = Config::get('token');
@@ -79,10 +79,10 @@ class Token
     }
 
     /**
-     * 判断Token是否可用(check别名)
+     * 判定Token利用可能かどうか(checkエイリアス)
      * @access public
-     * @param string $token   Token标识
-     * @param int    $user_id 会员ID
+     * @param string $token   Token識別子
+     * @param int    $user_id 会員ID
      * @return bool
      */
     public static function has($token, $user_id)
@@ -91,9 +91,9 @@ class Token
     }
 
     /**
-     * 判断Token是否可用
-     * @param string $token   Token标识
-     * @param int    $user_id 会员ID
+     * 判定Token利用可能かどうか
+     * @param string $token   Token識別子
+     * @param int    $user_id 会員ID
      * @return bool
      */
     public static function check($token, $user_id)
@@ -102,10 +102,10 @@ class Token
     }
 
     /**
-     * 读取Token
+     * 読み取りToken
      * @access public
-     * @param string $token   Token标识
-     * @param mixed  $default 默认值
+     * @param string $token   Token識別子
+     * @param mixed  $default デフォルト値
      * @return mixed
      */
     public static function get($token, $default = false)
@@ -114,11 +114,11 @@ class Token
     }
 
     /**
-     * 写入Token
+     * 書き込みToken
      * @access public
-     * @param string   $token   Token标识
-     * @param mixed    $user_id 会员ID
-     * @param int|null $expire  有效时间 0为永久
+     * @param string   $token   Token識別子
+     * @param mixed    $user_id 会員ID
+     * @param int|null $expire  有効期間 0は永久
      * @return boolean
      */
     public static function set($token, $user_id, $expire = null)
@@ -127,9 +127,9 @@ class Token
     }
 
     /**
-     * 删除Token(delete别名)
+     * 削除Token(deleteエイリアス)
      * @access public
-     * @param string $token Token标识
+     * @param string $token Token識別子
      * @return boolean
      */
     public static function rm($token)
@@ -138,8 +138,8 @@ class Token
     }
 
     /**
-     * 删除Token
-     * @param string $token 标签名
+     * 削除Token
+     * @param string $token タグ名
      * @return bool
      */
     public static function delete($token)
@@ -148,9 +148,9 @@ class Token
     }
 
     /**
-     * 清除Token
+     * クリアToken
      * @access public
-     * @param int $user_id 会员ID
+     * @param int $user_id 会員ID
      * @return boolean
      */
     public static function clear($user_id = null)

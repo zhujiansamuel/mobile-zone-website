@@ -2,7 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     index_url: 'user/user/index',
@@ -16,7 +16,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
@@ -47,8 +47,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             buttons:[
                                 {
                                     name: 'details',
-                                    text:'详情',
-                                    title:'详情',
+                                    text:'詳細',
+                                    title:'詳細',
                                     //classname: 'btn btn-xs btn-warning btn-view btn-ajax ',
                                     classname: 'btn btn-xs btn-warning  btn-dialog',
                                     icon: 'fa fa-shopping-cart',
@@ -62,7 +62,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 ]
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
         },
         add: function () {

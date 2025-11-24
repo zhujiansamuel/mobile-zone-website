@@ -23,13 +23,13 @@ use Yansongda\Supports\Collection;
 use Yansongda\Supports\Str;
 
 /**
- * @method ResponseInterface app(array $order)      APP 支付
- * @method Collection        pos(array $order)      刷卡支付
- * @method Collection        scan(array $order)     扫码支付
- * @method Collection        transfer(array $order) 帐户转账
- * @method ResponseInterface wap(array $order)      手机网站支付
- * @method ResponseInterface web(array $order)      电脑支付
- * @method Collection        mini(array $order)     小程序支付
+ * @method ResponseInterface app(array $order)      APP 支払い
+ * @method Collection        pos(array $order)      カード決済
+ * @method Collection        scan(array $order)     スキャン決済
+ * @method Collection        transfer(array $order) アカウント振込
+ * @method ResponseInterface wap(array $order)      モバイルサイト決済
+ * @method ResponseInterface web(array $order)      PC決済
+ * @method Collection        mini(array $order)     ミニプログラム決済
  */
 class Alipay extends AbstractProvider
 {

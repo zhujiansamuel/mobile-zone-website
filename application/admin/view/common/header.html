@@ -1,22 +1,22 @@
 <!-- Logo -->
 <a href="javascript:;" class="logo">
-    <!-- 迷你模式下Logo的大小为50X50 -->
+    <!-- ミニモード時Logoのサイズは50X50 -->
     <span class="logo-mini">{$site.name|mb_substr=0,4,'utf-8'|mb_strtoupper='utf-8'|htmlentities}</span>
-    <!-- 普通模式下Logo -->
+    <!-- 通常モード時Logo -->
     <span class="logo-lg">{$site.name|htmlentities}</span>
 </a>
 
-<!-- 顶部通栏样式 -->
+<!-- トップバーのスタイル -->
 <nav class="navbar navbar-static-top">
 
-    <!--第一级菜单-->
+    <!--第1階層メニュー-->
     <div id="firstnav">
-        <!-- 边栏切换按钮-->
+        <!-- サイドバー切り替えボタン-->
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">{:__('Toggle navigation')}</span>
         </a>
 
-        <!--如果不想在顶部显示角标,则给ul加上disable-top-badge类即可-->
+        <!--トップにバッジを表示したくない場合は,にulを追加しdisable-top-badgeクラスを付与すればよい-->
         <ul class="nav nav-tabs nav-addtabs disable-top-badge hidden-xs" role="tablist">
             {$navlist}
         </ul>
@@ -28,7 +28,7 @@
                     <a href="__PUBLIC__" target="_blank"><i class="fa fa-home" style="font-size:14px;"></i> {:__('Home')}</a>
                 </li>
 
-                <!-- 清除缓存 -->
+                <!-- キャッシュをクリア -->
                 <li class="hidden-xs">
                     <a href="javascript:;" data-toggle="dropdown" title="{:__('Wipe cache')}">
                         <i class="fa fa-trash"></i> {:__('Wipe cache')}
@@ -45,13 +45,13 @@
                     </ul>
                 </li>
 
-                <!-- 多语言列表 -->
+                <!-- 多言語リスト -->
                 {if $Think.config.lang_switch_on}
                 <li class="hidden-xs">
                     <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-language"></i></a>
                     <ul class="dropdown-menu">
                         <li class="{$config['language']=='zh-cn'?'active':''}">
-                            <a href="?ref=addtabs&lang=zh-cn">简体中文</a>
+                            <a href="?ref=addtabs&lang=zh-cn">簡体字中国語</a>
                         </li>
                         <li class="{$config['language']=='en'?'active':''}">
                             <a href="?ref=addtabs&lang=en">English</a>
@@ -60,12 +60,12 @@
                 </li>
                 {/if}
 
-                <!-- 全屏按钮 -->
+                <!-- フルスクリーンボタン -->
                 <li class="hidden-xs">
                     <a href="#" data-toggle="fullscreen"><i class="fa fa-arrows-alt"></i></a>
                 </li>
 
-                <!-- 账号信息下拉框 -->
+                <!-- アカウント情報ドロップダウン -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="{$admin.avatar|cdnurl|htmlentities}" class="user-image" alt="">
@@ -104,7 +104,7 @@
                         </li>
                     </ul>
                 </li>
-                <!-- 控制栏切换按钮 -->
+                <!-- コントロールバー切り替えボタン -->
                 <li class="hidden-xs">
                     <a href="javascript:;" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                 </li>
@@ -113,7 +113,7 @@
     </div>
 
     {if $Think.config.fastadmin.multiplenav}
-    <!--第二级菜单,只有在multiplenav开启时才显示-->
+    <!--第2階層メニュー,のみmultiplenav有効な場合に表示-->
     <div id="secondnav">
         <ul class="nav nav-tabs nav-addtabs disable-top-badge" role="tablist">
             {if $fixedmenu}

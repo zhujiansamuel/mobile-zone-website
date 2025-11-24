@@ -11,10 +11,10 @@ use think\Exception;
 use think\Validate;
 
 /**
- * 系统配置
+ * システム設定
  *
  * @icon   fa fa-cogs
- * @remark 可以在此增改系统的变量和分组,也可以自定义分组和变量,如果需要删除请从数据库中删除
+ * @remark ここでシステムの変数およびグループを追加・変更できます,カスタムのグループおよび変数も作成できます,削除が必要な場合はデータベースから削除してください
  */
 class Config extends Backend
 {
@@ -38,7 +38,7 @@ class Config extends Backend
     }
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {
@@ -74,7 +74,7 @@ class Config extends Backend
             }
             $value['tip'] = htmlspecialchars($value['tip']);
             if ($value['name'] == 'cdnurl') {
-                //cdnurl不支持在线修改
+                //cdnurlオンラインでの変更はサポートしていません
                 continue;
             }
             $siteList[$v['group']]['list'][] = $value;
@@ -92,7 +92,7 @@ class Config extends Backend
     }
 
     /**
-     * 添加
+     * 追加
      */
     public function add()
     {
@@ -133,7 +133,7 @@ class Config extends Backend
     }
 
     /**
-     * 编辑
+     * 編集
      * @param null $ids
      */
     public function edit($ids = null)
@@ -172,7 +172,7 @@ class Config extends Backend
     }
 
     /**
-     * 删除
+     * 削除
      * @param string $ids
      */
     public function del($ids = "")
@@ -196,7 +196,7 @@ class Config extends Backend
     }
 
     /**
-     * 检测配置项是否存在
+     * 設定項目が存在するかチェック
      * @internal
      */
     public function check()
@@ -215,14 +215,14 @@ class Config extends Backend
     }
 
     /**
-     * 规则列表
+     * ルール一覧
      * @internal
      */
     public function rulelist()
     {
-        //主键
+        //主キー
         $primarykey = $this->request->request("keyField");
-        //主键值
+        //主キー値
         $keyValue = $this->request->request("keyValue", "");
 
         $keyValueArr = array_filter(explode(',', $keyValue));
@@ -241,7 +241,7 @@ class Config extends Backend
     }
 
     /**
-     * 发送测试邮件
+     * テストメールを送信
      * @internal
      */
     public function emailtest()
@@ -277,7 +277,7 @@ class Config extends Backend
             $this->error(__('Invalid parameters'));
         }
         $setting = $config['setting'];
-        //自定义条件
+        //カスタム条件
         $custom = isset($setting['conditions']) ? (array)json_decode($setting['conditions'], true) : [];
         $custom = array_filter($custom);
 
@@ -287,7 +287,7 @@ class Config extends Backend
     }
 
     /**
-     * 获取表列表
+     * テーブル一覧を取得
      * @internal
      */
     public function get_table_list()
@@ -299,16 +299,16 @@ class Config extends Backend
     }
 
     /**
-     * 获取表字段列表
+     * テーブルフィールド一覧を取得
      * @internal
      */
     public function get_fields_list()
     {
         $table = $this->request->request('table');
         $dbname = \think\Config::get('database.database');
-        //从数据库中获取表字段信息
+        //データベースからテーブルフィールド情報を取得
         $sql = "SELECT `COLUMN_NAME` AS `name`,`COLUMN_COMMENT` AS `title`,`DATA_TYPE` AS `type` FROM `information_schema`.`columns` WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? ORDER BY ORDINAL_POSITION";
-        //加载主表的列
+        //メインテーブルの列を読み込む
         $fieldList = Db::query($sql, [$dbname, $table]);
         $this->success("", null, ['fieldList' => $fieldList]);
     }

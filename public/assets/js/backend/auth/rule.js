@@ -2,7 +2,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
 
     var Controller = {
         index: function () {
-            // 初始化表格参数配置
+            // テーブルパラメーター設定の初期化
             Table.api.init({
                 extend: {
                     "index_url": "auth/rule/index",
@@ -16,7 +16,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
 
             var table = $("#table");
 
-            // 初始化表格
+            // テーブルの初期化
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 sortName: '',
@@ -54,7 +54,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 }
             });
 
-            // 为表格绑定事件
+            // テーブルにイベントをバインド
             Table.api.bindevent(table);
 
             var btnSuccessEvent = function (data, ret) {
@@ -76,24 +76,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 return false;
             };
 
-            //表格内容渲染前
+            //テーブル内容のレンダリング前
             table.on('pre-body.bs.table', function (e, data) {
                 var options = table.bootstrapTable("getOptions");
                 options.escape = true;
             });
 
-            //当内容渲染完成后
+            //内容のレンダリング完了後
             table.on('post-body.bs.table', function (e, data) {
                 var options = table.bootstrapTable("getOptions");
                 options.escape = false;
 
-                //点击切换/排序/删除操作后刷新左侧菜单
+                //クリックして切り替え/ソート順/削除操作後に左側メニューを更新
                 $(".btn-change[data-id],.btn-delone,.btn-dragsort").data("success", btnSuccessEvent);
 
             });
 
             table.on('post-body.bs.table', function (e, settings, json, xhr) {
-                //显示隐藏子节点
+                //子ノードの表示／非表示
                 $(">tbody>tr[data-index] > td", this).on('click', "a.btn-node-sub", function () {
                     var status = $(this).data("shown") ? true : false;
                     $("a[data-pid='" + $(this).data("id") + "']").each(function () {
@@ -108,7 +108,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 });
             });
 
-            //隐藏子节点
+            //子ノードを非表示
             $(document).on("collapse", ".btn-node-sub", function () {
                 if ($("i", this).length > 0) {
                     $("a[data-pid='" + $(this).data("id") + "']").trigger("collapse");
@@ -118,12 +118,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 $(this).closest("tr").toggle(false);
             });
 
-            //批量删除后的回调
+            //一括削除後のコールバック
             $(".toolbar > .btn-del,.toolbar .btn-more~ul>li>a").data("success", function (e) {
                 Fast.api.refreshmenu();
             });
 
-            //展开隐藏一级
+            //第1階層の展開／折りたたみ
             $(document.body).on("click", ".btn-toggle", function (e) {
                 $("a[data-id][data-pid][data-pid!=0].disabled").closest("tr").hide();
                 var that = this;
@@ -133,7 +133,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 $(".btn-node-sub[data-pid=0]").data("shown", show);
             });
 
-            //展开隐藏全部
+            //すべて展開／折りたたみ
             $(document.body).on("click", ".btn-toggle-all", function (e) {
                 var that = this;
                 var show = $("i", that).hasClass("fa-plus");
@@ -180,7 +180,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 var iconfunc = function () {
                     Layer.open({
                         type: 1,
-                        area: ['80%', '80%'], //宽高
+                        area: ['80%', '80%'], //幅と高さ
                         content: Template('chooseicontpl', {iconlist: iconlist})
                     });
                 };

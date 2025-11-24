@@ -3,16 +3,16 @@
 namespace fast;
 
 /**
- * Http 请求类
+ * Http リクエストクラス
  */
 class Http
 {
 
     /**
-     * 发送一个POST请求
-     * @param string $url     请求URL
-     * @param array  $params  请求参数
-     * @param array  $options 扩展参数
+     * 1件のPOSTリクエスト
+     * @param string $url     リクエストURL
+     * @param array  $params  リクエストパラメータ
+     * @param array  $options 拡張パラメータ
      * @return mixed|string
      */
     public static function post($url, $params = [], $options = [])
@@ -22,10 +22,10 @@ class Http
     }
 
     /**
-     * 发送一个GET请求
-     * @param string $url     请求URL
-     * @param array  $params  请求参数
-     * @param array  $options 扩展参数
+     * 1件のGETリクエスト
+     * @param string $url     リクエストURL
+     * @param array  $params  リクエストパラメータ
+     * @param array  $options 拡張パラメータ
      * @return mixed|string
      */
     public static function get($url, $params = [], $options = [])
@@ -35,11 +35,11 @@ class Http
     }
 
     /**
-     * CURL发送Request请求,含POST和REQUEST
-     * @param string $url     请求的链接
-     * @param mixed  $params  传递的参数
-     * @param string $method  请求的方法
-     * @param mixed  $options CURL的参数
+     * CURL送信Requestリクエスト,を含むPOSTとREQUEST
+     * @param string $url     リクエスト先のリンク
+     * @param mixed  $params  送信するパラメータ
+     * @param string $method  リクエストメソッド
+     * @param mixed  $options CURLのパラメータ
      * @return array
      */
     public static function sendRequest($url, $params = [], $method = 'POST', $options = [])
@@ -102,17 +102,17 @@ class Http
     }
 
     /**
-     * 异步发送一个请求
-     * @param string $url    请求的链接
-     * @param mixed  $params 请求的参数
-     * @param string $method 请求的方法
+     * 非同期でリクエストを送信
+     * @param string $url    リクエスト先のリンク
+     * @param mixed  $params リクエストのパラメータ
+     * @param string $method リクエストメソッド
      * @return boolean TRUE
      */
     public static function sendAsyncRequest($url, $params = [], $method = 'POST')
     {
         $method = strtoupper($method);
         $method = $method == 'POST' ? 'POST' : 'GET';
-        //构造传递的参数
+        //送信パラメータを構築
         if (is_array($params)) {
             $post_params = [];
             foreach ($params as $k => &$v) {
@@ -126,18 +126,18 @@ class Http
             $post_string = $params;
         }
         $parts = parse_url($url);
-        //构造查询的参数
+        //クエリパラメータを構築
         if ($method == 'GET' && $post_string) {
             $parts['query'] = isset($parts['query']) ? $parts['query'] . '&' . $post_string : $post_string;
             $post_string = '';
         }
         $parts['query'] = isset($parts['query']) && $parts['query'] ? '?' . $parts['query'] : '';
-        //发送socket请求,获得连接句柄
+        //送信socketリクエスト,接続ハンドルを取得
         $fp = fsockopen($parts['host'], $parts['port'] ?? 80, $errno, $errstr, 10);
         if (!$fp) {
             return false;
         }
-        //设置超时时间
+        //タイムアウト時間を設定
         stream_set_timeout($fp, 10);
         $out = "{$method} {$parts['path']}{$parts['query']} HTTP/1.1\r\n";
         $out .= "Host: {$parts['host']}\r\n";
@@ -148,14 +148,14 @@ class Http
             $out .= $post_string;
         }
         fwrite($fp, $out);
-        //不用关心服务器返回结果
+        //サーバーからのレスポンス結果を気にしない
         //echo fread($fp, 1024);
         fclose($fp);
         return true;
     }
 
     /**
-     * 发送文件到客户端
+     * ファイルをクライアントに送信
      * @param string $file
      * @param bool   $delaftersend
      * @param bool   $exitaftersend

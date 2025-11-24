@@ -12,7 +12,7 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
     public function setTargetUrl($url)
     {
         if ('' === ($url ?? '')) {
-            throw new \InvalidArgumentException('无法跳转到空页面');
+            throw new \InvalidArgumentException('空のページにはリダイレクトできません');
         }
 
         $this->targetUrl = $url;
@@ -24,10 +24,10 @@ class RedirectResponse extends \Symfony\Component\HttpFoundation\RedirectRespons
         <meta charset="UTF-8" />
         <meta http-equiv="refresh" content="0;url=\'%1$s\'" />
 
-        <title>正在跳转支付 %1$s</title>
+        <title>決済画面へリダイレクト中 %1$s</title>
     </head>
     <body>
-        <div id="redirect" style="display:none;">正在跳转支付 <a href="%1$s">%1$s</a></div>
+        <div id="redirect" style="display:none;">決済画面へリダイレクト中 <a href="%1$s">%1$s</a></div>
         <script type="text/javascript">
             setTimeout(function(){
                 document.getElementById("redirect").style.display = "block";

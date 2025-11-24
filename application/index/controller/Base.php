@@ -18,7 +18,7 @@ class Base extends Frontend
 
         $this->view->assign('webAction', $webAction);
     
-        //商品分类
+        //商品カテゴリ
         $goodsCategory = db('category')->where('type', 'goods')->order('weigh desc')->select();
         $goodsCategoryTree = getTree($goodsCategory);
         //FAQS

@@ -16,7 +16,7 @@ class Auth extends \fast\Auth
     protected $_error = '';
     protected $requestUri = '';
     protected $breadcrumb = [];
-    protected $logined = false; //登录状态
+    protected $logined = false; //ログイン状態
 
     public function __construct()
     {
@@ -29,11 +29,11 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 管理员登录
+     * 管理者ログイン
      *
-     * @param string $username 用户名
-     * @param string $password 密码
-     * @param int    $keeptime 有效时长
+     * @param string $username ユーザー名
+     * @param string $password パスワード
+     * @param int    $keeptime 有効期間
      * @return  boolean
      */
     public function login($username, $password, $keeptime = 0)
@@ -69,7 +69,7 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 退出登录
+     * ログアウト
      */
     public function logout()
     {
@@ -78,7 +78,7 @@ class Auth extends \fast\Auth
             $admin->token = '';
             $admin->save();
         }
-        $this->logined = false; //重置登录状态
+        $this->logined = false; //ログイン状態をリセット
         Session::delete("admin");
         Cookie::delete("keeplogin");
         setcookie('fastadmin_userinfo', '', $_SERVER['REQUEST_TIME'] - 3600, rtrim(url("/" . request()->module(), '', false), '/'));
@@ -86,7 +86,7 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 自动登录
+     * 自動ログイン
      * @return boolean
      */
     public function autologin()
@@ -101,18 +101,18 @@ class Auth extends \fast\Auth
             if (!$admin || !$admin->token) {
                 return false;
             }
-            //token有变更
+            //tokenトークンに変更あり
             if ($key != $this->getKeeploginKey($admin, $keeptime, $expiretime)) {
                 return false;
             }
             $ip = request()->ip();
-            //IP有变动
+            //IPIPに変更あり
             if ($admin->loginip != $ip) {
                 return false;
             }
             Session::set("admin", $admin->toArray());
             Session::set("admin.safecode", $this->getEncryptSafecode($admin));
-            //刷新自动登录的时效
+            //自動ログインの有効期限を更新
             $this->keeplogin($admin, $keeptime);
             return true;
         } else {
@@ -121,7 +121,7 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 刷新保持登录的Cookie
+     * ログイン保持用Cookieを更新Cookie
      *
      * @param int $keeptime
      * @return  boolean
@@ -138,9 +138,9 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 获取密码加密后的字符串
-     * @param string $password 密码
-     * @param string $salt     密码盐
+     * パスワードを暗号化した文字列を取得
+     * @param string $password パスワード
+     * @param string $salt     ソルト
      * @return string
      */
     public function getEncryptPassword($password, $salt = '')
@@ -149,9 +149,9 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 获取密码加密后的自动登录码
-     * @param string $password 密码
-     * @param string $salt     密码盐
+     * パスワードを暗号化した自動ログインコードを取得
+     * @param string $password パスワード
+     * @param string $salt     ソルト
      * @return string
      */
     public function getEncryptKeeplogin($params, $keeptime)
@@ -162,7 +162,7 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 获取自动登录Key
+     * 自動ログインキーを取得Key
      * @param $params
      * @param $keeptime
      * @param $expiretime
@@ -175,7 +175,7 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 获取加密后的安全码
+     * 暗号化されたセキュリティコードを取得
      * @param $params
      * @return string
      */
@@ -191,9 +191,9 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 检测当前控制器和方法是否匹配传递的数组
+     * 現在のコントローラーとメソッドが渡された配列と一致するかを検出
      *
-     * @param array $arr 需要验证权限的数组
+     * @param array $arr 権限検証が必要な配列
      * @return bool
      */
     public function match($arr = [])
@@ -205,17 +205,17 @@ class Auth extends \fast\Auth
         }
 
         $arr = array_map('strtolower', $arr);
-        // 是否存在
+        // 存在するかどうか
         if (in_array(strtolower($request->action()), $arr) || in_array('*', $arr)) {
             return true;
         }
 
-        // 没找到匹配
+        // 一致が見つかりません
         return false;
     }
 
     /**
-     * 检测是否登录
+     * ログインしているか確認
      *
      * @return boolean
      */
@@ -232,19 +232,19 @@ class Auth extends \fast\Auth
         if (!$my) {
             return false;
         }
-        //校验安全码，可用于判断关键信息发生了变更需要重新登录
+        //セキュリティコードを検証，重要な情報が変更され、再ログインが必要かどうかの判定に使用できます
         if (!isset($admin['safecode']) || $this->getEncryptSafecode($my) !== $admin['safecode']) {
             $this->logout();
             return false;
         }
-        //判断是否同一时间同一账号只能在一个地方登录
+        //同一時間帯に同一アカウントを1か所でしかログインできないかどうかを判定する
         if (Config::get('fastadmin.login_unique')) {
             if ($my['token'] != $admin['token']) {
                 $this->logout();
                 return false;
             }
         }
-        //判断管理员IP是否变动
+        //管理者を判定するIP変更されているかどうか
         if (Config::get('fastadmin.loginip_check')) {
             if (!isset($admin['loginip']) || $admin['loginip'] != request()->ip()) {
                 $this->logout();
@@ -256,7 +256,7 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 获取当前请求的URI
+     * 現在のリクエストの〜を取得URI
      * @return string
      */
     public function getRequestUri()
@@ -265,7 +265,7 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 设置当前请求的URI
+     * 現在のリクエストのURI
      * @param string $uri
      */
     public function setRequestUri($uri)
@@ -304,7 +304,7 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 获取管理员所属于的分组ID
+     * 管理者が所属するグループを取得ID
      * @param int $uid
      * @return array
      */
@@ -319,13 +319,13 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 取出当前管理员所拥有权限的分组
-     * @param boolean $withself 是否包含当前所在的分组
+     * 現在の管理者が権限を持つグループを取得
+     * @param boolean $withself 現在所属しているグループを含めるかどうか
      * @return array
      */
     public function getChildrenGroupIds($withself = false)
     {
-        //取出当前管理员所有的分组
+        //現在の管理者が属するすべてのグループを取得
         $groups = $this->getGroups();
         $groupIds = [];
         foreach ($groups as $k => $v) {
@@ -338,7 +338,7 @@ class Auth extends \fast\Auth
                 unset($groups[$k]);
             }
         }
-        // 取出所有分组
+        // すべてのグループを取得
         $groupList = \app\admin\model\AuthGroup::where($this->isSuperAdmin() ? '1=1' : ['status' => 'normal'])->select();
         $objList = [];
         foreach ($groups as $k => $v) {
@@ -346,7 +346,7 @@ class Auth extends \fast\Auth
                 $objList = $groupList;
                 break;
             }
-            // 取出包含自己的所有子节点
+            // 自身を含むすべての子ノードを取得
             $childrenList = Tree::instance()->init($groupList, 'pid')->getChildren($v['id'], true);
             $obj = Tree::instance()->init($childrenList, 'pid')->getTreeArray($v['pid']);
             $objList = array_merge($objList, Tree::instance()->getTreeList($obj));
@@ -362,8 +362,8 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 取出当前管理员所拥有权限的管理员
-     * @param boolean $withself 是否包含自身
+     * 現在の管理者が権限を持つ管理者を取得
+     * @param boolean $withself 自身を含めるかどうか
      * @return array
      */
     public function getChildrenAdminIds($withself = false)
@@ -378,7 +378,7 @@ class Auth extends \fast\Auth
                 $childrenAdminIds[] = $v['uid'];
             }
         } else {
-            //超级管理员拥有所有人的权限
+            //スーパー管理者は全員に対する権限を持つ
             $childrenAdminIds = Admin::column('id');
         }
         if ($withself) {
@@ -392,7 +392,7 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 获得面包屑导航
+     * パンくずリストを取得
      * @param string $path
      * @return array
      */
@@ -424,21 +424,21 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 获取左侧和顶部菜单栏
+     * 左側および上部のメニューを取得
      *
-     * @param array  $params    URL对应的badge数据
-     * @param string $fixedPage 默认页
+     * @param array  $params    URLに対応するbadgeデータ
+     * @param string $fixedPage デフォルトページ
      * @return array
      */
     public function getSidebar($params = [], $fixedPage = 'dashboard')
     {
-        // 边栏开始
+        // サイドバー開始
         Hook::listen("admin_sidebar_begin", $params);
         $colorArr = ['red', 'green', 'yellow', 'blue', 'teal', 'orange', 'purple'];
         $colorNums = count($colorArr);
         $badgeList = [];
         $module = request()->module();
-        // 生成菜单的badge
+        // メニューのバッジを生成するbadge
         foreach ($params as $k => $v) {
             $url = $k;
             if (is_array($v)) {
@@ -450,17 +450,17 @@ class Auth extends \fast\Auth
                 $color = $colorArr[(is_numeric($nums) ? $nums : strlen($nums)) % $colorNums];
                 $class = 'label';
             }
-            //必须nums大于0才显示
+            //必須numsより大きい0場合のみ表示
             if ($nums) {
                 $badgeList[$url] = '<small class="' . $class . ' pull-right bg-' . $color . '">' . $nums . '</small>';
             }
         }
 
-        // 读取管理员当前拥有的权限节点
+        // 管理者が現在保有している権限ノードを読み込む
         $userRule = $this->getRuleList();
         $selected = $referer = [];
         $refererUrl = Session::get('referer');
-        // 必须将结果集转换为数组
+        // 結果セットを必ず配列に変換する必要がある
         $ruleList = collection(\app\admin\model\AuthRule::where('status', 'normal')
             ->where('ismenu', 1)
             ->order('weigh', 'desc')
@@ -539,7 +539,7 @@ class Auth extends \fast\Auth
                 $menu .= $childList;
             }
         } else {
-            // 构造菜单数据
+            // メニューデータを構築
             Tree::instance()->init($ruleList);
             $menu = Tree::instance()->getTreeMenu(
                 0,
@@ -561,9 +561,9 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 设置错误信息
+     * エラーメッセージを設定
      *
-     * @param string $error 错误信息
+     * @param string $error エラーメッセージ
      * @return Auth
      */
     public function setError($error)
@@ -573,7 +573,7 @@ class Auth extends \fast\Auth
     }
 
     /**
-     * 获取错误信息
+     * エラーメッセージを取得
      * @return string
      */
     public function getError()

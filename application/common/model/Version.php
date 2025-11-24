@@ -7,26 +7,26 @@ use think\Model;
 class Version extends Model
 {
 
-    // 开启自动写入时间戳字段
+    // 自動タイムスタンプ書き込みを有効にする
     protected $autoWriteTimestamp = 'int';
-    // 定义时间戳字段名
+    // タイムスタンプフィールド名を定義
     protected $createTime = 'createtime';
     protected $updateTime = 'updatetime';
-    // 定义字段类型
+    // フィールドタイプを定義
     protected $type = [
     ];
 
     /**
-     * 检测版本号
+     * バージョン番号をチェック
      *
-     * @param string $version 客户端版本号
+     * @param string $version クライアントのバージョン番号
      * @return array
      */
     public static function check($version)
     {
         $versionlist = self::where('status', 'normal')->cache('__version__')->order('weigh desc,id desc')->select();
         foreach ($versionlist as $k => $v) {
-            // 版本正常且新版本号不等于验证的版本号且找到匹配的旧版本
+            // バージョンが正常で、新バージョン番号が検証対象のバージョン番号と異なり、一致する旧バージョンが見つかった場合
             if ($v['status'] == 'normal' && $v['newversion'] !== $version && \fast\Version::check($version, $v['oldversion'])) {
                 $updateversion = $v;
                 break;

@@ -17,7 +17,7 @@ use app\common\model\Order;
 use custom\ConfigStatus as CS;
 
 /**
- * 会员中心
+ * 会員センター
  */
 class User extends Base
 {
@@ -34,7 +34,7 @@ class User extends Base
             $this->error(__('User center already closed'), '/');
         }
 
-        //监听注册登录退出的事件
+        //登録・ログイン・ログアウトのイベントをリッスン
         Hook::add('user_login_successed', function ($user) use ($auth) {
             $expire = input('post.keeplogin') ? 30 * 86400 : 0;
             Cookie::set('uid', $user->id, $expire);
@@ -55,7 +55,7 @@ class User extends Base
     }
 
     /**
-     * 会员中心
+     * 会員センター
      */
     public function index()
     {
@@ -85,7 +85,7 @@ class User extends Base
     }
 
     /**
-     * 订单 - 予約履歷
+     * 注文 - 予約履歴
      */
     public function order()
     {   
@@ -97,14 +97,14 @@ class User extends Base
             return $vs;
         });
         $page = $list->render();
-        $this->view->assign('title', __('予約履歷'));
+        $this->view->assign('title', __('予約履歴'));
         $this->view->assign('list', $list);
         $this->view->assign('page', $page);
         return $this->view->fetch();
     }
 
     /**
-     * 订单 - 予約履歷 - 详情
+     * 注文 - 予約履歴 - 詳細
      */
     public function order_details()
     {   
@@ -115,15 +115,15 @@ class User extends Base
         $info = Order::with('user,store,details')
         ->where($where)->order('id desc')->find();
         if(!$info){
-            $this->error(__('数据不存在'));
+            $this->error(__('データが存在しません'));
         }
-        $this->view->assign('title', __('予約履歷'));
+        $this->view->assign('title', __('予約履歴'));
         $this->view->assign('info', $info);
         return $this->view->fetch();
     }
 
     /**
-     * 申请完成页面
+     * 申し込み完了ページ
      */
     public function applyfor_complete()
     {   
@@ -133,7 +133,7 @@ class User extends Base
     
 
     /**
-     * 购物车 - カート
+     * カート - カート
      */
     public function shopping()
     {   
@@ -159,7 +159,7 @@ class User extends Base
     }
 
     /**
-     * 店铺买取/邮件申请
+     * 店頭買取/郵送申込
      */
     public function applyfor()
     {   
@@ -216,7 +216,7 @@ class User extends Base
     }
 
     /**
-     * 注册会员
+     * 会員登録
      */
     public function register()
     {
@@ -254,7 +254,7 @@ class User extends Base
                 'mobile'    => $mobile,
                 '__token__' => $token,
             ];
-            //验证码
+            //認証コード
             $captchaResult = true;
             $captchaType = config("fastadmin.user_register_captcha");
             if ($captchaType) {
@@ -282,7 +282,7 @@ class User extends Base
                 $this->error($this->auth->getError(), null, ['token' => $this->request->token()]);
             }
         }
-        //判断来源
+        //アクセス元を判別
         $referer = $this->request->server('HTTP_REFERER', '', 'url_clean');
         if (!$url && $referer && !preg_match("/(user\/login|user\/register|user\/logout)/i", $referer)) {
             $url = $referer;
@@ -294,7 +294,7 @@ class User extends Base
     }
 
     /**
-     * 会员登录
+     * 会員ログイン
      */
     public function login()
     {
@@ -335,7 +335,7 @@ class User extends Base
                 $this->error($this->auth->getError(), null, ['token' => $this->request->token()]);
             }
         }
-        //判断来源
+        //アクセス元を判別
         $referer = $this->request->server('HTTP_REFERER', '', 'url_clean');
         if (!$url && $referer && !preg_match("/(user\/login|user\/register|user\/logout)/i", $referer)) {
             $url = $referer;
@@ -346,13 +346,13 @@ class User extends Base
     }
 
     /**
-     * 退出登录
+     * ログアウト
      */
     public function logout()
     {
         if ($this->request->isPost()) {
             $this->token();
-            //退出本站
+            //サイトからログアウト
             $this->auth->logout();
             $this->redirect('/');
             //$this->success(__('Logout successful'), url('/'));
@@ -364,7 +364,7 @@ class User extends Base
     }
 
     /**
-     * 个人信息
+     * 個人情報
      */
     public function profile()
     {
@@ -373,7 +373,7 @@ class User extends Base
     }
 
     /**
-     * 修改密码
+     * パスワードを変更
      */
     public function changepwd()
     {
@@ -422,7 +422,7 @@ class User extends Base
 
     public function attachment()
     {
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
             $mimetypeQuery = [];

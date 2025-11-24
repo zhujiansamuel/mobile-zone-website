@@ -3,19 +3,19 @@
 return [
     [
         'name'    => 'version',
-        'title'   => 'API版本(请勿修改该值)',
+        'title'   => 'APIバージョン(この値は変更しないでください)',
         'type'    => 'radio',
         'content' => [],
         'value'   => 'v2',
         'rule'    => '',
         'msg'     => '',
-        'tip'     => 'V2版本只支持微信支付V2密钥，V3版本只支持微信支付V3密钥，请勿修改该值！！！',
+        'tip'     => 'V2バージョンは WeChat Pay のみをサポートV2キー，V3バージョンは WeChat Pay のみをサポートV3キー，この値は変更しないでください！！！',
         'ok'      => '',
         'extend'  => '',
     ],
     [
         'name'    => 'wechat',
-        'title'   => '微信',
+        'title'   => 'WeChat',
         'type'    => 'array',
         'content' => [],
         'value'   => [
@@ -38,13 +38,13 @@ return [
         ],
         'rule'    => 'required',
         'msg'     => '',
-        'tip'     => '微信参数配置',
+        'tip'     => 'WeChat パラメーター設定',
         'ok'      => '',
         'extend'  => '',
     ],
     [
         'name'    => 'alipay',
-        'title'   => '支付宝',
+        'title'   => 'Alipay',
         'type'    => 'array',
         'content' => [],
         'value'   => [
@@ -63,7 +63,7 @@ return [
         ],
         'rule'    => 'required',
         'msg'     => '',
-        'tip'     => '支付宝参数配置',
+        'tip'     => 'Alipay パラメーター設定',
         'ok'      => '',
         'extend'  => '',
     ]

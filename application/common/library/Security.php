@@ -5,7 +5,7 @@ namespace app\common\library;
 use Exception;
 
 /**
- * 安全过滤类
+ * セキュリティフィルタクラス
  *
  * @category       Security
  * @copyright      Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
@@ -131,7 +131,7 @@ class Security
 
     /**
      *
-     * @param array $options 参数
+     * @param array $options パラメーター
      * @return Security
      */
     public static function instance($options = [])

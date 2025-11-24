@@ -14,8 +14,8 @@ use Yansongda\Supports\Logger;
 use Yansongda\Supports\Str;
 
 /**
- * @method static Alipay alipay(array $config) 支付宝
- * @method static Wechat wechat(array $config) 微信
+ * @method static Alipay alipay(array $config) Alipay
+ * @method static Wechat wechat(array $config) WeChat
  */
 class Pay
 {

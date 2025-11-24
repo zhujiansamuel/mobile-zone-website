@@ -17,7 +17,7 @@ class AgreementPageSignPlugin implements PluginInterface
 {
     public function assembly(Rocket $rocket, Closure $next): Rocket
     {
-        Logger::debug('[alipay][AgreementPageSignPlugin] 插件开始装载', ['rocket' => $rocket]);
+        Logger::debug('[alipay][AgreementPageSignPlugin] プラグインの読み込みを開始', ['rocket' => $rocket]);
 
         $rocket->setDirection(ResponseDirection::class)
             ->mergePayload([
@@ -29,7 +29,7 @@ class AgreementPageSignPlugin implements PluginInterface
             ])
         ;
 
-        Logger::info('[alipay][AgreementPageSignPlugin] 插件装载完毕', ['rocket' => $rocket]);
+        Logger::info('[alipay][AgreementPageSignPlugin] プラグインの読み込み完了', ['rocket' => $rocket]);
 
         return $next($rocket);
     }

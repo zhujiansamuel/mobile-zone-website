@@ -17,13 +17,13 @@ class Index extends Base
 
     public function index()
     {
-    	//轮播
+    	//スライドショー
     	$lunbo = db('lunbo')->order('weigh desc')->select();
-    	//新闻
+    	//ニュース
     	$news = db('news')->where('recomm', 1)->order('weigh desc')->limit(3)->select();
-    	//商品大类
+    	//商品カテゴリ
     	$goodsCategory = db('category')->where('type', 'goods')->where('pid', 0)->order('weigh desc')->select();
-    	//商品推荐
+    	//商品おすすめ
     	$goods = Goods::where('recomm', 1)->order('weigh desc')->limit(8)->select();
 
     	$category = db('category')->field('id,type,name,image,description')
@@ -50,7 +50,7 @@ class Index extends Base
     }
 
     /*
-     * 商品列表
+     * 商品一覧
      */
     public function goods()
     {
@@ -93,7 +93,7 @@ class Index extends Base
     }
 
     /*
-     * 商品详情
+     * 商品詳細
      */
     public function goods_details()
     {
@@ -102,7 +102,7 @@ class Index extends Base
     	$where['id'] = $id;
     	$goods = Goods::where($where)->find();
     	if(!$goods){
-    		$this->error('商品不存在');
+    		$this->error('商品が存在しません');
     	}
     	$goods['color'] = $goods['color'] ? json_decode($goods['color'], true) : [];//db('category')->field('id,name')->whereIn('id', $goods['color_id'])->select();
     	$this->view->assign('title', __('商品一覧') . $goods['title']);
@@ -111,7 +111,7 @@ class Index extends Base
     }
 
     /*
-     * 新闻列表
+     * ニュース一覧
      */
     public function news()
     {
@@ -150,7 +150,7 @@ class Index extends Base
     }
 
     /*
-     * 新闻详情
+     * ニュース詳細
      */
     public function news_details()
     {
@@ -159,7 +159,7 @@ class Index extends Base
     	$where['id'] = $id;
     	$news = News::where($where)->find();
     	if(!$news){
-    		$this->error('商品不存在');
+    		$this->error('商品が存在しません');
     	}
     	$this->view->assign('title', __('お知らせ').'-'.$news['title']);
     	$this->view->assign('news', $news);
@@ -167,7 +167,7 @@ class Index extends Base
     }
 
     /*
-     * 店铺介绍
+     * 店舗紹介
      */
     public function shop()
     {
@@ -194,7 +194,7 @@ class Index extends Base
     }
 
     /*
-     * 使用指南
+     * 利用ガイド
      */
     public function guide()
     {
@@ -212,7 +212,7 @@ class Index extends Base
     }
 
     /*
-     * 使用条款 - 買取利用規豹
+     * 利用規約 - 買取利用規約
      */
     public function use_terms()
     {
@@ -221,7 +221,7 @@ class Index extends Base
     }
 
     /*
-     * 联系我们
+     * お問い合わせ
      */
     public function contactus()
     {
@@ -230,7 +230,7 @@ class Index extends Base
     }
 
     /*
-     * 隐私政策 - プライバシ-ボリシ-
+     * プライバシーーポリシー - プライバシー-ポリシー-
      */
     public function privacy_policy()
     {
@@ -239,7 +239,7 @@ class Index extends Base
     }
 
     /*
-     * 常见问题 - よくある質問
+     * よくある質問 - よくある質問
      */
     public function faq()
     {
@@ -250,7 +250,7 @@ class Index extends Base
     }
 
     /*
-     * 根据特定商品交易法的公示 - 特定商取引法に基づく表示
+     * 特定商取引法に基づく表示 - 特定商取引法に基づく表示
      */
     public function trading_law()
     {
@@ -259,7 +259,7 @@ class Index extends Base
     }
 
     /*
-     * 买取申请书
+     * 買取申込書
      */
     public function ylindex()
     {
@@ -285,7 +285,7 @@ class Index extends Base
             $age = $diff->y;
         }
    
-    	$this->view->assign('title', '申请书');
+    	$this->view->assign('title', '申込書');
     	$this->view->assign('order', $order);
     	$this->view->assign('user', $user);
     	$this->view->assign('age', $age);

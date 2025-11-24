@@ -1,5 +1,5 @@
 ﻿/**
- layer构建
+ layerビルド
  */
 
 const {src, dest, series} = require('gulp');

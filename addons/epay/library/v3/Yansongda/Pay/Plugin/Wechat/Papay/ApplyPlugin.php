@@ -8,7 +8,7 @@ use Yansongda\Pay\Plugin\Wechat\GeneralV2Plugin;
 use Yansongda\Pay\Rocket;
 
 /**
- * 申请代扣.
+ * 自動引き落としを申請.
  *
  * @see https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_8.shtml
  */

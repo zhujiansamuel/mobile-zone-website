@@ -5,7 +5,7 @@ namespace app\common\library\token\driver;
 use app\common\library\token\Driver;
 
 /**
- * Token操作类
+ * Token操作クラス
  */
 class Redis extends Driver
 {
@@ -23,8 +23,8 @@ class Redis extends Driver
     ];
 
     /**
-     * 构造函数
-     * @param array $options 缓存参数
+     * コンストラクタ
+     * @param array $options キャッシュパラメータ
      * @throws \BadFunctionCallException
      * @access public
      */
@@ -53,19 +53,19 @@ class Redis extends Driver
     }
 
     /**
-     * 获取加密后的Token
-     * @param string $token Token标识
+     * 暗号化後のToken
+     * @param string $token Token識別子
      * @return string
      */
     protected function getEncryptedToken($token)
     {
         $config = \think\Config::get('token');
-        $token = $token ?? ''; // 为兼容 php8
+        $token = $token ?? ''; // 互換性確保のため php8
         return $this->options['tokenprefix'] . hash_hmac($config['hashalgo'], $token, $config['key']);
     }
 
     /**
-     * 获取会员的key
+     * 会員のkey
      * @param $user_id
      * @return string
      */
@@ -75,10 +75,10 @@ class Redis extends Driver
     }
 
     /**
-     * 存储Token
+     * 保存Token
      * @param   string $token   Token
-     * @param   int    $user_id 会员ID
-     * @param   int    $expire  过期时长,0表示无限,单位秒
+     * @param   int    $user_id 会員ID
+     * @param   int    $expire  有効期限,0無制限を表す,単位は秒
      * @return bool
      */
     public function set($token, $user_id, $expire = 0)
@@ -95,13 +95,13 @@ class Redis extends Driver
         } else {
             $result = $this->handler->set($key, $user_id);
         }
-        //写入会员关联的token
+        //会員関連のを書き込みtoken
         $this->handler->sAdd($this->getUserKey($user_id), $key);
         return $result;
     }
 
     /**
-     * 获取Token内的信息
+     * 取得Token内の情報
      * @param   string $token
      * @return  array
      */
@@ -112,20 +112,20 @@ class Redis extends Driver
         if (is_null($value) || false === $value) {
             return [];
         }
-        //获取有效期
+        //有効期限を取得
         $expire = $this->handler->ttl($key);
         $expire = $expire < 0 ? 365 * 86400 : $expire;
         $expiretime = time() + $expire;
-        //解决使用redis方式储存token时api接口Token刷新与检测因expires_in拼写错误报错的BUG
+        //の使用時の問題を解決redis方式で保存tokenのときはapiインターフェースTokenリフレッシュと検証がexpires_inスペルミスによるエラーのBUG
         $result = ['token' => $token, 'user_id' => $value, 'expiretime' => $expiretime, 'expires_in' => $expire];
 
         return $result;
     }
 
     /**
-     * 判断Token是否可用
+     * 判定Token利用可能かどうか
      * @param   string $token   Token
-     * @param   int    $user_id 会员ID
+     * @param   int    $user_id 会員ID
      * @return  boolean
      */
     public function check($token, $user_id)
@@ -135,7 +135,7 @@ class Redis extends Driver
     }
 
     /**
-     * 删除Token
+     * 削除Token
      * @param   string $token
      * @return  boolean
      */
@@ -153,7 +153,7 @@ class Redis extends Driver
     }
 
     /**
-     * 删除指定用户的所有Token
+     * 指定ユーザーのすべてのToken
      * @param   int $user_id
      * @return  boolean
      */

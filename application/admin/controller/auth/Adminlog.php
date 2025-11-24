@@ -6,10 +6,10 @@ use app\admin\model\AuthGroup;
 use app\common\controller\Backend;
 
 /**
- * 管理员日志
+ * 管理者ログ
  *
  * @icon   fa fa-users
- * @remark 管理员可以查看自己所拥有的权限的管理员日志
+ * @remark 管理者は自分が所持する権限の管理者ログを閲覧できます
  */
 class Adminlog extends Backend
 {
@@ -28,11 +28,11 @@ class Adminlog extends Backend
     }
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['strip_tags', 'trim']);
         if ($this->request->isAjax()) {
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
@@ -57,7 +57,7 @@ class Adminlog extends Backend
     }
 
     /**
-     * 详情
+     * 詳細
      */
     public function detail($ids)
     {
@@ -75,7 +75,7 @@ class Adminlog extends Backend
     }
 
     /**
-     * 添加
+     * 追加
      * @internal
      */
     public function add()
@@ -84,7 +84,7 @@ class Adminlog extends Backend
     }
 
     /**
-     * 编辑
+     * 編集
      * @internal
      */
     public function edit($ids = null)
@@ -93,7 +93,7 @@ class Adminlog extends Backend
     }
 
     /**
-     * 删除
+     * 削除
      */
     public function del($ids = "")
     {
@@ -126,12 +126,12 @@ class Adminlog extends Backend
     }
 
     /**
-     * 批量更新
+     * 一括更新
      * @internal
      */
     public function multi($ids = "")
     {
-        // 管理员禁止批量操作
+        // 管理者は一括操作を禁止
         $this->error();
     }
 

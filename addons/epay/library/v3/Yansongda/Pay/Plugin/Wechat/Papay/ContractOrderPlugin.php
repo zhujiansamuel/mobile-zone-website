@@ -8,7 +8,7 @@ use Yansongda\Pay\Plugin\Wechat\GeneralV2Plugin;
 use Yansongda\Pay\Rocket;
 
 /**
- * 支付中签约.
+ * 支払い中に契約.
  *
  * @see https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_5.shtml
  */

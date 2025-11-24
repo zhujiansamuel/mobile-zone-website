@@ -2,24 +2,24 @@
  * ETPL (Enterprise Template)
  * Copyright 2013 Baidu Inc. All rights reserved.
  * 
- * @file 模板引擎
+ * @file テンプレートエンジン
  * @author errorrik(errorrik@gmail.com)
  *         otakustay(otakustay@gmail.com)
  */
 
-// 有的正则比较长，所以特别放开一些限制
+// 一部の正規表現はかなり長い，そのため一部制限を特別に緩和する
 /* jshint maxdepth: 10, unused: false, white: false */
 
-// HACK: 可见的重复代码未抽取成function和var是为了gzip size，吐槽的一边去
+// HACK: 目に見える重複コードをfunctionやvarに抽出していないのはgzipサイズのためで、文句は受け付けませんfunctionとvarためですgzip size，文句ばかりに文句を言うな
 
 (function (root) {
     /**
-     * 对象属性拷贝
+     * オブジェクトプロパティのコピー
      * 
      * @inner
-     * @param {Object} target 目标对象
-     * @param {Object} source 源对象
-     * @return {Object} 返回目标对象
+     * @param {Object} target ターゲットオブジェクト
+     * @param {Object} source ソースオブジェクト
+     * @return {Object} ターゲットオブジェクトを返す
      */
     function extend( target, source ) {
         for ( var key in source ) {
@@ -32,7 +32,7 @@
     }
 
     /**
-     * 随手写了个栈
+     * ついでにスタックを実装
      *
      * @inner
      * @constructor
@@ -44,16 +44,16 @@
 
     Stack.prototype = {
         /**
-         * 添加元素进栈
+         * 要素をスタックに追加
          *
-         * @param {*} elem 添加项
+         * @param {*} elem 追加項目
          */
         push: function ( elem ) {
             this.raw[ this.length++ ] = elem;
         },
 
         /**
-         * 弹出顶部元素
+         * 先頭要素をポップ
          *
          * @return {*}
          */
@@ -66,7 +66,7 @@
         },
 
         /**
-         * 获取顶部元素
+         * 先頭要素を取得
          *
          * @return {*}
          */
@@ -75,7 +75,7 @@
         },
 
         /**
-         * 获取底部元素
+         * 末尾要素を取得
          *
          * @return {*}
          */
@@ -84,9 +84,9 @@
         },
 
         /**
-         * 根据查询条件获取元素
+         * 検索条件に基づいて要素を取得
          * 
-         * @param {Function} condition 查询函数
+         * @param {Function} condition 検索関数
          * @return {*}
          */
         find: function ( condition ) {
@@ -101,7 +101,7 @@
     };
 
     /**
-     * 唯一id的起始值
+     * ユニークidの開始値
      * 
      * @inner
      * @type {number}
@@ -109,7 +109,7 @@
     var guidIndex = 0x2B845;
 
     /**
-     * 获取唯一id，用于匿名target或编译代码的变量名生成
+     * ユニークIDを取得id，匿名ターゲット用targetまたはコンパイルコードの変数名生成用
      * 
      * @inner
      * @return {string}
@@ -119,23 +119,23 @@
     }
 
     /**
-     * 构建类之间的继承关系
+     * クラス間の継承関係を構築する
      * 
      * @inner
-     * @param {Function} subClass 子类函数
-     * @param {Function} superClass 父类函数
+     * @param {Function} subClass サブクラス関数
+     * @param {Function} superClass スーパークラス関数
      */
     function inherits( subClass, superClass ) {
         var F = new Function();
         F.prototype = superClass.prototype;
         subClass.prototype = new F();
         subClass.prototype.constructor = subClass;
-        // 由于引擎内部的使用场景都是inherits后，逐个编写子类的prototype方法
-        // 所以，不考虑将原有子类prototype缓存再逐个拷贝回去
+        // エンジン内部での使用シーンはすべてinherits後，その後にサブクラスのprototypeメソッドを一つずつ記述するためprototypeメソッド
+        // そのため，元のサブクラスのprototypeをprototypeキャッシュしてから一つずつコピーし直すことは考慮しない
     }
 
     /**
-     * HTML Filter替换的字符实体表
+     * HTML Filter置換用文字実体のテーブル
      * 
      * @const
      * @inner
@@ -150,10 +150,10 @@
     };
 
     /**
-     * HTML Filter的替换函数
+     * HTML Filterの置換関数
      * 
      * @inner
-     * @param {string} c 替换字符
+     * @param {string} c 置換文字
      * @return {string}
      */
     function htmlFilterReplacer( c ) {
@@ -161,7 +161,7 @@
     }
 
     /**
-     * 默认filter
+     * デフォルトfilter
      * 
      * @inner
      * @const
@@ -169,9 +169,9 @@
      */
     var DEFAULT_FILTERS = {
         /**
-         * HTML转义filter
+         * HTMLエスケープfilter
          * 
-         * @param {string} source 源串
+         * @param {string} source 元の文字列
          * @return {string}
          */
         html: function ( source ) {
@@ -179,17 +179,17 @@
         },
 
         /**
-         * URL编码filter
+         * URLエンコードfilter
          * 
-         * @param {string} source 源串
+         * @param {string} source 元の文字列
          * @return {string}
          */
         url: encodeURIComponent,
 
         /**
-         * 源串filter，用于在默认开启HTML转义时获取源串，不进行转义
+         * 元の文字列filter，デフォルトでHTMLエスケープが有効な場合にHTML转义时获取元の文字列，エスケープを行わない
          * 
-         * @param {string} source 源串
+         * @param {string} source 元の文字列
          * @return {string}
          */
         raw: function ( source ) {
@@ -198,10 +198,10 @@
     };
 
     /**
-     * 字符串字面化
+     * 文字列リテラル化
      * 
      * @inner
-     * @param {string} source 需要字面化的字符串
+     * @param {string} source リテラル化が必要な文字列
      * @return {string}
      */
     function stringLiteralize( source ) {
@@ -218,11 +218,11 @@
     }
 
     /**
-     * 字符串格式化
+     * 文字列フォーマット
      * 
      * @inner
-     * @param {string} source 目标模版字符串
-     * @param {...string} replacements 字符串替换项集合
+     * @param {string} source ターゲットテンプレート文字列
+     * @param {...string} replacements 文字列の置換項目集合
      * @return {string}
      */
     function stringFormat( source ) {
@@ -235,7 +235,7 @@
     }
 
     /**
-     * 用于render的字符串变量声明语句
+     * に使用するrender用の文字列変数宣言文
      * 
      * @inner
      * @const
@@ -244,7 +244,7 @@
     var RENDER_STRING_DECLATION = 'var r="";';
 
     /**
-     * 用于render的字符串内容添加语句（起始）
+     * に使用するrender用の文字列内容追加文（開始）
      * 
      * @inner
      * @const
@@ -253,7 +253,7 @@
     var RENDER_STRING_ADD_START = 'r+=';
 
     /**
-     * 用于render的字符串内容添加语句（结束）
+     * に使用するrender用の文字列内容追加文（終了）
      * 
      * @inner
      * @const
@@ -262,7 +262,7 @@
     var RENDER_STRING_ADD_END = ';';
 
     /**
-     * 用于render的字符串内容返回语句
+     * に使用するrender用の文字列内容返却文
      * 
      * @inner
      * @const
@@ -270,7 +270,7 @@
      */
     var RENDER_STRING_RETURN = 'return r;';
 
-    // HACK: IE8-时，编译后的renderer使用join Array的策略进行字符串拼接
+    // HACK: IE8-のときは，コンパイル後のrenderer使用join Arrayの戦略で文字列結合を行う
     if ( typeof navigator != 'undefined' 
         && /msie\s*([0-9]+)/i.test( navigator.userAgent )
         && RegExp.$1 - 0 < 8
@@ -281,11 +281,11 @@
     }
 
     /**
-     * 将访问变量名称转换成getVariable调用的编译语句
-     * 用于if、var等命令生成编译代码
+     * アクセスする変数名をgetVariable呼び出しのコンパイル文に変換する
+     * に使用するif、varなどのコマンドでコンパイルコードを生成する
      * 
      * @inner
-     * @param {string} name 访问变量名
+     * @param {string} name アクセスする変数名
      * @return {string}
      */
     function toGetVariableLiteral( name ) {
@@ -305,16 +305,16 @@
     }
 
     /**
-     * 解析文本片段中以固定字符串开头和结尾的包含块
-     * 用于 命令串：<!-- ... --> 和 变量替换串：${...} 的解析
+     * テキスト片から、特定の文字列で始まり終わるブロックを解析する
+     * に使用する コマンド文字列：<!-- ... --> と 変数置換文字列：${...} の解析
      * 
      * @inner
-     * @param {string} source 要解析的文本
-     * @param {string} open 包含块开头
-     * @param {string} close 包含块结束
-     * @param {boolean} greedy 是否贪婪匹配
-     * @param {function({string})} onInBlock 包含块内文本的处理函数
-     * @param {function({string})} onOutBlock 非包含块内文本的处理函数
+     * @param {string} source 解析対象のテキスト
+     * @param {string} open ブロック開始を含む
+     * @param {string} close ブロック終了を含む
+     * @param {boolean} greedy 貪欲マッチを行うかどうか
+     * @param {function({string})} onInBlock ブロック内テキストの処理関数
+     * @param {function({string})} onOutBlock ブロック外テキストの処理関数
      */
     function parseTextBlock( source, open, close, greedy, onInBlock, onOutBlock ) {
         var closeLen = close.length;
@@ -367,13 +367,13 @@
     }
 
     /**
-     * 编译变量访问和变量替换的代码
-     * 用于普通文本或if、var、filter等命令生成编译代码
+     * 変数アクセスおよび変数置換コードのコンパイル
+     * 通常テキストまたはif、var、filterなどのコマンドでコンパイルコードを生成する
      * 
      * @inner
-     * @param {string} source 源代码
-     * @param {Engine} engine 引擎实例
-     * @param {boolean} forText 是否为输出文本的变量替换
+     * @param {string} source ソースコード
+     * @param {Engine} engine エンジンインスタンス
+     * @param {boolean} forText 出力テキストの変数置換かどうか
      * @return {string}
      */
     function compileVariable( source, engine, forText ) {
@@ -385,7 +385,7 @@
         var wrapHead = '';
         var wrapFoot = '';
 
-        // 默认的filter，当forText模式时有效
+        // デフォルトのfilter，タグLIB_LOADがforTextモード時に有効
         var defaultFilter;
 
         if ( forText ) {
@@ -400,21 +400,21 @@
             source, options.variableOpen, options.variableClose, 1,
 
             function ( text ) {
-                // 加入默认filter
-                // 只有当处理forText时，需要加入默认filter
-                // 处理if/var/use等command时，不需要加入默认filter
+                // デフォルトを追加filter
+                // forText を処理する場合のみforTextのときは，デフォルトを追加する必要があるfilter
+                // 処理if/var/useなどcommandのときは，デフォルトを追加する必要はないfilter
                 if ( forText && text.indexOf( '|' ) < 0 && defaultFilter ) {
                     text += '|' + defaultFilter;
                 }
 
-                // variableCode是一个gv调用，然后通过循环，在外面包filter的调用
-                // 形成filter["b"](filter["a"](gv(...)))
+                // variableCodeはgv呼び出し，その後ループで，外側をラップしてfilter的呼び出し
+                // を形成するfilter["b"](filter["a"](gv(...)))
                 // 
-                // 当forText模式，处理的是文本中的变量替换时
-                // 传递给filter的需要是字符串形式，所以gv外需要包一层ts调用
-                // 形成filter["b"](filter["a"](ts(gv(...))))
+                // タグLIB_LOADがforTextモード，テキスト中の変数置換を処理する場合
+                // に渡す値はfilter文字列形式である必要がある，そのためgv外側をさらに 1 層ラップする必要があるts呼び出し
+                // を形成するfilter["b"](filter["a"](ts(gv(...))))
                 // 
-                // 当variableName以*起始时，忽略ts调用，直接传递原值给filter
+                // タグLIB_LOADがvariableNameで始まる*先頭が，無視しts呼び出し，元の値を直接渡すfilter
                 var filterCharIndex = text.indexOf( '|' );
                 var variableName = (filterCharIndex > 0
                     ? text.slice( 0, filterCharIndex )
@@ -471,12 +471,12 @@
     }
 
     /**
-     * 文本节点类
+     * テキストノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 文本节点的内容文本
-     * @param {Engine} engine 引擎实例
+     * @param {string} value テキストノードの内容テキスト
+     * @param {Engine} engine エンジンインスタンス
      */
     function TextNode( value, engine ) {
         this.value = value;
@@ -485,7 +485,7 @@
     
     TextNode.prototype = {
         /**
-         * 获取renderer body的生成代码
+         * 取得renderer bodyの生成コード
          * 
          * @return {string}
          */
@@ -501,7 +501,7 @@
         },
 
         /**
-         * 获取内容
+         * 内容を取得
          * 
          * @return {string}
          */
@@ -511,12 +511,12 @@
     };
 
     /**
-     * 命令节点类
+     * コマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function Command( value, engine ) {
         this.value = value;
@@ -526,18 +526,18 @@
 
     Command.prototype = {
         /**
-         * 添加子节点
+         * 子ノードを追加
          * 
-         * @param {TextNode|Command} node 子节点
+         * @param {TextNode|Command} node 子ノード
          */
         addChild: function ( node ) {
             this.children.push( node );
         },
 
         /**
-         * 节点open，解析开始
+         * ノードopen，解析開始
          * 
-         * @param {Object} context 语法分析环境对象
+         * @param {Object} context 構文解析コンテキストオブジェクト
          */
         open: function ( context ) {
             var parent = context.stack.top();
@@ -547,25 +547,25 @@
         },
 
         /**
-         * 节点闭合，解析结束
+         * ノードクローズ，解析終了
          * 
-         * @param {Object} context 语法分析环境对象
+         * @param {Object} context 構文解析コンテキストオブジェクト
          */
         close: function ( context ) {
             while (context.stack.pop().constructor !== this.constructor) {}
         },
 
         /**
-         * 添加文本节点
+         * テキストノードを追加
          * 
-         * @param {TextNode} node 节点
+         * @param {TextNode} node ノード
          */
         addTextNode: function ( node ) {
             this.addChild( node );
         },
 
         /**
-         * 获取renderer body的生成代码
+         * 取得renderer bodyの生成コード
          * 
          * @return {string}
          */
@@ -581,11 +581,11 @@
     };
 
     /**
-     * 命令自动闭合
+     * コマンドの自動クローズ
      * 
      * @inner
-     * @param {Object} context 语法分析环境对象
-     * @param {Function=} CommandType 自闭合的节点类型
+     * @param {Object} context 構文解析コンテキストオブジェクト
+     * @param {Function=} CommandType 自己クローズノードタイプ
      */
     function autoCloseCommand( context, CommandType ) {
         var stack = context.stack;
@@ -601,9 +601,9 @@
             do {
                 node = stack.top();
 
-                // 如果节点对象不包含autoClose方法
-                // 则认为该节点不支持自动闭合，需要抛出错误
-                // for等节点不支持自动闭合
+                // ノードオブジェクトにautoCloseメソッド
+                // そのノードは自動クローズ非対応とみなす，エラーをスローする必要がある
+                // forなどのノードは自動クローズに対応していない
                 if ( !node.autoClose ) {
                     throw new Error( node.type + ' must be closed manually: ' + node.value );
                 }
@@ -615,7 +615,7 @@
     }
 
     /**
-     * renderer body起始代码段
+     * renderer body開始コードセクション
      * 
      * @inner
      * @const
@@ -648,12 +648,12 @@
     // hg: hasGetter
 
     /**
-     * Target命令节点类
+     * Targetコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function TargetCommand( value, engine ) {
         if ( !/^\s*([a-z0-9_-]+)\s*(\(\s*master\s*=\s*([a-z0-9_-]+)\s*\))?\s*/i.test( value ) ) {
@@ -666,16 +666,16 @@
         this.contents = {};
     }
 
-    // 创建Target命令节点继承关系
+    // 作成Targetコマンドノードの継承関係
     inherits( TargetCommand, Command );
 
     /**
-     * Master命令节点类
+     * Masterコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function MasterCommand( value, engine ) {
         if ( !/^\s*([a-z0-9_-]+)\s*(\(\s*master\s*=\s*([a-z0-9_-]+)\s*\))?\s*/i.test( value ) ) {
@@ -688,16 +688,16 @@
         this.contents = {};
     }
 
-    // 创建Master命令节点继承关系
+    // 作成Masterコマンドノードの継承関係
     inherits( MasterCommand, Command );
 
     /**
-     * Content命令节点类
+     * Contentコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function ContentCommand( value, engine ) {
         if ( !/^\s*([a-z0-9_-]+)\s*$/i.test( value ) ) {
@@ -708,16 +708,16 @@
         Command.call( this, value, engine );
     }
 
-    // 创建Content命令节点继承关系
+    // 作成Contentコマンドノードの継承関係
     inherits( ContentCommand, Command );
 
     /**
-     * ContentPlaceHolder命令节点类
+     * ContentPlaceHolderコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function ContentPlaceHolderCommand( value, engine ) {
         if ( !/^\s*([a-z0-9_-]+)\s*$/i.test( value ) ) {
@@ -728,16 +728,16 @@
         Command.call( this, value, engine );
     }
 
-    // 创建ContentPlaceHolder命令节点继承关系
+    // 作成ContentPlaceHolderコマンドノードの継承関係
     inherits( ContentPlaceHolderCommand, Command );
     
     /**
-     * Import命令节点类
+     * Importコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function ImportCommand( value, engine ) {
         if ( !/^\s*([a-z0-9_-]+)\s*$/i.test( value ) ) {
@@ -748,16 +748,16 @@
         Command.call( this, value, engine );
     }
 
-    // 创建Import命令节点继承关系
+    // 作成Importコマンドノードの継承関係
     inherits( ImportCommand, Command );
 
     /**
-     * Var命令节点类
+     * Varコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function VarCommand( value, engine ) {
         if ( !/^\s*([a-z0-9_]+)\s*=([\s\S]*)$/i.test( value ) ) {
@@ -769,16 +769,16 @@
         Command.call( this, value, engine );
     }
 
-    // 创建Var命令节点继承关系
+    // 作成Varコマンドノードの継承関係
     inherits( VarCommand, Command );
 
     /**
-     * filter命令节点类
+     * filterコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function FilterCommand( value, engine ) {
         if ( !/^\s*([a-z0-9_-]+)\s*(\(([\s\S]*)\))?\s*$/i.test( value ) ) {
@@ -790,16 +790,16 @@
         Command.call( this, value, engine );
     }
 
-    // 创建filter命令节点继承关系
+    // 作成filterコマンドノードの継承関係
     inherits( FilterCommand, Command );
 
     /**
-     * Use命令节点类
+     * Useコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function UseCommand( value, engine ) {
         if ( !/^\s*([a-z0-9_-]+)\s*(\(([\s\S]*)\))?\s*$/i.test( value ) ) {
@@ -811,16 +811,16 @@
         Command.call( this, value, engine );
     }
 
-    // 创建Use命令节点继承关系
+    // 作成Useコマンドノードの継承関係
     inherits( UseCommand, Command );
 
     /**
-     * for命令节点类
+     * forコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function ForCommand( value, engine ) {
         if ( !/^\s*(\$\{[\s\S]+\})\s+as\s+\$\{([0-9a-z_]+)\}\s*(,\s*\$\{([0-9a-z_]+)\})?\s*$/i.test( value ) ) {
@@ -833,56 +833,56 @@
         Command.call( this, value, engine );
     }
 
-    // 创建for命令节点继承关系
+    // 作成forコマンドノードの継承関係
     inherits( ForCommand, Command );
     
     /**
-     * if命令节点类
+     * ifコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function IfCommand( value, engine ) {
         Command.call( this, value, engine );
     }
 
-    // 创建if命令节点继承关系
+    // 作成ifコマンドノードの継承関係
     inherits( IfCommand, Command );
 
     /**
-     * elif命令节点类
+     * elifコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function ElifCommand( value, engine ) {
         IfCommand.call( this, value, engine );
     }
 
-    // 创建elif命令节点继承关系
+    // 作成elifコマンドノードの継承関係
     inherits( ElifCommand, IfCommand );
 
     /**
-     * else命令节点类
+     * elseコマンドノードクラス
      * 
      * @inner
      * @constructor
-     * @param {string} value 命令节点的value
-     * @param {Engine} engine 引擎实例
+     * @param {string} value コマンドノードのvalue
+     * @param {Engine} engine エンジンインスタンス
      */
     function ElseCommand( value, engine ) {
         Command.call( this, value, engine );
     }
 
-    // 创建else命令节点继承关系
+    // 作成elseコマンドノードの継承関係
     inherits( ElseCommand, Command ); 
     
     /**
-     * Target和Master的节点状态
+     * TargetとMasterのノード状態
      * 
      * @inner
      */
@@ -894,30 +894,30 @@
     };
 
     /**
-     * 节点闭合，解析结束
+     * ノードクローズ，解析終了
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     MasterCommand.prototype.close =
 
     /**
-     * 节点闭合，解析结束。自闭合时被调用
+     * ノードクローズ，解析終了。自己クローズ時に呼び出される
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     MasterCommand.prototype.autoClose = 
 
     /**
-     * 节点闭合，解析结束
+     * ノードクローズ，解析終了
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     TargetCommand.prototype.close =
 
     /**
-     * 节点闭合，解析结束。自闭合时被调用
+     * ノードクローズ，解析終了。自己クローズ時に呼び出される
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     TargetCommand.prototype.autoClose = function ( context ) {
         Command.prototype.close.call( this, context );
@@ -926,14 +926,14 @@
     };
 
     /**
-     * 应用其继承的母版，返回是否成功应用母版
+     * 継承しているマスタを適用する，マスタの適用に成功したかどうかを返す
      * 
      * @return {boolean}
      */
     TargetCommand.prototype.applyMaster = 
 
     /**
-     * 应用其继承的母版，返回是否成功应用母版
+     * 継承しているマスタを適用する，マスタの適用に成功したかどうかを返す
      * 
      * @return {boolean}
      */
@@ -966,8 +966,8 @@
     };
 
     /**
-     * 判断target是否ready
-     * 包括是否成功应用母版，以及import和use语句依赖的target是否ready
+     * 判定targetかどうかready
+     * 包括かどうか成功应用母版，およびimportとuse文に依存するtargetかどうかready
      * 
      * @return {boolean}
      */
@@ -980,10 +980,10 @@
         var readyState = 1;
 
         /**
-         * 递归检查节点的ready状态
+         * ノードのreadyステータス
          * 
          * @inner
-         * @param {Command|TextNode} node 目标节点
+         * @param {Command|TextNode} node 対象ノード
          */
         function checkReadyState( node ) {
             for ( var i = 0, len = node.children.length; i < len; i++ ) {
@@ -1007,7 +1007,7 @@
     };
 
     /**
-     * 获取target的renderer函数
+     * 取得targetのrenderer関数
      * 
      * @return {function(Object):string}
      */
@@ -1044,7 +1044,7 @@
     };
 
     /**
-     * 获取内容
+     * 内容を取得
      * 
      * @return {string}
      */
@@ -1063,11 +1063,11 @@
     };
 
     /**
-     * 将target或master节点对象添加到语法分析环境中
+     * をtargetまたはmasterノードオブジェクトを構文解析コンテキストに追加する
      * 
      * @inner
-     * @param {TargetCommand|MasterCommand} targetOrMaster target或master节点对象
-     * @param {Object} context 语法分析环境对象
+     * @param {TargetCommand|MasterCommand} targetOrMaster targetまたはmasterノードオブジェクト
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     function addTargetOrMasterToContext( targetOrMaster, context ) {
         context.targetOrMaster = targetOrMaster;
@@ -1096,16 +1096,16 @@
     }
 
     /**
-     * target节点open，解析开始
+     * targetノードopen，解析開始
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     TargetCommand.prototype.open = 
 
     /**
-     * master节点open，解析开始
+     * masterノードopen，解析開始
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     MasterCommand.prototype.open = function ( context ) {
         autoCloseCommand( context );
@@ -1115,23 +1115,23 @@
     };
 
     /**
-     * Import节点open，解析开始
+     * Importノードopen，解析開始
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     ImportCommand.prototype.open = 
 
     /**
-     * Var节点open，解析开始
+     * Varノードopen，解析開始
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     VarCommand.prototype.open = 
 
     /**
-     * Use节点open，解析开始
+     * Useノードopen，解析開始
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     UseCommand.prototype.open = function ( context ) {
         var parent = context.stack.top();
@@ -1141,51 +1141,51 @@
 
 
     /**
-     * 节点open前的处理动作：节点不在target中时，自动创建匿名target
+     * ノードopen前の処理アクション：ノード不在target内にない場合，匿名のを自動作成するtarget
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     UseCommand.prototype.beforeOpen = 
 
     /**
-     * 节点open前的处理动作：节点不在target中时，自动创建匿名target
+     * ノードopen前の処理アクション：ノード不在target内にない場合，匿名のを自動作成するtarget
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     ImportCommand.prototype.beforeOpen = 
 
     /**
-     * 节点open前的处理动作：节点不在target中时，自动创建匿名target
+     * ノードopen前の処理アクション：ノード不在target内にない場合，匿名のを自動作成するtarget
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     VarCommand.prototype.beforeOpen = 
 
     /**
-     * 节点open前的处理动作：节点不在target中时，自动创建匿名target
+     * ノードopen前の処理アクション：ノード不在target内にない場合，匿名のを自動作成するtarget
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     ForCommand.prototype.beforeOpen = 
 
     /**
-     * 节点open前的处理动作：节点不在target中时，自动创建匿名target
+     * ノードopen前の処理アクション：ノード不在target内にない場合，匿名のを自動作成するtarget
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     FilterCommand.prototype.beforeOpen = 
 
     /**
-     * 节点open前的处理动作：节点不在target中时，自动创建匿名target
+     * ノードopen前の処理アクション：ノード不在target内にない場合，匿名のを自動作成するtarget
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     IfCommand.prototype.beforeOpen = 
 
     /**
-     * 文本节点被添加到分析环境前的处理动作：节点不在target中时，自动创建匿名target
+     * テキストノードが解析コンテキストに追加される前の処理アクション：ノードがtarget内にない場合，匿名のを自動作成するtarget
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     TextNode.prototype.beforeAdd =  function ( context ) {
         if ( context.stack.bottom() ) {
@@ -1197,39 +1197,39 @@
     };
     
     /**
-     * 节点解析结束
-     * 由于use节点无需闭合，处理时不会入栈，所以将close置为空函数
+     * ノード解析完了
+     * 〜のためuseノードはクローズ不要，処理時にスタックに積まれない，そのためcloseを空の関数にする
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     UseCommand.prototype.close = 
 
     /**
-     * 节点解析结束
-     * 由于import节点无需闭合，处理时不会入栈，所以将close置为空函数
+     * ノード解析完了
+     * 〜のためimportノードはクローズ不要，処理時にスタックに積まれない，そのためcloseを空の関数にする
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */ 
     ImportCommand.prototype.close = 
 
     /**
-     * 节点解析结束
-     * 由于else节点无需闭合，处理时不会入栈，闭合由if负责。所以将close置为空函数
+     * ノード解析完了
+     * 〜のためelseノードはクローズ不要，処理時にスタックに積まれない，クローズは〜によって行われるif担当する。そのためcloseを空の関数にする
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     ElseCommand.prototype.close = 
 
     /**
-     * 节点解析结束
-     * 由于var节点无需闭合，处理时不会入栈，所以将close置为空函数
+     * ノード解析完了
+     * 〜のためvarノードはクローズ不要，処理時にスタックに積まれない，そのためcloseを空の関数にする
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     VarCommand.prototype.close = function () {};
 
     /**
-     * 获取内容
+     * 内容を取得
      * 
      * @return {string}
      */
@@ -1239,7 +1239,7 @@
     };
     
     /**
-     * 获取renderer body的生成代码
+     * 取得renderer bodyの生成コード
      * 
      * @return {string}
      */
@@ -1249,7 +1249,7 @@
     };
 
     /**
-     * 获取renderer body的生成代码
+     * 取得renderer bodyの生成コード
      * 
      * @return {string}
      */
@@ -1269,7 +1269,7 @@
     };
     
     /**
-     * 获取renderer body的生成代码
+     * 取得renderer bodyの生成コード
      * 
      * @return {string}
      */
@@ -1286,7 +1286,7 @@
     };
 
     /**
-     * 获取renderer body的生成代码
+     * 取得renderer bodyの生成コード
      * 
      * @return {string}
      */
@@ -1312,7 +1312,7 @@
     };
 
     /**
-     * 获取renderer body的生成代码
+     * 取得renderer bodyの生成コード
      * 
      * @return {string}
      */
@@ -1335,7 +1335,7 @@
     };
 
     /**
-     * 获取renderer body的生成代码
+     * 取得renderer bodyの生成コード
      * 
      * @return {string}
      */
@@ -1354,9 +1354,9 @@
     };
 
     /**
-     * content节点open，解析开始
+     * contentノードopen，解析開始
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     ContentCommand.prototype.open = function ( context ) {
         autoCloseCommand( context, ContentCommand );
@@ -1365,9 +1365,9 @@
     };
     
     /**
-     * content节点open，解析开始
+     * contentノードopen，解析開始
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     ContentPlaceHolderCommand.prototype.open = function ( context ) {
         autoCloseCommand( context, ContentPlaceHolderCommand );
@@ -1375,25 +1375,25 @@
     };
 
     /**
-     * 节点自动闭合，解析结束
+     * ノードが自動的にクローズされる，解析終了
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     ContentCommand.prototype.autoClose = 
 
     /**
-     * 节点自动闭合，解析结束
+     * ノードが自動的にクローズされる，解析終了
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     IfCommand.prototype.autoClose = Command.prototype.close;
 
     /**
-     * 节点自动闭合，解析结束
-     * contentplaceholder的自动结束逻辑为，在其开始位置后马上结束
-     * 所以，其自动结束时children应赋予其所属的parent，也就是master
+     * ノードが自動的にクローズされる，解析終了
+     * contentplaceholderの自動終了ロジックは，開始位置の直後で終了する
+     * そのため，その自動終了時にchildren所属するに割り当てるべきであるparent，すなわちmaster
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     ContentPlaceHolderCommand.prototype.autoClose = function ( context ) {
         var parentChildren = this.parent.children;
@@ -1403,9 +1403,9 @@
     };
     
     /**
-     * 添加子节点
+     * 子ノードを追加
      * 
-     * @param {TextNode|Command} node 子节点
+     * @param {TextNode|Command} node 子ノード
      */
     IfCommand.prototype.addChild = function ( node ) {
         var elseCommand = this[ 'else' ];
@@ -1416,9 +1416,9 @@
     };
 
     /**
-     * elif节点open，解析开始
+     * elifノードopen，解析開始
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     ElifCommand.prototype.open = function ( context ) {
         var elseCommand = new ElseCommand();
@@ -1430,9 +1430,9 @@
     };
 
     /**
-     * else节点open，解析开始
+     * elseノードopen，解析開始
      * 
-     * @param {Object} context 语法分析环境对象
+     * @param {Object} context 構文解析コンテキストオブジェクト
      */
     ElseCommand.prototype.open = function ( context ) {
         var ifCommand = autoCloseCommand( context, IfCommand );
@@ -1442,18 +1442,18 @@
     };
     
     /**
-     * 命令类型集合
+     * コマンドタイプの集合
      * 
      * @type {Object}
      */
     var commandTypes = {};
 
     /**
-     * 添加命令类型
+     * コマンドタイプを追加
      * 
      * @inner
-     * @param {string} name 命令名称
-     * @param {Function} Type 处理命令用到的类
+     * @param {string} name コマンド名
+     * @param {Function} Type コマンド処理に使用されるクラス
      */
     function addCommandType( name, Type ) {
         commandTypes[ name ] = Type;
@@ -1475,15 +1475,15 @@
     
     
     /**
-     * etpl引擎类
+     * etpletpl エンジンクラス
      * 
      * @constructor
-     * @param {Object=} options 引擎参数
-     * @param {string=} options.commandOpen 命令语法起始串
-     * @param {string=} options.commandClose 命令语法结束串
-     * @param {string=} options.defaultFilter 默认变量替换的filter
-     * @param {boolean=} options.strip 是否清除命令标签前后的空白字符
-     * @param {string=} options.namingConflict target或master名字冲突时的处理策略
+     * @param {Object=} options エンジンのパラメーター
+     * @param {string=} options.commandOpen コマンド構文の開始文字列
+     * @param {string=} options.commandClose コマンド構文の終了文字列
+     * @param {string=} options.defaultFilter デフォルトの変数置換に使用するfilter
+     * @param {boolean=} options.strip コマンドタグ前後の空白文字を削除するかどうか
+     * @param {string=} options.namingConflict targetまたはmaster名前が衝突した場合の処理ポリシー
      */
     function Engine( options ) {
         this.options = {
@@ -1501,32 +1501,32 @@
     }
 
     /**
-     * 配置引擎参数，设置的参数将被合并到现有参数中
+     * エンジンパラメータを設定する，設定したパラメータは既存のパラメータにマージされる
      * 
-     * @param {Object} options 参数对象
-     * @param {string=} options.commandOpen 命令语法起始串
-     * @param {string=} options.commandClose 命令语法结束串
-     * @param {string=} options.defaultFilter 默认变量替换的filter
-     * @param {boolean=} options.strip 是否清除命令标签前后的空白字符
-     * @param {string=} options.namingConflict target或master名字冲突时的处理策略
+     * @param {Object} options パラメータオブジェクト
+     * @param {string=} options.commandOpen コマンド構文の開始文字列
+     * @param {string=} options.commandClose コマンド構文の終了文字列
+     * @param {string=} options.defaultFilter デフォルトの変数置換に使用するfilter
+     * @param {boolean=} options.strip コマンドタグ前後の空白文字を削除するかどうか
+     * @param {string=} options.namingConflict targetまたはmaster名前が衝突した場合の処理ポリシー
      */
     Engine.prototype.config =  function ( options ) {
         extend( this.options, options );
     };
 
     /**
-     * 解析模板并编译，返回第一个target编译后的renderer函数。
+     * テンプレートを解析してコンパイルする，最初のを返すtargetコンパイル後のrenderer関数。
      * 
-     * @param {string} source 模板源代码
+     * @param {string} source テンプレートソースコード
      * @return {function(Object):string}
      */
     Engine.prototype.compile = 
 
     /**
-     * 解析模板并编译，返回第一个target编译后的renderer函数。
-     * 该方法的存在为了兼容老模板引擎
+     * テンプレートを解析してコンパイルする，最初のを返すtargetコンパイル後のrenderer関数。
+     * このメソッドは旧テンプレートエンジンとの互換性のために存在する
      * 
-     * @param {string} source 模板源代码
+     * @param {string} source テンプレートソースコード
      * @return {function(Object):string}
      */
     Engine.prototype.parse = function ( source ) {
@@ -1541,7 +1541,7 @@
     };
     
     /**
-     * 根据target名称获取编译后的renderer函数
+     * に基づいてtarget名前に基づいてコンパイル済みのを取得するrenderer関数
      * 
      * @param {string} name target名称
      * @return {function(Object):string}
@@ -1554,7 +1554,7 @@
     };
 
     /**
-     * 根据target名称获取模板内容
+     * に基づいてtarget名前でテンプレート内容を取得
      * 
      * @param {string} name target名称
      * @return {string}
@@ -1569,12 +1569,12 @@
     };
 
     /**
-     * 执行模板渲染，返回渲染后的字符串。
+     * テンプレートをレンダリング実行，レンダリング後の文字列を返す。
      * 
      * @param {string} name target名称
-     * @param {Object=} data 模板数据。
-     *      可以是plain object，
-     *      也可以是带有 {string}get({string}name) 方法的对象
+     * @param {Object=} data テンプレートデータ。
+     *      ～でもよいplain object，
+     *      また、～を持つ {string}get({string}name) メソッドを持つオブジェクトでもよい
      * @return {string}
      */
     Engine.prototype.render = function ( name, data ) {
@@ -1587,10 +1587,10 @@
     };
 
     /**
-     * 增加过滤器
+     * フィルタを追加
      * 
-     * @param {string} name 过滤器名称
-     * @param {Function} filter 过滤函数
+     * @param {string} name フィルタ名
+     * @param {Function} filter フィルタ関数
      */
     Engine.prototype.addFilter = function ( name, filter ) {
         if ( typeof filter == 'function' ) {
@@ -1599,12 +1599,12 @@
     };
 
     /**
-     * 解析源代码
+     * ソースコードを解析
      * 
      * @inner
-     * @param {string} source 模板源代码
-     * @param {Engine} engine 引擎实例
-     * @return {Array} target名称列表
+     * @param {string} source テンプレートソースコード
+     * @param {Engine} engine エンジンインスタンス
+     * @return {Array} target名前一覧
      */
     function parseSource( source, engine ) {
         var commandOpen = engine.options.commandOpen;
@@ -1617,11 +1617,11 @@
             stack: stack
         };
 
-        // text节点内容缓冲区，用于合并多text
+        // textノード内容バッファ，複数のテキストを結合するためのtext
         var textBuf = [];
 
         /**
-         * 将缓冲区中的text节点内容写入
+         * バッファ内のtextノード内容を書き込む
          *
          * @inner
          */
@@ -1646,11 +1646,11 @@
         var NodeType;
 
         /**
-         * 判断节点是否是NodeType类型的实例
-         * 用于在stack中find提供filter
+         * ノードが～かどうかを判定NodeTypeタイプのインスタンスかどうか
+         * ～で使用されstack中find提供するfilter
          * 
          * @inner
-         * @param {Command} node 目标节点
+         * @param {Command} node 対象ノード
          * @return {boolean}
          */
         function isInstanceofNodeType( node ) {
@@ -1660,16 +1660,16 @@
         parseTextBlock(
             source, commandOpen, commandClose, 0,
 
-            function ( text ) { // <!--...-->内文本的处理函数
+            function ( text ) { // <!--...-->内テキストの処理関数
                 var match = /^\s*(\/)?([a-z]+)\s*(:([\s\S]*))?$/.exec( text );
 
-                // 符合command规则，并且存在相应的Command类，说明是合法有含义的Command
-                // 否则，为不具有command含义的普通文本
+                // ルールに合致しcommandルール，かつ対応するCommandクラス，であれば、有効で意味のあるCommand
+                // それ以外の場合，を持たないcommand意味を持たない通常テキスト
                 if ( match 
                     && ( NodeType = commandTypes[ match[2].toLowerCase() ] )
                     && typeof NodeType == 'function'
                 ) {
-                    // 先将缓冲区中的text节点内容写入
+                    // まずバッファ内のtextノード内容を書き込む
                     flushTextBuf(); 
 
                     var currentNode = analyseContext.current;
@@ -1693,21 +1693,21 @@
                     analyseContext.current = currentNode;
                 }
                 else if ( !/^\s*\/\//.test( text ) ) {
-                    // 如果不是模板注释，则作为普通文本，写入缓冲区
+                    // テンプレートコメントでない場合，通常テキストとして扱い，バッファに書き込む
                     textBuf.push( commandOpen, text, commandClose );
                 }
 
                 NodeType = null;
             },
 
-            function ( text ) { // <!--...-->外，普通文本的处理函数
-                // 普通文本直接写入缓冲区
+            function ( text ) { // <!--...-->以外は，通常テキストの処理関数
+                // 通常テキストをそのままバッファに書き込む
                 textBuf.push( text );
             }
         );
 
 
-        flushTextBuf(); // 将缓冲区中的text节点内容写入
+        flushTextBuf(); // バッファ内のtextノード内容を書き込む
         autoCloseCommand( analyseContext );
 
         return analyseContext.targets;

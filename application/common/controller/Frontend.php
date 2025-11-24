@@ -11,47 +11,47 @@ use think\Loader;
 use think\Validate;
 
 /**
- * 前台控制器基类
+ * フロントエンドコントローラー基底クラス
  */
 class Frontend extends Controller
 {
 
     /**
-     * 布局模板
+     * レイアウトテンプレート
      * @var string
      */
     protected $layout = '';
 
     /**
-     * 无需登录的方法,同时也就不需要鉴权了
+     * ログイン不要のメソッド,同時に権限認証も不要となる
      * @var array
      */
     protected $noNeedLogin = [];
 
     /**
-     * 无需鉴权的方法,但需要登录
+     * 認証不要のメソッド,ただしログインは必要
      * @var array
      */
     protected $noNeedRight = [];
 
     /**
-     * 权限Auth
+     * 権限Auth
      * @var Auth
      */
     protected $auth = null;
 
     public function _initialize()
     {
-        //移除HTML标签
+        //削除HTMLラベル
         $this->request->filter('trim,strip_tags,htmlspecialchars');
         $modulename = $this->request->module();
         $controllername = Loader::parseName($this->request->controller());
         $actionname = strtolower($this->request->action());
 
-        // 检测IP是否允许
+        // チェックIP許可するかどうか
         check_ip_allowed();
 
-        // 如果有使用模板布局
+        // テンプレートレイアウトを使用している場合
         if ($this->layout) {
             $this->view->engine->layout('layout/' . $this->layout);
         }
@@ -61,25 +61,25 @@ class Frontend extends Controller
         $token = $this->request->server('HTTP_TOKEN', $this->request->request('token', \think\Cookie::get('token')));
 
         $path = str_replace('.', '/', $controllername) . '/' . $actionname;
-        // 设置当前请求的URI
+        // 現在のリクエストのURI
         $this->auth->setRequestUri($path);
-        // 检测是否需要验证登录
+        // ログイン検証が必要かをチェック
         if (!$this->auth->match($this->noNeedLogin)) {
-            //初始化
+            //初期化
             $this->auth->init($token);
-            //检测是否登录
+            //ログインしているか確認
             if (!$this->auth->isLogin()) {
                 $this->error(__('Please login first'), '/');
             }
-            // 判断是否需要验证权限
+            // 権限検証が必要かを判定
             if (!$this->auth->match($this->noNeedRight)) {
-                // 判断控制器和方法判断是否有对应权限
+                // コントローラーとメソッドに対応権限があるか判定
                 if (!$this->auth->check($path)) {
                     $this->error(__('You have no permission'));
                 }
             }
         } else {
-            // 如果有传递token才验证是否登录状态
+            // が渡された場合のみtokenログイン状態を検証する
             if ($token) {
                 $this->auth->init($token);
             }
@@ -87,7 +87,7 @@ class Frontend extends Controller
 
         $this->view->assign('user', $this->auth->getUser());
 
-        // 语言检测
+        // 言語検出
         $lang = $this->request->langset();
         $lang = preg_match("/^([a-zA-Z\-_]{2,10})\$/i", $lang) ? $lang : 'zh-cn';
 
@@ -95,10 +95,10 @@ class Frontend extends Controller
 
         $upload = \app\common\model\Config::upload();
 
-        // 上传信息配置后
+        // アップロード情報設定後
         Hook::listen("upload_config_init", $upload);
 
-        // 配置信息
+        // 設定情報
         $config = [
             'site'           => array_intersect_key($site, array_flip(['name', 'cdnurl', 'version', 'timezone', 'languages'])),
             'upload'         => $upload,
@@ -113,16 +113,16 @@ class Frontend extends Controller
 
         Config::set('upload', array_merge(Config::get('upload'), $upload));
 
-        // 配置信息后
+        // 設定情報の後
         Hook::listen("config_init", $config);
-        // 加载当前控制器语言包
+        // 現在のコントローラーの言語パックを読み込み
         $this->loadlang($controllername);
         $this->assign('site', $site);
         $this->assign('config', $config);
     }
 
     /**
-     * 加载语言文件
+     * 言語ファイルを読み込む
      * @param string $name
      */
     protected function loadlang($name)
@@ -135,9 +135,9 @@ class Frontend extends Controller
     }
 
     /**
-     * 渲染配置信息
-     * @param mixed $name  键名或数组
-     * @param mixed $value 值
+     * 設定情報をレンダリング
+     * @param mixed $name  キー名または配列
+     * @param mixed $value 値
      */
     protected function assignconfig($name, $value = '')
     {
@@ -145,18 +145,18 @@ class Frontend extends Controller
     }
 
     /**
-     * 刷新Token
+     * 更新Token
      */
     protected function token()
     {
         $token = $this->request->param('__token__');
 
-        //验证Token
+        //検証Token
         if (!Validate::make()->check(['__token__' => $token], ['__token__' => 'require|token'])) {
             $this->error(__('Token verification error'), '', ['__token__' => $this->request->token()]);
         }
 
-        //刷新Token
+        //更新Token
         $this->request->token();
     }
 }

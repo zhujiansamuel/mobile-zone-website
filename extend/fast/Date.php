@@ -6,7 +6,7 @@ use DateTime;
 use DateTimeZone;
 
 /**
- * 日期时间处理类
+ * 日付と時刻の処理クラス
  */
 class Date
 {
@@ -18,7 +18,7 @@ class Date
     const MINUTE = 60;
 
     /**
-     * 计算两个时区间相差的时长,单位为秒
+     * 2つのタイムゾーン間の差分時間を計算,単位は秒
      *
      * $seconds = self::offset('America/Chicago', 'GMT');
      *
@@ -52,7 +52,7 @@ class Date
     }
 
     /**
-     * 计算两个时间戳之间相差的时间
+     * 2つのタイムスタンプ間の経過時間を計算
      *
      * $span = self::span(60, 182, 'minutes,seconds'); // array('minutes' => 2, 'seconds' => 2)
      * $span = self::span(60, 182, 'minutes'); // 2
@@ -115,12 +115,12 @@ class Date
     }
 
     /**
-     * 格式化 UNIX 时间戳为人易读的字符串
+     * フォーマット UNIX 人が読みやすい文字列へ変換されたタイムスタンプ
      *
-     * @param int    Unix 时间戳
-     * @param mixed $local 本地时间
+     * @param int    Unix タイムスタンプ
+     * @param mixed $local ローカル時刻
      *
-     * @return    string    格式化的日期字符串
+     * @return    string    フォーマット済み日付文字列
      */
     public static function human($remote, $local = null)
     {
@@ -150,17 +150,17 @@ class Date
     }
 
     /**
-     * 获取一个基于时间偏移的Unix时间戳
+     * 時間オフセットに基づくUnixタイムスタンプ
      *
-     * @param string $type     时间类型，默认为day，可选minute,hour,day,week,month,quarter,year
-     * @param int    $offset   时间偏移量 默认为0，正数表示当前type之后，负数表示当前type之前
-     * @param string $position 时间的开始或结束，默认为begin，可选前(begin,start,first,front)，end
-     * @param int    $year     基准年，默认为null，即以当前年为基准
-     * @param int    $month    基准月，默认为null，即以当前月为基准
-     * @param int    $day      基准天，默认为null，即以当前天为基准
-     * @param int    $hour     基准小时，默认为null，即以当前年小时基准
-     * @param int    $minute   基准分钟，默认为null，即以当前分钟为基准
-     * @return int 处理后的Unix时间戳
+     * @param string $type     時間タイプ，デフォルトはday，選択可能minute,hour,day,week,month,quarter,year
+     * @param int    $offset   時間オフセット量 デフォルトは0，正数は現在のtype以降を示す，負数は現在のtype以前を示す
+     * @param string $position 時間の開始または終了，デフォルトはbegin，選択可能：前(begin,start,first,front)，end
+     * @param int    $year     基準年，デフォルトはnull，現在の年を基準とする
+     * @param int    $month    基準月，デフォルトはnull，現在の月を基準とする
+     * @param int    $day      基準日，デフォルトはnull，現在の日を基準とする
+     * @param int    $hour     基準時，デフォルトはnull，現在の時刻を基準とする
+     * @param int    $minute   基準分，デフォルトはnull，現在の分を基準とする
+     * @return int 処理後のUnixタイムスタンプ
      */
     public static function unixtime($type = 'day', $offset = 0, $position = 'begin', $year = null, $month = null, $day = null, $hour = null, $minute = null)
     {
@@ -214,7 +214,7 @@ class Date
     }
 
     /**
-     * 获取指定年月拥有的天数
+     * 指定した年月の日数を取得
      * @param int $month
      * @param int $year
      * @return false|int|string

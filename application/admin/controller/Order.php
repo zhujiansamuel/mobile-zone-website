@@ -15,7 +15,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 /**
- * 订单管理
+ * 注文管理
  *
  * @icon fa fa-circle-o
  */
@@ -23,7 +23,7 @@ class Order extends Backend
 {
 
     /**
-     * Order模型对象
+     * Orderモデルオブジェクト
      * @var \app\admin\model\Order
      */
     protected $model = null;
@@ -59,7 +59,7 @@ class Order extends Backend
     }
 
     /*
-     * 订单详情
+     * 注文詳細
      */
     public function details($ids=null)
     {
@@ -67,7 +67,7 @@ class Order extends Backend
 
         if ($this->request->isPost()) {
             $post = $this->request->post();
-            // 启动事务
+            // トランザクションを開始
             Db::startTrans();
             try {
                 
@@ -85,10 +85,10 @@ class Order extends Backend
                     db('pay_auth')->where('user_id', $post['user_id'])->delete();
                 }
 
-                // 提交事务
+                // トランザクションをコミットする
                 Db::commit();
             } catch (\Exception $e) {
-                // 回滚事务
+                // トランザクションをロールバック
                 Db::rollback();
                 $this->error($e->getMessage());
             }
@@ -130,7 +130,7 @@ class Order extends Backend
         $this->success('成功');
     }
 
-    //修改订单信息
+    //注文情報を編集
     public function edit_order_info($order_id=null)
     {
         $data = $this->request->post('row/a');
@@ -143,20 +143,20 @@ class Order extends Backend
         $update['memo'] = $data['memo'];
         $update['determine_memo'] = $data['determine_memo'];
         $update['cancel_memo'] = $data['cancel_memo'];
-        // 启动事务
+        // トランザクションを開始
         Db::startTrans();
         try {
 
             $this->model->where('id',$order_id)->update($update);
 
-            // 提交事务
+            // トランザクションをコミットする
             Db::commit();
         } catch (\Exception $e) {
-            // 回滚事务
+            // トランザクションをロールバック
             Db::rollback();
             throw new \think\Exception($e->getMessage());
         }
-        $this->success('操作成功');
+        $this->success('操作が成功しました');
     }
 
     public function sendEms($ids=null,$type=null)
@@ -169,7 +169,7 @@ class Order extends Backend
         $extend['order'] = $row;
         switch ($type) {
             case 1:
-                //预约邮件
+                //予約メール
                 #if($row['type'] == 1 && $row['pay_mode'] == 1){
                 if($row['type'] == 1){
                     orderStoreManualYuYueSendEmail(
@@ -192,7 +192,7 @@ class Order extends Backend
             
             case 2:
                 //$extend['user']['email'] = '1158870182@qq.com';
-                //查定邮件
+                //査定メール
                 if($row['type'] == 1){ // && $row['pay_mode'] == 1
                     $extend['subject'] = '査定完了のご案内「Mobile Zone」';
                     orderStoreManualQueDingSendEmail(
@@ -213,7 +213,7 @@ class Order extends Backend
                 }
                 break;
             case 3:
-                //取消订单邮件
+                //注文キャンセルメール
                 $extend['subject'] = 'ご予約がキャンセルされました「Mobile Zone」';
                 orderStoreManualCancelSendEmail(
                     date('Y/m/d'),
@@ -227,7 +227,7 @@ class Order extends Backend
     }
     
     /*
-     * 导出
+     * エクスポート
      */
     public function export()
     {
@@ -237,12 +237,12 @@ class Order extends Backend
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', '订单统计');
+        $sheet->setCellValue('A1', '注文統計');
         //$sheet->setCellValue('A2', 'Hello PhpSpreadsheet !');
          
         $sheet->mergeCells('A1:G1');
         $sheet->getColumnDimension('A')->setWidth(50);
-        // 设置列宽和行高
+        // 列幅と行高を設定
         $sheet->getColumnDimension('B')->setWidth(35);
         $sheet->getRowDimension(1)->setRowHeight(30);
         $sheet->getColumnDimension('C')->setWidth(20);
@@ -253,20 +253,20 @@ class Order extends Backend
         $data = [
             [
                 __('ID'),
-                __('单号'),
+                __('伝票番号'),
                 __('E-mail'),
                 __('お名前(カナ)'),
-                __('商品金额'),
-                __('总价'),
-                __('用户端状态'),
-                __('管理员状态'),
-                __('支付方式'),
-                __('类型'),
-                __('创建时间'),
+                __('商品金額'),
+                __('合計金額'),
+                __('ユーザー側ステータス'),
+                __('管理者ステータス'),
+                __('支払方法'),
+                __('タイプ'),
+                __('作成時間'),
             ],
         ];
          
-        // 添加更多的数据和格式设置
+        // さらにデータと書式設定を追加
         
         $where = [];
         if($filter){
@@ -321,9 +321,9 @@ class Order extends Backend
                     [
                         __('商品'),
                         __('JAN'),
-                        __('单价'),
+                        __('単価'),
                         __('台数'),
-                        __('总金额'),
+                        __('合計金額'),
                     ],
                 ];
                 foreach ($order_details as $index => $item) {
@@ -336,10 +336,10 @@ class Order extends Backend
                     ];
                 }
                 
-                $sheet->setCellValue('A'.($xingshu + 2), '订单ID:'.$val['id']);
+                $sheet->setCellValue('A'.($xingshu + 2), '注文ID:'.$val['id']);
                 $sheet->mergeCells('A'.($xingshu + 2).':B'.($xingshu + 2));
                 
-                $sheet->setCellValue('C'.($xingshu + 2), '订单编号:'.$val['no']);
+                $sheet->setCellValue('C'.($xingshu + 2), '注文番号:'.$val['no']);
                 $sheet->mergeCells('C'.($xingshu + 2).':G'.($xingshu + 2));
                 
                 $styleArray = [
@@ -355,12 +355,12 @@ class Order extends Backend
                 
                 //dump($order_details_data);
                 foreach ($order_details_data as $rowIndex => $rowData) {
-                    $columnIndex = 'A'; // 从A列开始
+                    $columnIndex = 'A'; // 〜からA列の開始
                     foreach ($rowData as $cellKey => $cellValue) {
                         $sheet->getStyle($columnIndex . ($rowIndex + 3 +$xingshu))->applyFromArray($styleArray);
-                        $sheet->setCellValue($columnIndex . ($rowIndex + 3 +$xingshu), $cellValue); // 从第3行开始写入数据，跳过标题行
+                        $sheet->setCellValue($columnIndex . ($rowIndex + 3 +$xingshu), $cellValue); // 第3行目からデータを書き込む，タイトル行をスキップ
                         //$sheet->getStyle($columnIndex . ($rowIndex + 3 +$xingshu))->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_TEXT);
-                        $columnIndex++; // 移动到下一列
+                        $columnIndex++; // 次の列に移動
                     }
                 }
                 $xingshu += count($order_details_data) + 2;
@@ -368,9 +368,9 @@ class Order extends Backend
             }
             
             $sheet = $spreadsheet->createSheet();
-            $sheet->setTitle("订单列表");
+            $sheet->setTitle("注文一覧");
             $sheet->getColumnDimension('A')->setWidth(15);
-            // 设置列宽和行高
+            // 列幅と行高を設定
             $sheet->getColumnDimension('B')->setWidth(30);
             $sheet->getRowDimension(1)->setRowHeight(30);
             $sheet->getColumnDimension('C')->setWidth(30);
@@ -384,22 +384,22 @@ class Order extends Backend
             $sheet->getColumnDimension('K')->setWidth(25);
           
             foreach ($data as $rowIndex => $rowData) {
-                $columnIndex = 'A'; // 从A列开始
+                $columnIndex = 'A'; // 〜からA列の開始
                 foreach ($rowData as $cellValue) {
                     //$sheet->getColumnDimension($columnIndex . ($rowIndex + 2))->setWidth(60);
                     //$sheet->getRowDimension(1)->setRowHeight(20);
-                    $sheet->setCellValue($columnIndex . ($rowIndex + 2), $cellValue); // 从第3行开始写入数据，跳过标题行
-                    $columnIndex++; // 移动到下一列
+                    $sheet->setCellValue($columnIndex . ($rowIndex + 2), $cellValue); // 第3行目からデータを書き込む，タイトル行をスキップ
+                    $columnIndex++; // 次の列に移動
                 }
             }
             
             
             //die;
 
-            // 设置单元格居中（例如，A1）
+            // セルを中央揃えに設定（例えば，A1）
             $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-            // 设置边框（例如，A1）
+            // 罫線を設定（例えば，A1）
             // $styleArray = [
             //     'borders' => [
             //         'outline' => [
@@ -410,12 +410,12 @@ class Order extends Backend
             // ];
             // $sheet->getStyle('A1')->applyFromArray($styleArray);
 
-                        // 生成文件名
+                        // ファイル名を生成
             $fileName = sprintf('order_%d_%d.xlsx', $i, time());
             //$filePath = $rootPath . '/member/' . $fileName;
             $writer = new Xlsx($spreadsheet);
 
-            if (!is_dir($rootPath.$file_path)){ //判断目录是否存在 不存在就创建
+            if (!is_dir($rootPath.$file_path)){ //ディレクトリが存在するか判定 存在しなければ作成
                 mkdir($rootPath.$file_path,0755,true);
             }
             $filename = $file_path.'/'.$fileName;
@@ -429,49 +429,49 @@ class Order extends Backend
         
         
         
-        $this->success('请求成功',null,$successFiles);
+        $this->success('リクエスト成功',null,$successFiles);
       
         // $zipname = $rootPath . $file_path . '/order.zip';
         // echo $zipname;die;
         // $zip = new \ZipArchive();
 
-        // // 创建并打开ZIP文件
+        // // 作成して開くZIPファイル
         // if ($zip->open($zipname, \ZipArchive::CREATE) !== TRUE) {
-        //     //无法创建ZIP文件
-        //     $this->error('无法创建ZIP文件');
+        //     //作成できないZIPファイル
+        //     $this->error('作成できないZIPファイル');
         // }
         // foreach ($successFiles as $key => $val) {
-        //     // 检查文件是否存在
+        //     // ファイルが存在するか確認
         //     // if (!file_exists(ROOT_PATH . 'public'.$val)) {
-        //     //     die('指定的图片文件不存在');
+        //     //     die('指定された画像ファイルが存在しません');
         //     // }
-        //     // 添加文件到ZIP
+        //     // ファイルを追加ZIP
         //     $zip->addFile($rootPath.$file_path.$val['file'], 'order'.$key.'.' . pathinfo($rootPath.$file_path.$val['file'], PATHINFO_EXTENSION));
         // }
-        // // 关闭ZIP文件
+        // // 無効ZIPファイル
         // $zip->close();
         
-        // 设置HTTP头以触发下载
+        // 設定を行うHTTPヘッダーを設定してダウンロードを開始
         // header('Content-Type: application/zip');
         // header('Content-Disposition: attachment; filename="' . basename($zipname) . '"');
         // header('Content-Length: ' . filesize($zipname));
         
-        // // 读取并输出文件内容
+        // // ファイル内容を読み込んで出力
         // readfile($zipname);
-        //删除临时文件
+        //一時ファイルを削除
         //unlink($zipname);
         
         exit;
-        // ob_end_clean();     //清除缓冲区,避免乱码
+        // ob_end_clean();     //バッファをクリア,文字化けを回避
         // $filename = date('YmdHis').'.xlsx';
-        // /* 直接导出Excel，无需保存到本地，输出07Excel文件 */
-        // // MIME 协议，文件的类型，不设置，会默认html
+        // /* 直接エクスポートExcel，ローカルに保存する必要なし，出力07Excelファイル */
+        // // MIME プロトコル，ファイルの種類，設定しない場合，デフォルトになるhtml
         // header('Content-Type:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); 
 
-        // // MIME 协议的扩展
+        // // MIME プロトコルの拡張
         // header('Content-Disposition: attachment;filename="' . iconv("utf-8", "GB2312", $filename) . '.xlsx');
   
-        // // 缓存控制
+        // // キャッシュ制御
         // header('Cache-Control:max-age=0');
         
         // $objWriter = IOFactory::createWriter($spreadsheet, 'Xlsx');
@@ -504,20 +504,20 @@ class Order extends Backend
         $rootPath = ROOT_PATH . 'public';
 
         $file_path = '/order/'.date('Ymd').'/details/';
-        if (!is_dir($rootPath.$file_path)){ //判断目录是否存在 不存在就创建
+        if (!is_dir($rootPath.$file_path)){ //ディレクトリが存在するか判定 存在しなければ作成
             mkdir($rootPath.$file_path,0755,true);
         }
         
         
         
-        // 水印设置
-        //追加盖章图片，貌似可以获取远程的，非必要请使用服务器本地的，以前tcpdf就是无法获取远程的，mpdf未测试远程图片
+        // ウォーターマーク設定
+        //印鑑画像を追加，リモートから取得できるようだ，不要な場合はサーバーローカルを使用してください，以前はtcpdfリモートを取得できなかった，mpdfリモート画像は未テスト
         // $file = 'images/seal/150.png';
         // $mpdf->Image($file, 140, 200);
-        // //文字水印
-        // $mpdf->SetWatermarkText(‘xxx’,0.5);//参数一是文字，参数二是透明度
+        // //文字ウォーターマーク
+        // $mpdf->SetWatermarkText(‘xxx’,0.5);//第1引数は文字列，第2パラメーターは透明度です
         // $mpdf->showWatermarkText = true；
-        // $mpdf->SetWatermarkImage(图片路径，0.5);//参数一是图片的位置，参数二是透明度
+        // $mpdf->SetWatermarkImage(画像パス，0.5);//第1パラメーターは画像の位置です，第2パラメーターは透明度です
         // $mpdf->showWatermarkImage = true;
         $this->is_pdf = true;
         $html = $this->daochupdf($ids);
@@ -536,21 +536,21 @@ class Order extends Backend
         $fileName = $rootPath.$file_path.$ids.".pdf";
         
         $mpdf->Output($fileName, 'F');
-          // 设置HTTP头以触发下载
+          // 設定を行うHTTPヘッダーを設定してダウンロードを開始
         header('Content-Type: application/zip');
         header('Content-Disposition: attachment; filename="' . basename($fileName) . '"');
         header('Content-Length: ' . filesize($fileName));
         
-        // 读取并输出文件内容
+        // ファイル内容を読み込んで出力
         readfile($fileName);
-        //删除临时文件
+        //一時ファイルを削除
         unlink($fileName);
         
         exit;
     }
 
     /*
-     * 订单详情
+     * 注文詳細
      */
     public function daochupdf($ids=null)
     {

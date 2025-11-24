@@ -304,7 +304,7 @@ class Support
     }
 
     /**
-     * 生成应用证书SN.
+     * アプリケーション証明書を生成SN.
      *
      * @author 大冰 https://sbing.vip/archives/2019-new-alipay-php-docking.html
      *
@@ -337,7 +337,7 @@ class Support
     }
 
     /**
-     * 生成支付宝根证书SN.
+     * Alipay ルート証明書を生成SN.
      *
      * @author 大冰 https://sbing.vip/archives/2019-new-alipay-php-docking.html
      *
@@ -429,7 +429,7 @@ class Support
     }
 
     /**
-     * 0x转高精度数字.
+     * 0x高精度数値に変換.
      *
      * @author 大冰 https://sbing.vip/archives/2019-new-alipay-php-docking.html
      *

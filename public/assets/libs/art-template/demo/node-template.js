@@ -1,30 +1,30 @@
 var template = require('../node/template.js');
 //console.log(template);
-template.config('base', __dirname);// 设置模板根目录，默认为引擎所在目录
-template.config('compress', true);// 压缩输出
+template.config('base', __dirname);// テンプレートのルートディレクトリを設定，デフォルトはエンジンのあるディレクトリ
+template.config('compress', true);// 出力を圧縮
 
 var html = template('node-template/index', {
-	title: '国内要闻',
+	title: '国内ニュース',
 	time: (new Date).toString(),
 	list: [
 		{
-			title: '<油价>调整周期缩至10个工作日 无4%幅度限制',
+			title: '<原油価格>調整サイクルを短縮して10営業日 拡張なし4%変動幅の制限',
 			url: 'http://finance.qq.com/zt2013/2013yj/index.htm'
 		},
 		{
-			title: '明起汽油价格每吨下调310元 单价回归7元时代',
+			title: '明日からガソリン価格をトン当たり引き下げ310元 単価が回帰して7元の時代に',
 			url: 'http://finance.qq.com/a/20130326/007060.htm'
 		},
 		{
-			title: '广东副县长疑因抛弃情妇遭6女子围殴 纪检调查',
+			title: '広東省の副県長が愛人を捨てた疑いで6女性たちに集団暴行される 規律検査による調査',
 			url: 'http://news.qq.com/a/20130326/001254.htm'
 		},
 		{
-			title: '湖南27岁副县长回应质疑：父亲已不是领导',
+			title: '湖南省27歳の副県長が疑問に回答：父はもはや指導者ではない',
 			url: 'http://news.qq.com/a/20130326/000959.htm'
 		},
 		{
-			title: '朝军进入战斗工作状态 称随时准备导弹攻击美国',
+			title: '北朝鮮軍が戦闘勤務態勢に入る いつでも米国へのミサイル攻撃の準備ができていると表明',
 			url: 'http://news.qq.com/a/20130326/001307.htm'
 		}
 	]

@@ -7,13 +7,13 @@ module.exports = function (template) {
 	var defaults = template.defaults;
 	var rExtname;
 
-	// 提供新的配置字段
+	// 新しい設定フィールドを提供
 	defaults.base = '';
 	defaults.extname = '.html';
 	defaults.encoding = 'utf-8';
 
 	function compileFromFS(filename) {
-		// 加载模板并编译
+		// テンプレートを読み込みコンパイル
 		var source = readTemplate(filename);
 
 		if (typeof source === 'string') {
@@ -23,14 +23,14 @@ module.exports = function (template) {
 		}
 	}
 
-	// 重写引擎编译结果获取方法
+	// エンジンのコンパイル結果取得メソッドを上書き
 	template.get = function (filename) {
 		
 	    var fn;
 
 
 	    if (cacheStore.hasOwnProperty(filename)) {
-	        // 使用内存缓存
+	        // メモリキャッシュを使用
 	        fn = cacheStore[filename];
 	    } else {
 			fn = compileFromFS(filename);
@@ -44,7 +44,7 @@ module.exports = function (template) {
 	    id = path.join(defaults.base, id + defaults.extname);
 	    
 	    if (id.indexOf(defaults.base) !== 0) {
-	        // 安全限制：禁止超出模板目录之外调用文件
+	        // セキュリティ制限：テンプレートディレクトリ外のファイル呼び出しを禁止
 	        throw new Error('"' + id + '" is not in the template directory');
 	    } else {
 	        try {
@@ -54,7 +54,7 @@ module.exports = function (template) {
 	}
 
 
-	// 重写模板`include``语句实现方法，转换模板为绝对路径
+	// テンプレートを再実装`include``文の実装方法，テンプレートを絶対パスに変換
 	template.utils.$include = function (filename, data, from) {
 	    
 	    from = path.dirname(from);
@@ -74,7 +74,7 @@ module.exports = function (template) {
 
 
 		if (!rExtname) {
-			// 去掉 express 传入的路径
+			// 削除した express 渡されたパス
 			rExtname = new RegExp((defaults.extname + '$').replace(/\./g, '\\.'));
 		}
 

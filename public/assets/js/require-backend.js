@@ -5,7 +5,7 @@ require.config({
         location: '../libs/moment',
         main: 'moment'
     }],
-    //在打包压缩时将会把include中的模块合并到主文件中
+    //パッケージ圧縮時にinclude内のモジュールをメインファイルに結合します
     include: ['css', 'layer', 'toastr', 'fast', 'backend', 'backend-init', 'table', 'form', 'dragsort', 'addtabs', 'selectpage', 'bootstrap-daterangepicker'],
     paths: {
         'lang': "empty:",
@@ -19,7 +19,7 @@ require.config({
         'bootstrap-table-commonsearch': 'bootstrap-table-commonsearch',
         'bootstrap-table-template': 'bootstrap-table-template',
         //
-        // 以下的包从bower的libs目录加载
+        // 以下の包从bowerのlibsディレクトリから読み込みます
         'jquery': '../libs/jquery/dist/jquery.min',
         'bootstrap': '../libs/bootstrap/dist/js/bootstrap.min',
         'bootstrap-datetimepicker': '../libs/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min',
@@ -50,7 +50,7 @@ require.config({
         'citypicker': '../libs/fastadmin-citypicker/dist/js/city-picker.min',
         'citypicker-data': '../libs/fastadmin-citypicker/dist/js/city-picker.data',
     },
-    // shim依赖配置
+    // shim依存関係の設定
     shim: {
         'addons': ['backend'],
         'bootstrap': ['jquery'],
@@ -113,33 +113,33 @@ require.config({
         'validator-lang': ['validator'],
         'citypicker': ['citypicker-data', 'css!../libs/fastadmin-citypicker/dist/css/city-picker.css']
     },
-    baseUrl: requirejs.s.contexts._.config.config.site.cdnurl + '/assets/js/', //资源基础路径
+    baseUrl: requirejs.s.contexts._.config.config.site.cdnurl + '/assets/js/', //アセットのベースパス
     map: {
         '*': {
             'css': '../libs/require-css/css.min'
         }
     },
     waitSeconds: 60,
-    charset: 'utf-8' // 文件编码
+    charset: 'utf-8' // ファイルエンコード
 });
 
 require(['jquery', 'bootstrap'], function ($, undefined) {
-    //初始配置
+    //初期設定
     var Config = requirejs.s.contexts._.config.config;
-    //将Config渲染到全局
+    //をConfigグローバルへレンダリング
     window.Config = Config;
-    // 配置语言包的路径
+    // 言語パックのパスを設定
     var paths = {};
     paths['lang'] = Config.moduleurl + '/ajax/lang?callback=define&controllername=' + Config.controllername + '&lang=' + Config.language;
-    // 避免目录冲突
+    // ディレクトリ競合を回避
     paths['backend/'] = 'backend/';
     require.config({paths: paths});
 
-    // 初始化
+    // 初期化
     $(function () {
         require(['fast'], function (Fast) {
             require(['backend', 'backend-init', 'addons'], function (Backend, undefined, Addons) {
-                //加载相应模块
+                //該当モジュールを読み込み
                 if (Config.jsname) {
                     require([Config.jsname], function (Controller) {
                         if (Controller.hasOwnProperty(Config.actionname)) {
@@ -151,7 +151,7 @@ require(['jquery', 'bootstrap'], function ($, undefined) {
                         }
                     }, function (e) {
                         console.error(e);
-                        // 这里可捕获模块加载的错误
+                        // ここでモジュール読み込みエラーを捕捉可能
                     });
                 }
             });

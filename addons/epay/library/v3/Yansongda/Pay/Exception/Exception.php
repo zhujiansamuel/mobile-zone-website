@@ -11,7 +11,7 @@ class Exception extends \Exception
     public const UNKNOWN_ERROR = 9999;
 
     /**
-     * 关于容器.
+     * コンテナについて.
      */
     public const CONTAINER_ERROR = 1000;
 
@@ -20,14 +20,14 @@ class Exception extends \Exception
     public const CONTAINER_NOT_FOUND_ENTRY = 1002;
 
     /**
-     * 关于容器的服务.
+     * コンテナサービスについて.
      */
     public const SERVICE_ERROR = 2000;
 
     public const SERVICE_NOT_FOUND_ERROR = 2001;
 
     /*
-     * 关于配置.
+     * 設定について.
      */
     public const CONFIG_ERROR = 3000;
 
@@ -48,7 +48,7 @@ class Exception extends \Exception
     public const INVALID_PACKER = 3008;
 
     /*
-     * 关于参数.
+     * パラメーターについて.
      */
     public const PARAMS_ERROR = 4000;
 
@@ -73,7 +73,7 @@ class Exception extends \Exception
     public const UNIPAY_CANCEL_STRING_NOT_SUPPORTED = 4010;
 
     /**
-     * 关于api.
+     * についてapi.
      */
     public const RESPONSE_ERROR = 5000;
 

@@ -6,7 +6,7 @@ use app\common\controller\Backend;
 use app\common\library\Auth;
 
 /**
- * 会员管理
+ * 会員管理
  *
  * @icon fa fa-user
  */
@@ -28,14 +28,14 @@ class User extends Backend
     }
 
     /**
-     * 查看
+     * 表示
      */
     public function index()
     {
-        //设置过滤方法
+        //フィルターメソッドを設定
         $this->request->filter(['strip_tags', 'trim']);
         if ($this->request->isAjax()) {
-            //如果发送的来源是Selectpage，则转发到Selectpage
+            //送信元がSelectpage，の場合は、次に転送するSelectpage
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
@@ -57,7 +57,7 @@ class User extends Backend
     }
 
     /**
-     * 添加
+     * 追加
      */
     public function add()
     {
@@ -68,7 +68,7 @@ class User extends Backend
     }
 
     /**
-     * 编辑
+     * 編集
      */
     public function edit($ids = null)
     {
@@ -85,7 +85,7 @@ class User extends Backend
     }
 
     /**
-     * 删除
+     * 削除
      */
     public function del($ids = "")
     {
@@ -103,7 +103,7 @@ class User extends Backend
     }
 
     /*
-     * 订单详情
+     * 注文詳細
      */
     public function details($ids=null)
     {
