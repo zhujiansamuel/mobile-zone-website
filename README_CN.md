@@ -23,18 +23,25 @@ bash dev-setup.sh
 
 1. **安装依赖**
 ```bash
-composer install
+composer install --ignore-platform-reqs
 ```
 
-2. **配置环境**
+2. **配置数据库**
 ```bash
-cp .env.sample .env
-# 编辑 .env 文件，配置数据库信息
+# 使用 MySQL 配置脚本（推荐）
+bash setup-mysql.sh
+
+# 或手动创建数据库
+mysql -u root -p
+CREATE DATABASE fastadmin CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-3. **创建数据库**
-```sql
-CREATE DATABASE fastadmin CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+详细配置说明：**[MySQL 数据库配置指南](./MYSQL_SETUP_GUIDE.md)**
+
+3. **配置环境文件**
+```bash
+# 编辑 .env 文件，填写数据库连接信息
+nano .env
 ```
 
 4. **设置权限**
@@ -98,6 +105,8 @@ mobile-zone-website/
 ## 开发文档
 
 - [PhpStorm 配置详细指南](./PHPSTORM_SETUP.md) - 完整的 IDE 配置说明
+- [MySQL 数据库配置指南](./MYSQL_SETUP_GUIDE.md) - 本地数据库配置详解
+- [依赖安装详细指南](./DEPENDENCY_INSTALL_GUIDE.md) - Composer 依赖问题解决
 - [FastAdmin 官方文档](https://doc.fastadmin.net) - 框架使用文档
 - [ThinkPHP 文档](https://www.kancloud.cn/manual/thinkphp5_1/) - 底层框架文档
 
