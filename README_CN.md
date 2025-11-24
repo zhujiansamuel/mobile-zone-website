@@ -130,10 +130,16 @@ chmod -R 755 runtime
 chmod -R 755 public/uploads
 ```
 
-### 2. Composer 安装慢
-使用国内镜像：
+### 2. Composer 依赖安装失败
+如果遇到 Gitee 403 错误或依赖安装问题，请查看：
+**[依赖安装详细指南](./DEPENDENCY_INSTALL_GUIDE.md)**
+
+快速解决方案：
 ```bash
-composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+# 在中国大陆网络环境直接运行
+composer install --ignore-platform-reqs
+
+# 如果还是失败，可能需要 VPN 或从官网下载完整包
 ```
 
 ### 3. 数据库连接失败
