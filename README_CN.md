@@ -106,6 +106,7 @@ mobile-zone-website/
 
 - [PhpStorm 配置详细指南](./PHPSTORM_SETUP.md) - 完整的 IDE 配置说明
 - [MySQL 数据库配置指南](./MYSQL_SETUP_GUIDE.md) - 本地数据库配置详解
+- [数据库导入指南](./DATABASE_IMPORT_GUIDE.md) - 从服务器导入数据库到本地
 - [依赖安装详细指南](./DEPENDENCY_INSTALL_GUIDE.md) - Composer 依赖问题解决
 - [FastAdmin 官方文档](https://doc.fastadmin.net) - 框架使用文档
 - [ThinkPHP 文档](https://www.kancloud.cn/manual/thinkphp5_1/) - 底层框架文档
@@ -151,10 +152,24 @@ composer install --ignore-platform-reqs
 # 如果还是失败，可能需要 VPN 或从官网下载完整包
 ```
 
-### 3. 数据库连接失败
+### 3. 数据库表不存在错误
+如果出现 `Table 'fastadmin.fa_xxx' doesn't exist` 错误：
+
+需要从服务器导入完整数据库，查看：**[数据库导入指南](./DATABASE_IMPORT_GUIDE.md)**
+
+快速导入：
+```bash
+# 使用导入脚本
+bash import-database.sh
+
+# 或手动导入 SQL 文件
+mysql -u root -p fastadmin < your_backup.sql
+```
+
+### 4. 数据库连接失败
 检查 `.env` 文件中的数据库配置是否正确
 
-### 4. 页面 500 错误
+### 5. 页面 500 错误
 - 检查 `runtime` 目录权限
 - 查看错误日志：`runtime/log/`
 - 开启调试：`.env` 中设置 `debug = true`
