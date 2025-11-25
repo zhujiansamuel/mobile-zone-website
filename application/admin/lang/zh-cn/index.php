@@ -63,6 +63,6 @@ return [
     'Forum'                                                      => 'コミュニティ',
     'QQ qun'                                                     => 'QQ交流グループ',
     'Captcha'                                                    => '認証コード',
-    'The duration of the session is %s hours'                    => 'セッションの有効期間を%s時間に設定%s時間',
+    'The duration of the session is %s hours'                    => 'セッションの有効期間は%s時間です',
     'Security tips'                                              => '<i class="fa fa-warning"></i> セキュリティ上の注意：管理画面の安全性を確保するため，管理画面のログインURLを次のように設定しないでください：adminまたはadmin.php',
 ];
