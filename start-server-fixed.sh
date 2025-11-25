@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# FastAdmin 项目快速启动脚本
+# FastAdmin 项目快速启动脚本（修复版）
 
 echo "========================================="
 echo "FastAdmin 项目启动"
@@ -33,9 +33,14 @@ if [ ! -d "public" ]; then
     exit 1
 fi
 
-# 检查 index.php
+# 检查必要文件
 if [ ! -f "public/index.php" ]; then
     echo "❌ 错误: public/index.php 不存在"
+    exit 1
+fi
+
+if [ ! -f "public/router.php" ]; then
+    echo "❌ 错误: public/router.php 不存在"
     exit 1
 fi
 
@@ -47,11 +52,20 @@ echo "  后台: http://localhost:$PORT/admin"
 echo ""
 echo "默认管理员账号:"
 echo "  用户名: admin"
-echo "  密码: [安装时设置的密码]"
+echo "  密码: [数据库中的密码]"
 echo ""
-echo "按 Ctrl+C 停止服务器"
+echo "提示:"
+echo "  - 使用 Ctrl+C 停止服务器"
+echo "  - 查看日志以诊断问题"
 echo "========================================="
 echo ""
 
-# 启动服务器（从 public 目录启动，确保路由正常工作）
-cd public && php -S localhost:$PORT router.php
+# 切换到项目根目录
+cd "$(dirname "$0")"
+
+# 启动服务器（使用完整路径）
+# 方式 1: 使用 router.php（推荐）
+php -S localhost:$PORT -t public public/router.php
+
+# 如果上面的方式不工作，可以尝试：
+# php -S localhost:$PORT public/router.php
