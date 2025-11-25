@@ -53,5 +53,5 @@ echo "按 Ctrl+C 停止服务器"
 echo "========================================="
 echo ""
 
-# 启动服务器
-php -S localhost:$PORT -t public
+# 启动服务器（使用 router.php 处理 URL 重写）
+php -S localhost:$PORT -t public public/router.php
