@@ -10,10 +10,14 @@
 // +----------------------------------------------------------------------
 // $Id$
 
-if (is_file($_SERVER["DOCUMENT_ROOT"] . $_SERVER["SCRIPT_NAME"])) {
-    return false;
-} else {
-    $_SERVER["SCRIPT_FILENAME"] = __DIR__ . '/index.php';
+// 获取请求的 URI
+$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
-    require __DIR__ . "/index.php";
+// 如果请求的是真实存在的文件（静态资源），直接返回
+if ($uri !== '/' && file_exists(__DIR__ . $uri)) {
+    return false;
 }
+
+// 否则路由到 index.php 处理
+$_SERVER["SCRIPT_FILENAME"] = __DIR__ . '/index.php';
+require __DIR__ . "/index.php";

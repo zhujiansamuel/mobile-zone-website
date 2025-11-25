@@ -61,7 +61,7 @@ return [
     // デフォルトモジュール名
     'default_module'         => 'index',
     // アクセス禁止モジュール
-    'deny_module_list'       => ['common', 'admin'],
+    'deny_module_list'       => ['common'],
     // デフォルトコントローラー名
     'default_controller'     => 'Index',
     // デフォルトアクション名
