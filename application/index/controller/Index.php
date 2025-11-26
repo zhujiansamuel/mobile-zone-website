@@ -225,7 +225,28 @@ class Index extends Base
      */
     public function contactus()
     {
-    	$this->view->assign('title', __('お問い合わせ'));
+        $this->view->assign('title', __('お問い合わせ'));
+        return $this->view->fetch();
+    }
+
+    /**
+     * Drag-and-drop editor for the purchase application template.
+     */
+    public function ylindexEditor()
+    {
+        $templatePath = realpath(__DIR__ . '/../view/index/ylindex.html');
+        $ylindexContent = '';
+
+        if ($templatePath && file_exists($templatePath)) {
+            $ylindexContent = file_get_contents($templatePath);
+        }
+
+        $this->view->assign('title', __('買取申込書エディター'));
+        $this->view->assign(
+            'ylindexContent',
+            json_encode($ylindexContent, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+        );
+
         return $this->view->fetch();
     }
 

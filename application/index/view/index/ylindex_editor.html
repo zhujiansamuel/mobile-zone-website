@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>買取申込書エディター</title>
+    <link rel="stylesheet" href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+        }
+        .gjs-editor-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        #gjs {
+            flex: 1;
+            border: 1px solid #e0e0e0;
+        }
+        .gjs-basic-actions {
+            display: flex;
+            gap: 8px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #ffffff;
+            align-items: center;
+        }
+        .gjs-basic-actions button {
+            padding: 6px 12px;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            background: #ffffff;
+            cursor: pointer;
+        }
+        .gjs-basic-actions button:hover {
+            background: #f0f0f0;
+        }
+        .gjs-basic-actions .title {
+            font-weight: bold;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="gjs-basic-actions">
+        <div class="title">買取申込書をドラッグ＆ドロップで編集</div>
+        <button id="preview-btn">プレビュー</button>
+        <button id="export-btn">HTML出力</button>
+    </div>
+    <div id="gjs" class="gjs-editor-wrapper"></div>
+
+    <script src="https://unpkg.com/grapesjs"></script>
+    <script>
+        const initialHtml = {$ylindexContent|raw};
+
+        const editor = grapesjs.init({
+            container: '#gjs',
+            height: '100%',
+            width: 'auto',
+            fromElement: false,
+            storageManager: false,
+            plugins: [],
+            canvas: {
+                styles: [
+                    'https://unpkg.com/grapesjs/dist/css/grapes.min.css'
+                ],
+            },
+        });
+
+        if (initialHtml) {
+            editor.setComponents(initialHtml);
+        }
+
+        const pn = editor.Panels;
+        pn.addButton('options', {
+            id: 'clear-canvas',
+            className: 'fa fa-trash',
+            command: 'core:canvas-clear',
+            attributes: { title: 'キャンバスをクリア' }
+        });
+
+        pn.addButton('options', {
+            id: 'visibility',
+            className: 'fa fa-square-o',
+            command: 'sw-visibility',
+            attributes: { title: 'コンポーネントを表示/非表示' }
+        });
+
+        document.getElementById('preview-btn').addEventListener('click', () => {
+            editor.runCommand('preview');
+        });
+
+        document.getElementById('export-btn').addEventListener('click', () => {
+            const html = editor.getHtml();
+            const css = editor.getCss();
+            const code = `<!DOCTYPE html>\n<html>\n<head>\n<style>${css}</style>\n</head>\n<body>${html}</body>\n</html>`;
+            const blob = new Blob([code], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'ylindex-export.html';
+            link.click();
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>
