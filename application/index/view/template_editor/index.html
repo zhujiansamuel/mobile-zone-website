@@ -370,62 +370,64 @@
 
         // 构建完整模板
         function buildFullTemplate(html, css) {
-            return `{if $rt neq 1}
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-\t\t<meta charset="utf-8">
-\t\t<meta http-equiv="X-UA-Compatible" content="IE=edge">
-\t\t<meta name="viewport" content="width=device-width, initial-scale=1">
-\t\t<script src="/js/jquery.js"></script>
-\t</head>
-\t
-\t<body style="padding:40px 30px 0;width:774px;" id="content">
-\t\t<!--startprint-->
-\t\t<div  id="content1" style="width:100%;">
-\t\t<div class="dcClick2">
-\t\t\t\t<button class="dcClick" id="doxt" style="opacity:0;">ダウンロード</button>
-\t\t\t</div>
-\t\t\t{/if}
-\t\t<style>
-${css}
-\t\t</style>
-\t\t\t
-${html}
+            // 使用字符串拼接避免模板字符串语法冲突
+            var template = '{if $rt neq 1}\n';
+            template += '<!DOCTYPE html>\n';
+            template += '<html lang="zh-CN">\n';
+            template += '<head>\n';
+            template += '\t\t<meta charset="utf-8">\n';
+            template += '\t\t<meta http-equiv="X-UA-Compatible" content="IE=edge">\n';
+            template += '\t\t<meta name="viewport" content="width=device-width, initial-scale=1">\n';
+            template += '\t\t<script src="/js/jquery.js"><\/script>\n';
+            template += '\t</head>\n';
+            template += '\t\n';
+            template += '\t<body style="padding:40px 30px 0;width:774px;" id="content">\n';
+            template += '\t\t<!--startprint-->\n';
+            template += '\t\t<div  id="content1" style="width:100%;">\n';
+            template += '\t\t<div class="dcClick2">\n';
+            template += '\t\t\t\t<button class="dcClick" id="doxt" style="opacity:0;">ダウンロード</button>\n';
+            template += '\t\t\t</div>\n';
+            template += '\t\t\t{/if}\n';
+            template += '\t\t<style>\n';
+            template += css + '\n';
+            template += '\t\t</style>\n';
+            template += '\t\t\t\n';
+            template += html + '\n';
+            template += '\n';
+            template += '\t\t{if $rt neq 1}\n';
+            template += '\t</div>\n';
+            template += '\t</body>\n';
+            template += '\t<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>\n';
+            template += '\t<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>\n';
+            template += '\t<script>\n';
+            template += '\t\t$(document).ready(function() {\n';
+            template += '\t\t\t$(".dcClick").click(function(event) {\n';
+            template += '\t\t\t\thtml2canvas(document.body, {\n';
+            template += '\t\t\t\t\tonrendered: function(canvas) {\n';
+            template += '\t\t\t\t\t\tvar imgData = canvas.toDataURL();\n';
+            template += '\t\t\t\t\t\tvar doc = new jspdf.jsPDF(\'p\', \'pt\', \'a4\');\n';
+            template += '\t\t\t\t\t\tconsole.log(imgData)\n';
+            template += '\t\t\t\t\t\tdoc.addImage(imgData, \'PNG\', 0, 0, 210, 0);\n';
+            template += '\t\t\t\t\t\tdoc.save(\'買取申込書.pdf\');\n';
+            template += '\t\t\t\t\t}\n';
+            template += '\t\t\t\t});\n';
+            template += '\t\t\t});\n';
+            template += '\t\t});\n';
+            template += '\t\tsetTimeout(doPrint(),1000);\n';
+            template += '\t\tfunction doPrint() {\n';
+            template += '\t\t\tbdhtml=window.document.body.innerHTML;\n';
+            template += '\t\t\tsprnstr="<!--startprint-->";\n';
+            template += '\t\t\teprnstr="<!--endprint-->";\n';
+            template += '\t\t\tprnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+0);\n';
+            template += '\t\t\tprnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));\n';
+            template += '\t\t\twindow.document.body.innerHTML=prnhtml;\n';
+            template += '\t\t\twindow.print();\n';
+            template += '\t\t}\n';
+            template += '\t<\/script>\n';
+            template += '</html>\n';
+            template += '{/if}';
 
-\t\t{if $rt neq 1}
-\t</div>
-\t</body>
-\t<script src="/js/jspdf.debug.js"></script>
-\t<script src="/js/html2canvas.min.js"></script>
-\t<script>
-\t\t$(document).ready(function() {
-\t\t\t$(".dcClick").click(function(event) {
-\t\t\t\thtml2canvas(document.body, {
-\t\t\t\t\tonrendered: function(canvas) {
-\t\t\t\t\t\tvar imgData = canvas.toDataURL();
-\t\t\t\t\t\tvar doc = new jsPDF('p', 'pt', 'a4');
-\t\t\t\t\t\tconsole.log(imgData)
-\t\t\t\t\t\tvar doc = new jsPDF();
-\t\t\t\t\t\tdoc.addImage(imgData, 'png', 0, 0, 210, 0);
-\t\t\t\t\t\tdoc.save('買取申込書.pdf');
-\t\t\t\t\t}
-\t\t\t\t});
-\t\t\t});
-\t\t});
-\t\tsetTimeout(doPrint(),1000);
-\t\tfunction doPrint() {
-\t\t\tbdhtml=window.document.body.innerHTML;
-\t\t\tsprnstr="<!--startprint-->";
-\t\t\teprnstr="<!--endprint-->";
-\t\t\tprnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+0);
-\t\t\tprnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));
-\t\t\twindow.document.body.innerHTML=prnhtml;
-\t\t\twindow.print();
-\t\t}
-\t</script>
-</html>
-{/if}`;
+            return template;
         }
 
         // 预览模板
