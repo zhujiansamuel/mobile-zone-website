@@ -15,6 +15,17 @@ class Index extends Base
     protected $noNeedRight = '*';
     //protected $layout = '';
 
+    public function _initialize()
+    {
+        // 编辑器相关方法不需要数据库初始化
+        $action = $this->request->action();
+        if (in_array($action, ['template_editor', 'get_template', 'save_template'])) {
+            // 跳过父类初始化
+            return;
+        }
+        parent::_initialize();
+    }
+
     public function index()
     {
     	//スライドショー
@@ -299,6 +310,8 @@ class Index extends Base
      */
     public function template_editor()
     {
+        // 禁用模板布局
+        $this->view->engine->layout(false);
         $this->view->assign('title', '買取申込書模板编辑器');
         return $this->view->fetch();
     }

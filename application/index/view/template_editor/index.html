@@ -301,7 +301,7 @@
         function loadTemplate() {
             showLoading();
             $.ajax({
-                url: '/index/index/get_template',
+                url: '/index/template_editor/get_template',
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -347,7 +347,7 @@
 
             showLoading();
             $.ajax({
-                url: '/index/index/save_template',
+                url: '/index/template_editor/save_template',
                 method: 'POST',
                 data: {
                     content: fullTemplate

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{php}echo isset($title) ? $title : '買取申込書模板编辑器';{/php}</title>
+    <title>買取申込書模板编辑器</title>
 
     <!-- GrapesJS CSS -->
     <link rel="stylesheet" href="https://unpkg.com/grapesjs/dist/css/grapes.min.css">
@@ -226,9 +226,7 @@
                     }
                 },
                 canvas: {
-                    styles: [
-                        // 保留原有样式
-                    ],
+                    styles: [],
                     scripts: [],
                 },
                 deviceManager: {
@@ -301,7 +299,7 @@
         function loadTemplate() {
             showLoading();
             $.ajax({
-                url: '/index/index/get_template',
+                url: '/index/template_editor/get_template',
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -347,7 +345,7 @@
 
             showLoading();
             $.ajax({
-                url: '/index/index/save_template',
+                url: '/index/template_editor/save_template',
                 method: 'POST',
                 data: {
                     content: fullTemplate
