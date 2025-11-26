@@ -265,10 +265,10 @@ class Index extends Base
     {
     	$order_id = $this->request->param('id');
     	$rt = $this->request->request('rt') ?: 0;
-    
+
     	$where = [];
     	$where['id'] = $order_id;
-        
+
         $order = Order::with('user,store,details')
         ->where($where)->order('id desc')->find();
 
@@ -284,7 +284,7 @@ class Index extends Base
             $diff = $today->diff(new \DateTime($user['birthday']));
             $age = $diff->y;
         }
-   
+
     	$this->view->assign('title', '申込書');
     	$this->view->assign('order', $order);
     	$this->view->assign('user', $user);
@@ -294,6 +294,56 @@ class Index extends Base
         return $this->view->fetch();
     }
 
-    
+    /*
+     * 模板编辑器 - 使用 GrapesJS
+     */
+    public function template_editor()
+    {
+        $this->view->assign('title', '買取申込書模板编辑器');
+        return $this->view->fetch();
+    }
+
+    /*
+     * 获取模板内容
+     */
+    public function get_template()
+    {
+        $template_file = APP_PATH . 'index/view/index/ylindex.html';
+        if (file_exists($template_file)) {
+            $content = file_get_contents($template_file);
+            return json(['code' => 1, 'data' => $content]);
+        } else {
+            return json(['code' => 0, 'msg' => '模板文件不存在']);
+        }
+    }
+
+    /*
+     * 保存模板内容
+     */
+    public function save_template()
+    {
+        if ($this->request->isPost()) {
+            $content = $this->request->post('content');
+            if (empty($content)) {
+                return json(['code' => 0, 'msg' => '内容不能为空']);
+            }
+
+            $template_file = APP_PATH . 'index/view/index/ylindex.html';
+
+            // 备份原文件
+            $backup_file = APP_PATH . 'index/view/index/ylindex.html.backup.' . date('YmdHis');
+            if (file_exists($template_file)) {
+                copy($template_file, $backup_file);
+            }
+
+            // 保存新内容
+            if (file_put_contents($template_file, $content)) {
+                return json(['code' => 1, 'msg' => '保存成功', 'backup' => basename($backup_file)]);
+            } else {
+                return json(['code' => 0, 'msg' => '保存失败']);
+            }
+        }
+        return json(['code' => 0, 'msg' => '非法请求']);
+    }
 
 }
