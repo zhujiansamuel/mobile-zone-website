@@ -18,5 +18,9 @@ return [
     'Status 0'        => '下架',
     'Set status to 0' => '设为下架',
     'Weigh'           => '排序',
-    'Createtime'      => '创建时间'
+    'Createtime'      => '创建时间',
+    'Bulk price management' => '批量价格管理',
+    'Updated %d items successfully' => '成功更新了 %d 个商品',
+    'Invalid parameters' => '参数无效',
+    'Invalid request' => '无效的请求'
 ];

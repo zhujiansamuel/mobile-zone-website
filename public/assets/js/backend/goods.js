@@ -98,5 +98,140 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         //obj为SelectPage对象
         return {custom: {pid: v}};
     });
+
+    // 批量价格管理
+    Controller.bulkprice = function() {
+        // 存储修改的价格
+        var modifiedPrices = {};
+
+        // 初始化表格
+        var table = $("#bulkprice-table");
+        table.bootstrapTable({
+            url: 'goods/bulkprice',
+            pk: 'id',
+            sortName: 'weigh',
+            pagination: true,
+            pageSize: 50,
+            pageList: [20, 50, 100, 200],
+            search: false,
+            showToggle: false,
+            showExport: false,
+            showColumns: false,
+            columns: [
+                [
+                    {field: 'id', title: 'ID', width: 60},
+                    {field: 'image', title: '图片', width: 80, formatter: function(value, row) {
+                        if (value) {
+                            var img = value.indexOf('http') === 0 ? value : '//' + value;
+                            return '<img src="' + img + '" style="max-width:50px;max-height:50px;">';
+                        }
+                        return '';
+                    }},
+                    {field: 'title', title: '商品标题', width: 200},
+                    {field: 'category.name', title: '分类', width: 100},
+                    {field: 'second.name', title: '二级分类', width: 100},
+                    {field: 'three.name', title: '三级分类', width: 100},
+                    {field: 'status', title: '状态', width: 80, formatter: function(value) {
+                        return value == 1 ? '<span class="label label-success">上架</span>' : '<span class="label label-default">下架</span>';
+                    }},
+                    {field: 'price', title: '参考价格', width: 120, formatter: function(value, row) {
+                        var val = value || 0;
+                        return '<input type="text" class="editable-price" data-id="' + row.id + '" data-field="price" value="' + val + '">';
+                    }},
+                    {field: 'price_zg', title: '中古价格', width: 120, formatter: function(value, row) {
+                        var val = value || 0;
+                        return '<input type="text" class="editable-price" data-id="' + row.id + '" data-field="price_zg" value="' + val + '">';
+                    }}
+                ]
+            ],
+            onLoadSuccess: function() {
+                // 绑定价格输入框事件
+                $('.editable-price').off('input').on('input', function() {
+                    var $input = $(this);
+                    var id = $input.data('id');
+                    var field = $input.data('field');
+                    var value = $input.val();
+
+                    // 标记为已修改
+                    if (!modifiedPrices[id]) {
+                        modifiedPrices[id] = {};
+                    }
+                    modifiedPrices[id][field] = value;
+
+                    // 添加视觉反馈
+                    $input.addClass('price-modified');
+                });
+            }
+        });
+
+        // 刷新按钮
+        $('.btn-refresh').on('click', function() {
+            table.bootstrapTable('refresh');
+            modifiedPrices = {};
+        });
+
+        // 批量保存按钮
+        $('.btn-save-all').on('click', function() {
+            if (Object.keys(modifiedPrices).length === 0) {
+                Layer.msg('没有需要保存的修改');
+                return;
+            }
+
+            Layer.confirm('确定要保存 ' + Object.keys(modifiedPrices).length + ' 个商品的价格修改吗？', function(index) {
+                Fast.api.ajax({
+                    url: 'goods/bulkupdate',
+                    data: {
+                        prices: modifiedPrices
+                    }
+                }, function(data, ret) {
+                    Layer.close(index);
+                    Layer.msg(ret.msg);
+                    modifiedPrices = {};
+                    table.bootstrapTable('refresh');
+                }, function(data, ret) {
+                    Layer.close(index);
+                    Layer.msg(ret.msg);
+                });
+            });
+        });
+
+        // 筛选功能
+        $('.btn-filter').on('click', function() {
+            var filter = {
+                'filter[title]': $('#filter-title').val(),
+                'filter[category_id]': $('#filter-category').val(),
+                'filter[status]': $('#filter-status').val()
+            };
+            table.bootstrapTable('refresh', {
+                query: filter
+            });
+        });
+
+        // 重置筛选
+        $('.btn-reset').on('click', function() {
+            $('#filter-title').val('');
+            $('#filter-category').val('');
+            $('#filter-status').val('');
+            table.bootstrapTable('refresh', {
+                query: {}
+            });
+        });
+
+        // 加载分类列表
+        $.ajax({
+            url: 'ajax/category',
+            dataType: 'json',
+            success: function(data) {
+                if (data && data.list) {
+                    var options = '<option value="">全部分类</option>';
+                    $.each(data.list, function(i, item) {
+                        options += '<option value="' + item.id + '">' + item.name + '</option>';
+                    });
+                    $('#filter-category').html(options);
+                }
+            }
+        });
+    };
+
     return Controller;
 });
