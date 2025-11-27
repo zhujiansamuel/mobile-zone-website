@@ -59,7 +59,42 @@ class Goods extends Backend
                 ->order($sort, $order)
                 ->paginate($limit);
 
-            $result = array("total" => $list->total(), "rows" => $list->items());
+            // 展开规格信息，每个规格作为一行
+            $expandedRows = [];
+            foreach ($list->items() as $item) {
+                $baseData = [
+                    'goods_id' => $item->id,
+                    'title' => $item->title,
+                    'image' => $item->image,
+                    'status' => $item->status,
+                    'category' => isset($item->category) ? ['name' => $item->category->name] : ['name' => ''],
+                    'second' => isset($item->second) ? ['name' => $item->second->name] : ['name' => ''],
+                    'three' => isset($item->three) ? ['name' => $item->three->name] : ['name' => ''],
+                ];
+
+                // 解析规格信息
+                $specInfo = json_decode($item->spec_info, true);
+                if (!empty($specInfo) && is_array($specInfo)) {
+                    foreach ($specInfo as $specIndex => $spec) {
+                        $expandedRows[] = array_merge($baseData, [
+                            'id' => $item->id . '_' . $specIndex,  // 组合ID：商品ID_规格索引
+                            'spec_index' => $specIndex,
+                            'spec_name' => isset($spec['name']) ? $spec['name'] : '',
+                            'price' => isset($spec['price']) ? $spec['price'] : 0,
+                        ]);
+                    }
+                } else {
+                    // 如果没有规格信息，显示空行
+                    $expandedRows[] = array_merge($baseData, [
+                        'id' => $item->id . '_0',
+                        'spec_index' => 0,
+                        'spec_name' => '',
+                        'price' => $item->price,
+                    ]);
+                }
+            }
+
+            $result = array("total" => count($expandedRows), "rows" => $expandedRows);
             return json($result);
         }
         return $this->view->fetch();
@@ -77,22 +112,57 @@ class Goods extends Backend
                 $this->error(__('Invalid parameters'));
             }
 
+            // 按商品ID分组价格数据
+            $goodsPrices = [];
+            foreach ($params['prices'] as $compositeId => $priceData) {
+                // 解析组合ID: goods_id_spec_index
+                $parts = explode('_', $compositeId);
+                if (count($parts) >= 2) {
+                    $specIndex = array_pop($parts);  // 最后一部分是规格索引
+                    $goodsId = implode('_', $parts); // 其余部分是商品ID
+
+                    if (!isset($goodsPrices[$goodsId])) {
+                        $goodsPrices[$goodsId] = [];
+                    }
+                    $goodsPrices[$goodsId][$specIndex] = $priceData;
+                }
+            }
+
             $count = 0;
             $this->model->startTrans();
             try {
-                foreach ($params['prices'] as $id => $priceData) {
-                    $update = [];
-                    if (isset($priceData['price']) && $priceData['price'] !== '') {
-                        $update['price'] = floatval($priceData['price']);
-                    }
-                    if (isset($priceData['price_zg']) && $priceData['price_zg'] !== '') {
-                        $update['price_zg'] = floatval($priceData['price_zg']);
+                foreach ($goodsPrices as $goodsId => $specs) {
+                    // 获取商品当前的spec_info
+                    $goods = $this->model->find($goodsId);
+                    if (!$goods) {
+                        continue;
                     }
 
-                    if (!empty($update)) {
-                        $this->model->where('id', $id)->update($update);
-                        $count++;
+                    $specInfo = json_decode($goods->spec_info, true);
+                    if (empty($specInfo)) {
+                        $specInfo = [];
                     }
+
+                    // 更新规格价格
+                    foreach ($specs as $specIndex => $priceData) {
+                        if (isset($priceData['price']) && $priceData['price'] !== '') {
+                            if (!isset($specInfo[$specIndex])) {
+                                $specInfo[$specIndex] = ['name' => '', 'price' => 0];
+                            }
+                            $specInfo[$specIndex]['price'] = floatval($priceData['price']);
+                        }
+                    }
+
+                    // 计算最高价格作为商品的参考价格
+                    $prices = array_column($specInfo, 'price');
+                    $maxPrice = $prices ? max($prices) : 0;
+
+                    // 更新商品
+                    $goods->spec_info = json_encode($specInfo, JSON_UNESCAPED_UNICODE);
+                    $goods->price = $maxPrice;
+                    $goods->save();
+
+                    $count++;
                 }
                 $this->model->commit();
                 $this->success(__('Updated %d items successfully', $count));

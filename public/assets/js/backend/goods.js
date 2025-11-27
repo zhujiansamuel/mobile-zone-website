@@ -109,7 +109,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         table.bootstrapTable({
             url: 'goods/bulkprice',
             pk: 'id',
-            sortName: 'weigh',
+            sortName: 'goods_id',
             pagination: true,
             pageSize: 50,
             pageList: [20, 50, 100, 200],
@@ -119,7 +119,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             showColumns: false,
             columns: [
                 [
-                    {field: 'id', title: 'ID', width: 60},
+                    {field: 'goods_id', title: '商品ID', width: 60},
                     {field: 'image', title: '图片', width: 80, formatter: function(value, row) {
                         if (value) {
                             var img = value.indexOf('http') === 0 ? value : '//' + value;
@@ -127,20 +127,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         }
                         return '';
                     }},
-                    {field: 'title', title: '商品标题', width: 200},
+                    {field: 'title', title: '商品标题', width: 250},
                     {field: 'category.name', title: '分类', width: 100},
-                    {field: 'second.name', title: '二级分类', width: 100},
-                    {field: 'three.name', title: '三级分类', width: 100},
-                    {field: 'status', title: '状态', width: 80, formatter: function(value) {
+                    {field: 'spec_name', title: '規格/色など', width: 150, formatter: function(value, row) {
+                        return '<span class="spec-name-highlight">' + (value || '') + '</span>';
+                    }},
+                    {field: 'status', title: '状态', width: 70, formatter: function(value) {
                         return value == 1 ? '<span class="label label-success">上架</span>' : '<span class="label label-default">下架</span>';
                     }},
-                    {field: 'price', title: '参考价格', width: 120, formatter: function(value, row) {
+                    {field: 'price', title: '价格', width: 120, formatter: function(value, row) {
                         var val = value || 0;
                         return '<input type="text" class="editable-price" data-id="' + row.id + '" data-field="price" value="' + val + '">';
-                    }},
-                    {field: 'price_zg', title: '中古价格', width: 120, formatter: function(value, row) {
-                        var val = value || 0;
-                        return '<input type="text" class="editable-price" data-id="' + row.id + '" data-field="price_zg" value="' + val + '">';
                     }}
                 ]
             ],
