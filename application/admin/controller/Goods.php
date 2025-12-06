@@ -51,51 +51,57 @@ class Goods extends Backend
     public function bulkprice()
     {
         if ($this->request->isAjax()) {
-            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            try {
+                list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
-            $list = $this->model
-                ->with(['category', 'second', 'three'])
-                ->where($where)
-                ->order($sort, $order)
-                ->paginate($limit);
+                $list = $this->model
+                    ->with(['category', 'second', 'three'])
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->paginate($limit);
 
-            // 展开规格信息，每个规格作为一行
-            $expandedRows = [];
-            foreach ($list->items() as $item) {
-                $baseData = [
-                    'goods_id' => $item->id,
-                    'title' => $item->title ?? '',
-                    'image' => $item->image ?? '',
-                    'status' => $item->status ?? '',
-                    'category' => ['name' => isset($item->category) && $item->category ? $item->category->name : ''],
-                    'second' => ['name' => isset($item->second) && $item->second ? $item->second->name : ''],
-                    'three' => ['name' => isset($item->three) && $item->three ? $item->three->name : ''],
-                ];
+                // 展开规格信息，每个规格作为一行
+                $expandedRows = [];
+                foreach ($list->items() as $item) {
+                    $baseData = [
+                        'goods_id' => $item->id,
+                        'title' => $item->title ?? '',
+                        'image' => $item->image ?? '',
+                        'status' => $item->status ?? '',
+                        'category' => ['name' => isset($item->category) && $item->category ? $item->category->name : ''],
+                        'second' => ['name' => isset($item->second) && $item->second ? $item->second->name : ''],
+                        'three' => ['name' => isset($item->three) && $item->three ? $item->three->name : ''],
+                    ];
 
-                // 解析规格信息
-                $specInfo = !empty($item->spec_info) ? json_decode($item->spec_info, true) : null;
-                if (!empty($specInfo) && is_array($specInfo)) {
-                    foreach ($specInfo as $specIndex => $spec) {
+                    // 解析规格信息
+                    $specInfo = !empty($item->spec_info) ? json_decode($item->spec_info, true) : null;
+                    if (!empty($specInfo) && is_array($specInfo)) {
+                        foreach ($specInfo as $specIndex => $spec) {
+                            $expandedRows[] = array_merge($baseData, [
+                                'id' => $item->id . '_' . $specIndex,  // 组合ID：商品ID_规格索引
+                                'spec_index' => $specIndex,
+                                'spec_name' => isset($spec['name']) ? $spec['name'] : '',
+                                'price' => isset($spec['price']) ? $spec['price'] : 0,
+                            ]);
+                        }
+                    } else {
+                        // 如果没有规格信息，显示空行
                         $expandedRows[] = array_merge($baseData, [
-                            'id' => $item->id . '_' . $specIndex,  // 组合ID：商品ID_规格索引
-                            'spec_index' => $specIndex,
-                            'spec_name' => isset($spec['name']) ? $spec['name'] : '',
-                            'price' => isset($spec['price']) ? $spec['price'] : 0,
+                            'id' => $item->id . '_0',
+                            'spec_index' => 0,
+                            'spec_name' => '',
+                            'price' => $item->price ?? 0,
                         ]);
                     }
-                } else {
-                    // 如果没有规格信息，显示空行
-                    $expandedRows[] = array_merge($baseData, [
-                        'id' => $item->id . '_0',
-                        'spec_index' => 0,
-                        'spec_name' => '',
-                        'price' => $item->price ?? 0,
-                    ]);
                 }
-            }
 
-            $result = array("total" => $list->total(), "rows" => $expandedRows);
-            return json($result);
+                $result = array("total" => $list->total(), "rows" => $expandedRows);
+                return json($result);
+            } catch (\Exception $e) {
+                // 记录错误日志
+                \think\Log::error('bulkprice error: ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
+                return json(['error' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()], 500);
+            }
         }
         return $this->view->fetch();
     }
