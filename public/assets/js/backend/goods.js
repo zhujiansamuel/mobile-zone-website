@@ -217,15 +217,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             var categoryId = $('#filter-category').val();
             var status = $('#filter-status').val();
 
+            // 构建filter对象
+            var filterObj = {};
+            var opObj = {};
+
             if (title) {
-                filterParams['filter[title]'] = title;
-                filterParams['op[title]'] = 'LIKE';
+                filterObj['title'] = title;
+                opObj['title'] = 'LIKE';
             }
             if (categoryId) {
-                filterParams['filter[category_id]'] = categoryId;
+                filterObj['category_id'] = categoryId;
             }
             if (status) {
-                filterParams['filter[status]'] = status;
+                filterObj['status'] = status;
+            }
+
+            // 将filter和op转换为JSON字符串
+            if (Object.keys(filterObj).length > 0) {
+                filterParams['filter'] = JSON.stringify(filterObj);
+            }
+            if (Object.keys(opObj).length > 0) {
+                filterParams['op'] = JSON.stringify(opObj);
             }
 
             console.log('Filter params:', filterParams);
