@@ -101,11 +101,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
     // 批量价格管理
     Controller.bulkprice = function() {
+        console.log('bulkprice function called');
         // 存储修改的价格
         var modifiedPrices = {};
 
         // 初始化表格
         var table = $("#bulkprice-table");
+        console.log('Table element found:', table.length);
         table.bootstrapTable({
             url: 'goods/bulkprice',
             pk: 'id',
@@ -139,7 +141,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     return '<input type="text" class="editable-price" data-id="' + row.id + '" data-field="price" value="' + val + '">';
                 }}
             ],
-            onLoadSuccess: function() {
+            onLoadSuccess: function(data) {
+                console.log('Table loaded successfully, rows:', data.rows ? data.rows.length : 0);
+                console.log('Total:', data.total);
                 // 绑定价格输入框事件
                 $('.editable-price').off('input').on('input', function() {
                     var $input = $(this);
