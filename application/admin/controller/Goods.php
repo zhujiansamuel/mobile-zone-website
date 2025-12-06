@@ -53,15 +53,21 @@ class Goods extends Backend
         if ($this->request->isAjax()) {
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
+            $total = $this->model
+                ->with(['category', 'second', 'three'])
+                ->where($where)
+                ->count();
+
             $list = $this->model
                 ->with(['category', 'second', 'three'])
                 ->where($where)
                 ->order($sort, $order)
-                ->paginate($limit);
+                ->limit($offset, $limit)
+                ->select();
 
             // 展开规格信息，每个规格作为一行
             $expandedRows = [];
-            foreach ($list->items() as $item) {
+            foreach ($list as $item) {
                 $baseData = [
                     'goods_id' => $item->id,
                     'title' => $item->title,
@@ -80,21 +86,21 @@ class Goods extends Backend
                             'id' => $item->id . '_' . $specIndex,  // 组合ID：商品ID_规格索引
                             'spec_index' => $specIndex,
                             'spec_name' => isset($spec['name']) ? $spec['name'] : '',
-                            'price' => isset($spec['price']) ? $spec['price'] : 0,
+                            'price' => isset($spec['price']) ? floatval($spec['price']) : 0,
                         ]);
                     }
                 } else {
-                    // 如果没有规格信息，显示空行
+                    // 如果没有规格信息，显示商品本身的价格
                     $expandedRows[] = array_merge($baseData, [
                         'id' => $item->id . '_0',
                         'spec_index' => 0,
                         'spec_name' => '',
-                        'price' => $item->price,
+                        'price' => floatval($item->price),
                     ]);
                 }
             }
 
-            $result = array("total" => count($expandedRows), "rows" => $expandedRows);
+            $result = array("total" => $total, "rows" => $expandedRows);
             return json($result);
         }
         return $this->view->fetch();
