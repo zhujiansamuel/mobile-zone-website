@@ -104,6 +104,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         console.log('bulkprice function called');
         // 存储修改的价格
         var modifiedPrices = {};
+        // 存储筛选条件
+        var filterParams = {};
 
         // 初始化表格
         var table = $("#bulkprice-table");
@@ -122,6 +124,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             sidePagination: 'server',
             queryParams: function(params) {
                 console.log('Query params:', params);
+                // 添加筛选参数
+                $.extend(params, filterParams);
+                console.log('Final params with filters:', params);
                 return params;
             },
             responseHandler: function(res) {
@@ -205,14 +210,27 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
         // 筛选功能
         $('.btn-filter').on('click', function() {
-            var filter = {
-                'filter[title]': $('#filter-title').val(),
-                'filter[category_id]': $('#filter-category').val(),
-                'filter[status]': $('#filter-status').val()
-            };
-            table.bootstrapTable('refresh', {
-                query: filter
-            });
+            // 更新筛选参数
+            filterParams = {};
+
+            var title = $('#filter-title').val();
+            var categoryId = $('#filter-category').val();
+            var status = $('#filter-status').val();
+
+            if (title) {
+                filterParams['filter[title]'] = title;
+                filterParams['op[title]'] = 'LIKE';
+            }
+            if (categoryId) {
+                filterParams['filter[category_id]'] = categoryId;
+            }
+            if (status) {
+                filterParams['filter[status]'] = status;
+            }
+
+            console.log('Filter params:', filterParams);
+            // 刷新表格
+            table.bootstrapTable('refresh');
         });
 
         // 重置筛选
@@ -220,9 +238,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('#filter-title').val('');
             $('#filter-category').val('');
             $('#filter-status').val('');
-            table.bootstrapTable('refresh', {
-                query: {}
-            });
+            // 清空筛选参数
+            filterParams = {};
+            // 刷新表格
+            table.bootstrapTable('refresh');
         });
 
         // 加载分类列表（树形结构，仅商品分类）
