@@ -119,6 +119,15 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             showToggle: false,
             showExport: false,
             showColumns: false,
+            sidePagination: 'server',
+            queryParams: function(params) {
+                console.log('Query params:', params);
+                return params;
+            },
+            responseHandler: function(res) {
+                console.log('Response handler called, data:', res);
+                return res;
+            },
             columns: [
                 {field: 'goods_id', title: '商品ID', width: 60, sortable: true},
                 {field: 'image', title: '图片', width: 80, formatter: function(value, row) {
