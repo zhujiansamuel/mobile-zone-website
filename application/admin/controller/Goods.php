@@ -54,6 +54,11 @@ class Goods extends Backend
             try {
                 list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
+                // 字段映射：前端使用goods_id，但数据库中是id
+                if ($sort === 'goods_id') {
+                    $sort = 'id';
+                }
+
                 $list = $this->model
                     ->with(['category', 'second', 'three'])
                     ->where($where)
