@@ -225,17 +225,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             });
         });
 
-        // 加载分类列表
+        // 加载分类列表（树形结构，仅商品分类）
         $.ajax({
             url: 'ajax/category',
+            data: {
+                type: 'goods',  // 仅加载商品分类
+                tree: '1'       // 返回树形结构
+            },
             dataType: 'json',
             success: function(res) {
                 console.log('Category response:', res);
                 if (res && res.code == 1 && res.data) {
                     var options = '<option value="">全部分类</option>';
                     $.each(res.data, function(i, item) {
-                        // Ajax返回的字段名是value和name，需要映射到id和name
-                        options += '<option value="' + (item.value || item.id) + '">' + item.name + '</option>';
+                        // Ajax返回的字段名是value和name
+                        options += '<option value="' + item.value + '">' + item.name + '</option>';
                     });
                     $('#filter-category').html(options);
                 } else {
