@@ -48,129 +48,132 @@ class Goods extends Backend
     /**
      * 批量价格管理页面
      */
-    public function batch_price()
+    public function bulkprice()
     {
         if ($this->request->isAjax()) {
-            // 获取筛选条件
-            $filter = $this->request->get("filter", '');
-            $filter = json_decode($filter, true);
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
-            $where = [];
-
-            // 按分类筛选
-            if (isset($filter['category_id']) && $filter['category_id']) {
-                $where['category_id'] = $filter['category_id'];
-            }
-
-            // 按标题搜索
-            if (isset($filter['title']) && $filter['title']) {
-                $where['title'] = ['like', '%' . $filter['title'] . '%'];
-            }
-
-            // 按状态筛选
-            if (isset($filter['status']) && $filter['status'] !== '') {
-                $where['status'] = $filter['status'];
-            }
-
-            // 获取商品列表
             $list = $this->model
+                ->with(['category', 'second', 'three'])
                 ->where($where)
-                ->order('id', 'desc')
-                ->select();
+                ->order($sort, $order)
+                ->paginate($limit);
 
-            // 处理数据，展开spec_info
-            $result = [];
-            foreach ($list as $goods) {
-                $spec_info = $goods['spec_info'] ? json_decode($goods['spec_info'], true) : [];
-
-                // 添加基础价格
-                $result[] = [
-                    'id' => $goods['id'],
-                    'goods_id' => $goods['id'],
-                    'title' => $goods['title'],
-                    'jan' => $goods['jan'],
-                    'spec_name' => '基础价格',
-                    'spec_index' => -1,
-                    'price_type' => 'base',
-                    'price' => $goods['price'],
-                    'color' => '',
-                    'image' => $goods['image'],
+            // 展开规格信息，每个规格作为一行
+            $expandedRows = [];
+            foreach ($list->items() as $item) {
+                $baseData = [
+                    'goods_id' => $item->id,
+                    'title' => $item->title,
+                    'image' => $item->image,
+                    'status' => $item->status,
+                    'category' => isset($item->category) ? ['name' => $item->category->name] : ['name' => ''],
+                    'second' => isset($item->second) ? ['name' => $item->second->name] : ['name' => ''],
+                    'three' => isset($item->three) ? ['name' => $item->three->name] : ['name' => ''],
                 ];
 
-                // 添加规格价格
-                if ($spec_info) {
-                    foreach ($spec_info as $index => $spec) {
-                        $result[] = [
-                            'id' => $goods['id'] . '_spec_' . $index,
-                            'goods_id' => $goods['id'],
-                            'title' => $goods['title'],
-                            'jan' => $goods['jan'],
-                            'spec_name' => $spec['specs_name'] . ' - ' . $spec['color'],
-                            'spec_index' => $index,
-                            'price_type' => 'spec',
-                            'price' => $spec['price'],
-                            'color' => $spec['color'],
-                            'image' => $goods['image'],
-                        ];
+                // 解析规格信息
+                $specInfo = json_decode($item->spec_info, true);
+                if (!empty($specInfo) && is_array($specInfo)) {
+                    foreach ($specInfo as $specIndex => $spec) {
+                        $expandedRows[] = array_merge($baseData, [
+                            'id' => $item->id . '_' . $specIndex,  // 组合ID：商品ID_规格索引
+                            'spec_index' => $specIndex,
+                            'spec_name' => isset($spec['name']) ? $spec['name'] : '',
+                            'price' => isset($spec['price']) ? $spec['price'] : 0,
+                        ]);
                     }
+                } else {
+                    // 如果没有规格信息，显示空行
+                    $expandedRows[] = array_merge($baseData, [
+                        'id' => $item->id . '_0',
+                        'spec_index' => 0,
+                        'spec_name' => '',
+                        'price' => $item->price,
+                    ]);
                 }
             }
 
-            return json(['code' => 1, 'msg' => '', 'data' => $result, 'count' => count($result)]);
+            $result = array("total" => count($expandedRows), "rows" => $expandedRows);
+            return json($result);
         }
-
-        // 获取商品分类
-        $categoryList = db('category')->where('type', 'goods')->order('weigh desc')->select();
-        $this->view->assign('categoryList', $categoryList);
-
         return $this->view->fetch();
     }
 
     /**
      * 批量更新价格
      */
-    public function batch_update_price()
+    public function bulkupdate()
     {
         if ($this->request->isPost()) {
-            $prices = $this->request->post('prices/a');
+            $params = $this->request->post();
 
-            if (empty($prices)) {
-                $this->error('没有价格数据');
+            if (empty($params['prices']) || !is_array($params['prices'])) {
+                $this->error(__('Invalid parameters'));
             }
 
-            db()->startTrans();
+            // 按商品ID分组价格数据
+            $goodsPrices = [];
+            foreach ($params['prices'] as $compositeId => $priceData) {
+                // 解析组合ID: goods_id_spec_index
+                $parts = explode('_', $compositeId);
+                if (count($parts) >= 2) {
+                    $specIndex = array_pop($parts);  // 最后一部分是规格索引
+                    $goodsId = implode('_', $parts); // 其余部分是商品ID
+
+                    if (!isset($goodsPrices[$goodsId])) {
+                        $goodsPrices[$goodsId] = [];
+                    }
+                    $goodsPrices[$goodsId][$specIndex] = $priceData;
+                }
+            }
+
+            $count = 0;
+            $this->model->startTrans();
             try {
-                foreach ($prices as $item) {
-                    $goods_id = $item['goods_id'];
-                    $price_type = $item['price_type'];
-                    $new_price = $item['price'];
+                foreach ($goodsPrices as $goodsId => $specs) {
+                    // 获取商品当前的spec_info
+                    $goods = $this->model->find($goodsId);
+                    if (!$goods) {
+                        continue;
+                    }
 
-                    if ($price_type == 'base') {
-                        // 更新基础价格
-                        db('goods')->where('id', $goods_id)->update(['price' => $new_price]);
-                    } elseif ($price_type == 'spec') {
-                        // 更新规格价格
-                        $spec_index = $item['spec_index'];
-                        $goods = db('goods')->where('id', $goods_id)->find();
-                        $spec_info = json_decode($goods['spec_info'], true);
+                    $specInfo = json_decode($goods->spec_info, true);
+                    if (empty($specInfo)) {
+                        $specInfo = [];
+                    }
 
-                        if (isset($spec_info[$spec_index])) {
-                            $spec_info[$spec_index]['price'] = $new_price;
-                            db('goods')->where('id', $goods_id)->update(['spec_info' => json_encode($spec_info)]);
+                    // 更新规格价格
+                    foreach ($specs as $specIndex => $priceData) {
+                        if (isset($priceData['price']) && $priceData['price'] !== '') {
+                            if (!isset($specInfo[$specIndex])) {
+                                $specInfo[$specIndex] = ['name' => '', 'price' => 0];
+                            }
+                            $specInfo[$specIndex]['price'] = floatval($priceData['price']);
                         }
                     }
-                }
 
-                db()->commit();
-                $this->success('价格更新成功');
+                    // 计算最高价格作为商品的参考价格
+                    $prices = array_column($specInfo, 'price');
+                    $maxPrice = $prices ? max($prices) : 0;
+
+                    // 更新商品
+                    $goods->spec_info = json_encode($specInfo, JSON_UNESCAPED_UNICODE);
+                    $goods->price = $maxPrice;
+                    $goods->save();
+
+                    $count++;
+                }
+                $this->model->commit();
+                $this->success(__('Updated %d items successfully', $count));
             } catch (\Exception $e) {
-                db()->rollback();
-                $this->error('更新失败：' . $e->getMessage());
+                $this->model->rollback();
+                $this->error($e->getMessage());
             }
         }
-
-        $this->error('非法请求');
+        $this->error(__('Invalid request'));
     }
+
 
 
 }
