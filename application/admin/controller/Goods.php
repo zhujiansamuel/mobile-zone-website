@@ -52,7 +52,8 @@ class Goods extends Backend
     {
         if ($this->request->isAjax()) {
             try {
-                list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+                // 启用关联查询模式
+                list($where, $sort, $order, $offset, $limit) = $this->buildparams(null, true);
 
                 // 字段映射：前端使用goods_id，但数据库中是id
                 if ($sort === 'goods_id') {
