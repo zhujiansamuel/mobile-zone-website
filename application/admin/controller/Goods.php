@@ -53,54 +53,48 @@ class Goods extends Backend
         if ($this->request->isAjax()) {
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
 
-            $total = $this->model
-                ->with(['category', 'second', 'three'])
-                ->where($where)
-                ->count();
-
             $list = $this->model
                 ->with(['category', 'second', 'three'])
                 ->where($where)
                 ->order($sort, $order)
-                ->limit($offset, $limit)
-                ->select();
+                ->paginate($limit);
 
             // 展开规格信息，每个规格作为一行
             $expandedRows = [];
-            foreach ($list as $item) {
+            foreach ($list->items() as $item) {
                 $baseData = [
                     'goods_id' => $item->id,
-                    'title' => $item->title,
-                    'image' => $item->image,
-                    'status' => $item->status,
-                    'category' => isset($item->category) ? ['name' => $item->category->name] : ['name' => ''],
-                    'second' => isset($item->second) ? ['name' => $item->second->name] : ['name' => ''],
-                    'three' => isset($item->three) ? ['name' => $item->three->name] : ['name' => ''],
+                    'title' => $item->title ?? '',
+                    'image' => $item->image ?? '',
+                    'status' => $item->status ?? '',
+                    'category' => ['name' => isset($item->category) && $item->category ? $item->category->name : ''],
+                    'second' => ['name' => isset($item->second) && $item->second ? $item->second->name : ''],
+                    'three' => ['name' => isset($item->three) && $item->three ? $item->three->name : ''],
                 ];
 
                 // 解析规格信息
-                $specInfo = json_decode($item->spec_info, true);
+                $specInfo = !empty($item->spec_info) ? json_decode($item->spec_info, true) : null;
                 if (!empty($specInfo) && is_array($specInfo)) {
                     foreach ($specInfo as $specIndex => $spec) {
                         $expandedRows[] = array_merge($baseData, [
                             'id' => $item->id . '_' . $specIndex,  // 组合ID：商品ID_规格索引
                             'spec_index' => $specIndex,
                             'spec_name' => isset($spec['name']) ? $spec['name'] : '',
-                            'price' => isset($spec['price']) ? floatval($spec['price']) : 0,
+                            'price' => isset($spec['price']) ? $spec['price'] : 0,
                         ]);
                     }
                 } else {
-                    // 如果没有规格信息，显示商品本身的价格
+                    // 如果没有规格信息，显示空行
                     $expandedRows[] = array_merge($baseData, [
                         'id' => $item->id . '_0',
                         'spec_index' => 0,
                         'spec_name' => '',
-                        'price' => floatval($item->price),
+                        'price' => $item->price,
                     ]);
                 }
             }
 
-            $result = array("total" => $total, "rows" => $expandedRows);
+            $result = array("total" => count($expandedRows), "rows" => $expandedRows);
             return json($result);
         }
         return $this->view->fetch();
