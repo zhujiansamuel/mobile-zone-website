@@ -64,16 +64,16 @@ class Goods extends Backend
             foreach ($list->items() as $item) {
                 $baseData = [
                     'goods_id' => $item->id,
-                    'title' => $item->title,
-                    'image' => $item->image,
-                    'status' => $item->status,
-                    'category' => isset($item->category) ? ['name' => $item->category->name] : ['name' => ''],
-                    'second' => isset($item->second) ? ['name' => $item->second->name] : ['name' => ''],
-                    'three' => isset($item->three) ? ['name' => $item->three->name] : ['name' => ''],
+                    'title' => $item->title ?? '',
+                    'image' => $item->image ?? '',
+                    'status' => $item->status ?? '',
+                    'category' => ['name' => isset($item->category) && $item->category ? $item->category->name : ''],
+                    'second' => ['name' => isset($item->second) && $item->second ? $item->second->name : ''],
+                    'three' => ['name' => isset($item->three) && $item->three ? $item->three->name : ''],
                 ];
 
                 // 解析规格信息
-                $specInfo = json_decode($item->spec_info, true);
+                $specInfo = !empty($item->spec_info) ? json_decode($item->spec_info, true) : null;
                 if (!empty($specInfo) && is_array($specInfo)) {
                     foreach ($specInfo as $specIndex => $spec) {
                         $expandedRows[] = array_merge($baseData, [
@@ -89,12 +89,12 @@ class Goods extends Backend
                         'id' => $item->id . '_0',
                         'spec_index' => 0,
                         'spec_name' => '',
-                        'price' => $item->price,
+                        'price' => $item->price ?? 0,
                     ]);
                 }
             }
 
-            $result = array("total" => count($expandedRows), "rows" => $expandedRows);
+            $result = array("total" => $list->total(), "rows" => $expandedRows);
             return json($result);
         }
         return $this->view->fetch();
