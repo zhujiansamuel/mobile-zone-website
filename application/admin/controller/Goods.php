@@ -56,8 +56,11 @@ class Goods extends Backend
                 list($where, $sort, $order, $offset, $limit) = $this->buildparams(null, true);
 
                 // 字段映射：前端使用goods_id，但数据库中是id
+                // 需要处理带表别名的情况（goods.goods_id -> goods.id）
                 if ($sort === 'goods_id') {
                     $sort = 'id';
+                } elseif ($sort === 'goods.goods_id') {
+                    $sort = 'goods.id';
                 }
 
                 $list = $this->model
