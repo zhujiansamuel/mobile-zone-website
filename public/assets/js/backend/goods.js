@@ -229,14 +229,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         $.ajax({
             url: 'ajax/category',
             dataType: 'json',
-            success: function(data) {
-                if (data && data.list) {
+            success: function(res) {
+                console.log('Category response:', res);
+                if (res && res.code == 1 && res.data) {
                     var options = '<option value="">全部分类</option>';
-                    $.each(data.list, function(i, item) {
-                        options += '<option value="' + item.id + '">' + item.name + '</option>';
+                    $.each(res.data, function(i, item) {
+                        // Ajax返回的字段名是value和name，需要映射到id和name
+                        options += '<option value="' + (item.value || item.id) + '">' + item.name + '</option>';
                     });
                     $('#filter-category').html(options);
+                } else {
+                    console.error('Failed to load categories:', res);
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('Ajax error loading categories:', error);
             }
         });
     };
