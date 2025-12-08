@@ -12,8 +12,8 @@ use app\admin\model\Goods as GoodsModel;
 class GoodsPrice extends Api
 {
     // 所有接口都需要登录认证（需要提供token）
-    // gettoken 和 listusers 方法不需要登录，用于获取测试token
-    protected $noNeedLogin = ['gettoken', 'listusers'];
+    // gettoken、listusers 和 createtestuser 方法不需要登录，用于获取测试token
+    protected $noNeedLogin = ['gettoken', 'listusers', 'createtestuser'];
     protected $noNeedRight = '*';
 
     protected $model = null;
@@ -445,24 +445,103 @@ class GoodsPrice extends Api
      */
     public function listusers()
     {
-        // 先查询所有用户（不过滤状态）
-        $allUsers = \app\common\model\User::limit(10)->select();
+        // 查询 fa_user 表中的用户
+        $users = \app\common\model\User::limit(10)->select();
+        $userCount = \app\common\model\User::count();
 
-        // 再查询状态为 normal 的用户
-        $normalUsers = \app\common\model\User::where('status', 'normal')
-            ->field('id, username, email, mobile, status')
-            ->limit(10)
-            ->select();
-
-        // 获取用户总数
-        $totalCount = \app\common\model\User::count();
+        // 查询 fa_admin 表中的管理员
+        $admins = \app\admin\model\Admin::limit(10)->select();
+        $adminCount = \app\admin\model\Admin::count();
 
         $this->success('获取成功', [
-            'total_users' => $totalCount,
-            'all_users' => $allUsers ? $allUsers->toArray() : [],
-            'normal_users' => $normalUsers ? $normalUsers->toArray() : [],
-            'tip' => '请使用任意用户的 id 访问 /api/goodsprice/gettoken?user_id=X 来获取token',
-            'note' => '如果 normal_users 为空，请使用 all_users 中的任意用户ID获取token'
+            'fa_user' => [
+                'count' => $userCount,
+                'list' => $users ? $users->toArray() : [],
+                'tip' => '这些是前台用户，可用于生成token'
+            ],
+            'fa_admin' => [
+                'count' => $adminCount,
+                'list' => $admins ? $admins->toArray() : [],
+                'tip' => '这些是后台管理员，但API认证系统只支持fa_user表的用户'
+            ],
+            'usage' => '请使用 fa_user 中的任意用户 id 访问 /api/goodsprice/gettoken?user_id=X 来获取token',
+            'note' => '如果 fa_user 为空，可以访问 /api/goodsprice/createtestuser 创建测试用户'
         ]);
+    }
+
+    /**
+     * 创建测试用户（仅用于开发测试）
+     *
+     * @ApiMethod (POST)
+     * @ApiRoute  (/api/goodsprice/createtestuser)
+     * @ApiParams (name="username", type="string", required=false, description="用户名，默认为testuser")
+     * @ApiParams (name="password", type="string", required=false, description="密码，默认为123456")
+     * @ApiParams (name="email", type="string", required=false, description="邮箱，默认为test@test.com")
+     *
+     * @ApiReturn ({
+     *   "code": 1,
+     *   "msg": "测试用户创建成功",
+     *   "time": "1638000000",
+     *   "data": {
+     *     "user_id": 1,
+     *     "username": "testuser",
+     *     "email": "test@test.com"
+     *   }
+     * })
+     */
+    public function createtestuser()
+    {
+        $username = $this->request->param('username', 'testuser_' . time());
+        $password = $this->request->param('password', '123456');
+        $email = $this->request->param('email', 'test_' . time() . '@test.com');
+
+        // 检查用户名是否已存在
+        $existUser = \app\common\model\User::where('username', $username)->find();
+        if ($existUser) {
+            $this->error('用户名已存在，请使用其他用户名或不传username参数（将自动生成）');
+        }
+
+        // 检查邮箱是否已存在
+        $existEmail = \app\common\model\User::where('email', $email)->find();
+        if ($existEmail) {
+            $this->error('邮箱已存在，请使用其他邮箱或不传email参数（将自动生成）');
+        }
+
+        try {
+            $salt = \fast\Random::alnum();
+            $encryptPassword = md5(md5($password) . $salt);
+
+            $userData = [
+                'username' => $username,
+                'nickname' => $username,
+                'password' => $encryptPassword,
+                'email' => $email,
+                'mobile' => '',
+                'salt' => $salt,
+                'avatar' => '',
+                'level' => 1,
+                'score' => 0,
+                'successions' => 1,
+                'maxsuccessions' => 1,
+                'logintime' => time(),
+                'loginip' => request()->ip(),
+                'jointime' => time(),
+                'joinip' => request()->ip(),
+                'prevtime' => time(),
+                'status' => 'normal'
+            ];
+
+            $user = \app\common\model\User::create($userData);
+
+            $this->success('测试用户创建成功', [
+                'user_id' => $user->id,
+                'username' => $user->username,
+                'email' => $user->email,
+                'password' => $password,
+                'next_step' => '请访问 /api/goodsprice/gettoken?user_id=' . $user->id . ' 获取token'
+            ]);
+        } catch (\Exception $e) {
+            $this->error('创建失败：' . $e->getMessage());
+        }
     }
 }
