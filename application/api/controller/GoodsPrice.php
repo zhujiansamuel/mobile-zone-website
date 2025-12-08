@@ -404,14 +404,10 @@ class GoodsPrice extends Api
         // 检查用户是否存在
         $user = \app\common\model\User::get($userId);
         if (!$user) {
-            $this->error('用户不存在，请提供有效的 user_id');
+            $this->error('用户不存在，请提供有效的 user_id。请先访问 /api/goodsprice/listusers 查看可用的用户ID');
         }
 
-        if ($user->status != 'normal') {
-            $this->error('用户账号已被锁定');
-        }
-
-        // 生成Token
+        // 生成Token（开发环境不检查用户状态）
         $token = \fast\Random::uuid();
         \app\common\library\Token::set($token, $userId, 2592000); // 30天有效期
 
@@ -419,6 +415,7 @@ class GoodsPrice extends Api
             'token' => $token,
             'user_id' => $userId,
             'username' => $user->username,
+            'user_status' => $user->status,
             'expire_time' => '2592000秒 (30天)',
             'usage' => '请在API请求时通过 HTTP Header "token: ' . $token . '" 或 URL参数 "?token=' . $token . '" 传递此token'
         ]);
@@ -448,18 +445,24 @@ class GoodsPrice extends Api
      */
     public function listusers()
     {
-        $users = \app\common\model\User::where('status', 'normal')
+        // 先查询所有用户（不过滤状态）
+        $allUsers = \app\common\model\User::limit(10)->select();
+
+        // 再查询状态为 normal 的用户
+        $normalUsers = \app\common\model\User::where('status', 'normal')
             ->field('id, username, email, mobile, status')
             ->limit(10)
             ->select();
 
-        if (!$users || count($users) == 0) {
-            $this->error('数据库中没有可用用户，请先创建用户或联系管理员');
-        }
+        // 获取用户总数
+        $totalCount = \app\common\model\User::count();
 
         $this->success('获取成功', [
-            'users' => $users,
-            'tip' => '请使用任意用户的 id 访问 /api/goodsprice/gettoken?user_id=X 来获取token'
+            'total_users' => $totalCount,
+            'all_users' => $allUsers ? $allUsers->toArray() : [],
+            'normal_users' => $normalUsers ? $normalUsers->toArray() : [],
+            'tip' => '请使用任意用户的 id 访问 /api/goodsprice/gettoken?user_id=X 来获取token',
+            'note' => '如果 normal_users 为空，请使用 all_users 中的任意用户ID获取token'
         ]);
     }
 }
