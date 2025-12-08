@@ -12,7 +12,8 @@ use app\admin\model\Goods as GoodsModel;
 class GoodsPrice extends Api
 {
     // 所有接口都需要登录认证（需要提供token）
-    protected $noNeedLogin = [];
+    // gettoken 和 listusers 方法不需要登录，用于获取测试token
+    protected $noNeedLogin = ['gettoken', 'listusers'];
     protected $noNeedRight = '*';
 
     protected $model = null;
@@ -376,5 +377,89 @@ class GoodsPrice extends Api
             $this->model->rollback();
             $this->error('更新失败：' . $e->getMessage());
         }
+    }
+
+    /**
+     * 获取测试Token（仅用于开发测试）
+     *
+     * @ApiMethod (GET)
+     * @ApiRoute  (/api/goodsprice/gettoken)
+     * @ApiParams (name="user_id", type="int", required=false, description="用户ID，默认为1")
+     *
+     * @ApiReturn ({
+     *   "code": 1,
+     *   "msg": "Token获取成功",
+     *   "time": "1638000000",
+     *   "data": {
+     *     "token": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+     *     "user_id": 1,
+     *     "expire_time": "2592000秒 (30天)"
+     *   }
+     * })
+     */
+    public function gettoken()
+    {
+        $userId = $this->request->param('user_id/d', 1);
+
+        // 检查用户是否存在
+        $user = \app\common\model\User::get($userId);
+        if (!$user) {
+            $this->error('用户不存在，请提供有效的 user_id');
+        }
+
+        if ($user->status != 'normal') {
+            $this->error('用户账号已被锁定');
+        }
+
+        // 生成Token
+        $token = \fast\Random::uuid();
+        \app\common\library\Token::set($token, $userId, 2592000); // 30天有效期
+
+        $this->success('Token获取成功', [
+            'token' => $token,
+            'user_id' => $userId,
+            'username' => $user->username,
+            'expire_time' => '2592000秒 (30天)',
+            'usage' => '请在API请求时通过 HTTP Header "token: ' . $token . '" 或 URL参数 "?token=' . $token . '" 传递此token'
+        ]);
+    }
+
+    /**
+     * 列出所有可用用户（仅用于开发测试）
+     *
+     * @ApiMethod (GET)
+     * @ApiRoute  (/api/goodsprice/listusers)
+     *
+     * @ApiReturn ({
+     *   "code": 1,
+     *   "msg": "获取成功",
+     *   "time": "1638000000",
+     *   "data": {
+     *     "users": [
+     *       {
+     *         "id": 1,
+     *         "username": "admin",
+     *         "email": "admin@example.com",
+     *         "status": "normal"
+     *       }
+     *     ]
+     *   }
+     * })
+     */
+    public function listusers()
+    {
+        $users = \app\common\model\User::where('status', 'normal')
+            ->field('id, username, email, mobile, status')
+            ->limit(10)
+            ->select();
+
+        if (!$users || count($users) == 0) {
+            $this->error('数据库中没有可用用户，请先创建用户或联系管理员');
+        }
+
+        $this->success('获取成功', [
+            'users' => $users,
+            'tip' => '请使用任意用户的 id 访问 /api/goodsprice/gettoken?user_id=X 来获取token'
+        ]);
     }
 }
