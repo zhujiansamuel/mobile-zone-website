@@ -52,6 +52,8 @@ class GoodsPrice extends Api
      *         "title": "iPhone 13",
      *         "image": "/uploads/xxx.jpg",
      *         "category_name": "手机",
+     *         "category_second_name": "智能手机",
+     *         "category_three_name": "苹果手机",
      *         "status": 1,
      *         "spec_index": 0,
      *         "spec_name": "128GB 黑色",
@@ -85,9 +87,9 @@ class GoodsPrice extends Api
             $where[] = ['id', '=', $goodsId];
         }
 
-        // 查询商品
+        // 查询商品（包含三级分类）
         $list = $this->model
-            ->with(['category'])
+            ->with(['category', 'second', 'three'])
             ->where($where)
             ->order('id', 'desc')
             ->paginate($limit, false, ['page' => $page]);
@@ -100,6 +102,8 @@ class GoodsPrice extends Api
                 'title' => $item->title,
                 'image' => $item->image ? cdnurl($item->image, true) : '',
                 'category_name' => isset($item->category) ? $item->category->name : '',
+                'category_second_name' => isset($item->second) ? $item->second->name : '',
+                'category_three_name' => isset($item->three) ? $item->three->name : '',
                 'status' => $item->status,
                 'status_text' => $item->status == 1 ? '上架' : '下架',
             ];
@@ -151,6 +155,11 @@ class GoodsPrice extends Api
      *     "goods_id": 1,
      *     "title": "iPhone 13",
      *     "image": "/uploads/xxx.jpg",
+     *     "category_name": "手机",
+     *     "category_second_name": "智能手机",
+     *     "category_three_name": "苹果手机",
+     *     "status": 1,
+     *     "status_text": "上架",
      *     "specs": [
      *       {
      *         "spec_index": 0,
@@ -174,7 +183,7 @@ class GoodsPrice extends Api
             $this->error('商品ID不能为空');
         }
 
-        $goods = $this->model->with(['category'])->find($goodsId);
+        $goods = $this->model->with(['category', 'second', 'three'])->find($goodsId);
         if (!$goods) {
             $this->error('商品不存在');
         }
@@ -197,6 +206,8 @@ class GoodsPrice extends Api
             'title' => $goods->title,
             'image' => $goods->image ? cdnurl($goods->image, true) : '',
             'category_name' => isset($goods->category) ? $goods->category->name : '',
+            'category_second_name' => isset($goods->second) ? $goods->second->name : '',
+            'category_three_name' => isset($goods->three) ? $goods->three->name : '',
             'status' => $goods->status,
             'status_text' => $goods->status == 1 ? '上架' : '下架',
             'specs' => $specs,
