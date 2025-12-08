@@ -453,15 +453,26 @@ class GoodsPrice extends Api
         $admins = \app\admin\model\Admin::limit(10)->select();
         $adminCount = \app\admin\model\Admin::count();
 
+        // 处理查询结果（兼容数组和集合）
+        $userList = $users;
+        if (is_object($users) && method_exists($users, 'toArray')) {
+            $userList = $users->toArray();
+        }
+
+        $adminList = $admins;
+        if (is_object($admins) && method_exists($admins, 'toArray')) {
+            $adminList = $admins->toArray();
+        }
+
         $this->success('获取成功', [
             'fa_user' => [
                 'count' => $userCount,
-                'list' => $users ? $users->toArray() : [],
+                'list' => $userList ?: [],
                 'tip' => '这些是前台用户，可用于生成token'
             ],
             'fa_admin' => [
                 'count' => $adminCount,
-                'list' => $admins ? $admins->toArray() : [],
+                'list' => $adminList ?: [],
                 'tip' => '这些是后台管理员，但API认证系统只支持fa_user表的用户'
             ],
             'usage' => '请使用 fa_user 中的任意用户 id 访问 /api/goodsprice/gettoken?user_id=X 来获取token',
