@@ -186,7 +186,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         // 批量保存按钮
         $('.btn-save-all').on('click', function() {
             if (Object.keys(modifiedPrices).length === 0) {
-                Layer.msg('没有需要保存的修改');
+                Toastr.warning('没有需要保存的修改');
                 return;
             }
 
@@ -198,12 +198,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     }
                 }, function(data, ret) {
                     Layer.close(index);
-                    Layer.msg(ret.msg);
+                    // 显示成功消息
+                    Toastr.success(ret.msg || '保存成功');
                     modifiedPrices = {};
+                    // 清除所有价格输入框的修改标记
+                    $('.editable-price').removeClass('price-modified');
                     table.bootstrapTable('refresh');
                 }, function(data, ret) {
                     Layer.close(index);
-                    Layer.msg(ret.msg);
+                    // 显示错误消息
+                    Toastr.error(ret.msg || '保存失败');
                 });
             });
         });
