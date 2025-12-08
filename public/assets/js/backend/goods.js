@@ -197,6 +197,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         prices: modifiedPrices
                     }
                 }, function(data, ret) {
+                    // 成功回调
+                    console.log('=== 成功回调被调用 ===');
+                    console.log('data:', data);
+                    console.log('ret:', ret);
+                    console.log('ret.msg:', ret.msg);
+                    console.log('ret.code:', ret.code);
+
                     Layer.close(index);
                     // 显示成功消息
                     Toastr.success(ret.msg || '保存成功');
@@ -205,6 +212,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     $('.editable-price').removeClass('price-modified');
                     table.bootstrapTable('refresh');
                 }, function(data, ret) {
+                    // 失败回调
+                    console.log('=== 失败回调被调用 ===');
+                    console.log('data:', data);
+                    console.log('ret:', ret);
+                    console.log('ret.msg:', ret.msg);
+
                     Layer.close(index);
                     // 显示错误消息
                     Toastr.error(ret.msg || '保存失败');
