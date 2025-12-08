@@ -220,7 +220,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
                     Layer.close(index);
                     // 显示错误消息
-                    Toastr.error(ret.msg || '保存失败');
+                    // Toastr.error(ret.msg || '保存失败');
+                    return false;  // ← 添加这一行，阻止框架再次显示错误
                 });
             });
         });

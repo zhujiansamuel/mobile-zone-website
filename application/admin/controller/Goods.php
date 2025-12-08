@@ -144,49 +144,69 @@ class Goods extends Backend
             $params = $this->request->post();
 
             if (empty($params['prices']) || !is_array($params['prices'])) {
-                \think\Log::write('批量更新价格参数错误：' . json_encode($params), 'error');
-                $this->error('参数错误');
+                $this->error(__('Invalid parameters'));
+            }
+
+            // 按商品ID分组价格数据
+            $goodsPrices = [];
+            foreach ($params['prices'] as $compositeId => $priceData) {
+                // 解析组合ID: goods_id_spec_index
+                $parts = explode('_', $compositeId);
+                if (count($parts) >= 2) {
+                    $specIndex = array_pop($parts);  // 最后一部分是规格索引
+                    $goodsId = implode('_', $parts); // 其余部分是商品ID
+
+                    if (!isset($goodsPrices[$goodsId])) {
+                        $goodsPrices[$goodsId] = [];
+                    }
+                    $goodsPrices[$goodsId][$specIndex] = $priceData;
+                }
             }
 
             $count = 0;
             $this->model->startTrans();
             try {
-                // 遍历每个商品的价格数据
-                foreach ($params['prices'] as $goodsId => $priceData) {
-                    // 查找商品
+                foreach ($goodsPrices as $goodsId => $specs) {
+                    // 获取商品当前的spec_info
                     $goods = $this->model->find($goodsId);
                     if (!$goods) {
-                        \think\Log::write('商品不存在：' . $goodsId, 'warning');
                         continue;
                     }
 
-                    // 更新价格
-                    if (isset($priceData['price']) && $priceData['price'] !== '') {
-                        $newPrice = floatval($priceData['price']);
-                        $goods->price = $newPrice;
-                        $goods->save();
-                        $count++;
-
-                        \think\Log::write('更新商品 ' . $goodsId . ' 价格：' . $newPrice, 'info');
+                    $specInfo = json_decode($goods->spec_info, true);
+                    if (empty($specInfo)) {
+                        $specInfo = [];
                     }
+
+                    // 更新规格价格
+                    foreach ($specs as $specIndex => $priceData) {
+                        if (isset($priceData['price']) && $priceData['price'] !== '') {
+                            if (!isset($specInfo[$specIndex])) {
+                                $specInfo[$specIndex] = ['name' => '', 'price' => 0];
+                            }
+                            $specInfo[$specIndex]['price'] = floatval($priceData['price']);
+                        }
+                    }
+
+                    // 计算最高价格作为商品的参考价格
+                    $prices = array_column($specInfo, 'price');
+                    $maxPrice = $prices ? max($prices) : 0;
+
+                    // 更新商品
+                    $goods->spec_info = json_encode($specInfo, JSON_UNESCAPED_UNICODE);
+                    $goods->price = $maxPrice;
+                    $goods->save();
+
+                    $count++;
                 }
-
                 $this->model->commit();
-
-                // 记录成功日志
-                \think\Log::write('批量更新价格成功，更新了 ' . $count . ' 个商品', 'info');
-
-                // 使用直接的中文消息，确保msg不为空
-                $this->success('成功保存 ' . $count . ' 个商品的价格');
+                $this->success(__('Updated %d items successfully', $count));
             } catch (\Exception $e) {
                 $this->model->rollback();
-                \think\Log::write('批量更新价格失败：' . $e->getMessage(), 'error');
-                $this->error('保存失败：' . $e->getMessage());
+                $this->error($e->getMessage());
             }
         }
-
-        \think\Log::write('无效的请求方法', 'error');
-        $this->error('无效的请求');
+        $this->error(__('Invalid request'));
     }
 
 
