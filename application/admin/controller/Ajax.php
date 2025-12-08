@@ -265,8 +265,9 @@ class Ajax extends Backend
      */
     public function category()
     {
-        $type = $this->request->get('type', '');
+        $type = $this->request->get('type', 'goods'); // 默认为商品分类
         $pid = $this->request->get('pid', '');
+        $tree = $this->request->get('tree', '0'); // 是否返回树形结构
         $where = ['status' => 'normal'];
         $categorylist = null;
         if ($pid || $pid === '0') {
@@ -276,9 +277,46 @@ class Ajax extends Backend
             $where['type'] = $type;
         }
 
-        $categorylist = Db::name('category')->where($where)->field('id as value,name')->order('weigh desc,id desc')->select();
+        if ($tree == '1') {
+            // 返回树形结构，包含所有层级
+            $categorylist = Db::name('category')
+                ->where($where)
+                ->field('id as value,name,pid')
+                ->order('weigh desc,id desc')
+                ->select();
+
+            // 构建树形结构并添加缩进
+            $categorylist = $this->buildCategoryTree($categorylist);
+        } else {
+            $categorylist = Db::name('category')
+                ->where($where)
+                ->field('id as value,name')
+                ->order('weigh desc,id desc')
+                ->select();
+        }
 
         $this->success('', '', $categorylist);
+    }
+
+    /**
+     * 构建分类树形结构
+     */
+    private function buildCategoryTree($categories, $pid = 0, $level = 0)
+    {
+        $tree = [];
+        foreach ($categories as $category) {
+            if ($category['pid'] == $pid) {
+                // 添加缩进前缀
+                $prefix = str_repeat('　', $level); // 全角空格
+                $category['name'] = $prefix . $category['name'];
+                $tree[] = $category;
+
+                // 递归查找子分类
+                $children = $this->buildCategoryTree($categories, $category['value'], $level + 1);
+                $tree = array_merge($tree, $children);
+            }
+        }
+        return $tree;
     }
 
     /**

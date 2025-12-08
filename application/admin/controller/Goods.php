@@ -52,16 +52,40 @@ class Goods extends Backend
     {
         if ($this->request->isAjax()) {
             try {
-                list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+                // 获取筛选参数
+                $filter = $this->request->get("filter", '');
+                $filter = (array)json_decode($filter, true);
+                $categoryId = isset($filter['category_id']) ? $filter['category_id'] : null;
+
+                // 如果有分类筛选，先从filter中移除，稍后单独处理
+                if ($categoryId) {
+                    unset($filter['category_id']);
+                    // 重新设置filter参数
+                    $this->request->get(['filter' => json_encode($filter)]);
+                }
+
+                // 启用关联查询模式
+                list($where, $sort, $order, $offset, $limit) = $this->buildparams(null, true);
 
                 // 字段映射：前端使用goods_id，但数据库中是id
+                // 需要处理带表别名的情况（goods.goods_id -> goods.id）
                 if ($sort === 'goods_id') {
                     $sort = 'id';
+                } elseif ($sort === 'goods.goods_id') {
+                    $sort = 'goods.id';
                 }
 
                 $list = $this->model
                     ->with(['category', 'second', 'three'])
                     ->where($where)
+                    ->where(function($query) use ($categoryId) {
+                        if ($categoryId) {
+                            // 分类筛选：查询三个分类字段中的任意一个匹配
+                            $query->where('category_id', $categoryId)
+                                  ->whereOr('category_second', $categoryId)
+                                  ->whereOr('category_three', $categoryId);
+                        }
+                    })
                     ->order($sort, $order)
                     ->paginate($limit);
 

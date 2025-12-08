@@ -104,6 +104,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         console.log('bulkprice function called');
         // 存储修改的价格
         var modifiedPrices = {};
+        // 存储筛选条件
+        var filterParams = {};
 
         // 初始化表格
         var table = $("#bulkprice-table");
@@ -122,6 +124,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             sidePagination: 'server',
             queryParams: function(params) {
                 console.log('Query params:', params);
+                // 添加筛选参数
+                $.extend(params, filterParams);
+                console.log('Final params with filters:', params);
                 return params;
             },
             responseHandler: function(res) {
@@ -181,7 +186,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         // 批量保存按钮
         $('.btn-save-all').on('click', function() {
             if (Object.keys(modifiedPrices).length === 0) {
-                Layer.msg('没有需要保存的修改');
+                Toastr.warning('没有需要保存的修改');
                 return;
             }
 
@@ -192,27 +197,70 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         prices: modifiedPrices
                     }
                 }, function(data, ret) {
+                    // 成功回调
+                    console.log('=== 成功回调被调用 ===');
+                    console.log('data:', data);
+                    console.log('ret:', ret);
+                    console.log('ret.msg:', ret.msg);
+                    console.log('ret.code:', ret.code);
+
                     Layer.close(index);
-                    Layer.msg(ret.msg);
+                    // 显示成功消息
+                    Toastr.success(ret.msg || '保存成功');
                     modifiedPrices = {};
+                    // 清除所有价格输入框的修改标记
+                    $('.editable-price').removeClass('price-modified');
                     table.bootstrapTable('refresh');
                 }, function(data, ret) {
+                    // 失败回调
+                    console.log('=== 失败回调被调用 ===');
+                    console.log('data:', data);
+                    console.log('ret:', ret);
+                    console.log('ret.msg:', ret.msg);
+
                     Layer.close(index);
-                    Layer.msg(ret.msg);
+                    // 显示错误消息
+                    // Toastr.error(ret.msg || '保存失败');
+                    return false;  // ← 添加这一行，阻止框架再次显示错误
                 });
             });
         });
 
         // 筛选功能
         $('.btn-filter').on('click', function() {
-            var filter = {
-                'filter[title]': $('#filter-title').val(),
-                'filter[category_id]': $('#filter-category').val(),
-                'filter[status]': $('#filter-status').val()
-            };
-            table.bootstrapTable('refresh', {
-                query: filter
-            });
+            // 更新筛选参数
+            filterParams = {};
+
+            var title = $('#filter-title').val();
+            var categoryId = $('#filter-category').val();
+            var status = $('#filter-status').val();
+
+            // 构建filter对象
+            var filterObj = {};
+            var opObj = {};
+
+            if (title) {
+                filterObj['title'] = title;
+                opObj['title'] = 'LIKE';
+            }
+            if (categoryId) {
+                filterObj['category_id'] = categoryId;
+            }
+            if (status) {
+                filterObj['status'] = status;
+            }
+
+            // 将filter和op转换为JSON字符串
+            if (Object.keys(filterObj).length > 0) {
+                filterParams['filter'] = JSON.stringify(filterObj);
+            }
+            if (Object.keys(opObj).length > 0) {
+                filterParams['op'] = JSON.stringify(opObj);
+            }
+
+            console.log('Filter params:', filterParams);
+            // 刷新表格
+            table.bootstrapTable('refresh');
         });
 
         // 重置筛选
@@ -220,23 +268,35 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             $('#filter-title').val('');
             $('#filter-category').val('');
             $('#filter-status').val('');
-            table.bootstrapTable('refresh', {
-                query: {}
-            });
+            // 清空筛选参数
+            filterParams = {};
+            // 刷新表格
+            table.bootstrapTable('refresh');
         });
 
-        // 加载分类列表
+        // 加载分类列表（树形结构，仅商品分类）
         $.ajax({
             url: 'ajax/category',
+            data: {
+                type: 'goods',  // 仅加载商品分类
+                tree: '1'       // 返回树形结构
+            },
             dataType: 'json',
-            success: function(data) {
-                if (data && data.list) {
+            success: function(res) {
+                console.log('Category response:', res);
+                if (res && res.code == 1 && res.data) {
                     var options = '<option value="">全部分类</option>';
-                    $.each(data.list, function(i, item) {
-                        options += '<option value="' + item.id + '">' + item.name + '</option>';
+                    $.each(res.data, function(i, item) {
+                        // Ajax返回的字段名是value和name
+                        options += '<option value="' + item.value + '">' + item.name + '</option>';
                     });
                     $('#filter-category').html(options);
+                } else {
+                    console.error('Failed to load categories:', res);
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('Ajax error loading categories:', error);
             }
         });
     };
