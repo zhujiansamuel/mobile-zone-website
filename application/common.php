@@ -1169,3 +1169,109 @@ EOT;
         return $icon;
     }
 }
+
+if (!function_exists('sendSlackNotification')) {
+    /**
+     * Slack通知を送信
+     * @param string $type 通知タイプ（contactus, order, register）
+     * @param array $data 通知データ
+     * @return bool
+     */
+    function sendSlackNotification($type, $data = [])
+    {
+        try {
+            // Slack Webhook URLを設定から取得
+            $webhookUrl = config('site.slack_webhook_url');
+
+            // Webhook URLが設定されていない場合はログに記録して正常終了
+            if (empty($webhookUrl)) {
+                \think\Log::write('Slack Webhook URLが設定されていません。通知タイプ: ' . $type, 'notice');
+                return true;
+            }
+
+            // 通知タイプに応じてメッセージを構築
+            $message = buildSlackMessage($type, $data);
+
+            // Slackにメッセージを送信
+            $payload = json_encode([
+                'text' => $message,
+                'username' => 'Mobile Zone Bot',
+                'icon_emoji' => ':bell:'
+            ]);
+
+            $ch = curl_init($webhookUrl);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($payload)
+            ]);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5); // 5秒タイムアウト
+
+            $result = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode !== 200) {
+                \think\Log::write('Slack通知送信失敗。HTTPコード: ' . $httpCode . ', タイプ: ' . $type, 'error');
+                return false;
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            // エラーをログに記録するが、例外をスローしない（主処理に影響を与えない）
+            \think\Log::write('Slack通知送信エラー: ' . $e->getMessage(), 'error');
+            return false;
+        }
+    }
+}
+
+if (!function_exists('buildSlackMessage')) {
+    /**
+     * Slack通知メッセージを構築
+     * @param string $type 通知タイプ
+     * @param array $data データ
+     * @return string
+     */
+    function buildSlackMessage($type, $data)
+    {
+        $message = '';
+
+        switch ($type) {
+            case 'contactus':
+                $message = ":email: *新規お問い合わせ*\n\n";
+                $message .= "ID: " . ($data['id'] ?? '-') . "\n";
+                $message .= "氏名: " . ($data['name'] ?? '-') . "\n";
+                $message .= "カナ: " . ($data['katakana'] ?? '-') . "\n";
+                $message .= "電話: " . ($data['tel'] ?? '-') . "\n";
+                $message .= "メール: " . ($data['email'] ?? '-') . "\n";
+                $message .= "郵便番号: " . ($data['zip_code'] ?? '-') . "\n";
+                $message .= "住所: " . ($data['address'] ?? '-') . "\n";
+                $message .= "内容: " . ($data['content'] ?? '-') . "\n";
+                break;
+
+            case 'order':
+                $message = ":shopping_cart: *新規注文*\n\n";
+                $message .= "注文ID: " . ($data['order_id'] ?? '-') . "\n";
+                $message .= "ユーザー: " . ($data['username'] ?? '-') . "\n";
+                $message .= "金額: ¥" . number_format($data['amount'] ?? 0) . "\n";
+                break;
+
+            case 'register':
+                $message = ":bust_in_silhouette: *新規会員登録*\n\n";
+                $message .= "ユーザーID: " . ($data['user_id'] ?? '-') . "\n";
+                $message .= "ユーザー名: " . ($data['username'] ?? '-') . "\n";
+                $message .= "メール: " . ($data['email'] ?? '-') . "\n";
+                break;
+
+            default:
+                $message = ":bell: *通知*\n\n";
+                $message .= "タイプ: " . $type . "\n";
+                $message .= "データ: " . json_encode($data, JSON_UNESCAPED_UNICODE);
+                break;
+        }
+
+        return $message;
+    }
+}
