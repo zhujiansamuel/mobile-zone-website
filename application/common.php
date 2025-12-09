@@ -1231,7 +1231,7 @@ if (!function_exists('buildSlackMessage')) {
      * Slack通知メッセージを構築
      * @param string $type 通知タイプ
      * @param array $data データ
-     * @return string
+     * @return array|false
      */
     function buildSlackMessage($event_type, $data)
     {
@@ -1241,13 +1241,13 @@ if (!function_exists('buildSlackMessage')) {
             case 'register':
                 // 新用户注册通知
                 return [
-                    'text' => '🎉 新用户注册',
+                    'text' => '🎉 新たな登録',
                     'blocks' => [
                         [
                             'type' => 'header',
                             'text' => [
                                 'type' => 'plain_text',
-                                'text' => '🎉 新用户注册',
+                                'text' => '🎉 新たな登録',
                                 'emoji' => true
                             ]
                         ],
@@ -1256,19 +1256,19 @@ if (!function_exists('buildSlackMessage')) {
                             'fields' => [
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '*用户名/邮箱:*\n' . ($data['username'] ?? 'N/A')
+                                    'text' => '*ユーザー名・Email:*' . ($data['username'] ?? 'N/A')
                                 ],
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '*手机号:*\n' . ($data['mobile'] ?? 'N/A')
+                                    'text' => '*電話番号:*' . ($data['mobile'] ?? 'N/A')
                                 ],
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '*注册时间:*\n' . date('Y-m-d H:i:s')
+                                    'text' => '*登録時間:*' . date('Y-m-d H:i:s')
                                 ],
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '*用户ID:*\n' . ($data['user_id'] ?? 'N/A')
+                                    'text' => '*ユーザーID:*' . ($data['user_id'] ?? 'N/A')
                                 ]
                             ]
                         ],
@@ -1277,7 +1277,7 @@ if (!function_exists('buildSlackMessage')) {
                             'elements' => [
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '来自: ' . $base_url
+                                    'text' => 'From: ' . $base_url
                                 ]
                             ]
                         ]
@@ -1292,27 +1292,27 @@ if (!function_exists('buildSlackMessage')) {
                 $fields = [
                     [
                         'type' => 'mrkdwn',
-                        'text' => '*订单编号:*\n' . ($data['no'] ?? 'N/A')
+                        'text' => '*注文番号:*' . ($data['no'] ?? 'N/A')
                     ],
                     [
                         'type' => 'mrkdwn',
-                        'text' => '*订单金额:*\n¥' . number_format($data['total_price'] ?? 0)
+                        'text' => '*注文金額:*¥' . number_format($data['total_price'] ?? 0)
                     ],
                     [
                         'type' => 'mrkdwn',
-                        'text' => '*订单类型:*\n' . $order_type
+                        'text' => '*注文タイプ:*' . $order_type
                     ],
                     [
                         'type' => 'mrkdwn',
-                        'text' => '*支付方式:*\n' . $pay_mode
+                        'text' => '*支払い方法:*' . $pay_mode
                     ],
                     [
                         'type' => 'mrkdwn',
-                        'text' => '*客户姓名:*\n' . ($data['user_name'] ?? 'N/A')
+                        'text' => '*ユーザー名前:*' . ($data['user_name'] ?? 'N/A')
                     ],
                     [
                         'type' => 'mrkdwn',
-                        'text' => '*客户邮箱:*\n' . ($data['user_email'] ?? 'N/A')
+                        'text' => '*ユーザーE-mail:*' . ($data['user_email'] ?? 'N/A')
                     ]
                 ];
 
@@ -1320,19 +1320,19 @@ if (!function_exists('buildSlackMessage')) {
                 if ($data['type'] == 1) {
                     $fields[] = [
                         'type' => 'mrkdwn',
-                        'text' => '*来店信息:*\n' . ($data['store_name'] ?? '') . '\n' .
+                        'text' => '*来店情報:*' . ($data['store_name'] ?? '') . '' .
                             ($data['go_store_date'] ?? '') . ' ' . ($data['go_store_time'] ?? '')
                     ];
                 }
 
                 return [
-                    'text' => '🛒 新订单创建',
+                    'text' => '🛒 新たな注文',
                     'blocks' => [
                         [
                             'type' => 'header',
                             'text' => [
                                 'type' => 'plain_text',
-                                'text' => '🛒 新订单创建',
+                                'text' => '🛒 新たな注文',
                                 'emoji' => true
                             ]
                         ],
@@ -1344,7 +1344,7 @@ if (!function_exists('buildSlackMessage')) {
                             'type' => 'section',
                             'text' => [
                                 'type' => 'mrkdwn',
-                                'text' => '*商品数量:* ' . (isset($data['details']) ? count($data['details']) : 0) . ' 件'
+                                'text' => '*商品数量:* ' . (isset($data['details']) ? count($data['details']) : 0) . ' 個'
                             ]
                         ],
                         [
@@ -1352,7 +1352,7 @@ if (!function_exists('buildSlackMessage')) {
                             'elements' => [
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '订单时间: ' . date('Y-m-d H:i:s') . ' | 来自: ' . $base_url
+                                    'text' => '注文時間: ' . date('Y-m-d H:i:s') . ' | From: ' . $base_url
                                 ]
                             ]
                         ]
@@ -1362,13 +1362,13 @@ if (!function_exists('buildSlackMessage')) {
             case 'contactus':
                 // 新咨询通知
                 return [
-                    'text' => '📧 新的お問い合わせ',
+                    'text' => '📧 新たなお問い合わせ',
                     'blocks' => [
                         [
                             'type' => 'header',
                             'text' => [
                                 'type' => 'plain_text',
-                                'text' => '📧 新的お問い合わせ',
+                                'text' => '📧 新たなお問い合わせ',
                                 'emoji' => true
                             ]
                         ],
@@ -1377,27 +1377,27 @@ if (!function_exists('buildSlackMessage')) {
                             'fields' => [
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '*姓名:*\n' . ($data['name'] ?? 'N/A')
+                                    'text' => '*名前:*' . ($data['name'] ?? 'N/A')
                                 ],
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '*假名:*\n' . ($data['katakana'] ?? 'N/A')
+                                    'text' => '*カナ:*' . ($data['katakana'] ?? 'N/A')
                                 ],
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '*邮箱:*\n' . ($data['email'] ?? 'N/A')
+                                    'text' => '*Email:*' . ($data['email'] ?? 'N/A')
                                 ],
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '*电话:*\n' . ($data['tel'] ?? 'N/A')
+                                    'text' => '*電話番号:*' . ($data['tel'] ?? 'N/A')
+                                ],
+
+                                    'type' => 'mrkdwn',
+                                    'text' => '*郵便番号:*' . ($data['zip_code'] ?? 'N/A')
                                 ],
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '*邮编:*\n' . ($data['zip_code'] ?? 'N/A')
-                                ],
-                                [
-                                    'type' => 'mrkdwn',
-                                    'text' => '*地址:*\n' . ($data['address'] ?? 'N/A')
+                                    'text' => '*住所:*' . ($data['address'] ?? 'N/A')
                                 ]
                             ]
                         ],
@@ -1405,7 +1405,7 @@ if (!function_exists('buildSlackMessage')) {
                             'type' => 'section',
                             'text' => [
                                 'type' => 'mrkdwn',
-                                'text' => '*咨询内容:*\n' . ($data['content'] ?? 'N/A')
+                                'text' => '*お問い合わせ内容:*' . ($data['content'] ?? 'N/A')
                             ]
                         ],
                         [
@@ -1413,11 +1413,10 @@ if (!function_exists('buildSlackMessage')) {
                             'elements' => [
                                 [
                                     'type' => 'mrkdwn',
-                                    'text' => '提交时间: ' . date('Y-m-d H:i:s') . ' | 来自: ' . $base_url
+                                    'text' => '時間: ' . date('Y-m-d H:i:s') . ' | From: ' . $base_url
                                 ]
                             ]
                         ]
-                    ]
                 ];
 
             default:
