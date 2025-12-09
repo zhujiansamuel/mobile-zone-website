@@ -1192,33 +1192,32 @@ if (!function_exists('sendSlackNotification')) {
             // 通知タイプに応じてメッセージを構築
             $message = buildSlackMessage($type, $data);
 
-            // Slackにメッセージを送信
-            $payload = json_encode([
-                'text' => $message,
-                'username' => 'Mobile Zone Bot',
-                'icon_emoji' => ':bell:'
-            ]);
-
-            $ch = curl_init($webhookUrl);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($payload)
-            ]);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5); // 5秒タイムアウト
-
-            $result = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if ($httpCode !== 200) {
-                \think\Log::write('Slack通知送信失敗。HTTPコード: ' . $httpCode . ', タイプ: ' . $type, 'error');
+            if (!$message) {
                 return false;
             }
 
-            return true;
+            try {
+                // 使用 cURL 发送 POST 请求到 Slack
+                $ch = curl_init($webhookUrl);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($message));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen(json_encode($message))
+                ]);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5); // 5秒超时
+
+                $result = curl_exec($ch);
+                $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+
+                return $http_code == 200;
+            } catch (\Exception $e) {
+                // 记录错误但不影响主流程
+                \think\Log::error('Slack notification failed: ' . $e->getMessage());
+                return false;
+            }
         } catch (\Exception $e) {
             // エラーをログに記録するが、例外をスローしない（主処理に影響を与えない）
             \think\Log::write('Slack通知送信エラー: ' . $e->getMessage(), 'error');
@@ -1234,44 +1233,195 @@ if (!function_exists('buildSlackMessage')) {
      * @param array $data データ
      * @return string
      */
-    function buildSlackMessage($type, $data)
+    function buildSlackMessage($event_type, $data)
     {
-        $message = '';
+        $base_url = request()->domain(); // 获取网站域名
 
-        switch ($type) {
-            case 'contactus':
-                $message = ":email: *新規お問い合わせ*\n\n";
-                $message .= "ID: " . ($data['id'] ?? '-') . "\n";
-                $message .= "氏名: " . ($data['name'] ?? '-') . "\n";
-                $message .= "カナ: " . ($data['katakana'] ?? '-') . "\n";
-                $message .= "電話: " . ($data['tel'] ?? '-') . "\n";
-                $message .= "メール: " . ($data['email'] ?? '-') . "\n";
-                $message .= "郵便番号: " . ($data['zip_code'] ?? '-') . "\n";
-                $message .= "住所: " . ($data['address'] ?? '-') . "\n";
-                $message .= "内容: " . ($data['content'] ?? '-') . "\n";
-                break;
+        switch ($event_type) {
+            case 'register':
+                // 新用户注册通知
+                return [
+                    'text' => '🎉 新用户注册',
+                    'blocks' => [
+                        [
+                            'type' => 'header',
+                            'text' => [
+                                'type' => 'plain_text',
+                                'text' => '🎉 新用户注册',
+                                'emoji' => true
+                            ]
+                        ],
+                        [
+                            'type' => 'section',
+                            'fields' => [
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '*用户名/邮箱:*\n' . ($data['username'] ?? 'N/A')
+                                ],
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '*手机号:*\n' . ($data['mobile'] ?? 'N/A')
+                                ],
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '*注册时间:*\n' . date('Y-m-d H:i:s')
+                                ],
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '*用户ID:*\n' . ($data['user_id'] ?? 'N/A')
+                                ]
+                            ]
+                        ],
+                        [
+                            'type' => 'context',
+                            'elements' => [
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '来自: ' . $base_url
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
 
             case 'order':
-                $message = ":shopping_cart: *新規注文*\n\n";
-                $message .= "注文ID: " . ($data['order_id'] ?? '-') . "\n";
-                $message .= "ユーザー: " . ($data['username'] ?? '-') . "\n";
-                $message .= "金額: ¥" . number_format($data['amount'] ?? 0) . "\n";
-                break;
+                // 新订单通知
+                $order_type = $data['type'] == 1 ? '店舗受取' : '郵送';
+                $pay_mode = $data['pay_mode'] == 1 ? '現金' : '銀行振込';
 
-            case 'register':
-                $message = ":bust_in_silhouette: *新規会員登録*\n\n";
-                $message .= "ユーザーID: " . ($data['user_id'] ?? '-') . "\n";
-                $message .= "ユーザー名: " . ($data['username'] ?? '-') . "\n";
-                $message .= "メール: " . ($data['email'] ?? '-') . "\n";
-                break;
+                $fields = [
+                    [
+                        'type' => 'mrkdwn',
+                        'text' => '*订单编号:*\n' . ($data['no'] ?? 'N/A')
+                    ],
+                    [
+                        'type' => 'mrkdwn',
+                        'text' => '*订单金额:*\n¥' . number_format($data['total_price'] ?? 0)
+                    ],
+                    [
+                        'type' => 'mrkdwn',
+                        'text' => '*订单类型:*\n' . $order_type
+                    ],
+                    [
+                        'type' => 'mrkdwn',
+                        'text' => '*支付方式:*\n' . $pay_mode
+                    ],
+                    [
+                        'type' => 'mrkdwn',
+                        'text' => '*客户姓名:*\n' . ($data['user_name'] ?? 'N/A')
+                    ],
+                    [
+                        'type' => 'mrkdwn',
+                        'text' => '*客户邮箱:*\n' . ($data['user_email'] ?? 'N/A')
+                    ]
+                ];
+
+                // 如果是店舗受取，添加店铺和时间信息
+                if ($data['type'] == 1) {
+                    $fields[] = [
+                        'type' => 'mrkdwn',
+                        'text' => '*来店信息:*\n' . ($data['store_name'] ?? '') . '\n' .
+                            ($data['go_store_date'] ?? '') . ' ' . ($data['go_store_time'] ?? '')
+                    ];
+                }
+
+                return [
+                    'text' => '🛒 新订单创建',
+                    'blocks' => [
+                        [
+                            'type' => 'header',
+                            'text' => [
+                                'type' => 'plain_text',
+                                'text' => '🛒 新订单创建',
+                                'emoji' => true
+                            ]
+                        ],
+                        [
+                            'type' => 'section',
+                            'fields' => $fields
+                        ],
+                        [
+                            'type' => 'section',
+                            'text' => [
+                                'type' => 'mrkdwn',
+                                'text' => '*商品数量:* ' . (isset($data['details']) ? count($data['details']) : 0) . ' 件'
+                            ]
+                        ],
+                        [
+                            'type' => 'context',
+                            'elements' => [
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '订单时间: ' . date('Y-m-d H:i:s') . ' | 来自: ' . $base_url
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
+
+            case 'contactus':
+                // 新咨询通知
+                return [
+                    'text' => '📧 新的お問い合わせ',
+                    'blocks' => [
+                        [
+                            'type' => 'header',
+                            'text' => [
+                                'type' => 'plain_text',
+                                'text' => '📧 新的お問い合わせ',
+                                'emoji' => true
+                            ]
+                        ],
+                        [
+                            'type' => 'section',
+                            'fields' => [
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '*姓名:*\n' . ($data['name'] ?? 'N/A')
+                                ],
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '*假名:*\n' . ($data['katakana'] ?? 'N/A')
+                                ],
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '*邮箱:*\n' . ($data['email'] ?? 'N/A')
+                                ],
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '*电话:*\n' . ($data['tel'] ?? 'N/A')
+                                ],
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '*邮编:*\n' . ($data['zip_code'] ?? 'N/A')
+                                ],
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '*地址:*\n' . ($data['address'] ?? 'N/A')
+                                ]
+                            ]
+                        ],
+                        [
+                            'type' => 'section',
+                            'text' => [
+                                'type' => 'mrkdwn',
+                                'text' => '*咨询内容:*\n' . ($data['content'] ?? 'N/A')
+                            ]
+                        ],
+                        [
+                            'type' => 'context',
+                            'elements' => [
+                                [
+                                    'type' => 'mrkdwn',
+                                    'text' => '提交时间: ' . date('Y-m-d H:i:s') . ' | 来自: ' . $base_url
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
 
             default:
-                $message = ":bell: *通知*\n\n";
-                $message .= "タイプ: " . $type . "\n";
-                $message .= "データ: " . json_encode($data, JSON_UNESCAPED_UNICODE);
-                break;
+                return false;
         }
-
-        return $message;
     }
 }
