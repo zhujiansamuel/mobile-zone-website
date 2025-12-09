@@ -67,6 +67,30 @@ class User extends Api
                 $this->error('失敗');
             }
 
+            # TODO：咨询事件触发点
+//            可用数据：
+//
+//                $res - 新插入的咨询记录ID
+//                $post['name'] - 姓名
+//                $post['katakana'] - 假名
+//                $post['tel'] - 电话
+//                $post['email'] - 邮箱
+//                $post['zip_code'] - 邮编
+//                $post['address'] - 地址
+//                $post['content'] - 咨询内容
+            // Slack 通知
+            sendSlackNotification('contactus', [
+                'id' => $res,
+                'name' => $post['name'],
+                'katakana' => $post['katakana'],
+                'tel' => $post['tel'] ?? '',
+                'email' => $post['email'],
+                'zip_code' => $post['zip_code'],
+                'address' => $post['address'],
+                'content' => $post['content']
+            ]);
+
+
             $this->success(__('お問い合わせいただき、ありがとうございます。'));
         }catch (Exception $e){
             //例外をキャッチ
@@ -280,6 +304,7 @@ class User extends Api
                 if(empty($post['bank_account_name'])){
                     $this->error(__('振込口座名義を入力してください'));
                 }
+                $save['is_send_yuyue'] = 0;  // 初始值为0，表示未发送预约邮件
                 $save['bank_account_type'] = $post['bank_account_type'];
                 $save['bank'] = $post['bank'];
                 $save['bank_branch'] = $post['bank_branch'];
@@ -359,6 +384,34 @@ class User extends Api
                 }
                 // トランザクションをコミットする
                 Db::commit();
+
+                # TODO：订单创建触发点
+//                可用数据：
+//
+//                $order_id - 订单ID
+//                $save['no'] - 订单编号
+//                $save['price'] - 商品总价
+//                $save['total_price'] - 订单总价
+//                $save['type'] - 订单类型（1=店舗, 2=郵送）
+//                $save['pay_mode'] - 支付方式（1=現金, 2=銀行）
+//                $this->auth->getUserinfo() - 用户信息
+//                $order_details - 订单详情数组
+                // Slack 通知
+                sendSlackNotification('order', [
+                    'no' => $save['no'],
+                    'total_price' => $save['total_price'],
+                    'price' => $save['price'],
+                    'type' => $save['type'],
+                    'pay_mode' => $save['pay_mode'],
+                    'user_name' => $this->auth->name,
+                    'user_email' => $this->auth->email,
+                    'store_name' => $save['store_name'] ?? '',
+                    'go_store_date' => $save['go_store_date'] ?? '',
+                    'go_store_time' => $save['go_store_time'] ?? '',
+                    'details' => $order_details
+                ]);
+
+
             } catch (\Exception $e) {
                 // トランザクションをロールバック
                 Db::rollback();
@@ -462,6 +515,22 @@ class User extends Api
         if ($ret) {
             $data = ['userinfo' => $this->auth->getUserinfo()];
             registerSendEmail($username, $password, $username);
+
+            # TODO：用户注册触发点
+//            可用数据：
+//
+//            $username - 用户名/邮箱
+//            $mobile - 手机号
+//            $this->auth->getUserinfo() - 完整用户信息
+            // Slack 通知
+            sendSlackNotification('register', [
+                'username' => $username,
+                'mobile' => $mobile,
+                'user_id' => $this->auth->id
+            ]);
+
+
+
             $this->success(__('新規会員登録が完了しました。再度ログインをしてください。'), $data);
         } else {
             $this->error($this->auth->getError());
