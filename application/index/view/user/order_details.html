@@ -27,14 +27,14 @@
 						<div class="record3">
 							<ul>
 								<li class="rWidth">
-									お申し込み日時<br>
+									お申込み日時<br>
 									{$info['createtime']|date='Y/m/d',###}
 								</li>
 								<li class="rWidth1">
-									商品名
+									商品品名
 								</li>
 								<li class="rWidth2">
-									数
+									数量
 								</li>
 								<li class="rWidth3">
 									金額
@@ -136,11 +136,11 @@
 				<div class="record1 wap">
 					<div class="sjmine">
 						<div class="sjmine1">
-							お申し込み日時 <br>
+							お申込み日時 <br>
 							{$info['createtime']|date='Y/m/d',###}
 						</div>
 						<div class="sjmine2">
-							商品名
+							商品品名
 						</div>
 					</div>
 				{volist name="info['details']" id="item2"}
@@ -161,7 +161,7 @@
 						</div>
 						<div class="sjmine6">
 							<div class="sjmine6a">
-								数 {$item2['num']}
+								数量 {$item2['num']}
 							</div>
 							<div class="sjmine6b">
 								金額 ￥{$item2['price']} <span>（税込）</span>
