@@ -137,8 +137,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 {field: 'goods_id', title: '商品ID', width: 60, sortable: true},
                 {field: 'image', title: '图片', width: 80, formatter: function(value, row) {
                     if (value) {
-                        var img = value.indexOf('http') === 0 ? value : '//' + value;
-                        return '<img src="' + img + '" style="max-width:50px;max-height:50px;">';
+                        var img = value.indexOf('http') === 0 ? value : 'https://www.mobile-zone.jp' + value;
+                        return '<img class="img-sm img-center" src="' + img + '">';
                     }
                     return '';
                 }},
