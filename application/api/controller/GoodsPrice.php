@@ -292,13 +292,15 @@ class GoodsPrice extends Api
                 $priceList = array_column($specInfo, 'price');
                 $maxPrice = $priceList ? max($priceList) : 0;
 
-                // 更新商品
-                $goods->spec_info = json_encode($specInfo, JSON_UNESCAPED_UNICODE);
-                $goods->price = $maxPrice;
+                // 更新商品 - 使用数据库直接更新避免模型问题
+                $updateData = [
+                    'spec_info' => json_encode($specInfo, JSON_UNESCAPED_UNICODE),
+                    'price' => $maxPrice,
+                ];
 
-                // 保存并检查结果
-                if (!$goods->save()) {
-                    throw new \Exception("保存商品ID {$goodsId} 失败");
+                $result = $this->model->where('id', $goodsId)->update($updateData);
+                if ($result === false) {
+                    throw new \Exception("保存商品ID {$goodsId} 失败，数据库更新返回false");
                 }
 
                 $count++;
@@ -382,10 +384,16 @@ class GoodsPrice extends Api
             $allPrices = array_column($specInfo, 'price');
             $maxPrice = $allPrices ? max($allPrices) : 0;
 
-            // 更新商品
-            $goods->spec_info = json_encode($specInfo, JSON_UNESCAPED_UNICODE);
-            $goods->price = $maxPrice;
-            $goods->save();
+            // 更新商品 - 使用数据库直接更新避免模型问题
+            $updateData = [
+                'spec_info' => json_encode($specInfo, JSON_UNESCAPED_UNICODE),
+                'price' => $maxPrice,
+            ];
+
+            $result = $this->model->where('id', $goodsId)->update($updateData);
+            if ($result === false) {
+                throw new \Exception("保存商品ID {$goodsId} 失败，数据库更新返回false");
+            }
 
             $this->model->commit();
 
