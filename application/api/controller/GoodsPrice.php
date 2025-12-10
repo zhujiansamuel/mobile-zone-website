@@ -72,27 +72,24 @@ class GoodsPrice extends Api
         $status = $this->request->param('status', '');
         $goodsId = $this->request->param('goods_id/d', 0);
 
-        // 构建查询条件
-        $where = [];
+        // 构建查询 - 使用链式调用避免查询表达式错误
+        $query = $this->model->with(['category', 'second', 'three']);
+
         if ($title) {
-            $where[] = ['title', 'like', '%' . $title . '%'];
+            $query = $query->where('title', 'like', '%' . $title . '%');
         }
         if ($categoryId > 0) {
-            $where[] = ['category_id', '=', $categoryId];
+            $query = $query->where('category_id', '=', $categoryId);
         }
         if ($status !== '') {
-            $where[] = ['status', '=', $status];
+            $query = $query->where('status', '=', $status);
         }
         if ($goodsId > 0) {
-            $where[] = ['id', '=', $goodsId];
+            $query = $query->where('id', '=', $goodsId);
         }
 
-        // 查询商品（包含三级分类）
-        $list = $this->model
-            ->with(['category', 'second', 'three'])
-            ->where($where)
-            ->order('id', 'desc')
-            ->paginate($limit, false, ['page' => $page]);
+        // 执行查询
+        $list = $query->order('id', 'desc')->paginate($limit, false, ['page' => $page]);
 
         // 展开规格信息
         $expandedRows = [];
