@@ -272,7 +272,7 @@ class GoodsPrice extends Api
                 // 获取商品当前的spec_info
                 $goods = $this->model->find($goodsId);
                 if (!$goods) {
-                    continue;
+                    throw new \Exception("商品ID {$goodsId} 不存在");
                 }
 
                 $specInfo = json_decode($goods->spec_info, true);
@@ -289,13 +289,17 @@ class GoodsPrice extends Api
                 }
 
                 // 计算最高价格作为商品的参考价格
-                $prices = array_column($specInfo, 'price');
-                $maxPrice = $prices ? max($prices) : 0;
+                $priceList = array_column($specInfo, 'price');
+                $maxPrice = $priceList ? max($priceList) : 0;
 
                 // 更新商品
                 $goods->spec_info = json_encode($specInfo, JSON_UNESCAPED_UNICODE);
                 $goods->price = $maxPrice;
-                $goods->save();
+
+                // 保存并检查结果
+                if (!$goods->save()) {
+                    throw new \Exception("保存商品ID {$goodsId} 失败");
+                }
 
                 $count++;
                 $updatedGoods[] = $goodsId;
@@ -308,7 +312,15 @@ class GoodsPrice extends Api
             ]);
         } catch (\Exception $e) {
             $this->model->rollback();
-            $this->error('更新失败：' . $e->getMessage());
+            $errorMsg = $e->getMessage() ?: '未知错误';
+            $errorDetail = [
+                'message' => $errorMsg,
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ];
+            // 记录详细错误到日志
+            \think\Log::error('商品价格更新失败: ' . json_encode($errorDetail, JSON_UNESCAPED_UNICODE));
+            $this->error('更新失败：' . $errorMsg);
         }
     }
 
@@ -383,7 +395,15 @@ class GoodsPrice extends Api
             ]);
         } catch (\Exception $e) {
             $this->model->rollback();
-            $this->error('更新失败：' . $e->getMessage());
+            $errorMsg = $e->getMessage() ?: '未知错误';
+            $errorDetail = [
+                'message' => $errorMsg,
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ];
+            // 记录详细错误到日志
+            \think\Log::error('商品价格更新失败: ' . json_encode($errorDetail, JSON_UNESCAPED_UNICODE));
+            $this->error('更新失败：' . $errorMsg);
         }
     }
 
