@@ -237,7 +237,7 @@ class GoodsPrice extends Api
      */
     public function update()
     {
-        $prices = $this->request->param('prices');
+        $prices = $this->request->param('prices/a', []);
 
         if (empty($prices) || !is_array($prices)) {
             $this->error('价格数据不能为空');
@@ -335,7 +335,7 @@ class GoodsPrice extends Api
     public function setprices()
     {
         $goodsId = $this->request->param('goods_id/d', 0);
-        $prices = $this->request->param('prices');
+        $prices = $this->request->param('prices/a', []);
 
         if ($goodsId <= 0) {
             $this->error('商品ID不能为空');
