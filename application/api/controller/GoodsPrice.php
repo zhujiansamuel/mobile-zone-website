@@ -275,7 +275,16 @@ class GoodsPrice extends Api
                     throw new \Exception("商品ID {$goodsId} 不存在");
                 }
 
-                $specInfo = json_decode($goods->spec_info, true);
+                // 获取spec_info，可能是字符串或已经是数组（如果模型有获取器）
+                $specInfoRaw = $goods->getData('spec_info'); // 获取原始数据，不经过获取器
+                if (is_string($specInfoRaw)) {
+                    $specInfo = json_decode($specInfoRaw, true);
+                } else if (is_array($specInfoRaw)) {
+                    $specInfo = $specInfoRaw;
+                } else {
+                    $specInfo = [];
+                }
+
                 if (empty($specInfo)) {
                     $specInfo = [];
                 }
@@ -312,17 +321,24 @@ class GoodsPrice extends Api
                 'updated_count' => $count,
                 'updated_goods' => $updatedGoods,
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->model->rollback();
             $errorMsg = $e->getMessage() ?: '未知错误';
             $errorDetail = [
+                'type' => get_class($e),
                 'message' => $errorMsg,
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
+                'trace' => explode("\n", $e->getTraceAsString()),
             ];
             // 记录详细错误到日志
             \think\Log::error('商品价格更新失败: ' . json_encode($errorDetail, JSON_UNESCAPED_UNICODE));
-            $this->error('更新失败：' . $errorMsg);
+            // 如果是开发环境，返回详细错误
+            if (config('app_debug')) {
+                $this->error('更新失败：' . $errorMsg . ' [' . basename($e->getFile()) . ':' . $e->getLine() . ']');
+            } else {
+                $this->error('更新失败：' . $errorMsg);
+            }
         }
     }
 
@@ -364,7 +380,16 @@ class GoodsPrice extends Api
             $this->error('商品不存在');
         }
 
-        $specInfo = json_decode($goods->spec_info, true);
+        // 获取spec_info，可能是字符串或已经是数组（如果模型有获取器）
+        $specInfoRaw = $goods->getData('spec_info'); // 获取原始数据，不经过获取器
+        if (is_string($specInfoRaw)) {
+            $specInfo = json_decode($specInfoRaw, true);
+        } else if (is_array($specInfoRaw)) {
+            $specInfo = $specInfoRaw;
+        } else {
+            $specInfo = [];
+        }
+
         if (empty($specInfo)) {
             $this->error('商品没有规格信息');
         }
@@ -401,17 +426,24 @@ class GoodsPrice extends Api
                 'goods_id' => $goodsId,
                 'updated_specs' => $updatedCount,
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->model->rollback();
             $errorMsg = $e->getMessage() ?: '未知错误';
             $errorDetail = [
+                'type' => get_class($e),
                 'message' => $errorMsg,
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
+                'trace' => explode("\n", $e->getTraceAsString()),
             ];
             // 记录详细错误到日志
             \think\Log::error('商品价格更新失败: ' . json_encode($errorDetail, JSON_UNESCAPED_UNICODE));
-            $this->error('更新失败：' . $errorMsg);
+            // 如果是开发环境，返回详细错误
+            if (config('app_debug')) {
+                $this->error('更新失败：' . $errorMsg . ' [' . basename($e->getFile()) . ':' . $e->getLine() . ']');
+            } else {
+                $this->error('更新失败：' . $errorMsg);
+            }
         }
     }
 
