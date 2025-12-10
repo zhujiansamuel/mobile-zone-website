@@ -315,12 +315,9 @@ class GoodsPrice extends Api
                 $count++;
                 $updatedGoods[] = $goodsId;
             }
-            $this->model->commit();
 
-            $this->success('成功更新了' . $count . '个商品', [
-                'updated_count' => $count,
-                'updated_goods' => $updatedGoods,
-            ]);
+            // 提交事务
+            $this->model->commit();
         } catch (\Throwable $e) {
             $this->model->rollback();
             $errorMsg = $e->getMessage() ?: '未知错误';
@@ -340,6 +337,12 @@ class GoodsPrice extends Api
                 $this->error('更新失败：' . $errorMsg);
             }
         }
+
+        // 事务提交成功后返回结果
+        $this->success('成功更新了' . $count . '个商品', [
+            'updated_count' => $count,
+            'updated_goods' => $updatedGoods,
+        ]);
     }
 
     /**
@@ -420,12 +423,8 @@ class GoodsPrice extends Api
                 throw new \Exception("保存商品ID {$goodsId} 失败，数据库更新返回false");
             }
 
+            // 提交事务
             $this->model->commit();
-
-            $this->success('价格更新成功', [
-                'goods_id' => $goodsId,
-                'updated_specs' => $updatedCount,
-            ]);
         } catch (\Throwable $e) {
             $this->model->rollback();
             $errorMsg = $e->getMessage() ?: '未知错误';
@@ -445,6 +444,12 @@ class GoodsPrice extends Api
                 $this->error('更新失败：' . $errorMsg);
             }
         }
+
+        // 事务提交成功后返回结果
+        $this->success('价格更新成功', [
+            'goods_id' => $goodsId,
+            'updated_specs' => $updatedCount,
+        ]);
     }
 
     /**
